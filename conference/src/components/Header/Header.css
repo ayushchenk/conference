@@ -1,0 +1,9 @@
+.header__box {
+    display: flex;
+    flex-grow: 1;
+}
+
+.header__link {
+    text-decoration: none;
+    color: inherit;
+}

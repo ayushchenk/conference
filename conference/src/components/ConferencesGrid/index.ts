@@ -1,0 +1,1 @@
+export { ConferencesGrid } from "./ConferencesGrid";

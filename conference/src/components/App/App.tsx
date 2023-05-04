@@ -1,21 +1,15 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Header } from "../Header";
+import { ConferencesPage } from "../../pages/Conferences/ConferencesPage";
 
-export const App = () => (
-    <div className="App">
-        <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <p>
-                Edit <code>src/App.tsx</code> and save to reload.
-            </p>
-            <a
-                className="App-link"
-                href="https://reactjs.org"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                Learn React
-            </a>
-        </header>
-    </div>
-);
+export const App = () => {
+    return (
+        <BrowserRouter>
+            <Header />
+            <Routes>
+                <Route path="/" element={<ConferencesPage />}></Route>
+                <Route path="/conference/:id" element={<div>test</div>}></Route>
+            </Routes>
+        </BrowserRouter>
+    );
+}
