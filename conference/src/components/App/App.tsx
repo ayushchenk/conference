@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Header } from "../Header";
-import { ConferencesPage } from "../../pages/Conferences/ConferencesPage";
+import { ConferencesPage } from "../../pages/Conferences";
 
 export const App = () => {
     return (

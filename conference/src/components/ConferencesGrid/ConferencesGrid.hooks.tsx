@@ -57,12 +57,12 @@ export const useConferencesGridProps = (conferences: GetConferencesResponse)
         {
             headerName: "Start Date",
             field: "start",
-            flex: 1
+            minWidth: 150
         },
         {
             headerName: "End Date",
             field: "end",
-            flex: 1
+            minWidth: 150
         }
     ];
 
