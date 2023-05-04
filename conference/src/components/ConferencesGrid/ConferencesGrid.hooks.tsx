@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { GetConferencesResponse } from "./ConferencesGrid.types";
 import { GridRowsProp, GridColDef, GridPaginationModel } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
+import moment from "moment";
 
 export const useGetConferencesApi = (paging: GridPaginationModel) => {
     console.log(paging);
@@ -57,12 +58,14 @@ export const useConferencesGridProps = (conferences: GetConferencesResponse)
         {
             headerName: "Start Date",
             field: "start",
-            minWidth: 150
+            minWidth: 120,
+            valueFormatter: params => moment(params?.value).format("DD/MM/YYYY")
         },
         {
             headerName: "End Date",
             field: "end",
-            minWidth: 150
+            minWidth: 120,
+            valueFormatter: params => moment(params?.value).format("DD/MM/YYYY")
         }
     ];
 
