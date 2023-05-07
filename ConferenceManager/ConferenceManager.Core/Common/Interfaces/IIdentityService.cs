@@ -1,4 +1,5 @@
 ﻿using ConferenceManager.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace ConferenceManager.Core.Common.Interfaces;
 

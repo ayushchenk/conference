@@ -4,7 +4,6 @@ using ConferenceManager.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using System.Reflection;
 
 namespace ConferenceManager.Infrastructure.Persistence
@@ -31,10 +30,10 @@ namespace ConferenceManager.Infrastructure.Persistence
         public DbSet<ConferenceParticipant> ConferenceParticipants => Set<ConferenceParticipant>();
 
         public ApplicationDbContext(
-           DbContextOptions<ApplicationDbContext> options,
-           IMediator mediator,
-           AuditableEntitySaveChangesInterceptor auditableEntitySaveChangesInterceptor
-        ) : base(options)
+            DbContextOptions<ApplicationDbContext> options,
+            IMediator mediator,
+            AuditableEntitySaveChangesInterceptor auditableEntitySaveChangesInterceptor
+            ) : base(options)
         {
             _mediator = mediator;
             _auditableEntitySaveChangesInterceptor = auditableEntitySaveChangesInterceptor;
