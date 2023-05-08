@@ -47,6 +47,18 @@ namespace ConferenceManager.Infrastructure.Persistence.Configurations
             builder.HasMany(x => x.ModifiedSubmissions)
                 .WithOne(y => y.ModifiedBy)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasMany(x => x.SubmissionsForReview)
+                .WithMany(y => y.ActualReviewers)
+                .UsingEntity<SubmissionReviewer>();
+
+            builder.HasMany(x => x.ReviewPreferences)
+                .WithMany(y => y.AppliedReviewers)
+                .UsingEntity<ReviewPreference>();
+
+            builder.HasMany(x => x.ConferenceParticipations)
+                .WithMany(y => y.Participants)
+                .UsingEntity<ConferenceParticipant>();
         }
     }
 }

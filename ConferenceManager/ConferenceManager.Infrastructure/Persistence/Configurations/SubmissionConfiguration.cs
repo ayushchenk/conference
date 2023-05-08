@@ -27,14 +27,6 @@ namespace ConferenceManager.Infrastructure.Persistence.Configurations
 
             builder.Property(x => x.Status)
                 .IsRequired();
-
-            builder.HasMany(x => x.ActualReviewers)
-                .WithMany(y => y.ReviewSubmissions)
-                .UsingEntity<SubmissionReviewer>();
-
-            builder.HasMany(x => x.AppliedReviewers)
-                .WithMany(y => y.ReviewPreferences)
-                .UsingEntity<ReviewPreference>();
         }
     }
 }

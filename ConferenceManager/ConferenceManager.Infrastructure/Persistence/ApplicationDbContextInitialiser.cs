@@ -1,5 +1,5 @@
-﻿using ConferenceManager.Core.Common.Model.Settings;
-using ConferenceManager.Domain.Entities;
+﻿using ConferenceManager.Domain.Entities;
+using ConferenceManager.Infrastructure.Util;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -10,21 +10,21 @@ namespace ConferenceManager.Infrastructure.Persistence;
 public class ApplicationDbContextInitialiser
 {
     private readonly ILogger<ApplicationDbContextInitialiser> _logger;
-    private readonly AppSettings _appSettings;
+    private readonly SeedSettings _settings;
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<ApplicationRole> _roleManager;
 
     public ApplicationDbContextInitialiser(
         ILogger<ApplicationDbContextInitialiser> logger, 
-        IOptions<AppSettings> appSettings,
+        IOptions<SeedSettings> appSettings,
         ApplicationDbContext context, 
         UserManager<ApplicationUser> userManager, 
         RoleManager<ApplicationRole> roleManager
         )
     {
         _logger = logger;
-        _appSettings = appSettings.Value;
+        _settings = appSettings.Value;
         _context = context;
         _userManager = userManager;
         _roleManager = roleManager;
@@ -83,7 +83,7 @@ public class ApplicationDbContextInitialiser
 
         if (await _userManager.FindByEmailAsync(admin.Email) == null)
         {
-            await _userManager.CreateAsync(admin, _appSettings.SeedSettings.AdminPassword);
+            await _userManager.CreateAsync(admin, _settings.AdminPassword);
             await _userManager.AddToRoleAsync(admin, ApplicationRole.GlobalAdmin );
         }
     }

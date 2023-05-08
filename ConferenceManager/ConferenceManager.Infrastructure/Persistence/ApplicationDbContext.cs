@@ -1,6 +1,6 @@
-﻿using CleanArchitecture.Infrastructure.Persistence.Interceptors;
-using ConferenceManager.Core.Common.Interfaces;
+﻿using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Domain.Entities;
+using ConferenceManager.Infrastructure.Persistence.Interceptors;
 using MediatR;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
