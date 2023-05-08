@@ -16,10 +16,10 @@ public class ApplicationDbContextInitialiser
     private readonly RoleManager<ApplicationRole> _roleManager;
 
     public ApplicationDbContextInitialiser(
-        ILogger<ApplicationDbContextInitialiser> logger, 
+        ILogger<ApplicationDbContextInitialiser> logger,
         IOptions<SeedSettings> appSettings,
-        ApplicationDbContext context, 
-        UserManager<ApplicationUser> userManager, 
+        ApplicationDbContext context,
+        UserManager<ApplicationUser> userManager,
         RoleManager<ApplicationRole> roleManager
         )
     {
@@ -59,9 +59,9 @@ public class ApplicationDbContextInitialiser
     private async Task TrySeedAsync()
     {
         // Default roles
-        foreach(var role in ApplicationRole.SupportedRoles)
+        foreach (var role in ApplicationRole.SupportedRoles)
         {
-            if(await _roleManager.FindByNameAsync(role) == null)
+            if (await _roleManager.FindByNameAsync(role) == null)
             {
                 await _roleManager.CreateAsync(new ApplicationRole()
                 {
@@ -71,7 +71,7 @@ public class ApplicationDbContextInitialiser
         }
 
         // Default users
-        var admin = new ApplicationUser ()
+        var admin = new ApplicationUser()
         {
             UserName = "admin@localhost.com",
             Email = "admin@localhost.com",
@@ -84,7 +84,7 @@ public class ApplicationDbContextInitialiser
         if (await _userManager.FindByEmailAsync(admin.Email) == null)
         {
             await _userManager.CreateAsync(admin, _settings.AdminPassword);
-            await _userManager.AddToRoleAsync(admin, ApplicationRole.GlobalAdmin );
+            await _userManager.AddToRoleAsync(admin, ApplicationRole.GlobalAdmin);
         }
     }
 }

@@ -7,7 +7,7 @@ using ConferenceManager.Infrastructure.Util;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.Configure<TokenSettings>(builder.Configuration.GetSection("TokenSettings"));
+builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("TokenSettings"));
 builder.Services.Configure<SeedSettings>(builder.Configuration.GetSection("SeedSettings"));
 
 builder.Services.AddInfrastructureServices(builder.Configuration);
@@ -23,6 +23,8 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseDeveloperExceptionPage();
+    app.UseMigrationsEndPoint();
 }
 
 using (var scope = app.Services.CreateScope())
