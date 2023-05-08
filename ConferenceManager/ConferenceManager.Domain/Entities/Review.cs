@@ -13,8 +13,6 @@ namespace ConferenceManager.Domain.Entities
 
         public required ReviewConfidence Confidence { set; get; }
 
-        public virtual ApplicationUser Reviewer { set; get; } = null!;
-
         public virtual Submission Submission { set; get; } = null!;
     }
 }

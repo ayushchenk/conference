@@ -10,8 +10,6 @@ namespace ConferenceManager.Domain.Entities
 
         public required byte[] File { set; get; }
 
-        public virtual ApplicationUser Author { set; get; } = null!;
-
         public virtual Submission Submission { set; get; } = null!;
     }
 }

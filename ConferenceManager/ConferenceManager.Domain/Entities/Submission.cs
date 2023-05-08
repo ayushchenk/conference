@@ -17,8 +17,6 @@ namespace ConferenceManager.Domain.Entities
 
         public required SubmissionStatus Status { set; get; }
 
-        public virtual ApplicationUser Author { set; get; } = null!;
-
         public virtual Conference Conference { set; get; } = null!;
 
         public virtual IList<ApplicationUser> ActualReviewers { set; get; } = null!;

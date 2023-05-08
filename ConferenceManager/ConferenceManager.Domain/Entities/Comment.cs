@@ -10,8 +10,6 @@ namespace ConferenceManager.Domain.Entities
 
         public required string Text { set; get; }
 
-        public virtual ApplicationUser User { set; get; } = null!;
-
         public virtual Submission Submission { set; get; } = null!;
     }
 }

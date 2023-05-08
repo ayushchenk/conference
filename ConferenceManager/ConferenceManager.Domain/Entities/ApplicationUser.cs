@@ -18,21 +18,31 @@ namespace ConferenceManager.Domain.Entities
 
         public string? Webpage { set; get; }
 
-        public virtual IList<Paper> Papers { set; get; } = null!;
+        public virtual IList<Paper> CreatedPapers { set; get; } = null!;
 
-        public virtual IList<Submission> OwnedSubmissions { set; get; } = null!;
+        public virtual IList<Paper> ModifiedPapers { set; get; } = null!;
 
-        public virtual IList<Submission> ReviewSubmissions { set; get; } = null!;
+        public virtual IList<Submission> CreatedSubmissions { set; get; } = null!;
+
+        public virtual IList<Submission> ModifiedSubmissions { set; get; } = null!;
+
+        public virtual IList<Submission> SubmissionsForReview { set; get; } = null!;
 
         public virtual IList<Submission> ReviewPreferences { set; get; } = null!;
 
         public virtual IList<Conference> ConferenceParticipations { set; get; } = null!;
 
-        public virtual IList<Conference> OwnedConferences { set; get; } = null!;
+        public virtual IList<Conference> CreatedConferences { set; get; } = null!;
 
-        public virtual IList<Comment> Comments { set; get; } = null!;
+        public virtual IList<Conference> ModifiedConferences { set; get; } = null!;
 
-        public virtual IList<Review> Reviews { set; get; } = null!;
+        public virtual IList<Comment> CreatedComments { set; get; } = null!;
+
+        public virtual IList<Comment> ModifiedComments { set; get; } = null!;
+
+        public virtual IList<Review> CreatedReviews { set; get; } = null!;
+
+        public virtual IList<Review> ModifiedReviews { set; get; } = null!;
 
         [NotMapped]
         public IReadOnlyCollection<BaseEvent> DomainEvents => _domainEvents.AsReadOnly();

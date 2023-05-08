@@ -36,8 +36,6 @@ namespace ConferenceManager.Domain.Entities
 
         public string? ContactPhoneNumber { set; get; }
 
-        public virtual ApplicationUser User { set; get; } = null!;
-
         public virtual IList<Submission> Submissions { set; get; } = null!;
 
         public virtual IList<ApplicationUser> Participants { set; get; } = null!;
