@@ -58,7 +58,7 @@ namespace ConferenceManager.Api.Services
                 return false;
             }
 
-            var signInResult = await _signInManager.PasswordSignInAsync(user, password, true, false);
+            var signInResult = await _signInManager.CheckPasswordSignInAsync(user, password, false);
 
             if (!signInResult.Succeeded)
             {
@@ -78,18 +78,18 @@ namespace ConferenceManager.Api.Services
             {
                 Issuer = _settings.Issuer,
                 Audience = _settings.Audience,
+                Expires = _dateTime.Now.AddMinutes(_settings.ExpiresMinutes),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.Name, user.Email!),
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                }),
-                Expires = _dateTime.Now.AddMinutes(_settings.ExpiresMinutes),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                })
             };
 
             foreach(var role in roles)
             {
-                descriptor.Claims.Add(ClaimTypes.Role, role);
+                descriptor.Subject.AddClaim(new Claim(ClaimTypes.Role, role));
             }
 
             var token = handler.CreateToken(descriptor);

@@ -7,7 +7,7 @@ using ConferenceManager.Infrastructure.Util;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("TokenSettings"));
+builder.Services.Configure<TokenSettings>(builder.Configuration.GetSection("TokenSettings"));
 builder.Services.Configure<SeedSettings>(builder.Configuration.GetSection("SeedSettings"));
 
 builder.Services.AddInfrastructureServices(builder.Configuration);
@@ -35,6 +35,8 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
