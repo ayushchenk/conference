@@ -15,6 +15,8 @@ namespace ConferenceManager.Core.Account.Commands.Login
 
         public async Task<TokenResponse> Handle(LoginUserCommand request, CancellationToken cancellationToken)
         {
+            throw new ArgumentNullException("test haha");
+
             return await _tokenService.Authenticate(new TokenRequest() 
             {
                 Email = request.Email,

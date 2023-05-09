@@ -1,4 +1,5 @@
 using ConferenceManager.Api;
+using ConferenceManager.Api.Middleware;
 using ConferenceManager.Core;
 using ConferenceManager.Core.Common.Model.Settings;
 using ConferenceManager.Infrastructure;
@@ -35,6 +36,8 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseAuthentication();
 
