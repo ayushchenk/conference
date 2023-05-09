@@ -8,7 +8,7 @@ namespace ConferenceManager.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<ConferenceParticipant> builder)
         {
-            builder.HasKey(x => new { x.User, x.ConferenceId});
+            builder.HasKey(x => new { x.UserId, x.ConferenceId });
         }
     }
 }

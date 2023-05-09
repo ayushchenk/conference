@@ -66,10 +66,6 @@ namespace ConferenceManager.Infrastructure.Persistence.Configurations
             builder.Property(x => x.ContactPhoneNumber)
                 .IsRequired(false)
                 .HasMaxLength(20);
-
-            builder.HasMany(x => x.Participants)
-                .WithMany(y => y.ConferenceParticipations)
-                .UsingEntity<ConferenceParticipant>();
         }
     }
 }

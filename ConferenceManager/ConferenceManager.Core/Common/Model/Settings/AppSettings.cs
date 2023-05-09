@@ -4,6 +4,8 @@ namespace ConferenceManager.Core.Common.Model.Settings
 {
     public class AppSettings
     {
-        public SeedSettings SeedSettings { get; set; } = null!;
+        public required TokenSettings TokenSettings { get; init; }
+
+        public required SeedSettings SeedSettings { get; init; }
     }
 }

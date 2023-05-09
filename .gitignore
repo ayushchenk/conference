@@ -418,3 +418,4 @@ FodyWeavers.xsd
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+/ConferenceManager/ConferenceManager.Api/appsettings.Development.json

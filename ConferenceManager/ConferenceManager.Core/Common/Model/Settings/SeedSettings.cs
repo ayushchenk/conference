@@ -2,6 +2,6 @@
 {
     public class SeedSettings
     {
-        public required string AdminPassword { set; get; } 
+        public string AdminPassword { get; init; } = null!;
     }
 }

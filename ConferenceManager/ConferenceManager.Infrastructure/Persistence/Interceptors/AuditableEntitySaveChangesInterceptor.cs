@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace CleanArchitecture.Infrastructure.Persistence.Interceptors;
+namespace ConferenceManager.Infrastructure.Persistence.Interceptors;
 
 public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
 {
@@ -41,13 +41,13 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
         {
             if (entry.State == EntityState.Added)
             {
-                entry.Entity.CreatedBy = _currentUserService.User;
+                entry.Entity.CreatedById = _currentUserService.UserId;
                 entry.Entity.CreatedOn = _dateTime.Now;
             } 
 
             if (entry.State == EntityState.Added || entry.State == EntityState.Modified || entry.HasChangedOwnedEntities())
             {
-                entry.Entity.ModifiedBy = _currentUserService.User;
+                entry.Entity.ModifiedById = _currentUserService.UserId;
                 entry.Entity.ModifiedOn = _dateTime.Now;
             }
         }
