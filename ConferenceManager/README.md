@@ -43,7 +43,7 @@ dotnet run --project ./ConferenceManager.Api --launch-profile https
 
 ## Build and run locally using Docker
 
->!Work in progress!
+>!Work in progress! This solution is currently build on workarounds
 
 1. In ConferenceManager folder:
 
@@ -52,7 +52,7 @@ docker build -t <image>
 docker run p 8000:80 -p 8001:443 <image>
 ```
 
-2. In container, update appsettings.json, use connection string, restart container:
+2. In container, update appsettings.json, use following connection string, restart container:
 
 >Make sure MS SQL server allows tcp connections, tcp:1433 port is open in firewall
 
