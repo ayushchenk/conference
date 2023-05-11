@@ -6,6 +6,7 @@ using ConferenceManager.Domain.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
 
 namespace ConferenceManager.Api
@@ -15,8 +16,6 @@ namespace ConferenceManager.Api
         public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration)
         {
             var tokenSettings = configuration.GetSection("TokenSettings").Get<TokenSettings>()!;
-
-            services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddHttpContextAccessor();
 
@@ -40,6 +39,36 @@ namespace ConferenceManager.Api
                         ClockSkew = TimeSpan.Zero,
                     };
                 });
+
+            services.AddSwaggerGen(options =>
+            {
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Bearer <access_token>",
+                });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme()
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[] { }
+                    }
+                });
+
+            });
+
 
             return services;
         }

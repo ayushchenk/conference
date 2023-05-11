@@ -2,6 +2,11 @@
 {
     public class CreateResponse
     {
-        public required int Id { get; init; }
+        public int Id { get; }
+
+        public CreateResponse(int id)
+        {
+            Id = id;
+        }
     }
 }
