@@ -5,7 +5,7 @@ namespace ConferenceManager.Core.Common.Interfaces
 {
     public interface IApplicationDbContext
     {
-        public DbSet<Conference> Conferences { get; }
+        public DbSet<Domain.Entities.Conference> Conferences { get; }
 
         public DbSet<Paper> Papers { get; }
 

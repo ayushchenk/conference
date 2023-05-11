@@ -10,14 +10,28 @@ namespace ConferenceManager.Infrastructure.Persistence.Configurations
         {
             builder.HasKey(x => x.Id);
 
+            builder.Property(x => x.Id)
+                .ValueGeneratedOnAdd();
+
             builder.Property(x => x.FirstName)
+                .IsRequired()
                 .HasMaxLength(50);
 
             builder.Property(x => x.LastName)
+                .IsRequired()
                 .HasMaxLength(50);
 
-            builder.Property(x => x.Id)
-                .ValueGeneratedOnAdd();
+            builder.Property(x => x.Country)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            builder.Property(x => x.Affiliation)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            builder.Property(x => x.Webpage)
+                .IsRequired(false)
+                .HasMaxLength(100);
 
             builder.HasMany(x => x.CreatedComments)
                 .WithOne(y => y.CreatedBy)

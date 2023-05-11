@@ -4,8 +4,6 @@ namespace ConferenceManager.Domain.Entities
 {
     public class Conference : BaseAuditableEntity
     {
-        public required int UserId { set; get; }
-
         public required string Title { set; get; } 
 
         public required string Acronyn { set; get; }

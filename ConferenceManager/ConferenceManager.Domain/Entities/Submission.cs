@@ -5,8 +5,6 @@ namespace ConferenceManager.Domain.Entities
 {
     public class Submission : BaseAuditableEntity
     {
-        public required int AuthorId { set; get; }
-        
         public required int ConferenceId { set; get; }
 
         public required string Title { set; get; }
