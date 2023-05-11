@@ -46,8 +46,11 @@ namespace CleanArchitecture.WebUI.Filters
         {
             var exception = (ValidationException)context.Exception;
 
-            var details = new ValidationProblemDetails(exception.Errors);
-            details.Title = "Validation failed";
+            var details = new ValidationProblemDetails(exception.Errors) 
+            {
+                Title = "Validation failed",
+                Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.1"
+            };
 
             context.Result = new BadRequestObjectResult(details);
 
@@ -58,8 +61,11 @@ namespace CleanArchitecture.WebUI.Filters
         {
             var exception = (IdentityException)context.Exception;
 
-            var details = new ValidationProblemDetails(exception.Errors);
-            details.Title = "Validation failed";
+            var details = new ValidationProblemDetails(exception.Errors)
+            {
+                Title = "Validation failed",
+                Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.1"
+            };
 
             context.Result = new BadRequestObjectResult(details);
 
@@ -73,8 +79,9 @@ namespace CleanArchitecture.WebUI.Filters
             var details = new ProblemDetails()
             {
                 Title = "Not found",
+                Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.4",
                 Detail = exception.Message,
-                Status = StatusCodes.Status404NotFound
+                Status = StatusCodes.Status404NotFound,
             };
 
             context.Result = new NotFoundObjectResult(details);
@@ -84,8 +91,11 @@ namespace CleanArchitecture.WebUI.Filters
 
         private void HandleInvalidModelStateException(ExceptionContext context)
         {
-            var details = new ValidationProblemDetails(context.ModelState);
-            details.Title = "Validation failed";
+            var details = new ValidationProblemDetails(context.ModelState)
+            {
+                Title = "Validation failed",
+                Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.1"
+            };
 
             context.Result = new BadRequestObjectResult(details);
 
