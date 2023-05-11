@@ -39,7 +39,7 @@ dotnet build
 dotnet run --project ./ConferenceManager.Api --launch-profile https
 ```
 
-3. Navigate to https://localhost:7157/swagger
+3. Navigate to https://localhost:8001/swagger
 
 ## Build and run locally using Docker
 
