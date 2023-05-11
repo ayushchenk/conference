@@ -21,7 +21,7 @@ namespace ConferenceManager.Core.Common.Exceptions
                 new IdentityError() 
                 { 
                     Description = message,
-                    Code = "Common"
+                    Code = "Identity"
                 }
             };
         }

@@ -1,6 +1,5 @@
 ﻿using CleanArchitecture.Application.Common.Behaviours;
 using MediatR;
-using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
@@ -12,8 +11,6 @@ namespace ConferenceManager.Core
     {
         public static IServiceCollection AddCoreServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddFluentValidationRulesToSwagger();
-
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
