@@ -1,1 +1,1 @@
-export { ConferencesPage } from "./ConferencesPage";
+export { ConferencesPage } from "../Conferences/ConferencesPage";

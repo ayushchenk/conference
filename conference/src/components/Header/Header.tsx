@@ -12,7 +12,9 @@ export const Header = () => {
                     </Button>
                 </Box>
                 <Button color="inherit">Login</Button>
-                <Button color="inherit">Sign up</Button>
+                <Button color="inherit">
+                    <Link className="header__link" to="/sign-up">Sign up</Link>
+                </Button>
             </Toolbar>
         </AppBar>
     );
