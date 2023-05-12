@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
-using ConferenceManager.Core.Conferences.Commands.Create;
+using ConferenceManager.Core.Common.Model.Dtos;
 using ConferenceManager.Domain.Entities;
 
-namespace ConferenceManager.Core.Mappings
+namespace ConferenceManager.Core.Common.Mappings
 {
     public class ConferenceProfile : Profile
     {
         public ConferenceProfile()
         {
-            CreateMap<CreateConferenceCommand, Conference>();
+            CreateMap<ConferenceDto, Conference>().ReverseMap();
         }
     }
 }

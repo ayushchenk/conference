@@ -1,5 +1,8 @@
 ﻿using ConferenceManager.Api.Abstract;
+using ConferenceManager.Api.Extensions;
+using ConferenceManager.Core.Common.Model.Dtos;
 using ConferenceManager.Core.Conferences.Commands.Create;
+using ConferenceManager.Core.Conferences.Commands.Get;
 using ConferenceManager.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,11 +13,21 @@ namespace ConferenceManager.Api.Controllers
     {
         [HttpPost]
         [Authorize(Roles = ApplicationRole.GlobalAdmin)]
-        public async Task<IActionResult> Post(CreateConferenceCommand command)
+        public async Task<IActionResult> Post(ConferenceDto conference)
         {
-            var result = await Mediator.Send(command);
+            var result = await Mediator.Send(new CreateConferenceCommand(conference));
 
             return Created(nameof(ConferenceController), result);
+        }
+
+        [HttpGet]
+        [Route("id")]
+        [Authorize(Roles = ApplicationRole.GlobalAdmin)]
+        public async Task<IActionResult> Get(int id)
+        {
+            var result = await Mediator.Send(new GetConferenceQuery(id));
+
+            return this.OkOrNotFound(result);
         }
     }
 }
