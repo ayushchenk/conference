@@ -1,33 +1,34 @@
 ﻿using ConferenceManager.Core.Common.Interfaces;
 using System.Security.Claims;
 
-namespace CleanArchitecture.WebUI.Services;
-
-public class CurrentUserService : ICurrentUserService
+namespace CleanArchitecture.WebUI.Services
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly ILogger<CurrentUserService> _logger;
-
-    public CurrentUserService(IHttpContextAccessor httpContextAccessor, ILogger<CurrentUserService> logger)
+    public class CurrentUserService : ICurrentUserService
     {
-        _httpContextAccessor = httpContextAccessor;
-        _logger = logger;
-    }
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ILogger<CurrentUserService> _logger;
 
-    public int? UserId 
-    {
-        get
+        public CurrentUserService(IHttpContextAccessor httpContextAccessor, ILogger<CurrentUserService> logger)
         {
-            var idClaim = _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+            _httpContextAccessor = httpContextAccessor;
+            _logger = logger;
+        }
 
-            var parseResult = int.TryParse(idClaim, out int id);
-
-            if (!parseResult)
+        public int? UserId
+        {
+            get
             {
-                _logger.LogInformation("Unable to parse id from claim");
-            }
+                var idClaim = _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            return parseResult ? id : null;
+                var parseResult = int.TryParse(idClaim, out int id);
+
+                if (!parseResult)
+                {
+                    _logger.LogInformation("Unable to parse id from claim");
+                }
+
+                return parseResult ? id : null;
+            }
         }
     }
 }

@@ -1,9 +1,11 @@
-﻿using MediatR;
+﻿using CleanArchitecture.WebUI.Filters;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConferenceManager.Api.Abstract
 {
     [ApiController]
+    [ApiExceptionFilter]
     [Route("api/[controller]")]
     public class ApiControllerBase : ControllerBase
     {
