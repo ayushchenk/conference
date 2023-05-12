@@ -1,5 +1,4 @@
 ﻿using ConferenceManager.Api.Abstract;
-using ConferenceManager.Api.Extensions;
 using ConferenceManager.Core.Common.Model.Dtos;
 using ConferenceManager.Core.Conferences.Commands.Create;
 using ConferenceManager.Core.Conferences.Commands.Get;
@@ -27,7 +26,7 @@ namespace ConferenceManager.Api.Controllers
         {
             var result = await Mediator.Send(new GetConferenceQuery(id));
 
-            return this.OkOrNotFound(result);
+            return OkOrNotFound(result);
         }
     }
 }
