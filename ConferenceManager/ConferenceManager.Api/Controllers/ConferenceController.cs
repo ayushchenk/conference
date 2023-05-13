@@ -1,6 +1,7 @@
 ﻿using ConferenceManager.Api.Abstract;
 using ConferenceManager.Core.Common.Model.Dtos;
 using ConferenceManager.Core.Conferences.Commands.Create;
+using ConferenceManager.Core.Conferences.Commands.Delete;
 using ConferenceManager.Core.Conferences.Commands.Get;
 using ConferenceManager.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -12,9 +13,9 @@ namespace ConferenceManager.Api.Controllers
     {
         [HttpPost]
         [Authorize(Roles = $"{ApplicationRole.GlobalAdmin},{ApplicationRole.ConferenceAdmin}")]
-        public async Task<IActionResult> Post(ConferenceDto conference)
+        public async Task<IActionResult> Post(ConferenceDto conference, CancellationToken cancellation)
         {
-            var result = await Mediator.Send(new CreateConferenceCommand(conference));
+            var result = await Mediator.Send(new CreateConferenceCommand(conference), cancellation);
 
             return Created(nameof(ConferenceController), result);
         }
@@ -22,15 +23,21 @@ namespace ConferenceManager.Api.Controllers
         [HttpGet]
         [Route("{id}")]
         [Authorize]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> Get(int id, CancellationToken cancellation)
         {
-            var result = await Mediator.Send(new GetConferenceQuery(id));
+            var result = await Mediator.Send(new GetConferenceQuery(id), cancellation);
 
             return OkOrNotFound(result);
         }
 
-        //[HttpDelete]
-        //[Route("id")]
-        //[Authorize(Roles)]
+        [HttpDelete]
+        [Route("{id}")]
+        [Authorize(Roles = ApplicationRole.GlobalAdmin)]
+        public async Task<IActionResult> Delete(int id, CancellationToken cancellation)
+        {
+            var result = await Mediator.Send(new DeleteConferenceCommand(id), cancellation);
+
+            return DeletedOrNotFound(result);
+        }
     }
 }

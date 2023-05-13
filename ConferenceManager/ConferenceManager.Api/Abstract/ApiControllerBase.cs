@@ -1,4 +1,5 @@
 ﻿using CleanArchitecture.WebUI.Filters;
+using ConferenceManager.Core.Common.Model.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,7 +14,7 @@ namespace ConferenceManager.Api.Abstract
 
         protected ISender Mediator => _mediator ??= HttpContext.RequestServices.GetRequiredService<ISender>();
 
-        protected IActionResult OkOrNotFound(object result)
+        protected IActionResult OkOrNotFound(object? result)
         {
             if (result == null)
             {
@@ -21,6 +22,16 @@ namespace ConferenceManager.Api.Abstract
             }
 
             return Ok(result);
+        }
+
+        protected IActionResult DeletedOrNotFound(DeleteEntityResponse response)
+        {
+            if (!response.Deleted)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
         }
     }
 }

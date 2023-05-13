@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using ConferenceManager.Core.Common;
 using ConferenceManager.Core.Common.Interfaces;
-using ConferenceManager.Core.Common.Model;
+using ConferenceManager.Core.Common.Model.Responses;
 using ConferenceManager.Domain.Entities;
 
 namespace ConferenceManager.Core.Conferences.Commands.Create
 {
-    public class CreateConferenceCommandHandler : DbContextRequestHandler<CreateConferenceCommand, CreateResponse>
+    public class CreateConferenceCommandHandler : DbContextRequestHandler<CreateConferenceCommand, CreateEntityResponse>
     {
         public CreateConferenceCommandHandler(
             IApplicationDbContext context, 
@@ -15,7 +15,7 @@ namespace ConferenceManager.Core.Conferences.Commands.Create
         {
         }
 
-        public override async Task<CreateResponse> Handle(CreateConferenceCommand request, CancellationToken cancellationToken)
+        public override async Task<CreateEntityResponse> Handle(CreateConferenceCommand request, CancellationToken cancellationToken)
         {
             var conference = Mapper.Map<Conference>(request.Entity);
 
@@ -23,7 +23,7 @@ namespace ConferenceManager.Core.Conferences.Commands.Create
 
             await Context.SaveChangesAsync(cancellationToken);
 
-            return new CreateResponse(conference.Id);
+            return new CreateEntityResponse(conference.Id);
         }
     }
 }

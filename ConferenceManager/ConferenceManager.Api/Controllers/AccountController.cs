@@ -9,17 +9,17 @@ namespace ConferenceManager.Api.Controllers
     public class AccountController : ApiControllerBase
     {
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterUserCommand command)
+        public async Task<IActionResult> Register(RegisterUserCommand command, CancellationToken cancellation)
         {
-            var token = await Mediator.Send(command);
+            var token = await Mediator.Send(command, cancellation);
 
             return Ok(token);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginUserCommand command)
+        public async Task<IActionResult> Login(LoginUserCommand command, CancellationToken cancellation)
         {
-            var token = await Mediator.Send(command);
+            var token = await Mediator.Send(command, cancellation);
 
             return Ok(token);
         }
