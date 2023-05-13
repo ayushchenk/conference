@@ -20,4 +20,8 @@
     <ProjectReference Include="..\ConferenceManager.Infrastructure\ConferenceManager.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Util\" />
+  </ItemGroup>
+
 </Project>

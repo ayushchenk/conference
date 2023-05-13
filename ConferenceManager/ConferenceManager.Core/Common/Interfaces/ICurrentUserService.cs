@@ -2,6 +2,10 @@
 {
     public interface ICurrentUserService
     {
-        int? UserId { get; }
+        int Id { get; }
+
+        string[] Roles { get; }
+
+        bool IsGlobalAdmin { get; }
     }
 }

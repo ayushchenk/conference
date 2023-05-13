@@ -32,6 +32,7 @@ namespace CleanArchitecture.Application.Common.Behaviours
                     throw new ValidationException(failures);
                 }
             }
+
             return await next();
         }
     }

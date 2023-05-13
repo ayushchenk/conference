@@ -2,7 +2,9 @@
 {
     public class NotFoundException : Exception
     {
-        public NotFoundException() : base("Resource not found")
+        public const string GenericMessage = "Resource not found";
+
+        public NotFoundException() : base(GenericMessage)
         {
         }
 

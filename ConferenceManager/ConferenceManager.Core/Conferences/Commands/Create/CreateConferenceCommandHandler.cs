@@ -8,7 +8,10 @@ namespace ConferenceManager.Core.Conferences.Commands.Create
 {
     public class CreateConferenceCommandHandler : DbContextRequestHandler<CreateConferenceCommand, CreateResponse>
     {
-        public CreateConferenceCommandHandler(IApplicationDbContext context, IMapper mapper) : base(context, mapper)
+        public CreateConferenceCommandHandler(
+            IApplicationDbContext context, 
+            ICurrentUserService currentUser, 
+            IMapper mapper) : base(context, currentUser, mapper)
         {
         }
 

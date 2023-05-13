@@ -15,6 +15,7 @@ namespace CleanArchitecture.WebUI.Filters
                 { typeof(ValidationException), HandleValidationException },
                 { typeof(IdentityException), HandleIdentityException },
                 { typeof(NotFoundException), HandleNotFoundException },
+                { typeof(ForbiddenException), HandleForbiddenException },
             };
         }
 
@@ -53,7 +54,6 @@ namespace CleanArchitecture.WebUI.Filters
             };
 
             context.Result = new BadRequestObjectResult(details);
-
             context.ExceptionHandled = true;
         }
 
@@ -68,7 +68,6 @@ namespace CleanArchitecture.WebUI.Filters
             };
 
             context.Result = new BadRequestObjectResult(details);
-
             context.ExceptionHandled = true;
         }
 
@@ -85,7 +84,22 @@ namespace CleanArchitecture.WebUI.Filters
             };
 
             context.Result = new NotFoundObjectResult(details);
+            context.ExceptionHandled = true;
+        }
 
+        private void HandleForbiddenException(ExceptionContext context)
+        {
+            var exception = (ForbiddenException)context.Exception;
+
+            var details = new ProblemDetails()
+            {
+                Title = "Access denied",
+                Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.3",
+                Detail = exception.Message,
+                Status = StatusCodes.Status403Forbidden,
+            };
+
+            context.Result = new ObjectResult(details);
             context.ExceptionHandled = true;
         }
 
@@ -98,7 +112,6 @@ namespace CleanArchitecture.WebUI.Filters
             };
 
             context.Result = new BadRequestObjectResult(details);
-
             context.ExceptionHandled = true;
         }
     }

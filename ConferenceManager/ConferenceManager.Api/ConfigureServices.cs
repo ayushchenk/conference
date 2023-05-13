@@ -1,5 +1,4 @@
-﻿using CleanArchitecture.WebUI.Services;
-using ConferenceManager.Api.Services;
+﻿using ConferenceManager.Api.Services;
 using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Core.Common.Model.Settings;
 using ConferenceManager.Domain.Entities;
@@ -16,6 +15,15 @@ namespace ConferenceManager.Api
         public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration)
         {
             var tokenSettings = configuration.GetSection("TokenSettings").Get<TokenSettings>()!;
+
+            services.AddLogging(loggin =>
+            {
+                loggin.AddSimpleConsole(options =>
+                {
+                    options.UseUtcTimestamp = true;
+                    options.TimestampFormat = "[yyyy-MM-ddTHH:mm:ss.fffZ] ";
+                });
+            });
 
             services.AddHttpContextAccessor();
 
@@ -66,9 +74,7 @@ namespace ConferenceManager.Api
                         new string[] { }
                     }
                 });
-
             });
-
 
             return services;
         }

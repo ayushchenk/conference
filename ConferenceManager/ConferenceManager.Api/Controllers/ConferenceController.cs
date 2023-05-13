@@ -11,7 +11,7 @@ namespace ConferenceManager.Api.Controllers
     public class ConferenceController : ApiControllerBase
     {
         [HttpPost]
-        [Authorize(Roles = ApplicationRole.GlobalAdmin)]
+        [Authorize(Roles = $"{ApplicationRole.GlobalAdmin},{ApplicationRole.ConferenceAdmin}")]
         public async Task<IActionResult> Post(ConferenceDto conference)
         {
             var result = await Mediator.Send(new CreateConferenceCommand(conference));
@@ -20,13 +20,17 @@ namespace ConferenceManager.Api.Controllers
         }
 
         [HttpGet]
-        [Route("id")]
-        [Authorize(Roles = ApplicationRole.GlobalAdmin)]
+        [Route("{id}")]
+        [Authorize]
         public async Task<IActionResult> Get(int id)
         {
             var result = await Mediator.Send(new GetConferenceQuery(id));
 
             return OkOrNotFound(result);
         }
+
+        //[HttpDelete]
+        //[Route("id")]
+        //[Authorize(Roles)]
     }
 }

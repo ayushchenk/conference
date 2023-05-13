@@ -1,7 +1,8 @@
 ﻿using ConferenceManager.Core.Common.Interfaces;
+using ConferenceManager.Domain.Entities;
 using System.Security.Claims;
 
-namespace CleanArchitecture.WebUI.Services
+namespace ConferenceManager.Api.Services
 {
     public class CurrentUserService : ICurrentUserService
     {
@@ -14,7 +15,7 @@ namespace CleanArchitecture.WebUI.Services
             _logger = logger;
         }
 
-        public int? UserId
+        public int Id
         {
             get
             {
@@ -27,8 +28,22 @@ namespace CleanArchitecture.WebUI.Services
                     _logger.LogInformation("Unable to parse id from claim");
                 }
 
-                return parseResult ? id : null;
+                return parseResult ? id : default;
             }
         }
+
+        public string[] Roles
+        {
+            get
+            {
+                var roleClaims = _httpContextAccessor.HttpContext?.User?.Claims?.Where(claim => claim.Type == ClaimTypes.Role);
+
+                return roleClaims == null
+                    ? Array.Empty<string>()
+                    : roleClaims.Select(claim => claim.Value).ToArray();
+            }
+        }
+
+        public bool IsGlobalAdmin => Roles.Contains(ApplicationRole.GlobalAdmin);
     }
 }
