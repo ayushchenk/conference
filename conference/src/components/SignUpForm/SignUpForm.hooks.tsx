@@ -10,7 +10,7 @@ export const usePostSignUpApi = () => {
     });
 
     const post = useCallback((data: SignUpRequest) => {
-        axios.post("/sign-up", data)
+        axios.post("/Account/Register", data)
             .then(response => {
                 setResponse({
                     data: response.data,
@@ -19,7 +19,6 @@ export const usePostSignUpApi = () => {
                 });
             })
             .catch(error => {
-                console.error(error);
                 setResponse({
                     data: {},
                     isError: true,

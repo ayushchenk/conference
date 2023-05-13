@@ -1,50 +1,52 @@
+import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
-import * as yup from "yup";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Alert from "@mui/material/Alert";
 import Collapse from "@mui/material/Collapse";
 import { usePostSignUpApi } from "./SignUpForm.hooks";
+import { validationSchema } from "./SignUpForm.validator";
+
 
 export const SignUpForm = () => {
   const { data, isError, isLoading, post } = usePostSignUpApi();
-
-  const validationSchema = yup.object({
-    email: yup
-      .string()
-      .email("Enter a valid email")
-      .required("Email is required"),
-    password1: yup
-      .string()
-      .min(8, "Password should be of minimum 8 characters length")
-      .required("Password is required"),
-    password2: yup
-      .string()
-      .oneOf([yup.ref("password1")], "Passwords must match")
-      .min(8, "Password should be of minimum 8 characters length")
-      .required("Password is required"),
-  });
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
       email: "",
+      firstName: "",
+      lastName: "",
+      country: "",
+      affiliation: "",
+      webpage: "",
       password1: "",
-      password2: "",
+      password2: ""
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       const formData = {
         email: values.email,
-        password: values.password1,
+        firstName: values.firstName,
+        lastName: values.lastName,
+        country: values.country,
+        affiliation: values.affiliation,
+        webpage: values.webpage,
+        password: values.password1
       };
-      post(formData)
+      post(formData);
     },
   });
+
+  if (!isLoading && !isError) {
+    navigate("/");
+  };
 
   return (
     <form onSubmit={formik.handleSubmit}>
       <TextField
         fullWidth
+        required
         margin="normal"
         id="email"
         name="email"
@@ -56,6 +58,71 @@ export const SignUpForm = () => {
       />
       <TextField
         fullWidth
+        required
+        margin="normal"
+        id="firstName"
+        name="firstName"
+        label="First Name"
+        type="text"
+        value={formik.values.firstName}
+        onChange={formik.handleChange}
+        error={formik.touched.firstName && Boolean(formik.errors.firstName)}
+        helperText={formik.touched.firstName && formik.errors.firstName}
+      />
+      <TextField
+        fullWidth
+        required
+        margin="normal"
+        id="lastName"
+        name="lastName"
+        label="Last Name"
+        type="text"
+        value={formik.values.lastName}
+        onChange={formik.handleChange}
+        error={formik.touched.lastName && Boolean(formik.errors.lastName)}
+        helperText={formik.touched.lastName && formik.errors.lastName}
+      />
+      <TextField
+        fullWidth
+        required
+        margin="normal"
+        id="country"
+        name="country"
+        label="Country"
+        type="text"
+        value={formik.values.country}
+        onChange={formik.handleChange}
+        error={formik.touched.country && Boolean(formik.errors.country)}
+        helperText={formik.touched.country && formik.errors.country}
+      />
+      <TextField
+        fullWidth
+        required
+        margin="normal"
+        id="affiliation"
+        name="affiliation"
+        label="Affiliation"
+        type="text"
+        value={formik.values.affiliation}
+        onChange={formik.handleChange}
+        error={formik.touched.affiliation && Boolean(formik.errors.affiliation)}
+        helperText={formik.touched.affiliation && formik.errors.affiliation}
+      />
+      <TextField
+        fullWidth
+        margin="normal"
+        id="webpage"
+        name="webpage"
+        label="Webpage"
+        type="text"
+        value={formik.values.webpage}
+        onChange={formik.handleChange}
+        error={formik.touched.webpage && Boolean(formik.errors.webpage)}
+        helperText={formik.touched.webpage && formik.errors.webpage}
+      />
+      <TextField
+        fullWidth
+        required
         margin="normal"
         id="password1"
         name="password1"
@@ -68,6 +135,7 @@ export const SignUpForm = () => {
       />
       <TextField
         fullWidth
+        required
         margin="normal"
         id="password2"
         name="password2"
