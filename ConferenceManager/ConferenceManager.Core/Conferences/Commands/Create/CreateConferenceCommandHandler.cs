@@ -22,7 +22,7 @@ namespace ConferenceManager.Core.Conferences.Commands.Create
 
             var createdby = await Context.Users.FindAsync(CurrentUser.Id, cancellationToken);
 
-            conference.Participants.Add(createdby!);
+            conference.Participants = new List<ApplicationUser>() { createdby! };
 
             Context.Conferences.Add(conference);
 

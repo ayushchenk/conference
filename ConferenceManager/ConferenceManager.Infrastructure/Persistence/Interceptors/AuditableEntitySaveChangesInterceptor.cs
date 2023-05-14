@@ -50,6 +50,7 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
             if (entry.State == EntityState.Modified)
             {
                 entry.Property(p => p.CreatedById).IsModified = false;
+                entry.Property(p => p.CreatedOn).IsModified = false;
                 entry.Entity.ModifiedById = _currentUserService.Id;
                 entry.Entity.ModifiedOn = _dateTime.Now;
             }
