@@ -43,7 +43,7 @@ dotnet run --project ./ConferenceManager.Api --launch-profile https
 
 > You only need to run dev-certs once
 
-3. Navigate to https://localhost:7157/swagger
+3. Navigate to https://localhost:8001/swagger
 
 ## Build and run locally using Docker
 
