@@ -14,7 +14,8 @@ Prerequisites:
   "Logging": {
     "LogLevel": {
       "Default": "Information",
-      "Microsoft.AspNetCore": "Warning"
+      "Microsoft.AspNetCore": "Warning",
+      "Microsoft.EntityFrameworkCore.Database.Command": "Warning"
     }
   },
   "ConnectionStrings": {
@@ -35,9 +36,12 @@ Prerequisites:
 2. Open ConferenceManager folder, run following commands
 
 ```shell
+dotnet dev-certs https --trust
 dotnet build
 dotnet run --project ./ConferenceManager.Api --launch-profile https
 ```
+
+> You only need to run dev-certs once
 
 3. Navigate to https://localhost:8001/swagger
 

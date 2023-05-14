@@ -1,11 +1,11 @@
-﻿using CleanArchitecture.WebUI.Services;
-using ConferenceManager.Api.Services;
+﻿using ConferenceManager.Api.Services;
 using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Core.Common.Model.Settings;
 using ConferenceManager.Domain.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
 
 namespace ConferenceManager.Api
@@ -16,7 +16,14 @@ namespace ConferenceManager.Api
         {
             var tokenSettings = configuration.GetSection("TokenSettings").Get<TokenSettings>()!;
 
-            services.AddDatabaseDeveloperPageExceptionFilter();
+            services.AddLogging(loggin =>
+            {
+                loggin.AddSimpleConsole(options =>
+                {
+                    options.UseUtcTimestamp = true;
+                    options.TimestampFormat = "[yyyy-MM-ddTHH:mm:ss.fffZ] ";
+                });
+            });
 
             services.AddHttpContextAccessor();
 
@@ -40,6 +47,34 @@ namespace ConferenceManager.Api
                         ClockSkew = TimeSpan.Zero,
                     };
                 });
+
+            services.AddSwaggerGen(options =>
+            {
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Bearer <access_token>",
+                });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme()
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[] { }
+                    }
+                });
+            });
 
             return services;
         }

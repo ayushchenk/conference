@@ -5,17 +5,17 @@ namespace ConferenceManager.Core.Account.Commands.Register
 {
     public class RegisterUserCommand : IRequest<TokenResponse>
     {
-        public required string Email { get; init; }
+        public string Email { get; init; } = null!;
 
         public required string Password { get; init; }
 
-        public required string FirstName { get; init; }
+        public string FirstName { get; init; } = null!;
 
-        public required string LastName { get; init; }
+        public string LastName { get; init; } = null!;
 
-        public required string Country { get; init; }
+        public string Country { get; init; } = null!;
 
-        public required string Affiliation { get; init; }
+        public string Affiliation { get; init; } = null!;
 
         public string? Webpage { get; init; }
     }
