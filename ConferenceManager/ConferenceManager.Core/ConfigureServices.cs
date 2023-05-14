@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using FluentValidation;
+using AutoMapper.Extensions.ExpressionMapping;
 
 namespace ConferenceManager.Core
 {
@@ -13,7 +14,10 @@ namespace ConferenceManager.Core
         {
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
-            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            services.AddAutoMapper(config =>
+            {
+                config.AddExpressionMapping();
+            }, Assembly.GetExecutingAssembly());
 
             services.AddMediatR(cfg =>
             {
