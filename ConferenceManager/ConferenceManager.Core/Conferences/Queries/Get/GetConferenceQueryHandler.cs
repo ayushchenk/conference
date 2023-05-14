@@ -4,7 +4,7 @@ using ConferenceManager.Core.Common.Exceptions;
 using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Core.Common.Model.Dtos;
 
-namespace ConferenceManager.Core.Conferences.Commands.Get
+namespace ConferenceManager.Core.Conferences.Queries.Get
 {
     public class GetConferenceQueryHandler : DbContextRequestHandler<GetConferenceQuery, ConferenceDto?>
     {
@@ -17,7 +17,7 @@ namespace ConferenceManager.Core.Conferences.Commands.Get
 
         public override async Task<ConferenceDto?> Handle(GetConferenceQuery request, CancellationToken cancellationToken)
         {
-            var conference = await Context.Conferences.FindAsync(request.Id);
+            var conference = await Context.Conferences.FindAsync(request.Id, cancellationToken);
 
             if (conference == null)
             {

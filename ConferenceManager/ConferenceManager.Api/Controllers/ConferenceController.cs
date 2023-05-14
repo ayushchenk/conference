@@ -2,7 +2,8 @@
 using ConferenceManager.Core.Common.Model.Dtos;
 using ConferenceManager.Core.Conferences.Commands.Create;
 using ConferenceManager.Core.Conferences.Commands.Delete;
-using ConferenceManager.Core.Conferences.Commands.Get;
+using ConferenceManager.Core.Conferences.Commands.Update;
+using ConferenceManager.Core.Conferences.Queries.Get;
 using ConferenceManager.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -35,9 +36,18 @@ namespace ConferenceManager.Api.Controllers
         [Authorize(Roles = ApplicationRole.GlobalAdmin)]
         public async Task<IActionResult> Delete(int id, CancellationToken cancellation)
         {
-            var result = await Mediator.Send(new DeleteConferenceCommand(id), cancellation);
+            await Mediator.Send(new DeleteConferenceCommand(id), cancellation);
 
-            return DeletedOrNotFound(result);
+            return NoContent();
+        }
+
+        [HttpPut]
+        [Authorize(Roles = $"{ApplicationRole.GlobalAdmin},{ApplicationRole.ConferenceAdmin}")]
+        public async Task<IActionResult> Put(ConferenceDto conference, CancellationToken cancellation)
+        {
+            await Mediator.Send(new UpdateConferenceCommand(conference), cancellation);
+
+            return NoContent();
         }
     }
 }

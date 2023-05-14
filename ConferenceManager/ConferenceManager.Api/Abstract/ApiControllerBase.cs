@@ -23,15 +23,5 @@ namespace ConferenceManager.Api.Abstract
 
             return Ok(result);
         }
-
-        protected IActionResult DeletedOrNotFound(DeleteEntityResponse response)
-        {
-            if (!response.Deleted)
-            {
-                return NotFound();
-            }
-
-            return NoContent();
-        }
     }
 }

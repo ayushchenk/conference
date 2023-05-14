@@ -4,6 +4,8 @@ namespace ConferenceManager.Core.Common.Model.Dtos
 {
     public class ConferenceDto : IDto
     {
+        public int? Id { get; set; }
+
         public string Title { get; set; } = null!;
 
         public string Acronyn { get; set; } = null!;

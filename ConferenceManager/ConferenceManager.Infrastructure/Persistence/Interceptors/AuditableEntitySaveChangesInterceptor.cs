@@ -43,22 +43,16 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
             {
                 entry.Entity.CreatedById = _currentUserService.Id;
                 entry.Entity.CreatedOn = _dateTime.Now;
+                entry.Entity.ModifiedById = _currentUserService.Id;
+                entry.Entity.ModifiedOn = _dateTime.Now;
             } 
 
-            if (entry.State == EntityState.Added || entry.State == EntityState.Modified || entry.HasChangedOwnedEntities())
+            if (entry.State == EntityState.Modified)
             {
+                entry.Property(p => p.CreatedById).IsModified = false;
                 entry.Entity.ModifiedById = _currentUserService.Id;
                 entry.Entity.ModifiedOn = _dateTime.Now;
             }
         }
     }
-}
-
-public static class Extensions
-{
-    public static bool HasChangedOwnedEntities(this EntityEntry entry) =>
-        entry.References.Any(r => 
-            r.TargetEntry != null && 
-            r.TargetEntry.Metadata.IsOwned() && 
-            (r.TargetEntry.State == EntityState.Added || r.TargetEntry.State == EntityState.Modified));
 }
