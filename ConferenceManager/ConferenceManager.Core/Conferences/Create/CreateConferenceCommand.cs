@@ -1,12 +1,9 @@
 ﻿using ConferenceManager.Core.Common.Commands;
-using ConferenceManager.Core.Common.Model.Dtos;
+using ConferenceManager.Core.Conferences.Model;
 
 namespace ConferenceManager.Core.Conferences.Create
 {
-    public class CreateConferenceCommand : CreateEntityCommand<ConferenceDto>
+    public class CreateConferenceCommand : ConferenceCommandBase, ICreateEntityCommand
     {
-        public CreateConferenceCommand(ConferenceDto conference) : base(conference)
-        {
-        }
     }
 }

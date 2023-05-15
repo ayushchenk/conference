@@ -34,9 +34,9 @@ namespace ConferenceManager.Api.Controllers
 
         [HttpPost]
         [Authorize(Roles = $"{ApplicationRole.GlobalAdmin},{ApplicationRole.ConferenceAdmin}")]
-        public async Task<IActionResult> Post(ConferenceDto conference, CancellationToken cancellation)
+        public async Task<IActionResult> Post(CreateConferenceCommand command, CancellationToken cancellation)
         {
-            var result = await Mediator.Send(new CreateConferenceCommand(conference), cancellation);
+            var result = await Mediator.Send(command, cancellation);
 
             return Created(nameof(ConferenceController), result);
         }
