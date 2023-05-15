@@ -8,6 +8,8 @@ namespace ConferenceManager.Domain.Entities
 
         public required byte[] File { set; get; }
 
+        public required string FileName { set; get; }
+
         public virtual Submission Submission { set; get; } = null!;
     }
 }
