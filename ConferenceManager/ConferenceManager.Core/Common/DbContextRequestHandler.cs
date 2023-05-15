@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using ConferenceManager.Core.Common.Interfaces;
+﻿using ConferenceManager.Core.Common.Interfaces;
 using MediatR;
 
 namespace ConferenceManager.Core.Common
