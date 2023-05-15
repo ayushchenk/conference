@@ -1,4 +1,4 @@
-﻿using ConferenceManager.Core.Common.Validators;
+﻿using ConferenceManager.Core.Conferences.Common;
 using FluentValidation;
 
 namespace ConferenceManager.Core.Conferences.Update
@@ -7,12 +7,10 @@ namespace ConferenceManager.Core.Conferences.Update
     {
         public UpdateConferenceCommandValidator()
         {
-            RuleFor(x => x.Entity)
-                .NotNull()
-                .SetValidator(new ConferenceDtoValidator());
+            Include(new ConferenceCommandBaseValidator());
 
-            RuleFor(x => x.Entity.Id)
-                .NotEmpty().WithMessage("Id should not be empty");
+            RuleFor(x => x.Id)
+                .GreaterThan(0).WithMessage("Id is required");
         }
     }
 }

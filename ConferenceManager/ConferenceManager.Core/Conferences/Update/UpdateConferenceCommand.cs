@@ -1,12 +1,10 @@
 ﻿using ConferenceManager.Core.Common.Commands;
-using ConferenceManager.Core.Common.Model.Dtos;
+using ConferenceManager.Core.Conferences.Model;
 
 namespace ConferenceManager.Core.Conferences.Update
 {
-    public class UpdateConferenceCommand : UpdateEntityCommand<ConferenceDto>
+    public class UpdateConferenceCommand : ConferenceCommandBase, IUpdateEntityCommand
     {
-        public UpdateConferenceCommand(ConferenceDto entity) : base(entity)
-        {
-        }
+        public int Id { set; get; }
     }
 }

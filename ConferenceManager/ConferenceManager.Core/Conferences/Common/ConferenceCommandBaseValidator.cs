@@ -1,11 +1,11 @@
-﻿using ConferenceManager.Core.Common.Model.Dtos;
+﻿using ConferenceManager.Core.Conferences.Model;
 using FluentValidation;
 
-namespace ConferenceManager.Core.Common.Validators
+namespace ConferenceManager.Core.Conferences.Common
 {
-    public class ConferenceDtoValidator : AbstractValidator<ConferenceDto>
+    public class ConferenceCommandBaseValidator : AbstractValidator<ConferenceCommandBase>
     {
-        public ConferenceDtoValidator()
+        public ConferenceCommandBaseValidator()
         {
             RuleFor(x => x.Title)
                 .NotEmpty().WithMessage("Title is required")

@@ -43,9 +43,9 @@ namespace ConferenceManager.Api.Controllers
 
         [HttpPut]
         [Authorize(Roles = $"{ApplicationRole.GlobalAdmin},{ApplicationRole.ConferenceAdmin}")]
-        public async Task<IActionResult> Put(ConferenceDto conference, CancellationToken cancellation)
+        public async Task<IActionResult> Put(UpdateConferenceCommand command, CancellationToken cancellation)
         {
-            await Mediator.Send(new UpdateConferenceCommand(conference), cancellation);
+            await Mediator.Send(command, cancellation);
 
             return NoContent();
         }
