@@ -1,7 +1,7 @@
 ﻿using ConferenceManager.Core.Common.Model.Dtos;
 using ConferenceManager.Core.Common.Queries;
 
-namespace ConferenceManager.Core.Conferences.Queries.Get
+namespace ConferenceManager.Core.Conferences.Get
 {
     public class GetConferenceQuery : GetEntityQuery<ConferenceDto?>
     {

@@ -5,7 +5,7 @@ using ConferenceManager.Core.Common.Model.Responses;
 using ConferenceManager.Domain.Common;
 using ConferenceManager.Domain.Entities;
 
-namespace ConferenceManager.Core.Conferences.Commands.Create
+namespace ConferenceManager.Core.Conferences.Create
 {
     public class CreateConferenceCommandHandler : DbContextRequestHandler<CreateConferenceCommand, CreateEntityResponse>
     {

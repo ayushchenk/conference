@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using ConferenceManager.Core.Account.Commands.Register;
+using ConferenceManager.Core.Account.Register;
 using ConferenceManager.Domain.Entities;
 
 namespace ConferenceManager.Core.Common.Mappings

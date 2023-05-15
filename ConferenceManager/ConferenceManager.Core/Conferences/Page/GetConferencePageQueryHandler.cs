@@ -7,13 +7,13 @@ using ConferenceManager.Core.Common.Model.Responses;
 using ConferenceManager.Domain.Entities;
 using System.Runtime.CompilerServices;
 
-namespace ConferenceManager.Core.Conferences.Queries.Page
+namespace ConferenceManager.Core.Conferences.Page
 {
     public class GetConferencePageQueryHandler : DbContextRequestHandler<GetConferencePageQuery, GetEntityPageResponse<ConferenceDto>>
     {
         public GetConferencePageQueryHandler(
-            IApplicationDbContext context, 
-            ICurrentUserService currentUser, 
+            IApplicationDbContext context,
+            ICurrentUserService currentUser,
             IMapper mapper) : base(context, currentUser, mapper)
         {
         }

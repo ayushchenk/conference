@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace ConferenceManager.Core.Account.Commands.Register
+namespace ConferenceManager.Core.Account.Register
 {
     public class RegisterUserCommandValidator : AbstractValidator<RegisterUserCommand>
     {
-        public RegisterUserCommandValidator() 
+        public RegisterUserCommandValidator()
         {
             RuleFor(x => x.Email)
                 .NotEmpty().WithMessage("Email is required")
@@ -13,7 +13,7 @@ namespace ConferenceManager.Core.Account.Commands.Register
 
             RuleFor(x => x.Password)
                 .NotEmpty().WithMessage("Password is required")
-                .MaximumLength(50).WithMessage("Maximum length for Password is 50");;
+                .MaximumLength(50).WithMessage("Maximum length for Password is 50"); ;
 
             RuleFor(x => x.FirstName)
                 .NotEmpty().WithMessage("Firstname is required")

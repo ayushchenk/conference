@@ -1,21 +1,20 @@
-﻿using AutoMapper;
-using ConferenceManager.Core.Common.Exceptions;
+﻿using ConferenceManager.Core.Common.Exceptions;
 using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Core.Common.Model.Token;
 using ConferenceManager.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
-namespace ConferenceManager.Core.Account.Commands.Register
+namespace ConferenceManager.Core.Account.Register
 {
     public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, TokenResponse>
     {
-        private readonly IMapper _mapper;
+        private readonly IMapper<RegisterUserCommand, ApplicationUser> _mapper;
         private readonly ITokenService _tokenService;
         private readonly UserManager<ApplicationUser> _userManager;
 
         public RegisterUserCommandHandler(
-            IMapper mapper,
+            IMapper<RegisterUserCommand, ApplicationUser> mapper,
             ITokenService tokenService,
             UserManager<ApplicationUser> userManager
             )
@@ -27,7 +26,7 @@ namespace ConferenceManager.Core.Account.Commands.Register
 
         public async Task<TokenResponse> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
-            var user = _mapper.Map<ApplicationUser>(request);
+            var user = _mapper.Map(request);
 
             var createResult = await _userManager.CreateAsync(user, request.Password);
 

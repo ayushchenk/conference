@@ -4,7 +4,7 @@ using ConferenceManager.Core.Common.Exceptions;
 using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Core.Common.Model.Dtos;
 
-namespace ConferenceManager.Core.Conferences.Queries.Get
+namespace ConferenceManager.Core.Conferences.Get
 {
     public class GetConferenceQueryHandler : DbContextRequestHandler<GetConferenceQuery, ConferenceDto?>
     {

@@ -6,7 +6,7 @@ using ConferenceManager.Core.Common.Model.Responses;
 using ConferenceManager.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace ConferenceManager.Core.Conferences.Commands.Update
+namespace ConferenceManager.Core.Conferences.Update
 {
     public class UpdateConferenceCommandHandler : DbContextRequestHandler<UpdateConferenceCommand, UpdateEntityResponse>
     {

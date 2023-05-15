@@ -1,6 +1,6 @@
 ﻿using ConferenceManager.Api.Abstract;
-using ConferenceManager.Core.Account.Commands.Login;
-using ConferenceManager.Core.Account.Commands.Register;
+using ConferenceManager.Core.Account.Login;
+using ConferenceManager.Core.Account.Register;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConferenceManager.Api.Controllers

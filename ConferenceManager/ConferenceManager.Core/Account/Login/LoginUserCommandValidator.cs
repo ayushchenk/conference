@@ -1,13 +1,13 @@
 ﻿using FluentValidation;
 
-namespace ConferenceManager.Core.Account.Commands.Login
+namespace ConferenceManager.Core.Account.Login
 {
     public class LoginUserCommandValidator : AbstractValidator<LoginUserCommand>
     {
-        public LoginUserCommandValidator() 
+        public LoginUserCommandValidator()
         {
             RuleFor(x => x.Email)
-                .NotEmpty().WithMessage("Email is required")                
+                .NotEmpty().WithMessage("Email is required")
                 .EmailAddress().WithMessage("Email should be of valid format");
 
             RuleFor(x => x.Password)

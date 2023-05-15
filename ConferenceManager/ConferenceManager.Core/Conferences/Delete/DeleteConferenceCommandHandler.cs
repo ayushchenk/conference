@@ -3,7 +3,7 @@ using ConferenceManager.Core.Common;
 using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Core.Common.Model.Responses;
 
-namespace ConferenceManager.Core.Conferences.Commands.Delete
+namespace ConferenceManager.Core.Conferences.Delete
 {
     public class DeleteConferenceCommandHandler : DbContextRequestHandler<DeleteConferenceCommand, DeleteEntityResponse>
     {

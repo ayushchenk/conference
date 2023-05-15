@@ -2,7 +2,7 @@
 using ConferenceManager.Core.Common.Model.Token;
 using MediatR;
 
-namespace ConferenceManager.Core.Account.Commands.Login
+namespace ConferenceManager.Core.Account.Login
 {
     public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, TokenResponse>
     {
@@ -15,7 +15,7 @@ namespace ConferenceManager.Core.Account.Commands.Login
 
         public async Task<TokenResponse> Handle(LoginUserCommand request, CancellationToken cancellationToken)
         {
-            return await _tokenService.Authenticate(new TokenRequest() 
+            return await _tokenService.Authenticate(new TokenRequest()
             {
                 Email = request.Email,
                 Password = request.Password

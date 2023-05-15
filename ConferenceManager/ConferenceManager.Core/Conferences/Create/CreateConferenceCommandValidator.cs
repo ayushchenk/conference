@@ -1,7 +1,7 @@
 ﻿using ConferenceManager.Core.Common.Validators;
 using FluentValidation;
 
-namespace ConferenceManager.Core.Conferences.Commands.Create
+namespace ConferenceManager.Core.Conferences.Create
 {
     public class CreateConferenceCommandValidator : AbstractValidator<CreateConferenceCommand>
     {

@@ -1,6 +1,6 @@
 ﻿using ConferenceManager.Core.Common.Commands;
 
-namespace ConferenceManager.Core.Conferences.Commands.Delete
+namespace ConferenceManager.Core.Conferences.Delete
 {
     public class DeleteConferenceCommand : DeleteEntityCommand
     {
