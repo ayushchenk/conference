@@ -1,10 +1,9 @@
-﻿using ConferenceManager.Core.Common.Model.Responses;
-using MediatR;
+﻿using ConferenceManager.Core.Common.Commands;
 using Microsoft.AspNetCore.Http;
 
 namespace ConferenceManager.Core.Submissions.Create
 {
-    public class CreateSubmissionCommand : IRequest<CreateEntityResponse>
+    public class CreateSubmissionCommand : ICreateEntityCommand
     {
         public int ConferenceId { set; get; }
 
