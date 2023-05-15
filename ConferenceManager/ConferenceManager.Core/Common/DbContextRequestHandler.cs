@@ -8,16 +8,10 @@ namespace ConferenceManager.Core.Common
     {
         protected IApplicationDbContext Context { get; }
         protected ICurrentUserService CurrentUser { get; }
-        protected IMapper Mapper { get; }
 
-        protected DbContextRequestHandler(
-            IApplicationDbContext context, 
-            ICurrentUserService currentUser,
-            IMapper mapper
-            )
+        protected DbContextRequestHandler(IApplicationDbContext context, ICurrentUserService currentUser)
         {
             Context = context;
-            Mapper = mapper;
             CurrentUser = currentUser;
         }
 

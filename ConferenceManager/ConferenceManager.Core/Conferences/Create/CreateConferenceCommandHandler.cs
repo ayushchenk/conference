@@ -13,10 +13,9 @@ namespace ConferenceManager.Core.Conferences.Create
         public CreateConferenceCommandHandler(
             IApplicationDbContext context,
             ICurrentUserService currentUser,
-            IMapper mapper,
-            IMapper<CreateConferenceCommand, Conference> customMapper) : base(context, currentUser, mapper)
+            IMapper<CreateConferenceCommand, Conference> mapper) : base(context, currentUser)
         {
-            _mapper = customMapper;
+            _mapper = mapper;
         }
 
         public override async Task<CreateEntityResponse> Handle(CreateConferenceCommand request, CancellationToken cancellationToken)

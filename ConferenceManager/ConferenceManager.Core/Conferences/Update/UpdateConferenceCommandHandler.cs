@@ -16,10 +16,9 @@ namespace ConferenceManager.Core.Conferences.Update
         public UpdateConferenceCommandHandler(
             IApplicationDbContext context,
             ICurrentUserService currentUser,
-            IMapper mapper,
-            IMapper<UpdateConferenceCommand, Conference> commonMapper) : base(context, currentUser, mapper)
+            IMapper<UpdateConferenceCommand, Conference> mapper) : base(context, currentUser)
         {
-            _mapper = commonMapper;
+            _mapper = mapper;
         }
 
         public override async Task<UpdateEntityResponse> Handle(UpdateConferenceCommand request, CancellationToken cancellationToken)

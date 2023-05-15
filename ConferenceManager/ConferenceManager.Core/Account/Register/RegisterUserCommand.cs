@@ -7,7 +7,7 @@ namespace ConferenceManager.Core.Account.Register
     {
         public string Email { get; init; } = null!;
 
-        public required string Password { get; init; }
+        public string Password { get; init; } = null!;
 
         public string FirstName { get; init; } = null!;
 

@@ -1,8 +1,6 @@
-﻿using ConferenceManager.Core.Common.Interfaces;
-
-namespace ConferenceManager.Core.Common.Model.Responses
+﻿namespace ConferenceManager.Core.Common.Model.Responses
 {
-    public class GetEntityPageResponse<TEntity> where TEntity : IDto
+    public class GetEntityPageResponse<TEntity>
     {
         public required IEnumerable<TEntity> Items { get; init; }
 

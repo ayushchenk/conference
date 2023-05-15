@@ -10,6 +10,8 @@ using ConferenceManager.Domain.Entities;
 using ConferenceManager.Core.Account.Register;
 using ConferenceManager.Core.Conferences.Create;
 using ConferenceManager.Core.Conferences.Update;
+using ConferenceManager.Core.Common.Model.Dtos;
+using ConferenceManager.Core.Conferences.Common;
 
 namespace ConferenceManager.Core
 {
@@ -32,6 +34,7 @@ namespace ConferenceManager.Core
 
             services.AddTransient<IMapper<CreateConferenceCommand, Conference>, CreateConferenceCommandMapper>();
             services.AddTransient<IMapper<UpdateConferenceCommand, Conference>, UpdateConferenceCommandMapper>();
+            services.AddTransient<IMapper<Conference, ConferenceDto>, ConferenceDtoMapper>();
 
             services.AddTransient<IMapper<RegisterUserCommand, ApplicationUser>, RegisterUserCommandMapper>();
 

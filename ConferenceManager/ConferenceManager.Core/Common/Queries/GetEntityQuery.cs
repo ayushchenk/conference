@@ -3,7 +3,7 @@ using MediatR;
 
 namespace ConferenceManager.Core.Common.Queries
 {
-    public abstract class GetEntityQuery<TEntity> : IRequest<TEntity?> where TEntity : IDto?
+    public abstract class GetEntityQuery<TEntity> : IRequest<TEntity?> where TEntity : IDto
     {
         public int Id { get; }
 

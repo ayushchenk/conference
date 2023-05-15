@@ -1,21 +1,22 @@
-﻿using AutoMapper;
-using ConferenceManager.Core.Common;
+﻿using ConferenceManager.Core.Common;
 using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Core.Common.Model;
 using ConferenceManager.Core.Common.Model.Dtos;
 using ConferenceManager.Core.Common.Model.Responses;
 using ConferenceManager.Domain.Entities;
-using System.Runtime.CompilerServices;
 
 namespace ConferenceManager.Core.Conferences.Page
 {
     public class GetConferencePageQueryHandler : DbContextRequestHandler<GetConferencePageQuery, GetEntityPageResponse<ConferenceDto>>
     {
+        private readonly IMapper<Conference, ConferenceDto> _mapper;
+
         public GetConferencePageQueryHandler(
             IApplicationDbContext context,
             ICurrentUserService currentUser,
-            IMapper mapper) : base(context, currentUser, mapper)
+            IMapper<Conference, ConferenceDto> mapper) : base(context, currentUser)
         {
+            _mapper = mapper;
         }
 
         public override async Task<GetEntityPageResponse<ConferenceDto>> Handle(GetConferencePageQuery request, CancellationToken cancellationToken)
@@ -29,7 +30,7 @@ namespace ConferenceManager.Core.Conferences.Page
 
             var conferences = await PaginatedList<Conference>.CreateAsync(source, request.PageIndex, request.PageSize);
 
-            var dtos = conferences.Select(Mapper.Map<ConferenceDto>);
+            var dtos = conferences.Select(_mapper.Map);
 
             return new GetEntityPageResponse<ConferenceDto>()
             {

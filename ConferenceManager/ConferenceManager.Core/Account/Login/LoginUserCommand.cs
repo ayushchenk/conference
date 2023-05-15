@@ -5,8 +5,8 @@ namespace ConferenceManager.Core.Account.Login
 {
     public class LoginUserCommand : IRequest<TokenResponse>
     {
-        public required string Email { get; init; }
+        public string Email { get; init; } = null!;
 
-        public required string Password { get; init; }
+        public string Password { get; init; } = null!;
     }
 }

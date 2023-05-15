@@ -1,5 +1,4 @@
 ﻿using ConferenceManager.Core.Common.Interfaces;
-using ConferenceManager.Core.Common.Model;
 using ConferenceManager.Core.Common.Model.Responses;
 using MediatR;
 
