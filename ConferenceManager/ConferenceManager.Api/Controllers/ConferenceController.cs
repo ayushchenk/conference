@@ -1,10 +1,10 @@
 ﻿using ConferenceManager.Api.Abstract;
 using ConferenceManager.Core.Common.Model.Dtos;
-using ConferenceManager.Core.Conferences.Commands.Create;
-using ConferenceManager.Core.Conferences.Commands.Delete;
-using ConferenceManager.Core.Conferences.Commands.Update;
-using ConferenceManager.Core.Conferences.Queries.Get;
-using ConferenceManager.Core.Conferences.Queries.Page;
+using ConferenceManager.Core.Conferences.Create;
+using ConferenceManager.Core.Conferences.Delete;
+using ConferenceManager.Core.Conferences.Get;
+using ConferenceManager.Core.Conferences.Page;
+using ConferenceManager.Core.Conferences.Update;
 using ConferenceManager.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
