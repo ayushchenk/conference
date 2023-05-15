@@ -1,11 +1,7 @@
-﻿using ConferenceManager.Core.Common.Interfaces;
-
-namespace ConferenceManager.Core.Common.Model.Dtos
+﻿namespace ConferenceManager.Core.Conferences.Model
 {
-    public class ConferenceDto : IDto
+    public class ConferenceCommandBase
     {
-        public int Id { get; set; }
-
         public string Title { get; set; } = null!;
 
         public string Acronyn { get; set; } = null!;

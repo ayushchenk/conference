@@ -1,10 +1,10 @@
 ﻿using ConferenceManager.Api.Abstract;
 using ConferenceManager.Core.Common.Model.Dtos;
-using ConferenceManager.Core.Conferences.Commands.Create;
-using ConferenceManager.Core.Conferences.Commands.Delete;
-using ConferenceManager.Core.Conferences.Commands.Update;
-using ConferenceManager.Core.Conferences.Queries.Get;
-using ConferenceManager.Core.Conferences.Queries.Page;
+using ConferenceManager.Core.Conferences.Create;
+using ConferenceManager.Core.Conferences.Delete;
+using ConferenceManager.Core.Conferences.Get;
+using ConferenceManager.Core.Conferences.Page;
+using ConferenceManager.Core.Conferences.Update;
 using ConferenceManager.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -34,18 +34,18 @@ namespace ConferenceManager.Api.Controllers
 
         [HttpPost]
         [Authorize(Roles = $"{ApplicationRole.GlobalAdmin},{ApplicationRole.ConferenceAdmin}")]
-        public async Task<IActionResult> Post(ConferenceDto conference, CancellationToken cancellation)
+        public async Task<IActionResult> Post(CreateConferenceCommand command, CancellationToken cancellation)
         {
-            var result = await Mediator.Send(new CreateConferenceCommand(conference), cancellation);
+            var result = await Mediator.Send(command, cancellation);
 
             return Created(nameof(ConferenceController), result);
         }
 
         [HttpPut]
         [Authorize(Roles = $"{ApplicationRole.GlobalAdmin},{ApplicationRole.ConferenceAdmin}")]
-        public async Task<IActionResult> Put(ConferenceDto conference, CancellationToken cancellation)
+        public async Task<IActionResult> Put(UpdateConferenceCommand command, CancellationToken cancellation)
         {
-            await Mediator.Send(new UpdateConferenceCommand(conference), cancellation);
+            await Mediator.Send(command, cancellation);
 
             return NoContent();
         }

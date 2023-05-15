@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using ConferenceManager.Core.Common;
+﻿using ConferenceManager.Core.Common;
 using ConferenceManager.Core.Common.Exceptions;
 using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Core.Common.Model.Responses;
@@ -14,10 +13,9 @@ namespace ConferenceManager.Core.Submissions.Create
         public CreateSubmissionCommandHandler(
             IApplicationDbContext context,
             ICurrentUserService currentUser,
-            IMapper mapper,
-            IMapper<CreateSubmissionCommand, Submission> customMapper) : base(context, currentUser, mapper)
+            IMapper<CreateSubmissionCommand, Submission> mapper) : base(context, currentUser)
         {
-            _mapper = customMapper;
+            _mapper = mapper;
         }
 
         public override async Task<CreateEntityResponse> Handle(CreateSubmissionCommand request, CancellationToken cancellationToken)
