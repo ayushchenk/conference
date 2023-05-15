@@ -4,7 +4,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using FluentValidation;
-using AutoMapper.Extensions.ExpressionMapping;
+using ConferenceManager.Core.Common.Interfaces;
+using ConferenceManager.Core.Submissions.Create;
+using ConferenceManager.Domain.Entities;
 
 namespace ConferenceManager.Core
 {
@@ -14,10 +16,7 @@ namespace ConferenceManager.Core
         {
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
-            services.AddAutoMapper(config =>
-            {
-                config.AddExpressionMapping();
-            }, Assembly.GetExecutingAssembly());
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             services.AddMediatR(cfg =>
             {
@@ -25,6 +24,8 @@ namespace ConferenceManager.Core
                 cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
                 cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(PerformanceBehavior<,>));
             });
+
+            services.AddTransient<IMapper<CreateSubmissionCommand, Submission>, CreateSubmissionCommandMapper>();
 
             return services;
         }
