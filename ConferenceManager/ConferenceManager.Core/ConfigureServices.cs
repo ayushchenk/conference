@@ -7,6 +7,7 @@ using FluentValidation;
 using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Core.Submissions.Create;
 using ConferenceManager.Domain.Entities;
+using ConferenceManager.Core.Account.Register;
 
 namespace ConferenceManager.Core
 {
@@ -26,6 +27,7 @@ namespace ConferenceManager.Core
             });
 
             services.AddTransient<IMapper<CreateSubmissionCommand, Submission>, CreateSubmissionCommandMapper>();
+            services.AddTransient<IMapper<RegisterUserCommand, ApplicationUser>, RegisterUserCommandMapper>();
 
             return services;
         }
