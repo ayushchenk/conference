@@ -12,6 +12,8 @@ namespace ConferenceManager.Domain.Entities
 
         public required string LastName { set; get; }
 
+        public string FullName => $"{FirstName} {LastName}";
+
         public required string Country { set; get; }
 
         public required string Affiliation { set; get; }

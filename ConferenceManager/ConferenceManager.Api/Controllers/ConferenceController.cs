@@ -1,5 +1,4 @@
 ﻿using ConferenceManager.Api.Abstract;
-using ConferenceManager.Core.Common.Model.Dtos;
 using ConferenceManager.Core.Conferences.Create;
 using ConferenceManager.Core.Conferences.Delete;
 using ConferenceManager.Core.Conferences.Get;
