@@ -1,5 +1,4 @@
 ﻿using CleanArchitecture.WebUI.Filters;
-using ConferenceManager.Core.Common.Model.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

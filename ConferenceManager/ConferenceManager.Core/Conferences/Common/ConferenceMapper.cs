@@ -1,5 +1,4 @@
 ﻿using ConferenceManager.Core.Common.Interfaces;
-using ConferenceManager.Core.Common.Model.Dtos;
 using ConferenceManager.Domain.Entities;
 
 namespace ConferenceManager.Core.Conferences.Common

@@ -1,8 +1,8 @@
 ﻿using ConferenceManager.Core.Common;
 using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Core.Common.Model;
-using ConferenceManager.Core.Common.Model.Dtos;
 using ConferenceManager.Core.Common.Model.Responses;
+using ConferenceManager.Core.Conferences.Common;
 using ConferenceManager.Domain.Entities;
 
 namespace ConferenceManager.Core.Conferences.Page

@@ -1,6 +1,6 @@
 ﻿using ConferenceManager.Core.Common.Interfaces;
 
-namespace ConferenceManager.Core.Common.Model.Dtos
+namespace ConferenceManager.Core.Conferences.Common
 {
     public class ConferenceDto : IDto
     {

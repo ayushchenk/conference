@@ -1,5 +1,5 @@
-﻿using ConferenceManager.Core.Common.Model.Dtos;
-using ConferenceManager.Core.Common.Queries;
+﻿using ConferenceManager.Core.Common.Queries;
+using ConferenceManager.Core.Conferences.Common;
 
 namespace ConferenceManager.Core.Conferences.Page
 {
