@@ -37,6 +37,12 @@ namespace ConferenceManager.Core
 
             services.AddTransient<IMapper<RegisterUserCommand, ApplicationUser>, RegisterUserCommandMapper>();
 
+            services.AddTransient<IMapper<CreateConferenceCommand, Conference>, CreateConferenceCommandMapper>();
+            services.AddTransient<IMapper<UpdateConferenceCommand, Conference>, UpdateConferenceCommandMapper>();
+            services.AddTransient<IMapper<Conference, ConferenceDto>, ConferenceDtoMapper>();
+
+            services.AddTransient<IMapper<RegisterUserCommand, ApplicationUser>, RegisterUserCommandMapper>();
+
             return services;
         }
     }
