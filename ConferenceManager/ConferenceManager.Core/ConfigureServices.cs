@@ -4,14 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using FluentValidation;
-using ConferenceManager.Core.Common.Interfaces;
-using ConferenceManager.Core.Submissions.Create;
-using ConferenceManager.Domain.Entities;
-using ConferenceManager.Core.Account.Register;
-using ConferenceManager.Core.Conferences.Create;
-using ConferenceManager.Core.Conferences.Update;
-using ConferenceManager.Core.Conferences.Common;
-using ConferenceManager.Core.Submissions.Common;
 
 namespace ConferenceManager.Core
 {
@@ -28,20 +20,14 @@ namespace ConferenceManager.Core
                 cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(PerformanceBehavior<,>));
             });
 
-            services.AddTransient<IMapper<CreateSubmissionCommand, Submission>, CreateSubmissionCommandMapper>();
-            services.AddTransient<IMapper<Submission, SubmissionDto>, SubmissionMapper>();
+            //var mappers = Assembly.GetExecutingAssembly().GetTypes()
+            //    .Where(type => type.GetInterface("IMapper`2") != null)
+            //    .Select(type => new { Service = type.GetInterface("IMapper`2")!, Impl = type });
 
-            services.AddTransient<IMapper<CreateConferenceCommand, Conference>, CreateConferenceCommandMapper>();
-            services.AddTransient<IMapper<UpdateConferenceCommand, Conference>, UpdateConferenceCommandMapper>();
-            services.AddTransient<IMapper<Conference, ConferenceDto>, ConferenceDtoMapper>();
-
-            services.AddTransient<IMapper<RegisterUserCommand, ApplicationUser>, RegisterUserCommandMapper>();
-
-            services.AddTransient<IMapper<CreateConferenceCommand, Conference>, CreateConferenceCommandMapper>();
-            services.AddTransient<IMapper<UpdateConferenceCommand, Conference>, UpdateConferenceCommandMapper>();
-            services.AddTransient<IMapper<Conference, ConferenceDto>, ConferenceDtoMapper>();
-
-            services.AddTransient<IMapper<RegisterUserCommand, ApplicationUser>, RegisterUserCommandMapper>();
+            //foreach(var mapper in mappers)
+            //{
+            //    services.Add(new ServiceDescriptor(mapper.Service, mapper.Impl, ServiceLifetime.Singleton));
+            //}
 
             return services;
         }

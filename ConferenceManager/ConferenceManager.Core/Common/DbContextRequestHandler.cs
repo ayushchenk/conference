@@ -7,11 +7,13 @@ namespace ConferenceManager.Core.Common
     {
         protected IApplicationDbContext Context { get; }
         protected ICurrentUserService CurrentUser { get; }
+        protected IMappingHost Mapper { get; }
 
-        protected DbContextRequestHandler(IApplicationDbContext context, ICurrentUserService currentUser)
+        protected DbContextRequestHandler(IApplicationDbContext context, ICurrentUserService currentUser, IMappingHost mapper)
         {
             Context = context;
             CurrentUser = currentUser;
+            Mapper = mapper;
         }
 
         public abstract Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken);

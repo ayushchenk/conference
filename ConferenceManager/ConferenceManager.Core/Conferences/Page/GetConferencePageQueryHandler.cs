@@ -9,14 +9,11 @@ namespace ConferenceManager.Core.Conferences.Page
 {
     public class GetConferencePageQueryHandler : DbContextRequestHandler<GetConferencePageQuery, GetEntityPageResponse<ConferenceDto>>
     {
-        private readonly IMapper<Conference, ConferenceDto> _mapper;
-
         public GetConferencePageQueryHandler(
             IApplicationDbContext context,
             ICurrentUserService currentUser,
-            IMapper<Conference, ConferenceDto> mapper) : base(context, currentUser)
+            IMappingHost mapper) : base(context, currentUser, mapper)
         {
-            _mapper = mapper;
         }
 
         public override async Task<GetEntityPageResponse<ConferenceDto>> Handle(GetConferencePageQuery request, CancellationToken cancellationToken)
@@ -30,7 +27,7 @@ namespace ConferenceManager.Core.Conferences.Page
 
             var conferences = await PaginatedList<Conference>.CreateAsync(source, request.PageIndex, request.PageSize);
 
-            var dtos = conferences.Select(_mapper.Map);
+            var dtos = conferences.Select(Mapper.Map<Conference, ConferenceDto>);
 
             return new GetEntityPageResponse<ConferenceDto>()
             {

@@ -8,7 +8,8 @@ namespace ConferenceManager.Core.Conferences.Delete
     {
         public DeleteConferenceCommandHandler(
             IApplicationDbContext context,
-            ICurrentUserService currentUser) : base(context, currentUser)
+            ICurrentUserService currentUser,
+            IMappingHost mapper) : base(context, currentUser, mapper)
         {
         }
 

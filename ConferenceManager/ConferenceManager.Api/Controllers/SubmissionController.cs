@@ -1,6 +1,8 @@
 ﻿using ConferenceManager.Api.Abstract;
 using ConferenceManager.Core.Submissions.Create;
 using ConferenceManager.Core.Submissions.Get;
+using ConferenceManager.Core.Submissions.Update;
+using ConferenceManager.Core.Submissions.UpdatePaper;
 using ConferenceManager.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +28,25 @@ namespace ConferenceManager.Api.Controllers
             var result = await Mediator.Send(new GetSubmissionQuery(id), cancellation);
 
             return OkOrNotFound(result);
+        }
+
+        [HttpPut]
+        [Authorize(Roles = ApplicationRole.Author)]
+        public async Task<IActionResult> Put(UpdateSubmissionCommand command, CancellationToken cancellation)
+        {
+            await Mediator.Send(command, cancellation);
+
+            return NoContent();
+        }
+
+        [HttpPost]
+        [Route("file")]
+        [Authorize(Roles = ApplicationRole.Author)]
+        public async Task<IActionResult> UploadPaper([FromForm] UploadPaperCommand command, CancellationToken cancellation)
+        {
+            await Mediator.Send(command, cancellation);
+
+            return NoContent();
         }
     }
 }

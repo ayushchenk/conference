@@ -5,7 +5,7 @@ namespace ConferenceManager.Domain.Entities
 {
     public class Submission : BaseAuditableEntity
     {
-        public required int ConferenceId { set; get; }
+        public int ConferenceId { set; get; }
 
         public required string Title { set; get; }
 
@@ -13,7 +13,7 @@ namespace ConferenceManager.Domain.Entities
 
         public required string Abstract { set; get; }
 
-        public required SubmissionStatus Status { set; get; }
+        public SubmissionStatus Status { set; get; }
 
         public virtual Conference Conference { set; get; } = null!;
 
@@ -25,6 +25,6 @@ namespace ConferenceManager.Domain.Entities
 
         public virtual IList<Comment> Comments { set; get; } = null!;
 
-        public virtual IList<Paper> Papers { set; get; } = null!; 
+        public virtual IList<Paper> Papers { set; get; } = null!;
     }
 }

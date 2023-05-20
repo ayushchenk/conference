@@ -1,4 +1,5 @@
-﻿using ConferenceManager.Core.Common.Interfaces;
+﻿using ConferenceManager.Core.Common.Extensions;
+using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Domain.Entities;
 
 namespace ConferenceManager.Core.Submissions.Create
@@ -17,14 +18,11 @@ namespace ConferenceManager.Core.Submissions.Create
                 Papers = new List<Paper>()
             };
 
-            using var stream = new MemoryStream();
-            source.File.CopyTo(stream);
-
             submission.Papers.Add(new Paper() 
             {
                 SubmissionId = 0,
                 FileName = source.File.FileName,
-                File = stream.ToArray()
+                File = source.File.ToBytes()
             });
 
             return submission;

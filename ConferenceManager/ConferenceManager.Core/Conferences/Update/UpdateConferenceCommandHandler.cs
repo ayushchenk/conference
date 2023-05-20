@@ -2,7 +2,6 @@
 using ConferenceManager.Core.Common.Exceptions;
 using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Core.Common.Model.Responses;
-using ConferenceManager.Core.Conferences.Create;
 using ConferenceManager.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,14 +9,11 @@ namespace ConferenceManager.Core.Conferences.Update
 {
     public class UpdateConferenceCommandHandler : DbContextRequestHandler<UpdateConferenceCommand, UpdateEntityResponse>
     {
-        private readonly IMapper<UpdateConferenceCommand, Conference> _mapper;
-
         public UpdateConferenceCommandHandler(
             IApplicationDbContext context,
             ICurrentUserService currentUser,
-            IMapper<UpdateConferenceCommand, Conference> mapper) : base(context, currentUser)
+            IMappingHost mapper) : base(context, currentUser, mapper)
         {
-            _mapper = mapper;
         }
 
         public override async Task<UpdateEntityResponse> Handle(UpdateConferenceCommand request, CancellationToken cancellationToken)
@@ -40,7 +36,7 @@ namespace ConferenceManager.Core.Conferences.Update
                 throw new ForbiddenException();
             }
 
-            var newConference = _mapper.Map(request);
+            var newConference = Mapper.Map<UpdateConferenceCommand, Conference>(request);
 
             Context.Conferences.Update(newConference);
             await Context.SaveChangesAsync(cancellationToken);
