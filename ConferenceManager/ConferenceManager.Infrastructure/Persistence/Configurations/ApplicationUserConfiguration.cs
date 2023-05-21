@@ -10,10 +10,10 @@ namespace ConferenceManager.Infrastructure.Persistence.Configurations
         {
             builder.HasKey(x => x.Id);
 
-            builder.Ignore(x => x.FullName);
-
             builder.Property(x => x.Id)
                 .ValueGeneratedOnAdd();
+
+            builder.Ignore(x => x.FullName);
 
             builder.Property(x => x.FirstName)
                 .IsRequired()

@@ -29,7 +29,7 @@ namespace ConferenceManager.Api
 
             services.AddScoped<SignInManager<ApplicationUser>>();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
-            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IIdentityService, IdentityService>();
 
             services.AddAuthorization();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

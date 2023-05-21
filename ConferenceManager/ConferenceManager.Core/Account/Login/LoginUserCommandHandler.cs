@@ -6,16 +6,16 @@ namespace ConferenceManager.Core.Account.Login
 {
     public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, TokenResponse>
     {
-        private readonly ITokenService _tokenService;
+        private readonly IIdentityService _identityService;
 
-        public LoginUserCommandHandler(ITokenService tokenService)
+        public LoginUserCommandHandler(IIdentityService identityService)
         {
-            _tokenService = tokenService;
+            _identityService = identityService;
         }
 
         public async Task<TokenResponse> Handle(LoginUserCommand request, CancellationToken cancellationToken)
         {
-            return await _tokenService.Authenticate(new TokenRequest()
+            return await _identityService.Authenticate(new TokenRequest()
             {
                 Email = request.Email,
                 Password = request.Password

@@ -1,9 +1,12 @@
 ﻿using ConferenceManager.Core.Common.Model.Token;
+using ConferenceManager.Domain.Entities;
 
 namespace ConferenceManager.Core.Common.Interfaces
 {
-    public interface ITokenService
+    public interface IIdentityService
     {
         Task<TokenResponse> Authenticate(TokenRequest tokenRequest);
+
+        Task<TokenResponse> CreateUser(ApplicationUser user, string password);
     }
 }

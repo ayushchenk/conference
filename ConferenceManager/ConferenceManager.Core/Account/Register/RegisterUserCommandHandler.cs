@@ -10,38 +10,22 @@ namespace ConferenceManager.Core.Account.Register
     public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, TokenResponse>
     {
         private readonly IMapper<RegisterUserCommand, ApplicationUser> _mapper;
-        private readonly ITokenService _tokenService;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IIdentityService _identityService;
 
         public RegisterUserCommandHandler(
             IMapper<RegisterUserCommand, ApplicationUser> mapper,
-            ITokenService tokenService,
-            UserManager<ApplicationUser> userManager
+            IIdentityService identityService
             )
         {
             _mapper = mapper;
-            _tokenService = tokenService;
-            _userManager = userManager;
+            _identityService = identityService;
         }
 
         public async Task<TokenResponse> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
             var user = _mapper.Map(request);
 
-            var createResult = await _userManager.CreateAsync(user, request.Password);
-
-            if (!createResult.Succeeded)
-            {
-                throw new IdentityException(createResult.Errors);
-            }
-
-            await _userManager.AddToRoleAsync(user, ApplicationRole.Author);
-
-            return await _tokenService.Authenticate(new TokenRequest()
-            {
-                Email = request.Email,
-                Password = request.Password
-            });
+            return await _identityService.CreateUser(user, request.Password);
         }
     }
 }
