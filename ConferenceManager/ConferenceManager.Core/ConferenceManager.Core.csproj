@@ -20,8 +20,4 @@
     <ProjectReference Include="..\ConferenceManager.Domain\ConferenceManager.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="User\Delete\" />
-  </ItemGroup>
-
 </Project>

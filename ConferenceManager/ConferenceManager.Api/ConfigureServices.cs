@@ -76,6 +76,12 @@ namespace ConferenceManager.Api
                 });
             });
 
+            services.Configure<SecurityStampValidatorOptions>(options =>
+            {
+                // enables immediate logout, after updating the user's stat.
+                options.ValidationInterval = TimeSpan.Zero;
+            });
+
             var mappers = typeof(IMapper<,>).Assembly.GetTypes()
                 .Where(type => type.GetInterface("IMapper`2") != null)
                 .Select(type =>

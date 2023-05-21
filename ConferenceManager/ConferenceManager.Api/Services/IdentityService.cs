@@ -72,6 +72,18 @@ namespace ConferenceManager.Api.Services
             });
         }
 
+        public async Task DeleteUser(int id)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+
+            if (user == null)
+            {
+                throw new NotFoundException();
+            }
+
+            await _userManager.DeleteAsync(user);
+        }
+
         private TokenResponse GenerateJwtToken(ApplicationUser user, IEnumerable<string> roles)
         {
             byte[] key = Encoding.ASCII.GetBytes(_settings.Key);

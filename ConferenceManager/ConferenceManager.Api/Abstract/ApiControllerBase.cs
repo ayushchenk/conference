@@ -1,4 +1,5 @@
 ﻿using CleanArchitecture.WebUI.Filters;
+using ConferenceManager.Core.Common.Model.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,16 @@ namespace ConferenceManager.Api.Abstract
         protected IActionResult OkOrNotFound(object? result)
         {
             if (result == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
+        }
+
+        protected IActionResult DeletedOrNotFound(DeleteEntityResponse result)
+        {
+            if (!result.Deleted)
             {
                 return NotFound();
             }
