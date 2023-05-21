@@ -1,13 +1,14 @@
-﻿using FluentValidation;
+﻿using ConferenceManager.Core.Submissions.Update;
+using FluentValidation;
 
 namespace ConferenceManager.Core.Submissions.Create
 {
-    public class CreateSubmissionCommandValidator : AbstractValidator<CreateSubmissionCommand>
+    public class UpdateSubmissionCommandValidator : AbstractValidator<UpdateSubmissionCommand>
     {
-        public CreateSubmissionCommandValidator()
+        public UpdateSubmissionCommandValidator()
         {
-            RuleFor(x => x.ConferenceId)
-                .GreaterThan(0).WithMessage("ConferenceId is required");
+            RuleFor(x => x.Id)
+                .GreaterThan(0).WithMessage("Id is required");
 
             RuleFor(x => x.Title)
                 .NotEmpty().WithMessage("Title is required")
@@ -20,9 +21,6 @@ namespace ConferenceManager.Core.Submissions.Create
             RuleFor(x => x.Abstract)
                 .NotEmpty().WithMessage("Abstract is required")
                 .MaximumLength(1000).WithMessage("Maximum length for Abstract is 1000");
-
-            RuleFor(x => x.File)
-                .NotEmpty().WithMessage("File is required");
         }
     }
 }

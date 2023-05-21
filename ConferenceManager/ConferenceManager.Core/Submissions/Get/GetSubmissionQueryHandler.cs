@@ -8,14 +8,11 @@ namespace ConferenceManager.Core.Submissions.Get
 {
     public class GetSubmissionQueryHandler : DbContextRequestHandler<GetSubmissionQuery, SubmissionDto?>
     {
-        private readonly IMapper<Submission, SubmissionDto> _mapper;
-
         public GetSubmissionQueryHandler(
-            IMapper<Submission, SubmissionDto> mapper,
             IApplicationDbContext context,
-            ICurrentUserService currentUser) : base(context, currentUser)
+            ICurrentUserService currentUser,
+            IMappingHost mapper) : base(context, currentUser, mapper)
         {
-            _mapper = mapper;
         }
 
         public override async Task<SubmissionDto?> Handle(GetSubmissionQuery request, CancellationToken cancellationToken)
@@ -24,7 +21,7 @@ namespace ConferenceManager.Core.Submissions.Get
 
             if (submission == null)
             {
-                return null;
+                throw new NotFoundException();
             }
 
             var reviewers = Context.SubmissionReviewers
@@ -39,11 +36,11 @@ namespace ConferenceManager.Core.Submissions.Get
             var isReviewer = reviewers.Contains(CurrentUser.Id);
 
             if (CurrentUser.IsGlobalAdmin
-                || (CurrentUser.Roles.Contains(ApplicationRole.ConferenceAdmin) && isParticipant)
-                || (CurrentUser.Roles.Contains(ApplicationRole.Reviwer) && isReviewer)
+                || (CurrentUser.IsConferenceAdmin && isParticipant)
+                || (CurrentUser.IsReviewer && isReviewer)
                 || submission.CreatedById == CurrentUser.Id)
             {
-                return _mapper.Map(submission);
+                return Mapper.Map<Submission, SubmissionDto>(submission);
             }
 
             throw new ForbiddenException();

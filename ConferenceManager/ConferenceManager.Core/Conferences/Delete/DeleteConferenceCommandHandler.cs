@@ -8,7 +8,8 @@ namespace ConferenceManager.Core.Conferences.Delete
     {
         public DeleteConferenceCommandHandler(
             IApplicationDbContext context,
-            ICurrentUserService currentUser) : base(context, currentUser)
+            ICurrentUserService currentUser,
+            IMappingHost mapper) : base(context, currentUser, mapper)
         {
         }
 
@@ -18,13 +19,13 @@ namespace ConferenceManager.Core.Conferences.Delete
 
             if (conference == null)
             {
-                return new DeleteEntityResponse(false);
+                return DeleteEntityResponse.Fail;
             }
 
             Context.Conferences.Remove(conference);
             await Context.SaveChangesAsync(cancellationToken);
 
-            return new DeleteEntityResponse(true);
+            return DeleteEntityResponse.Success;
         }
     }
 }

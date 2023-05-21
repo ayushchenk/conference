@@ -8,14 +8,11 @@ namespace ConferenceManager.Core.Conferences.Get
 {
     public class GetConferenceQueryHandler : DbContextRequestHandler<GetConferenceQuery, ConferenceDto?>
     {
-        private readonly IMapper<Conference, ConferenceDto> _mapper;
-
         public GetConferenceQueryHandler(
             IApplicationDbContext context,
             ICurrentUserService currentUser,
-            IMapper<Conference, ConferenceDto> mapper) : base(context, currentUser)
+            IMappingHost mapper) : base(context, currentUser, mapper)
         {
-            _mapper = mapper;
         }
 
         public override async Task<ConferenceDto?> Handle(GetConferenceQuery request, CancellationToken cancellationToken)
@@ -34,7 +31,7 @@ namespace ConferenceManager.Core.Conferences.Get
                 throw new ForbiddenException();
             }
 
-            return _mapper.Map(conference);
+            return Mapper.Map<Conference, ConferenceDto>(conference);
         }
     }
 }

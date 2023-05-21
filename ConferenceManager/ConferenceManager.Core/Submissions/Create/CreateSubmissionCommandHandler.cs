@@ -8,14 +8,11 @@ namespace ConferenceManager.Core.Submissions.Create
 {
     public class CreateSubmissionCommandHandler : DbContextRequestHandler<CreateSubmissionCommand, CreateEntityResponse>
     {
-        private readonly IMapper<CreateSubmissionCommand, Submission> _mapper;
-
         public CreateSubmissionCommandHandler(
             IApplicationDbContext context,
             ICurrentUserService currentUser,
-            IMapper<CreateSubmissionCommand, Submission> mapper) : base(context, currentUser)
+            IMappingHost mapper) : base(context, currentUser, mapper)
         {
-            _mapper = mapper;
         }
 
         public override async Task<CreateEntityResponse> Handle(CreateSubmissionCommand request, CancellationToken cancellationToken)
@@ -29,7 +26,7 @@ namespace ConferenceManager.Core.Submissions.Create
                 throw new ForbiddenException("Can only upload submissions to participating conferences");
             }
 
-            var submission = _mapper.Map(request);
+            var submission = Mapper.Map<CreateSubmissionCommand, Submission>(request);
 
             Context.Submissions.Add(submission);
             await Context.SaveChangesAsync(cancellationToken);

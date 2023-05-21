@@ -1,7 +1,6 @@
 ﻿using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Domain.Common;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace ConferenceManager.Infrastructure.Persistence.Interceptors;

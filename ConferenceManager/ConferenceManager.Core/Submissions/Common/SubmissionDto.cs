@@ -1,4 +1,5 @@
 ﻿using ConferenceManager.Core.Common.Interfaces;
+using ConferenceManager.Domain.Enums;
 
 namespace ConferenceManager.Core.Submissions.Common
 {
@@ -7,6 +8,8 @@ namespace ConferenceManager.Core.Submissions.Common
         public required int Id { set; get; }
 
         public required int ConferenceId { set; get; }
+
+        public required SubmissionStatus Status { set; get; }
 
         public required int? AuthorId { set; get; }
 
@@ -20,6 +23,6 @@ namespace ConferenceManager.Core.Submissions.Common
 
         public required string Abstract { set; get; }
 
-        public required string FileBase64 { set; get; }
+        public required PaperDto[] Papers { set; get; }
     }
 }
