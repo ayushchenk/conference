@@ -1,9 +1,7 @@
-﻿using ConferenceManager.Core.Common.Exceptions;
-using ConferenceManager.Core.Common.Interfaces;
+﻿using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Core.Common.Model.Token;
 using ConferenceManager.Domain.Entities;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 
 namespace ConferenceManager.Core.Account.Register
 {
