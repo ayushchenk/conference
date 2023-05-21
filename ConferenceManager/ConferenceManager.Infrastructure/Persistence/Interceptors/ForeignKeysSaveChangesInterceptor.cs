@@ -32,6 +32,14 @@ namespace ConferenceManager.Infrastructure.Persistence.Interceptors
                 }
             }
 
+            foreach (var entry in context.ChangeTracker.Entries<Paper>())
+            {
+                if (entry.State == EntityState.Modified)
+                {
+                    entry.Property(p => p.SubmissionId).IsModified = false;
+                }
+            }
+
             foreach (var entry in context.ChangeTracker.Entries<Review>())
             {
                 if (entry.State == EntityState.Modified)

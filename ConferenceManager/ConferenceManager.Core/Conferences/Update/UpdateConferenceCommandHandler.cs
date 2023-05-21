@@ -41,7 +41,7 @@ namespace ConferenceManager.Core.Conferences.Update
             Context.Conferences.Update(newConference);
             await Context.SaveChangesAsync(cancellationToken);
 
-            return new UpdateEntityResponse(true);
+            return UpdateEntityResponse.Success;
         }
     }
 }

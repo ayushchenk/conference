@@ -13,7 +13,7 @@ namespace ConferenceManager.Domain.Entities
 
         public required string Abstract { set; get; }
 
-        public SubmissionStatus Status { set; get; }
+        public required SubmissionStatus Status { set; get; }
 
         public virtual Conference Conference { set; get; } = null!;
 

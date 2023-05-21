@@ -24,7 +24,7 @@ namespace ConferenceManager.Core.Submissions.UploadPaper
 
             if (submission == null)
             {
-                throw new NotFoundException("Submission not found");
+                throw new NotFoundException();
             }
 
             if (submission.CreatedById != CurrentUser.Id)
@@ -32,10 +32,15 @@ namespace ConferenceManager.Core.Submissions.UploadPaper
                 throw new ForbiddenException("Cannot upload to others submissions");
             }
 
+            if (submission.Status != Domain.Enums.SubmissionStatus.Returned)
+            {
+                throw new ForbiddenException("Can only upload to returned submissions");
+            }
+
             submission.Papers.Add(paper);
             await Context.SaveChangesAsync(cancellationToken);
 
-            return new UpdateEntityResponse(true);
+            return UpdateEntityResponse.Success;
         }
     }
 }

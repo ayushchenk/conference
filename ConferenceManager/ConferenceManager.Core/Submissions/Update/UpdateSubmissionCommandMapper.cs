@@ -13,6 +13,7 @@ namespace ConferenceManager.Core.Submissions.Update
                 Abstract = source.Abstract,
                 Keywords = source.Keywords,
                 Title = source.Title,
+                Status = Domain.Enums.SubmissionStatus.Updated
             };
 
             return submission;

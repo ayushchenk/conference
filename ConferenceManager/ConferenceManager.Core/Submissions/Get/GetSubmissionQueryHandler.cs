@@ -21,7 +21,7 @@ namespace ConferenceManager.Core.Submissions.Get
 
             if (submission == null)
             {
-                return null;
+                throw new NotFoundException();
             }
 
             var reviewers = Context.SubmissionReviewers

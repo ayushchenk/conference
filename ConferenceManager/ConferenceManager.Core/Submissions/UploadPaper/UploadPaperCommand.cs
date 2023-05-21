@@ -1,5 +1,6 @@
 ﻿using ConferenceManager.Core.Common.Commands;
 using Microsoft.AspNetCore.Http;
+using System.Text.Json.Serialization;
 
 namespace ConferenceManager.Core.Submissions.UpdatePaper
 {

@@ -19,13 +19,13 @@ namespace ConferenceManager.Core.Conferences.Delete
 
             if (conference == null)
             {
-                return new DeleteEntityResponse(false);
+                return DeleteEntityResponse.Fail;
             }
 
             Context.Conferences.Remove(conference);
             await Context.SaveChangesAsync(cancellationToken);
 
-            return new DeleteEntityResponse(true);
+            return DeleteEntityResponse.Success;
         }
     }
 }

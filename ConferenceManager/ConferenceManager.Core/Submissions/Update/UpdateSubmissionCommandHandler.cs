@@ -9,14 +9,11 @@ namespace ConferenceManager.Core.Submissions.Update
 {
     public class UpdateSubmissionCommandHandler : DbContextRequestHandler<UpdateSubmissionCommand, UpdateEntityResponse>
     {
-        //private readonly IMapper<UpdateSubmissionCommand, Submission> _mapper;
-
         public UpdateSubmissionCommandHandler(
             IApplicationDbContext context,
             ICurrentUserService currentUser,
             IMappingHost mapper) : base(context, currentUser, mapper)
         {
-            //_mapper = mapper;
         }
 
         public override async Task<UpdateEntityResponse> Handle(UpdateSubmissionCommand request, CancellationToken cancellationToken)
@@ -30,13 +27,17 @@ namespace ConferenceManager.Core.Submissions.Update
                 throw new NotFoundException();
             }
 
+            if (oldSubmission.Status != Domain.Enums.SubmissionStatus.Returned)
+            {
+                throw new ForbiddenException("Can only update returned submissions");
+            }
+
             var newSubmission = Mapper.Map<UpdateSubmissionCommand, Submission>(request);
-            newSubmission.Status = oldSubmission.Status;
 
             Context.Submissions.Update(newSubmission);
             await Context.SaveChangesAsync(cancellationToken);
 
-            return new UpdateEntityResponse(true);
+            return UpdateEntityResponse.Success;
         }
     }
 }
