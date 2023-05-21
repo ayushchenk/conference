@@ -4,7 +4,7 @@ namespace ConferenceManager.Core.Account.Common
 {
     public class UserDto : IDto
     {
-        public int Id { set; get; }
+        public required int Id { set; get; }
 
         public required string Email { set; get; }
 
@@ -16,6 +16,6 @@ namespace ConferenceManager.Core.Account.Common
 
         public string? Webpage { set; get; }
 
-        public required string[] Roles { set; get; }
+        public required IEnumerable<string> Roles { set; get; }
     }
 }
