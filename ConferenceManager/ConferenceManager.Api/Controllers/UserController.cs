@@ -1,6 +1,7 @@
 ﻿using ConferenceManager.Api.Abstract;
 using ConferenceManager.Core.Account.Login;
 using ConferenceManager.Core.Account.Register;
+using ConferenceManager.Core.User.AddRole;
 using ConferenceManager.Core.User.Delete;
 using ConferenceManager.Core.User.Get;
 using ConferenceManager.Domain.Entities;
@@ -48,6 +49,26 @@ namespace ConferenceManager.Api.Controllers
             var result = await Mediator.Send(new DeleteUserCommand(id), cancellation);
 
             return DeletedOrNotFound(result);
+        }
+
+        [HttpPost]
+        [Route("{id}/role")]
+        [Authorize(Roles = $"{ApplicationRole.GlobalAdmin},{ApplicationRole.ConferenceAdmin}")]
+        public async Task<IActionResult> AssignRole(int id, AssignRoleCommand command, CancellationToken cancellation)
+        {
+            await Mediator.Send(new AssignRoleCommand(id, command.Role), cancellation);
+
+            return Ok();
+        }
+
+        [HttpDelete]
+        [Route("{id}/role")]
+        [Authorize(Roles = $"{ApplicationRole.GlobalAdmin},{ApplicationRole.ConferenceAdmin}")]
+        public async Task<IActionResult> UnassignRole(int id, UnassignRoleCommand command, CancellationToken cancellation)
+        {
+            await Mediator.Send(new UnassignRoleCommand(id, command.Role), cancellation);
+
+            return Ok();
         }
     }
 }

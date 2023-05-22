@@ -5,6 +5,6 @@ namespace ConferenceManager.Core.Common.Commands
 {
     public interface IUpdateEntityCommand : IRequest<UpdateEntityResponse>
     {
-        int Id { get; set; }
+        int Id { get; }
     }
 }
