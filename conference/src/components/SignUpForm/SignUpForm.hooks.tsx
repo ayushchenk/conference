@@ -1,9 +1,10 @@
 import axios from "axios";
 import { useCallback, useState } from "react";
-import { SignUpRequest, SignUpResponse } from "./SignUpForm.types";
+import { SignUpRequest } from "./SignUpForm.types";
+import { AuthResponse } from "../../types/Auth";
 
 export const usePostSignUpApi = () => {
-    const [response, setResponse] = useState<SignUpResponse>({
+    const [response, setResponse] = useState<AuthResponse>({
         data: null,
         isError: false,
         isLoading: true
@@ -19,6 +20,7 @@ export const usePostSignUpApi = () => {
                 });
             })
             .catch(error => {
+                console.error(error);
                 setResponse({
                     data: null,
                     isError: true,
@@ -28,5 +30,5 @@ export const usePostSignUpApi = () => {
 
     }, []);
 
-    return {data: response.data, isError: response.isError, isLoading: response.isLoading, post: post};
+    return { data: response.data, isError: response.isError, isLoading: response.isLoading, post: post };
 };

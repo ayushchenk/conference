@@ -16,6 +16,14 @@ namespace ConferenceManager.Api
         {
             var tokenSettings = configuration.GetSection("TokenSettings").Get<TokenSettings>()!;
 
+            services.AddCors(o => o.AddPolicy("local",
+                      builder =>
+                      {
+                          builder.WithOrigins("http://localhost:3000")
+                          .AllowAnyMethod()
+                          .AllowAnyHeader();
+                      }));
+
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddHttpContextAccessor();

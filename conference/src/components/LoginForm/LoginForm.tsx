@@ -6,12 +6,9 @@ import Alert from "@mui/material/Alert";
 import Collapse from "@mui/material/Collapse";
 import { usePostLoginApi } from "./LoginForm.hooks";
 import { validationSchema } from "./LoginForm.validator";
+import { Auth } from "../../logic/Auth";
 
-interface LoginFormProps {
-  logIn: Function;
-}
-
-export const LoginForm: React.FC<LoginFormProps> = ({ logIn }) => {
+export const LoginForm: React.FC<{}> = () => {
   const { data, isError, isLoading, post } = usePostLoginApi();
   const navigate = useNavigate();
 
@@ -29,11 +26,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({ logIn }) => {
       post(formData);
     },
   });
-  
-  if (!isLoading && !isError) {
-    if (data && "token" in data) {
-      logIn(data["token"]["accessToken"]);
-    }
+
+  if (!isLoading && !isError && data) {
+    Auth.login(data);
     navigate("/");
   };
 
@@ -64,9 +59,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({ logIn }) => {
         error={formik.touched.password && Boolean(formik.errors.password)}
         helperText={formik.touched.password && formik.errors.password}
       />
-        <Collapse in={isError} sx={{my: "10px"}}>
+      <Collapse in={isError} sx={{ my: "10px" }}>
         <Alert severity="error">Something went wrong while signing in.</Alert>
-        </Collapse>
+      </Collapse>
       <Button color="primary" variant="contained" fullWidth type="submit">
         Submit
       </Button>
