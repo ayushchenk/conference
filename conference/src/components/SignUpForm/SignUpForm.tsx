@@ -7,8 +7,11 @@ import Collapse from "@mui/material/Collapse";
 import { usePostSignUpApi } from "./SignUpForm.hooks";
 import { validationSchema } from "./SignUpForm.validator";
 
+interface SignUpFormProps {
+  logIn: Function;
+}
 
-export const SignUpForm = () => {
+export const SignUpForm: React.FC<SignUpFormProps> = ({ logIn }) => {
   const { data, isError, isLoading, post } = usePostSignUpApi();
   const navigate = useNavigate();
 
@@ -37,8 +40,11 @@ export const SignUpForm = () => {
       post(formData);
     },
   });
-
+  
   if (!isLoading && !isError) {
+    if (data && "token" in data) {
+      logIn(data["token"]["accessToken"]);
+    }
     navigate("/");
   };
 

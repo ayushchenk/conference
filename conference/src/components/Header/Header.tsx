@@ -11,7 +11,9 @@ export const Header = () => {
                         <Link className="header__link" to="/">Conferences</Link>
                     </Button>
                 </Box>
-                <Button color="inherit">Login</Button>
+                <Button color="inherit">
+                    <Link className="header__link" to="/login">Login</Link>
+                </Button>
                 <Button color="inherit">
                     <Link className="header__link" to="/sign-up">Sign up</Link>
                 </Button>
