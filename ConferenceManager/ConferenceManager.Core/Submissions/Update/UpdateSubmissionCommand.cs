@@ -1,11 +1,10 @@
 ﻿using ConferenceManager.Core.Common.Commands;
-using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Http;
 
 namespace ConferenceManager.Core.Submissions.Update
 {
     public class UpdateSubmissionCommand : IUpdateEntityCommand
     {
-        [JsonIgnore]
         public int Id { set; get; }
 
         public string Title { set; get; } = null!;
@@ -13,5 +12,7 @@ namespace ConferenceManager.Core.Submissions.Update
         public string Keywords { set; get; } = null!;
 
         public string Abstract { set; get; } = null!;
+
+        public IFormFile? File { set; get; }
     }
 }
