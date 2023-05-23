@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { SignUpRequest } from "./SignUpForm.types";
 import { AuthResponse } from "../../types/Auth";
 
@@ -11,24 +11,22 @@ export const usePostSignUpApi = () => {
     });
 
     const post = useCallback((data: SignUpRequest) => {
-        useEffect(() => {
-            axios.post("/Account/Register", data)
-                .then(response => {
-                    setResponse({
-                        data: response.data,
-                        isError: false,
-                        isLoading: false
-                    });
-                })
-                .catch(error => {
-                    console.error(error);
-                    setResponse({
-                        data: null,
-                        isError: true,
-                        isLoading: false
-                    });
+        axios.post("/Account/Register", data)
+            .then(response => {
+                setResponse({
+                    data: response.data,
+                    isError: false,
+                    isLoading: false
                 });
-        }, []);
+            })
+            .catch(error => {
+                console.error(error);
+                setResponse({
+                    data: null,
+                    isError: true,
+                    isLoading: false
+                });
+            });
     }, []);
 
     return { data: response.data, isError: response.isError, isLoading: response.isLoading, post: post };

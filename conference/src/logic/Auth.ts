@@ -23,7 +23,7 @@ export namespace Auth {
 
         const authData = JSON.parse(authDataString) as AuthData;
 
-        return authData.token.expiry > new Date();
+        return new Date(authData.token.expiry) > new Date();
     }
 
     export function getRoles() {

@@ -1,7 +1,7 @@
 export type Token = {
     accessToken: string,
-    expiry: Date,
-    issued: Date,
+    expiry: string,
+    issued: string,
 }
 
 export type AuthData = {

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { LoginRequest } from "./LoginForm.types";
 import { AuthResponse } from "../../types/Auth";
 
@@ -11,24 +11,22 @@ export const usePostLoginApi = () => {
     });
 
     const post = useCallback((data: LoginRequest) => {
-        useEffect(() => {
-            axios.post("/Account/Login", data)
-                .then(response => {
-                    setResponse({
-                        data: response.data,
-                        isError: false,
-                        isLoading: false
-                    });
-                })
-                .catch(error => {
-                    console.error(error);
-                    setResponse({
-                        data: null,
-                        isError: true,
-                        isLoading: false
-                    });
+        axios.post("/Account/Login", data)
+            .then(response => {
+                setResponse({
+                    data: response.data,
+                    isError: false,
+                    isLoading: false
                 });
-        }, []);
+            })
+            .catch(error => {
+                console.error(error);
+                setResponse({
+                    data: null,
+                    isError: true,
+                    isLoading: false
+                });
+            });
     }, []);
 
     return { data: response.data, isError: response.isError, isLoading: response.isLoading, post: post };
