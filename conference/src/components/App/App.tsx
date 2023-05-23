@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes} from "react-router-dom";
 import { Header } from "../Header";
 import { ConferencesPage } from "../../pages/Conferences";
 import { Protected } from "../ProtectedRoute/Protected";
-import { SignUpPage, LoginPage } from "../../pages/Auth";
+import { SignUpPage, LoginPage, LogoutPage } from "../../pages/Auth";
 import { Auth } from "../../logic/Auth";
 
 axios.interceptors.request.use(function (config) {
@@ -21,6 +21,7 @@ export const App = () => {
             <Routes>
                 <Route path="/sign-up" element={<SignUpPage />}></Route>
                 <Route path="/login" element={<LoginPage />}></Route>
+                <Route path="/logout" element={<LogoutPage />}></Route>
                 <Route path="/" element={
                     <Protected> 
                         <ConferencesPage />
