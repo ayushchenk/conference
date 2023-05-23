@@ -22,8 +22,8 @@ namespace ConferenceManager.Api.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         [Route("{id}")]
+        [Authorize]
         public async Task<IActionResult> Get(int id, CancellationToken cancellation)
         {
             var result = await Mediator.Send(new GetSubmissionQuery(id), cancellation);
@@ -32,9 +32,11 @@ namespace ConferenceManager.Api.Controllers
         }
 
         [HttpPut]
+        [Route("{id}")]
         [Authorize(Roles = ApplicationRole.Author)]
-        public async Task<IActionResult> Put(UpdateSubmissionCommand command, CancellationToken cancellation)
+        public async Task<IActionResult> Put(int id, UpdateSubmissionCommand command, CancellationToken cancellation)
         {
+            command.Id = id;
             await Mediator.Send(command, cancellation);
 
             return NoContent();
