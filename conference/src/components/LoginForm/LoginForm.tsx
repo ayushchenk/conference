@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import Button from "@mui/material/Button";
@@ -11,6 +12,19 @@ import { Auth } from "../../logic/Auth";
 export const LoginForm: React.FC<{}> = () => {
   const { data, isError, isLoading, post } = usePostLoginApi();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (Auth.isAuthed()) {
+      navigate("/");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isLoading && !isError && data) {
+      Auth.login(data);
+      navigate("/");
+    };
+  }, [data, isError, isLoading]);
 
   const formik = useFormik({
     initialValues: {
@@ -26,11 +40,6 @@ export const LoginForm: React.FC<{}> = () => {
       post(formData);
     },
   });
-
-  if (!isLoading && !isError && data) {
-    Auth.login(data);
-    navigate("/");
-  };
 
   return (
     <form onSubmit={formik.handleSubmit}>
