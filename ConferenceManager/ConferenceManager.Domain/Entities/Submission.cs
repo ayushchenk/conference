@@ -1,5 +1,6 @@
 ﻿using ConferenceManager.Domain.Common;
 using ConferenceManager.Domain.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ConferenceManager.Domain.Entities
 {
@@ -16,6 +17,12 @@ namespace ConferenceManager.Domain.Entities
         public required SubmissionStatus Status { set; get; }
 
         public virtual Conference Conference { set; get; } = null!;
+
+        [NotMapped]
+        public bool IsValidForReturn => Status == SubmissionStatus.Created || Status == SubmissionStatus.Updated;
+
+        [NotMapped]
+        public bool IsValidForUpdate => Status == SubmissionStatus.Returned;
 
         public virtual IList<ApplicationUser> ActualReviewers { set; get; } = null!;
 

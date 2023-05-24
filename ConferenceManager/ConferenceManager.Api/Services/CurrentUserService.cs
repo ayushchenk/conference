@@ -7,10 +7,12 @@ namespace ConferenceManager.Api.Services
     public class CurrentUserService : ICurrentUserService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IApplicationDbContext _context;
 
-        public CurrentUserService(IHttpContextAccessor httpContextAccessor)
+        public CurrentUserService(IHttpContextAccessor httpContextAccessor, IApplicationDbContext context)
         {
             _httpContextAccessor = httpContextAccessor;
+            _context = context;
         }
 
         public int Id
@@ -37,12 +39,43 @@ namespace ConferenceManager.Api.Services
             }
         }
 
-        public bool IsGlobalAdmin => Roles.Contains(ApplicationRole.GlobalAdmin);
+        public bool HasAdminRole => Roles.Contains(ApplicationRole.Admin);
 
-        public bool IsConferenceAdmin => Roles.Contains(ApplicationRole.ConferenceAdmin);
+        public bool HasAuthorRole => Roles.Contains(ApplicationRole.Author);
 
-        public bool IsAuthor => Roles.Contains(ApplicationRole.Author);
+        public bool HasReviewerRole => Roles.Contains(ApplicationRole.Reviewer);
 
-        public bool IsReviewer => Roles.Contains(ApplicationRole.Reviwer);
+        public bool IsParticipantOf(Conference conference)
+        {
+            return HasAdminRole || conference.Participants
+                .Select(p => p.Id)
+                .Contains(Id);
+        }
+
+        public bool IsAuthorOf(Submission submission)
+        {
+            return (HasAuthorRole && submission.CreatedById == Id) || HasAdminRole;
+        }
+
+        public bool IsReviewerOf(Submission submission)
+        {
+            return (HasReviewerRole && submission.ActualReviewers
+                .Select(r => r.Id)
+                .Contains(Id)) || HasAdminRole;
+        }
+
+        public IOrderedQueryable<Submission> AllCreatedSubmissions()
+        {
+            return _context.Submissions
+                .Where(s => s.CreatedById == Id)
+                .OrderByDescending(s => s.CreatedOn);
+        }
+
+        public IOrderedQueryable<Submission> AllReviewingSubmissions()
+        {
+            return _context.Submissions
+                .Where(s => s.ActualReviewers.Select(r => r.Id).Contains(Id))
+                .OrderByDescending(s => s.CreatedOn);
+        }
     }
 }

@@ -18,12 +18,7 @@ namespace ConferenceManager.Core.Conferences.Page
 
         public override async Task<EntityPageResponse<ConferenceDto>> Handle(GetConferencePageQuery request, CancellationToken cancellationToken)
         {
-            var source = CurrentUser.IsGlobalAdmin
-                ? Context.Conferences
-                    .OrderByDescending(conf => conf.EndDate)
-                : Context.Conferences
-                    .Where(conf => conf.Participants.Select(user => user.Id).Contains(CurrentUser.Id))
-                    .OrderByDescending(conf => conf.EndDate);
+            var source = Context.Conferences.OrderByDescending(conf => conf.EndDate);
 
             var conferences = await PaginatedList<Conference>.CreateAsync(source, request.PageIndex, request.PageSize);
 

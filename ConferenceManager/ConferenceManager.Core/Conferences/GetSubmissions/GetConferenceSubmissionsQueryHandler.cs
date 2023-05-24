@@ -26,9 +26,7 @@ namespace ConferenceManager.Core.Conferences.GetSubmissions
                 throw new NotFoundException();
             }
 
-            var particpants = conference.Participants.Select(x => x.Id);
-
-            if (!CurrentUser.IsGlobalAdmin && !particpants.Contains(CurrentUser.Id))
+            if (!CurrentUser.IsParticipantOf(conference))
             {
                 throw new ForbiddenException("Not a participant of conference");
             }
@@ -47,16 +45,14 @@ namespace ConferenceManager.Core.Conferences.GetSubmissions
 
         private IQueryable<Submission> GetQuerySource(int conferenceId)
         {
-            if (CurrentUser.IsAuthor)
+            if (CurrentUser.HasReviewerRole)
             {
-                return Context.Submissions
-                    .Where(s => s.CreatedById == CurrentUser.Id)
-                    .OrderByDescending(s => s.CreatedOn);
+                return CurrentUser.AllReviewingSubmissions()
+                    .Where(s => s.ConferenceId == conferenceId);
             }
 
-            return Context.Submissions
-               .Where(s => s.ConferenceId == conferenceId)
-               .OrderByDescending(s => s.CreatedOn);
+            return CurrentUser.AllCreatedSubmissions()
+                    .Where(s => s.ConferenceId == conferenceId);
         }
     }
 }

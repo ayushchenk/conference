@@ -24,21 +24,12 @@ namespace ConferenceManager.Core.Submissions.Get
                 throw new NotFoundException();
             }
 
-            var confParticipants = Context.ConferenceParticipants
-                .Where(conf => conf.ConferenceId == submission.ConferenceId)
-                .Select(conf => conf.UserId);
-
-            var isParticipant = confParticipants.Contains(CurrentUser.Id);
-
-            if (CurrentUser.IsGlobalAdmin
-                || (CurrentUser.IsConferenceAdmin && isParticipant)
-                || (CurrentUser.IsReviewer && isParticipant)
-                || submission.CreatedById == CurrentUser.Id)
+            if (!CurrentUser.IsParticipantOf(submission.Conference))
             {
-                return Mapper.Map<Submission, SubmissionDto>(submission);
+                throw new ForbiddenException();
             }
 
-            throw new ForbiddenException();
+            return Mapper.Map<Submission, SubmissionDto>(submission);
         }
     }
 }

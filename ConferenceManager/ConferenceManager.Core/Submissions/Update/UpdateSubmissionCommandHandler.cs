@@ -27,7 +27,7 @@ namespace ConferenceManager.Core.Submissions.Update
                 throw new NotFoundException();
             }
 
-            if (oldSubmission.Status != Domain.Enums.SubmissionStatus.Returned)
+            if (!oldSubmission.IsValidForUpdate)
             {
                 throw new ForbiddenException("Can only update returned submissions");
             }

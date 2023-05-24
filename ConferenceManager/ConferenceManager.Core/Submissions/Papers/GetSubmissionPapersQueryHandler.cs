@@ -26,32 +26,28 @@ namespace ConferenceManager.Core.Submissions.Papers
                 throw new NotFoundException();
             }
 
-            if (CurrentUser.IsAuthor && submission.CreatedById != CurrentUser.Id)
+            if (CurrentUser.HasAuthorRole && !CurrentUser.IsAuthorOf(submission))
             {
                 throw new ForbiddenException();
             }
 
-            var isParticipant = submission.Conference.Participants
-                .Select(p => p.Id)
-                .Contains(CurrentUser.Id);
-
-            if (isParticipant || CurrentUser.IsGlobalAdmin)
+            if (!CurrentUser.IsParticipantOf(submission.Conference))
             {
-                var source = Context.Papers
+                throw new ForbiddenException();
+            }
+
+            var source = Context.Papers
                     .Where(p => p.SubmissionId == submission.Id)
                     .OrderByDescending(p => p.CreatedOn);
 
+            var page = await PaginatedList<Paper>.CreateAsync(source, request.PageIndex, request.PageSize);
 
-                var page = await PaginatedList<Paper>.CreateAsync(source, request.PageIndex, request.PageSize);
-                return new EntityPageResponse<PaperDto>()
-                {
-                    Items = page.Select(Mapper.Map<Paper, PaperDto>),
-                    TotalCount = page.TotalCount,
-                    TotalPages = page.TotalPages
-                };
-            }
-
-            throw new ForbiddenException();
+            return new EntityPageResponse<PaperDto>()
+            {
+                Items = page.Select(Mapper.Map<Paper, PaperDto>),
+                TotalCount = page.TotalCount,
+                TotalPages = page.TotalPages
+            };
         }
     }
 }

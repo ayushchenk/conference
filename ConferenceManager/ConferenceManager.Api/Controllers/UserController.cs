@@ -33,17 +33,17 @@ namespace ConferenceManager.Api.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        [Authorize(Roles = $"{ApplicationRole.GlobalAdmin},{ApplicationRole.ConferenceAdmin}")]
+        [Authorize(Roles = ApplicationRole.Admin)]
         public async Task<IActionResult> Get(int id, CancellationToken cancellation)
         {
-            var result = await Mediator.Send(new GetUserQuery(id) , cancellation);
+            var result = await Mediator.Send(new GetUserQuery(id), cancellation);
 
             return OkOrNotFound(result);
         }
 
         [HttpDelete]
         [Route("{id}")]
-        [Authorize(Roles = ApplicationRole.GlobalAdmin)]
+        [Authorize(Roles = ApplicationRole.Admin)]
         public async Task<IActionResult> Delete(int id, CancellationToken cancellation)
         {
             var result = await Mediator.Send(new DeleteUserCommand(id), cancellation);
@@ -53,7 +53,7 @@ namespace ConferenceManager.Api.Controllers
 
         [HttpPost]
         [Route("{id}/role")]
-        [Authorize(Roles = $"{ApplicationRole.GlobalAdmin},{ApplicationRole.ConferenceAdmin}")]
+        [Authorize(Roles = ApplicationRole.Admin)]
         public async Task<IActionResult> AssignRole(int id, AssignRoleCommand command, CancellationToken cancellation)
         {
             await Mediator.Send(new AssignRoleCommand(id, command.Role), cancellation);
@@ -63,7 +63,7 @@ namespace ConferenceManager.Api.Controllers
 
         [HttpDelete]
         [Route("{id}/role")]
-        [Authorize(Roles = $"{ApplicationRole.GlobalAdmin},{ApplicationRole.ConferenceAdmin}")]
+        [Authorize(Roles = ApplicationRole.Admin)]
         public async Task<IActionResult> UnassignRole(int id, UnassignRoleCommand command, CancellationToken cancellation)
         {
             await Mediator.Send(new UnassignRoleCommand(id, command.Role), cancellation);

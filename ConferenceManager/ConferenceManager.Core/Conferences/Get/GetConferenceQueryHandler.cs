@@ -24,13 +24,6 @@ namespace ConferenceManager.Core.Conferences.Get
                 return null;
             }
 
-            var participantsIds = conference.Participants.Select(u => u.Id);
-
-            if (!CurrentUser.IsGlobalAdmin && !participantsIds.Contains(CurrentUser.Id))
-            {
-                throw new ForbiddenException();
-            }
-
             return Mapper.Map<Conference, ConferenceDto>(conference);
         }
     }

@@ -31,7 +31,7 @@ namespace ConferenceManager.Core.Conferences.Update
                 .Where(c => c.ConferenceId == request.Id)
                 .Select(c => c.UserId);
 
-            if (!CurrentUser.IsGlobalAdmin && !participantIds.Contains(CurrentUser.Id))
+            if (!CurrentUser.HasAdminRole && !participantIds.Contains(CurrentUser.Id))
             {
                 throw new ForbiddenException();
             }
