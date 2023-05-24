@@ -23,24 +23,20 @@ namespace ConferenceManager.Core.Submissions.Papers
 
             if (submission == null)
             {
-                throw new NotFoundException();
+                throw new NotFoundException("Submission not found");
             }
 
-            if (CurrentUser.HasAuthorRole && !CurrentUser.IsAuthorOf(submission))
+            if ((CurrentUser.HasAuthorRole && !CurrentUser.IsAuthorOf(submission))
+                || !CurrentUser.IsReviewerOf(submission))
             {
-                throw new ForbiddenException();
+                throw new ForbiddenException("Must be author or reviewer");
             }
 
-            if (!CurrentUser.IsParticipantOf(submission.Conference))
-            {
-                throw new ForbiddenException();
-            }
-
-            var source = Context.Papers
+            var papers = Context.Papers
                     .Where(p => p.SubmissionId == submission.Id)
                     .OrderByDescending(p => p.CreatedOn);
 
-            var page = await PaginatedList<Paper>.CreateAsync(source, request.PageIndex, request.PageSize);
+            var page = await PaginatedList<Paper>.CreateAsync(papers, request.PageIndex, request.PageSize);
 
             return new EntityPageResponse<PaperDto>()
             {

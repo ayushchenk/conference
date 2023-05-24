@@ -22,11 +22,9 @@ namespace ConferenceManager.Core.Conferences.Page
 
             var conferences = await PaginatedList<Conference>.CreateAsync(source, request.PageIndex, request.PageSize);
 
-            var dtos = conferences.Select(Mapper.Map<Conference, ConferenceDto>);
-
             return new EntityPageResponse<ConferenceDto>()
             {
-                Items = dtos,
+                Items = conferences.Select(Mapper.Map<Conference, ConferenceDto>),
                 TotalCount = conferences.TotalCount,
                 TotalPages = conferences.TotalPages
             };

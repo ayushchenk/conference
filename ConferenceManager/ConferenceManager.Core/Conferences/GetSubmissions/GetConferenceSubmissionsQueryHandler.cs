@@ -23,7 +23,7 @@ namespace ConferenceManager.Core.Conferences.GetSubmissions
 
             if (conference == null)
             {
-                throw new NotFoundException();
+                throw new NotFoundException("Conference not found");
             }
 
             if (!CurrentUser.IsParticipantOf(conference))

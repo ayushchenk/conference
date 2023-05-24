@@ -21,12 +21,12 @@ namespace ConferenceManager.Core.Submissions.Get
 
             if (submission == null)
             {
-                throw new NotFoundException();
+                throw new NotFoundException("Submission not found");
             }
 
             if (!CurrentUser.IsParticipantOf(submission.Conference))
             {
-                throw new ForbiddenException();
+                throw new ForbiddenException("Is not part of conference");
             }
 
             return Mapper.Map<Submission, SubmissionDto>(submission);

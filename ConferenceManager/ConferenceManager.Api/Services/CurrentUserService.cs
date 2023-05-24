@@ -54,14 +54,14 @@ namespace ConferenceManager.Api.Services
 
         public bool IsAuthorOf(Submission submission)
         {
-            return (HasAuthorRole && submission.CreatedById == Id) || HasAdminRole;
+            return submission.CreatedById == Id || HasAdminRole;
         }
 
         public bool IsReviewerOf(Submission submission)
         {
-            return (HasReviewerRole && submission.ActualReviewers
+            return HasAdminRole || submission.ActualReviewers
                 .Select(r => r.Id)
-                .Contains(Id)) || HasAdminRole;
+                .Contains(Id);
         }
 
         public IOrderedQueryable<Submission> AllCreatedSubmissions()

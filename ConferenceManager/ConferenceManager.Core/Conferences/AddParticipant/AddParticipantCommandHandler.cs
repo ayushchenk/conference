@@ -23,7 +23,7 @@ namespace ConferenceManager.Core.Conferences.AddParticipant
 
             if (user == null || conference == null)
             {
-                throw new NotFoundException();
+                throw new NotFoundException("User of conference not found");
             }
 
             var participation = await Context.ConferenceParticipants

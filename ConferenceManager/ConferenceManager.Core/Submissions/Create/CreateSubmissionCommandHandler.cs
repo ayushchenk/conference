@@ -26,7 +26,7 @@ namespace ConferenceManager.Core.Submissions.Create
 
             if (!CurrentUser.IsParticipantOf(conference))
             {
-                throw new ForbiddenException("Can only upload submissions to participating conferences");
+                throw new ForbiddenException("Is not part of conference");
             }
 
             var submission = Mapper.Map<CreateSubmissionCommand, Submission>(request);
