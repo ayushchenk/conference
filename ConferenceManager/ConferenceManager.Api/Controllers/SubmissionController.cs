@@ -52,7 +52,7 @@ namespace ConferenceManager.Api.Controllers
 
         [HttpGet]
         [Route("{id}/papers")]
-        [Authorize(Roles = ApplicationRole.Reviewer)]
+        [Authorize]
         public async Task<IActionResult> UploadPaper(int id, int pageIndex, int pageSize, CancellationToken cancellation)
         {
             var result = await Mediator.Send(new GetSubmissionPapersQuery(id, pageIndex, pageSize), cancellation);
