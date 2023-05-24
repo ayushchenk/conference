@@ -1,9 +1,17 @@
+import { useNavigate } from "react-router-dom";
 import { AppBar, Box, Button, Toolbar } from "@mui/material";
 import { Link } from "react-router-dom";
 import { Auth } from "../../logic/Auth";
 import "./Header.css";
 
 export const Header = () => {
+    const navigate = useNavigate();
+
+    function handleLogout() {
+        Auth.logout();
+        navigate("/login");
+    }
+
     return (
         <AppBar position="static">
             <Toolbar variant="dense">
@@ -14,8 +22,8 @@ export const Header = () => {
                 </Box>
                 {
                     Auth.isAuthed() ? 
-                    <Button color="inherit">
-                        <Link className="header__link" to="/logout">Logout</Link>
+                    <Button color="inherit" className="header__link" onClick={handleLogout}>
+                        Logout
                     </Button>
                     :
                     <>

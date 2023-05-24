@@ -1,1 +1,0 @@
-export { LogoutForm } from "./LogoutForm";
