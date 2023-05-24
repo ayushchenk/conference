@@ -35,7 +35,7 @@ namespace ConferenceManager.Api.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = $"{ApplicationRole.GlobalAdmin},{ApplicationRole.ConferenceAdmin}")]
+        [Authorize(Roles = ApplicationRole.Admin)]
         public async Task<IActionResult> Post(CreateConferenceCommand command, CancellationToken cancellation)
         {
             var result = await Mediator.Send(command, cancellation);
@@ -45,7 +45,7 @@ namespace ConferenceManager.Api.Controllers
 
         [HttpPut]
         [Route("{id}")]
-        [Authorize(Roles = $"{ApplicationRole.GlobalAdmin},{ApplicationRole.ConferenceAdmin}")]
+        [Authorize(Roles = ApplicationRole.Admin)]
         public async Task<IActionResult> Put(int id, UpdateConferenceCommand command, CancellationToken cancellation)
         {
             command.Id = id;
@@ -56,7 +56,7 @@ namespace ConferenceManager.Api.Controllers
 
         [HttpDelete]
         [Route("{id}")]
-        [Authorize(Roles = ApplicationRole.GlobalAdmin)]
+        [Authorize(Roles = ApplicationRole.Admin)]
         public async Task<IActionResult> Delete(int id, CancellationToken cancellation)
         {
             await Mediator.Send(new DeleteConferenceCommand(id), cancellation);
@@ -66,7 +66,7 @@ namespace ConferenceManager.Api.Controllers
 
         [HttpPost]
         [Route("{id}/participant/{userId}")]
-        [Authorize(Roles = $"{ApplicationRole.GlobalAdmin},{ApplicationRole.ConferenceAdmin}")]
+        [Authorize(Roles = ApplicationRole.Admin)]
         public async Task<IActionResult> AddParticipant(int id, int userId, CancellationToken cancellation)
         {
             await Mediator.Send(new AddParticipantCommand(id, userId), cancellation);
@@ -76,7 +76,7 @@ namespace ConferenceManager.Api.Controllers
 
         [HttpDelete]
         [Route("{id}/participant/{userId}")]
-        [Authorize(Roles = $"{ApplicationRole.GlobalAdmin},{ApplicationRole.ConferenceAdmin}")]
+        [Authorize(Roles = ApplicationRole.Admin)]
         public async Task<IActionResult> RemoveParticipant(int id, int userId, CancellationToken cancellation)
         {
             await Mediator.Send(new RemoveParticipantCommand(id, userId), cancellation);

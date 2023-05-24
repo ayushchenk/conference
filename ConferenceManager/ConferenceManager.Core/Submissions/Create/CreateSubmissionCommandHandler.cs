@@ -17,13 +17,16 @@ namespace ConferenceManager.Core.Submissions.Create
 
         public override async Task<CreateEntityResponse> Handle(CreateSubmissionCommand request, CancellationToken cancellationToken)
         {
-            var confParticipants = Context.ConferenceParticipants
-                .Where(part => part.ConferenceId == request.ConferenceId)
-                .Select(part => part.User.Id);
+            var conference = await Context.Conferences.FindAsync(request.ConferenceId, cancellationToken);
 
-            if (!confParticipants.Contains(CurrentUser.Id))
+            if (conference == null)
             {
-                throw new ForbiddenException("Can only upload submissions to participating conferences");
+                throw new NotFoundException("Conference not found");
+            }
+
+            if (!CurrentUser.IsParticipantOf(conference))
+            {
+                throw new ForbiddenException("Is not part of conference");
             }
 
             var submission = Mapper.Map<CreateSubmissionCommand, Submission>(request);

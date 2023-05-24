@@ -24,29 +24,11 @@ namespace ConferenceManager.Core.Conferences.RemoveParticipant
                 throw new NotFoundException();
             }
 
-            CheckConferenceAdminPermission(request.ConferenceId);
-
             Context.ConferenceParticipants.Remove(participation);
 
             await Context.SaveChangesAsync(cancellationToken);
 
             return EmptyResponse.Value;
-        }
-
-        private void CheckConferenceAdminPermission(int conferenceId)
-        {
-            if (CurrentUser.IsConferenceAdmin)
-            {
-                var isAdminInConference = Context.ConferenceParticipants
-                    .Where(p => p.ConferenceId == conferenceId)
-                    .Select(p => p.UserId)
-                    .Contains(CurrentUser.Id);
-
-                if (!isAdminInConference)
-                {
-                    throw new ForbiddenException("Can only remove user from participating conference");
-                }
-            }
         }
     }
 }

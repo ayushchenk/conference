@@ -27,6 +27,9 @@ namespace ConferenceManager.Infrastructure.Persistence.Configurations
 
             builder.Property(x => x.Status)
                 .IsRequired();
+
+            builder.Ignore(x => x.IsValidForReturn);
+            builder.Ignore(x => x.IsValidForUpdate);
         }
     }
 }

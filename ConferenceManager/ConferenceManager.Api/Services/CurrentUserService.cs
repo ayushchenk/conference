@@ -37,12 +37,29 @@ namespace ConferenceManager.Api.Services
             }
         }
 
-        public bool IsGlobalAdmin => Roles.Contains(ApplicationRole.GlobalAdmin);
+        public bool HasAdminRole => Roles.Contains(ApplicationRole.Admin);
 
-        public bool IsConferenceAdmin => Roles.Contains(ApplicationRole.ConferenceAdmin);
+        public bool HasAuthorRole => Roles.Contains(ApplicationRole.Author);
 
-        public bool IsAuthor => Roles.Contains(ApplicationRole.Author);
+        public bool HasReviewerRole => Roles.Contains(ApplicationRole.Reviewer);
 
-        public bool IsReviewer => Roles.Contains(ApplicationRole.Reviwer);
+        public bool IsParticipantOf(Conference conference)
+        {
+            return HasAdminRole || conference.Participants
+                .Select(p => p.Id)
+                .Contains(Id);
+        }
+
+        public bool IsAuthorOf(Submission submission)
+        {
+            return HasAdminRole || submission.CreatedById == Id;
+        }
+
+        public bool IsReviewerOf(Submission submission)
+        {
+            return HasAdminRole || submission.ActualReviewers
+                .Select(r => r.Id)
+                .Contains(Id);
+        }
     }
 }

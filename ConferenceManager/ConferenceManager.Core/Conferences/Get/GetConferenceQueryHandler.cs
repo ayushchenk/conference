@@ -1,5 +1,4 @@
 ﻿using ConferenceManager.Core.Common;
-using ConferenceManager.Core.Common.Exceptions;
 using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Core.Conferences.Common;
 using ConferenceManager.Domain.Entities;
@@ -19,19 +18,9 @@ namespace ConferenceManager.Core.Conferences.Get
         {
             var conference = await Context.Conferences.FindAsync(request.Id, cancellationToken);
 
-            if (conference == null)
-            {
-                return null;
-            }
-
-            var participantsIds = conference.Participants.Select(u => u.Id);
-
-            if (!CurrentUser.IsGlobalAdmin && !participantsIds.Contains(CurrentUser.Id))
-            {
-                throw new ForbiddenException();
-            }
-
-            return Mapper.Map<Conference, ConferenceDto>(conference);
+            return conference == null
+                ? null
+                : Mapper.Map<Conference, ConferenceDto>(conference);
         }
     }
 }
