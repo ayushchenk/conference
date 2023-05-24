@@ -1,4 +1,5 @@
-﻿using ConferenceManager.Core.Common.Exceptions;
+﻿using Azure.Core;
+using ConferenceManager.Core.Common.Exceptions;
 using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Core.Common.Model.Settings;
 using ConferenceManager.Core.Common.Model.Token;
@@ -12,14 +13,14 @@ using System.Text;
 
 namespace ConferenceManager.Api.Services
 {
-    public class TokenService : ITokenService
+    public class IdentityService : IIdentityService
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly TokenSettings _settings;
         private readonly IDateTimeService _dateTime;
 
-        public TokenService(
+        public IdentityService(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IOptions<TokenSettings> settings,
@@ -53,6 +54,36 @@ namespace ConferenceManager.Api.Services
             return GenerateJwtToken(user, roles);
         }
 
+        public async Task<TokenResponse> CreateUser(ApplicationUser user, string password)
+        {
+            var createResult = await _userManager.CreateAsync(user, password);
+
+            if (!createResult.Succeeded)
+            {
+                throw new IdentityException(createResult.Errors);
+            }
+
+            await _userManager.AddToRoleAsync(user, ApplicationRole.Author);
+
+            return await Authenticate(new TokenRequest()
+            {
+                Email = user.Email!,
+                Password = password
+            });
+        }
+
+        public async Task DeleteUser(int id)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+
+            if (user == null)
+            {
+                throw new NotFoundException();
+            }
+
+            await _userManager.DeleteAsync(user);
+        }
+
         private TokenResponse GenerateJwtToken(ApplicationUser user, IEnumerable<string> roles)
         {
             byte[] key = Encoding.ASCII.GetBytes(_settings.Key);
@@ -72,7 +103,7 @@ namespace ConferenceManager.Api.Services
                 })
             };
 
-            foreach(var role in roles)
+            foreach (var role in roles)
             {
                 descriptor.Subject.AddClaim(new Claim(ClaimTypes.Role, role));
             }

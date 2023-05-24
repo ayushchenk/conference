@@ -1,8 +1,10 @@
 ﻿using ConferenceManager.Api.Abstract;
+using ConferenceManager.Core.Conferences.AddParticipant;
 using ConferenceManager.Core.Conferences.Create;
 using ConferenceManager.Core.Conferences.Delete;
 using ConferenceManager.Core.Conferences.Get;
 using ConferenceManager.Core.Conferences.Page;
+using ConferenceManager.Core.Conferences.RemoveParticipant;
 using ConferenceManager.Core.Conferences.Update;
 using ConferenceManager.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -41,9 +43,11 @@ namespace ConferenceManager.Api.Controllers
         }
 
         [HttpPut]
+        [Route("{id}")]
         [Authorize(Roles = $"{ApplicationRole.GlobalAdmin},{ApplicationRole.ConferenceAdmin}")]
-        public async Task<IActionResult> Put(UpdateConferenceCommand command, CancellationToken cancellation)
+        public async Task<IActionResult> Put(int id, UpdateConferenceCommand command, CancellationToken cancellation)
         {
+            command.Id = id;
             await Mediator.Send(command, cancellation);
 
             return NoContent();
@@ -57,6 +61,26 @@ namespace ConferenceManager.Api.Controllers
             await Mediator.Send(new DeleteConferenceCommand(id), cancellation);
 
             return NoContent();
+        }
+
+        [HttpPost]
+        [Route("{id}/participant/{userId}")]
+        [Authorize(Roles = $"{ApplicationRole.GlobalAdmin},{ApplicationRole.ConferenceAdmin}")]
+        public async Task<IActionResult> AddParticipant(int id, int userId, CancellationToken cancellation)
+        {
+            await Mediator.Send(new AddParticipantCommand(id, userId), cancellation);
+
+            return Ok();
+        }
+
+        [HttpDelete]
+        [Route("{id}/participant/{userId}")]
+        [Authorize(Roles = $"{ApplicationRole.GlobalAdmin},{ApplicationRole.ConferenceAdmin}")]
+        public async Task<IActionResult> RemoveParticipant(int id, int userId, CancellationToken cancellation)
+        {
+            await Mediator.Send(new RemoveParticipantCommand(id, userId), cancellation);
+
+            return Ok();
         }
     }
 }

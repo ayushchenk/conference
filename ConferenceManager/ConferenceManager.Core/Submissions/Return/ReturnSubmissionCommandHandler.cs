@@ -30,7 +30,16 @@ namespace ConferenceManager.Core.Submissions.Return
                 throw new ForbiddenException("Can only return created or updated submissions");
             }
 
-            submission.Status = Domain.Enums.SubmissionStatus.Returned;
+            var reviewers = Context.SubmissionReviewers
+                .Where(sr => sr.SubmissionId == submission.Id)
+                .Select(sr => sr.ReviewerId);
+
+            if (!reviewers.Contains(CurrentUser.Id))
+            {
+                throw new ForbiddenException("Can only return reviewing submissions");
+            }
+
+            submission.Status = SubmissionStatus.Returned;
 
             Context.Submissions.Update(submission);
             await Context.SaveChangesAsync(cancellationToken);

@@ -29,7 +29,7 @@ namespace ConferenceManager.Api
 
             services.AddScoped<SignInManager<ApplicationUser>>();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
-            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IIdentityService, IdentityService>();
 
             services.AddAuthorization();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -74,6 +74,12 @@ namespace ConferenceManager.Api
                         new string[] { }
                     }
                 });
+            });
+
+            services.Configure<SecurityStampValidatorOptions>(options =>
+            {
+                // enables immediate logout, after updating the user's stat.
+                options.ValidationInterval = TimeSpan.Zero;
             });
 
             var mappers = typeof(IMapper<,>).Assembly.GetTypes()

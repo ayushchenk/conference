@@ -1,4 +1,5 @@
-﻿using ConferenceManager.Core.Common.Interfaces;
+﻿using ConferenceManager.Core.Common.Extensions;
+using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Domain.Entities;
 
 namespace ConferenceManager.Core.Submissions.Update
@@ -15,6 +16,19 @@ namespace ConferenceManager.Core.Submissions.Update
                 Title = source.Title,
                 Status = Domain.Enums.SubmissionStatus.Updated
             };
+
+            if (source.File != null)
+            {
+                submission.Papers = new List<Paper>()
+                {
+                    new Paper()
+                    {
+                        File = source.File.ToBytes(),
+                        FileName = source.File.FileName,
+                        SubmissionId = source.Id,
+                    }
+                };
+            }
 
             return submission;
         }
