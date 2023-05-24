@@ -54,7 +54,7 @@ namespace ConferenceManager.Api.Services
 
         public bool IsAuthorOf(Submission submission)
         {
-            return submission.CreatedById == Id || HasAdminRole;
+            return HasAdminRole || submission.CreatedById == Id;
         }
 
         public bool IsReviewerOf(Submission submission)

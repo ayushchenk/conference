@@ -21,7 +21,7 @@ namespace ConferenceManager.Core.Submissions.Return
 
             if (submission == null)
             {
-                throw new NotFoundException();
+                throw new NotFoundException("Submission not found");
             }
 
             if (!submission.IsValidForReturn)

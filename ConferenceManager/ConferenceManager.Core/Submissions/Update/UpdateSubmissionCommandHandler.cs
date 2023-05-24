@@ -24,7 +24,7 @@ namespace ConferenceManager.Core.Submissions.Update
 
             if (oldSubmission == null)
             {
-                throw new NotFoundException();
+                throw new NotFoundException("Submission not found");
             }
 
             if (!oldSubmission.IsValidForUpdate)
