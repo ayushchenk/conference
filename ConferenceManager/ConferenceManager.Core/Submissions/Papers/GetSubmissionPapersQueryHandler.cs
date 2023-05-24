@@ -37,7 +37,11 @@ namespace ConferenceManager.Core.Submissions.Papers
 
             if (isParticipant || CurrentUser.IsGlobalAdmin)
             {
-                var source = Context.Papers.Where(p => p.SubmissionId == submission.Id);
+                var source = Context.Papers
+                    .Where(p => p.SubmissionId == submission.Id)
+                    .OrderByDescending(p => p.CreatedOn);
+
+
                 var page = await PaginatedList<Paper>.CreateAsync(source, request.PageIndex, request.PageSize);
                 return new EntityPageResponse<PaperDto>()
                 {
