@@ -5,16 +5,21 @@ using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Core.Common.Model;
 using ConferenceManager.Core.Common.Model.Responses;
 using ConferenceManager.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace ConferenceManager.Core.Conferences.GetParticipants
 {
     public class GetConferenceParticipantsQueryHandler : DbContextRequestHandler<GetConferenceParticipantsQuery, EntityPageResponse<UserDto>>
     {
+        private readonly UserManager<ApplicationUser> _userManager;
+
         public GetConferenceParticipantsQueryHandler(
             IApplicationDbContext context,
             ICurrentUserService currentUser,
-            IMappingHost mapper) : base(context, currentUser, mapper)
+            IMappingHost mapper,
+            UserManager<ApplicationUser> userManager) : base(context, currentUser, mapper)
         {
+            _userManager = userManager;
         }
 
         public override async Task<EntityPageResponse<UserDto>> Handle(GetConferenceParticipantsQuery request, CancellationToken cancellationToken)
@@ -32,9 +37,16 @@ namespace ConferenceManager.Core.Conferences.GetParticipants
 
             var page = await PaginatedList<ApplicationUser>.CreateAsync(participants, request.PageIndex, request.PageSize);
 
+            var dtos = page.Select(async (u) => 
+            {
+                var dto = Mapper.Map<ApplicationUser, UserDto>(u);
+                dto.Roles = await _userManager.GetRolesAsync(u);
+                return dto;
+            });
+
             return new EntityPageResponse<UserDto>()
             {
-                Items = page.Select(Mapper.Map<ApplicationUser, UserDto>),
+                Items = dtos.Select(d => d.Result),
                 TotalCount = page.TotalCount,
                 TotalPages = page.TotalPages
             };
