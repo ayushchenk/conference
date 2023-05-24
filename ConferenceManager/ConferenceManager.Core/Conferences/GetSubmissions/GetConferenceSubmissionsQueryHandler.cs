@@ -31,7 +31,7 @@ namespace ConferenceManager.Core.Conferences.GetSubmissions
                 throw new ForbiddenException("Not a participant of conference");
             }
 
-            var source = GetQuerySource(conference.Id);
+            var source = GetSourceQuery(conference.Id);
 
             var page = await PaginatedList<Submission>.CreateAsync(source, request.PageIndex, request.PageSize);
 
@@ -43,16 +43,20 @@ namespace ConferenceManager.Core.Conferences.GetSubmissions
             };
         }
 
-        private IQueryable<Submission> GetQuerySource(int conferenceId)
+        private IQueryable<Submission> GetSourceQuery(int conferenceId)
         {
             if (CurrentUser.HasReviewerRole)
             {
-                return CurrentUser.AllReviewingSubmissions()
-                    .Where(s => s.ConferenceId == conferenceId);
+                return Context.Submissions
+                    .Where(s => s.ActualReviewers.Select(r => r.Id).Contains(CurrentUser.Id))
+                    .Where(s => s.ConferenceId == conferenceId)
+                    .OrderByDescending(s => s.CreatedOn);
             }
 
-            return CurrentUser.AllCreatedSubmissions()
-                    .Where(s => s.ConferenceId == conferenceId);
+            return Context.Submissions
+                .Where(s => s.CreatedById == CurrentUser.Id)
+                .Where(s => s.ConferenceId == conferenceId)
+                .OrderByDescending(s => s.CreatedOn);
         }
     }
 }

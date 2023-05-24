@@ -19,9 +19,5 @@ namespace ConferenceManager.Core.Common.Interfaces
         bool IsAuthorOf(Submission submission);
 
         bool IsReviewerOf(Submission submission);
-
-        IOrderedQueryable<Submission> AllCreatedSubmissions();
-
-        IOrderedQueryable<Submission> AllReviewingSubmissions();
     }
 }

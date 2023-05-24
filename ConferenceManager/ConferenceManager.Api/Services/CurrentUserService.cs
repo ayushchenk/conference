@@ -7,12 +7,10 @@ namespace ConferenceManager.Api.Services
     public class CurrentUserService : ICurrentUserService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IApplicationDbContext _context;
 
-        public CurrentUserService(IHttpContextAccessor httpContextAccessor, IApplicationDbContext context)
+        public CurrentUserService(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
-            _context = context;
         }
 
         public int Id
@@ -62,20 +60,6 @@ namespace ConferenceManager.Api.Services
             return HasAdminRole || submission.ActualReviewers
                 .Select(r => r.Id)
                 .Contains(Id);
-        }
-
-        public IOrderedQueryable<Submission> AllCreatedSubmissions()
-        {
-            return _context.Submissions
-                .Where(s => s.CreatedById == Id)
-                .OrderByDescending(s => s.CreatedOn);
-        }
-
-        public IOrderedQueryable<Submission> AllReviewingSubmissions()
-        {
-            return _context.Submissions
-                .Where(s => s.ActualReviewers.Select(r => r.Id).Contains(Id))
-                .OrderByDescending(s => s.CreatedOn);
         }
     }
 }
