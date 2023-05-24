@@ -1,4 +1,6 @@
-﻿namespace ConferenceManager.Core.Common.Interfaces
+﻿using ConferenceManager.Domain.Entities;
+
+namespace ConferenceManager.Core.Common.Interfaces
 {
     public interface ICurrentUserService
     {
@@ -6,12 +8,16 @@
 
         string[] Roles { get; }
 
-        bool IsGlobalAdmin { get; }
+        bool HasAdminRole { get; }
 
-        bool IsConferenceAdmin { get; }
+        bool HasAuthorRole { get; }
 
-        bool IsAuthor { get; }
+        bool HasReviewerRole { get; }
 
-        bool IsReviewer { get; }
+        bool IsParticipantOf(Conference conference);
+
+        bool IsAuthorOf(Submission submission);
+
+        bool IsReviewerOf(Submission submission);
     }
 }

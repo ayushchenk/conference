@@ -23,17 +23,15 @@ namespace ConferenceManager.Core.Conferences.GetSubmissions
 
             if (conference == null)
             {
-                throw new NotFoundException();
+                throw new NotFoundException("Conference not found");
             }
 
-            var particpants = conference.Participants.Select(x => x.Id);
-
-            if (!CurrentUser.IsGlobalAdmin && !particpants.Contains(CurrentUser.Id))
+            if (!CurrentUser.IsParticipantOf(conference))
             {
                 throw new ForbiddenException("Not a participant of conference");
             }
 
-            var source = GetQuerySource(conference.Id);
+            var source = GetSourceQuery(conference.Id);
 
             var page = await PaginatedList<Submission>.CreateAsync(source, request.PageIndex, request.PageSize);
 
@@ -45,18 +43,20 @@ namespace ConferenceManager.Core.Conferences.GetSubmissions
             };
         }
 
-        private IQueryable<Submission> GetQuerySource(int conferenceId)
+        private IQueryable<Submission> GetSourceQuery(int conferenceId)
         {
-            if (CurrentUser.IsAuthor)
+            if (CurrentUser.HasReviewerRole)
             {
                 return Context.Submissions
-                    .Where(s => s.CreatedById == CurrentUser.Id)
+                    .Where(s => s.ActualReviewers.Select(r => r.Id).Contains(CurrentUser.Id))
+                    .Where(s => s.ConferenceId == conferenceId)
                     .OrderByDescending(s => s.CreatedOn);
             }
 
             return Context.Submissions
-               .Where(s => s.ConferenceId == conferenceId)
-               .OrderByDescending(s => s.CreatedOn);
+                .Where(s => s.CreatedById == CurrentUser.Id)
+                .Where(s => s.ConferenceId == conferenceId)
+                .OrderByDescending(s => s.CreatedOn);
         }
     }
 }

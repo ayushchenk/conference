@@ -24,10 +24,10 @@ namespace ConferenceManager.Core.Submissions.Update
 
             if (oldSubmission == null)
             {
-                throw new NotFoundException();
+                throw new NotFoundException("Submission not found");
             }
 
-            if (oldSubmission.Status != Domain.Enums.SubmissionStatus.Returned)
+            if (!oldSubmission.IsValidForUpdate)
             {
                 throw new ForbiddenException("Can only update returned submissions");
             }

@@ -23,7 +23,7 @@ namespace ConferenceManager.Core.Conferences.AddParticipant
 
             if (user == null || conference == null)
             {
-                throw new NotFoundException();
+                throw new NotFoundException("User of conference not found");
             }
 
             var participation = await Context.ConferenceParticipants
@@ -34,8 +34,6 @@ namespace ConferenceManager.Core.Conferences.AddParticipant
                 return EmptyResponse.Value;
             }
 
-            CheckConferenceAdminPermission(conference);
-
             Context.ConferenceParticipants.Add(new ConferenceParticipant()
             {
                 ConferenceId = request.ConferenceId,
@@ -45,21 +43,6 @@ namespace ConferenceManager.Core.Conferences.AddParticipant
             await Context.SaveChangesAsync(cancellationToken);
 
             return EmptyResponse.Value;
-        }
-
-        private void CheckConferenceAdminPermission(Conference conference)
-        {
-            if (CurrentUser.IsConferenceAdmin)
-            {
-                var isAdminInConference = conference.Participants
-                    .Select(p => p.Id)
-                    .Contains(CurrentUser.Id);
-
-                if (!isAdminInConference)
-                {
-                    throw new ForbiddenException("Can only add user to participating conference");
-                }
-            }
         }
     }
 }

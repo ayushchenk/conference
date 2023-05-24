@@ -22,7 +22,7 @@ namespace ConferenceManager.Core.User.AssignRole
 
             if (user == null)
             {
-                throw new NotFoundException();
+                throw new NotFoundException("User not found");
             }
 
             await _manager.RemoveFromRoleAsync(user, request.Role);

@@ -21,20 +21,15 @@ namespace ConferenceManager.Core.Submissions.Return
 
             if (submission == null)
             {
-                throw new NotFoundException();
+                throw new NotFoundException("Submission not found");
             }
 
-            if (submission.Status != SubmissionStatus.Created
-                && submission.Status != SubmissionStatus.Updated)
+            if (!submission.IsValidForReturn)
             {
                 throw new ForbiddenException("Can only return created or updated submissions");
             }
 
-            var reviewers = Context.SubmissionReviewers
-                .Where(sr => sr.SubmissionId == submission.Id)
-                .Select(sr => sr.ReviewerId);
-
-            if (!reviewers.Contains(CurrentUser.Id))
+            if (!CurrentUser.IsReviewerOf(submission))
             {
                 throw new ForbiddenException("Can only return reviewing submissions");
             }

@@ -23,35 +23,27 @@ namespace ConferenceManager.Core.Submissions.Papers
 
             if (submission == null)
             {
-                throw new NotFoundException();
+                throw new NotFoundException("Submission not found");
             }
 
-            if (CurrentUser.IsAuthor && submission.CreatedById != CurrentUser.Id)
+            if ((CurrentUser.HasAuthorRole && !CurrentUser.IsAuthorOf(submission))
+                || !CurrentUser.IsReviewerOf(submission))
             {
-                throw new ForbiddenException();
+                throw new ForbiddenException("Must be author or reviewer");
             }
 
-            var isParticipant = submission.Conference.Participants
-                .Select(p => p.Id)
-                .Contains(CurrentUser.Id);
-
-            if (isParticipant || CurrentUser.IsGlobalAdmin)
-            {
-                var source = Context.Papers
+            var papers = Context.Papers
                     .Where(p => p.SubmissionId == submission.Id)
                     .OrderByDescending(p => p.CreatedOn);
 
+            var page = await PaginatedList<Paper>.CreateAsync(papers, request.PageIndex, request.PageSize);
 
-                var page = await PaginatedList<Paper>.CreateAsync(source, request.PageIndex, request.PageSize);
-                return new EntityPageResponse<PaperDto>()
-                {
-                    Items = page.Select(Mapper.Map<Paper, PaperDto>),
-                    TotalCount = page.TotalCount,
-                    TotalPages = page.TotalPages
-                };
-            }
-
-            throw new ForbiddenException();
+            return new EntityPageResponse<PaperDto>()
+            {
+                Items = page.Select(Mapper.Map<Paper, PaperDto>),
+                TotalCount = page.TotalCount,
+                TotalPages = page.TotalPages
+            };
         }
     }
 }

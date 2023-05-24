@@ -24,16 +24,7 @@ namespace ConferenceManager.Core.Conferences.Update
 
             if (oldConference == null)
             {
-                throw new NotFoundException();
-            }
-
-            var participantIds = Context.ConferenceParticipants
-                .Where(c => c.ConferenceId == request.Id)
-                .Select(c => c.UserId);
-
-            if (!CurrentUser.IsGlobalAdmin && !participantIds.Contains(CurrentUser.Id))
-            {
-                throw new ForbiddenException();
+                throw new NotFoundException("Conference not found");
             }
 
             var newConference = Mapper.Map<UpdateConferenceCommand, Conference>(request);
