@@ -3,6 +3,7 @@ using ConferenceManager.Core.Conferences.AddParticipant;
 using ConferenceManager.Core.Conferences.Create;
 using ConferenceManager.Core.Conferences.Delete;
 using ConferenceManager.Core.Conferences.Get;
+using ConferenceManager.Core.Conferences.GetParticipants;
 using ConferenceManager.Core.Conferences.GetSubmissions;
 using ConferenceManager.Core.Conferences.Page;
 using ConferenceManager.Core.Conferences.RemoveParticipant;
@@ -65,7 +66,7 @@ namespace ConferenceManager.Api.Controllers
         }
 
         [HttpPost]
-        [Route("{id}/participant/{userId}")]
+        [Route("{id}/participants/{userId}")]
         [Authorize(Roles = $"{ApplicationRole.GlobalAdmin},{ApplicationRole.ConferenceAdmin}")]
         public async Task<IActionResult> AddParticipant(int id, int userId, CancellationToken cancellation)
         {
@@ -75,7 +76,7 @@ namespace ConferenceManager.Api.Controllers
         }
 
         [HttpDelete]
-        [Route("{id}/participant/{userId}")]
+        [Route("{id}/participants/{userId}")]
         [Authorize(Roles = $"{ApplicationRole.GlobalAdmin},{ApplicationRole.ConferenceAdmin}")]
         public async Task<IActionResult> RemoveParticipant(int id, int userId, CancellationToken cancellation)
         {
@@ -90,6 +91,16 @@ namespace ConferenceManager.Api.Controllers
         public async Task<IActionResult> GetSubmissions(int id, int pageIndex, int pageSize, CancellationToken cancellation)
         {
             var result = await Mediator.Send(new GetConferenceSubmissionsQuery(id, pageIndex, pageSize), cancellation);
+
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("{id}/participants")]
+        [Authorize]
+        public async Task<IActionResult> GetParticipants(int id, int pageIndex, int pageSize, CancellationToken cancellation)
+        {
+            var result = await Mediator.Send(new GetConferenceParticipantsQuery(id, pageIndex, pageSize), cancellation);
 
             return Ok(result);
         }
