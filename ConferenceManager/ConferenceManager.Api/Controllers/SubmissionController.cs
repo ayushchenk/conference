@@ -1,6 +1,7 @@
 ﻿using ConferenceManager.Api.Abstract;
 using ConferenceManager.Core.Submissions.Create;
 using ConferenceManager.Core.Submissions.Get;
+using ConferenceManager.Core.Submissions.Papers;
 using ConferenceManager.Core.Submissions.Return;
 using ConferenceManager.Core.Submissions.Update;
 using ConferenceManager.Domain.Entities;
@@ -47,6 +48,16 @@ namespace ConferenceManager.Api.Controllers
             await Mediator.Send(new ReturnSubmissionCommand(id), cancellation);
 
             return NoContent();
+        }
+
+        [HttpGet]
+        [Route("{id}/papers")]
+        [Authorize(Roles = ApplicationRole.Reviwer)]
+        public async Task<IActionResult> UploadPaper(int id, int pageIndex, int pageSize, CancellationToken cancellation)
+        {
+            var result = await Mediator.Send(new GetSubmissionPapersQuery(id, pageIndex, pageSize), cancellation);
+
+            return Ok(result);
         }
     }
 }

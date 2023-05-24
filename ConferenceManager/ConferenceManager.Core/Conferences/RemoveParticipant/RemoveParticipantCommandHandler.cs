@@ -2,9 +2,8 @@
 using ConferenceManager.Core.Common.Exceptions;
 using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Core.Common.Model.Responses;
-using ConferenceManager.Core.Conferences.RemoveParticipant;
 
-namespace ConferenceManager.Core.Conferences.AddParticipant
+namespace ConferenceManager.Core.Conferences.RemoveParticipant
 {
     public class RemoveParticipantCommandHandler : DbContextRequestHandler<RemoveParticipantCommand, EmptyResponse>
     {

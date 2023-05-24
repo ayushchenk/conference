@@ -22,7 +22,5 @@ namespace ConferenceManager.Core.Submissions.Common
         public required string Keywords { set; get; } 
 
         public required string Abstract { set; get; }
-
-        public required PaperDto[] Papers { set; get; }
     }
 }

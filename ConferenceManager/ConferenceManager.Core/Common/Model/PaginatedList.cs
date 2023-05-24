@@ -15,7 +15,7 @@ public class PaginatedList<T> : IEnumerable<T>
 
     public int TotalCount { get; }
 
-    public bool HasPreviousPage => PageIndex > 1;
+    public bool HasPreviousPage => PageIndex > 0;
 
     public bool HasNextPage => PageIndex < TotalPages;
 
@@ -23,7 +23,7 @@ public class PaginatedList<T> : IEnumerable<T>
     {
         PageIndex = pageIndex;
         PageSize = pageSize;
-        TotalPages = (int)Math.Ceiling(count / (double)pageSize);
+        TotalPages = count > 0 ? (int)Math.Ceiling(count / (double)pageSize) : 0;
         TotalCount = count;
         Items = items;
     }

@@ -7,7 +7,7 @@ using ConferenceManager.Domain.Entities;
 
 namespace ConferenceManager.Core.Conferences.Page
 {
-    public class GetConferencePageQueryHandler : DbContextRequestHandler<GetConferencePageQuery, GetEntityPageResponse<ConferenceDto>>
+    public class GetConferencePageQueryHandler : DbContextRequestHandler<GetConferencePageQuery, EntityPageResponse<ConferenceDto>>
     {
         public GetConferencePageQueryHandler(
             IApplicationDbContext context,
@@ -16,7 +16,7 @@ namespace ConferenceManager.Core.Conferences.Page
         {
         }
 
-        public override async Task<GetEntityPageResponse<ConferenceDto>> Handle(GetConferencePageQuery request, CancellationToken cancellationToken)
+        public override async Task<EntityPageResponse<ConferenceDto>> Handle(GetConferencePageQuery request, CancellationToken cancellationToken)
         {
             var source = CurrentUser.IsGlobalAdmin
                 ? Context.Conferences
@@ -29,7 +29,7 @@ namespace ConferenceManager.Core.Conferences.Page
 
             var dtos = conferences.Select(Mapper.Map<Conference, ConferenceDto>);
 
-            return new GetEntityPageResponse<ConferenceDto>()
+            return new EntityPageResponse<ConferenceDto>()
             {
                 Items = dtos,
                 TotalCount = conferences.TotalCount,
