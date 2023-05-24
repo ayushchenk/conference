@@ -17,13 +17,7 @@ namespace ConferenceManager.Core.Submissions.Common
                 ConferenceId = source.ConferenceId,
                 Keywords = source.Keywords,
                 Title = source.Title,
-                Abstract = source.Abstract,
-                Papers = source.Papers.Select(p => new PaperDto()
-                {
-                    Id = p.Id,
-                    FileName = p.FileName,
-                    Base64Content = Convert.ToBase64String(p.File)
-                }).ToArray()
+                Abstract = source.Abstract
             };
         }
     }

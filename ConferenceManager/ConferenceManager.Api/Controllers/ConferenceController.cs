@@ -3,6 +3,7 @@ using ConferenceManager.Core.Conferences.AddParticipant;
 using ConferenceManager.Core.Conferences.Create;
 using ConferenceManager.Core.Conferences.Delete;
 using ConferenceManager.Core.Conferences.Get;
+using ConferenceManager.Core.Conferences.GetSubmissions;
 using ConferenceManager.Core.Conferences.Page;
 using ConferenceManager.Core.Conferences.RemoveParticipant;
 using ConferenceManager.Core.Conferences.Update;
@@ -81,6 +82,16 @@ namespace ConferenceManager.Api.Controllers
             await Mediator.Send(new RemoveParticipantCommand(id, userId), cancellation);
 
             return Ok();
+        }
+
+        [HttpGet]
+        [Route("{id}/submissions")]
+        [Authorize]
+        public async Task<IActionResult> GetSubmissions(int id, int pageIndex, int pageSize, CancellationToken cancellation)
+        {
+            var result = await Mediator.Send(new GetConferenceSubmissionsQuery(id, pageIndex, pageSize), cancellation);
+
+            return Ok(result);
         }
     }
 }

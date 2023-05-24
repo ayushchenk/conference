@@ -26,6 +26,7 @@ namespace ConferenceManager.Core.User.AssignRole
             }
 
             await _manager.RemoveFromRoleAsync(user, request.Role);
+            await _manager.UpdateSecurityStampAsync(user);
 
             return UpdateEntityResponse.Success;
         }

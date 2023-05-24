@@ -24,20 +24,15 @@ namespace ConferenceManager.Core.Submissions.Get
                 throw new NotFoundException();
             }
 
-            var reviewers = Context.SubmissionReviewers
-                .Where(sr => sr.SubmissionId == submission.Id)
-                .Select(sr => sr.ReviewerId);
-
             var confParticipants = Context.ConferenceParticipants
                 .Where(conf => conf.ConferenceId == submission.ConferenceId)
                 .Select(conf => conf.UserId);
 
             var isParticipant = confParticipants.Contains(CurrentUser.Id);
-            var isReviewer = reviewers.Contains(CurrentUser.Id);
 
             if (CurrentUser.IsGlobalAdmin
                 || (CurrentUser.IsConferenceAdmin && isParticipant)
-                || (CurrentUser.IsReviewer && isReviewer)
+                || (CurrentUser.IsReviewer && isParticipant)
                 || submission.CreatedById == CurrentUser.Id)
             {
                 return Mapper.Map<Submission, SubmissionDto>(submission);

@@ -2,7 +2,7 @@
 
 namespace ConferenceManager.Core.Common.Model.Responses
 {
-    public class GetEntityPageResponse<TEntity> where TEntity : IDto
+    public class EntityPageResponse<TEntity> where TEntity : IDto
     {
         public required IEnumerable<TEntity> Items { get; init; }
 
