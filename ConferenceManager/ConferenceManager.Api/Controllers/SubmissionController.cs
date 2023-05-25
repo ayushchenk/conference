@@ -1,12 +1,16 @@
 ﻿using ConferenceManager.Api.Abstract;
+using ConferenceManager.Core.Submissions.AddReviewer;
 using ConferenceManager.Core.Submissions.Create;
 using ConferenceManager.Core.Submissions.Get;
+using ConferenceManager.Core.Submissions.GetReviewers;
 using ConferenceManager.Core.Submissions.Papers;
+using ConferenceManager.Core.Submissions.RemoveReviewer;
 using ConferenceManager.Core.Submissions.Return;
 using ConferenceManager.Core.Submissions.Update;
 using ConferenceManager.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace ConferenceManager.Api.Controllers
 {
@@ -21,6 +25,15 @@ namespace ConferenceManager.Api.Controllers
             return Created(nameof(SubmissionController), result);
         }
 
+        [HttpPut]
+        [Authorize(Roles = ApplicationRole.Author)]
+        public async Task<IActionResult> Put([FromForm] UpdateSubmissionCommand command, CancellationToken cancellation)
+        {
+            await Mediator.Send(command, cancellation);
+
+            return NoContent();
+        }
+
         [HttpGet]
         [Route("{id}")]
         [Authorize]
@@ -29,15 +42,6 @@ namespace ConferenceManager.Api.Controllers
             var result = await Mediator.Send(new GetSubmissionQuery(id), cancellation);
 
             return OkOrNotFound(result);
-        }
-
-        [HttpPut]
-        [Authorize(Roles = ApplicationRole.Author)]
-        public async Task<IActionResult> Put([FromForm] UpdateSubmissionCommand command, CancellationToken cancellation)
-        {
-            await Mediator.Send(command, cancellation);
-
-            return NoContent();
         }
 
         [HttpPost]
@@ -53,9 +57,39 @@ namespace ConferenceManager.Api.Controllers
         [HttpGet]
         [Route("{id}/papers")]
         [Authorize]
-        public async Task<IActionResult> UploadPaper(int id, int pageIndex, int pageSize, CancellationToken cancellation)
+        public async Task<IActionResult> GetPapers(int id, CancellationToken cancellation)
         {
-            var result = await Mediator.Send(new GetSubmissionPapersQuery(id, pageIndex, pageSize), cancellation);
+            var result = await Mediator.Send(new GetSubmissionPapersQuery(id), cancellation);
+
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [Route("{id}/reviewers/{userId}")]
+        [Authorize(Roles = ApplicationRole.Admin)]
+        public async Task<IActionResult> AddReviewer(int id, int userId, CancellationToken cancellation)
+        {
+            await Mediator.Send(new AddReviewerCommand(id, userId), cancellation);
+                
+            return NoContent();
+        }
+
+        [HttpDelete]
+        [Route("{id}/reviewers/{userId}")]
+        [Authorize(Roles = ApplicationRole.Admin)]
+        public async Task<IActionResult> RemoveReviewer(int id, int userId, CancellationToken cancellation)
+        {
+            await Mediator.Send(new RemoveReviewerCommand(id, userId), cancellation);
+
+            return NoContent();
+        }
+
+        [HttpGet]
+        [Route("{id}/reviewers")]
+        [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Reviewer}")]
+        public async Task<IActionResult> GetReviewers(int id, CancellationToken cancellation)
+        {
+            var result = await Mediator.Send(new GetSubmissionReviewersQuery(id), cancellation);
 
             return Ok(result);
         }

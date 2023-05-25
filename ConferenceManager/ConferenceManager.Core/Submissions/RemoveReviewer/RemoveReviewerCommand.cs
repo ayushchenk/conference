@@ -1,14 +1,14 @@
 ﻿using MediatR;
 
-namespace ConferenceManager.Core.Submissions.AddReviewer
+namespace ConferenceManager.Core.Submissions.RemoveReviewer
 {
-    public class AddReviewerCommand : IRequest
+    public class RemoveReviewerCommand : IRequest
     {
         public int SubmissionId { get; }
 
         public int UserId { get; }
 
-        public AddReviewerCommand(int submissionId, int userId)
+        public RemoveReviewerCommand(int submissionId, int userId)
         {
             SubmissionId = submissionId;
             UserId = userId;
