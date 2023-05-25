@@ -63,5 +63,12 @@ namespace ConferenceManager.Domain.Entities
         {
             _domainEvents.Clear();
         }
+
+        public bool IsParticipantOf(Conference conference)
+        {
+            return ConferenceParticipations
+                .Select(c => c.Id)
+                .Contains(conference.Id);
+        }
     }
 }

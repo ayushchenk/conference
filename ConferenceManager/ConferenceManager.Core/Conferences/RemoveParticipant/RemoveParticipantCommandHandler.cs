@@ -1,11 +1,10 @@
 ﻿using ConferenceManager.Core.Common;
 using ConferenceManager.Core.Common.Exceptions;
 using ConferenceManager.Core.Common.Interfaces;
-using ConferenceManager.Core.Common.Model.Responses;
 
 namespace ConferenceManager.Core.Conferences.RemoveParticipant
 {
-    public class RemoveParticipantCommandHandler : DbContextRequestHandler<RemoveParticipantCommand, EmptyResponse>
+    public class RemoveParticipantCommandHandler : DbContextRequestHandler<RemoveParticipantCommand>
     {
         public RemoveParticipantCommandHandler(
             IApplicationDbContext context,
@@ -14,10 +13,10 @@ namespace ConferenceManager.Core.Conferences.RemoveParticipant
         {
         }
 
-        public override async Task<EmptyResponse> Handle(RemoveParticipantCommand request, CancellationToken cancellationToken)
+        public override async Task Handle(RemoveParticipantCommand request, CancellationToken cancellationToken)
         {
-            var participation = Context.ConferenceParticipants
-                .FirstOrDefault(p => p.ConferenceId == request.ConferenceId && p.UserId == request.UserId);
+            var participation = await Context.ConferenceParticipants
+                .FindAsync(new object[] { request.UserId, request.ConferenceId }, cancellationToken);
 
             if (participation == null)
             {
@@ -27,8 +26,6 @@ namespace ConferenceManager.Core.Conferences.RemoveParticipant
             Context.ConferenceParticipants.Remove(participation);
 
             await Context.SaveChangesAsync(cancellationToken);
-
-            return EmptyResponse.Value;
         }
     }
 }

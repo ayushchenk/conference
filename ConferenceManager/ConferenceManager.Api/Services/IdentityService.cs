@@ -15,7 +15,7 @@ namespace ConferenceManager.Api.Services
 {
     public class IdentityService : IIdentityService
     {
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly UserManager<ApplicationUser> _manager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly TokenSettings _settings;
         private readonly IDateTimeService _dateTime;
@@ -27,7 +27,7 @@ namespace ConferenceManager.Api.Services
             IDateTimeService dateTime
             )
         {
-            _userManager = userManager;
+            _manager = userManager;
             _signInManager = signInManager;
             _settings = settings.Value;
             _dateTime = dateTime;
@@ -35,7 +35,7 @@ namespace ConferenceManager.Api.Services
 
         public async Task<TokenResponse> Authenticate(TokenRequest request)
         {
-            var user = await _userManager.FindByEmailAsync(request.Email);
+            var user = await _manager.FindByEmailAsync(request.Email);
 
             if (user == null)
             {
@@ -49,21 +49,21 @@ namespace ConferenceManager.Api.Services
                 throw new IdentityException("Incorrect password");
             }
 
-            var roles = await _userManager.GetRolesAsync(user);
+            var roles = await _manager.GetRolesAsync(user);
 
             return GenerateJwtToken(user, roles);
         }
 
         public async Task<TokenResponse> CreateUser(ApplicationUser user, string password)
         {
-            var createResult = await _userManager.CreateAsync(user, password);
+            var createResult = await _manager.CreateAsync(user, password);
 
             if (!createResult.Succeeded)
             {
                 throw new IdentityException(createResult.Errors);
             }
 
-            await _userManager.AddToRoleAsync(user, ApplicationRole.Author);
+            await _manager.AddToRoleAsync(user, ApplicationRole.Author);
 
             return await Authenticate(new TokenRequest()
             {
@@ -74,14 +74,40 @@ namespace ConferenceManager.Api.Services
 
         public async Task DeleteUser(int id)
         {
-            var user = await _userManager.FindByIdAsync(id.ToString());
+            var user = await _manager.FindByIdAsync(id.ToString());
 
             if (user == null)
             {
-                throw new NotFoundException();
+                throw new NotFoundException("User not found");
             }
 
-            await _userManager.DeleteAsync(user);
+            await _manager.DeleteAsync(user);
+        }
+
+        public async Task AssignRole(int id, string role)
+        {
+            var user = await _manager.FindByIdAsync(id.ToString());
+
+            if (user == null)
+            {
+                throw new NotFoundException("User not found");
+            }
+
+            await _manager.AddToRoleAsync(user, role);
+            await _manager.UpdateSecurityStampAsync(user);
+        }
+
+        public async Task UnassignRole(int id, string role)
+        {
+            var user = await _manager.FindByIdAsync(id.ToString());
+
+            if (user == null)
+            {
+                throw new NotFoundException("User not found");
+            }
+
+            await _manager.RemoveFromRoleAsync(user, role);
+            await _manager.UpdateSecurityStampAsync(user);
         }
 
         private TokenResponse GenerateJwtToken(ApplicationUser user, IEnumerable<string> roles)

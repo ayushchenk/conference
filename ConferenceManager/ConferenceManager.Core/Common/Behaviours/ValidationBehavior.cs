@@ -27,6 +27,13 @@ namespace CleanArchitecture.Application.Common.Behaviours
                     .SelectMany(r => r.Errors)
                     .ToList();
 
+                var exceptionFailures = failures.Where(f => f.CustomState is Exception);
+
+                if (exceptionFailures.Any())
+                {
+                    throw (Exception)exceptionFailures.First().CustomState;
+                }
+
                 if (failures.Any())
                 {
                     throw new ValidationException(failures);

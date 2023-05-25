@@ -1,13 +1,13 @@
-﻿using ConferenceManager.Core.Common.Queries;
-using ConferenceManager.Core.Submissions.Common;
+﻿using ConferenceManager.Core.Submissions.Common;
+using MediatR;
 
 namespace ConferenceManager.Core.Submissions.Papers
 {
-    public class GetSubmissionPapersQuery : GetEntityPageQuery<PaperDto>
+    public class GetSubmissionPapersQuery : IRequest<IEnumerable<PaperDto>>
     {
         public int SubmissionId { get; }
 
-        public GetSubmissionPapersQuery(int submissionId, int pageIndex, int pageSize) : base(pageIndex, pageSize)
+        public GetSubmissionPapersQuery(int submissionId)
         {
             SubmissionId = submissionId;
         }

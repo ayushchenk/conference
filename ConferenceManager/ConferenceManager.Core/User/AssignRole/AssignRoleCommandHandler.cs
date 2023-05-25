@@ -1,34 +1,21 @@
-﻿using ConferenceManager.Core.Common.Exceptions;
-using ConferenceManager.Core.Common.Model.Responses;
+﻿using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Core.User.AddRole;
-using ConferenceManager.Domain.Entities;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 
 namespace ConferenceManager.Core.User.AssignRole
 {
-    public class AssignRoleCommandHandler : IRequestHandler<AssignRoleCommand, UpdateEntityResponse>
+    public class AssignRoleCommandHandler : IRequestHandler<AssignRoleCommand>
     {
-        private readonly UserManager<ApplicationUser> _manager;
+        private readonly IIdentityService _service;
 
-        public AssignRoleCommandHandler(UserManager<ApplicationUser> manager)
+        public AssignRoleCommandHandler(IIdentityService service)
         {
-            _manager = manager;
+            _service = service;
         }
 
-        public async Task<UpdateEntityResponse> Handle(AssignRoleCommand request, CancellationToken cancellationToken)
+        public async Task Handle(AssignRoleCommand request, CancellationToken cancellationToken)
         {
-            var user = await _manager.FindByIdAsync(request.Id.ToString());
-
-            if (user == null)
-            {
-                throw new NotFoundException("User not found");
-            }
-
-            await _manager.AddToRoleAsync(user, request.Role);
-            await _manager.UpdateSecurityStampAsync(user);
-
-            return UpdateEntityResponse.Success;
+            await _service.AssignRole(request.Id, request.Role);
         }
     }
 }

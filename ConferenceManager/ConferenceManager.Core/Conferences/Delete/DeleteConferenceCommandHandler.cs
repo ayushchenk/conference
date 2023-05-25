@@ -1,10 +1,10 @@
 ﻿using ConferenceManager.Core.Common;
+using ConferenceManager.Core.Common.Exceptions;
 using ConferenceManager.Core.Common.Interfaces;
-using ConferenceManager.Core.Common.Model.Responses;
 
 namespace ConferenceManager.Core.Conferences.Delete
 {
-    public class DeleteConferenceCommandHandler : DbContextRequestHandler<DeleteConferenceCommand, DeleteEntityResponse>
+    public class DeleteConferenceCommandHandler : DbContextRequestHandler<DeleteConferenceCommand>
     {
         public DeleteConferenceCommandHandler(
             IApplicationDbContext context,
@@ -13,19 +13,17 @@ namespace ConferenceManager.Core.Conferences.Delete
         {
         }
 
-        public async override Task<DeleteEntityResponse> Handle(DeleteConferenceCommand request, CancellationToken cancellationToken)
+        public async override Task Handle(DeleteConferenceCommand request, CancellationToken cancellationToken)
         {
             var conference = await Context.Conferences.FindAsync(request.Id, cancellationToken);
 
             if (conference == null)
             {
-                return DeleteEntityResponse.Fail;
+                throw new NotFoundException();
             }
 
             Context.Conferences.Remove(conference);
             await Context.SaveChangesAsync(cancellationToken);
-
-            return DeleteEntityResponse.Success;
         }
     }
 }

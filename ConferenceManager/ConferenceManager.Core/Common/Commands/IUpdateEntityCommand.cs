@@ -1,9 +1,8 @@
-﻿using ConferenceManager.Core.Common.Model.Responses;
-using MediatR;
+﻿using MediatR;
 
 namespace ConferenceManager.Core.Common.Commands
 {
-    public interface IUpdateEntityCommand : IRequest<UpdateEntityResponse>
+    public interface IUpdateEntityCommand : IRequest
     {
         int Id { get; }
     }

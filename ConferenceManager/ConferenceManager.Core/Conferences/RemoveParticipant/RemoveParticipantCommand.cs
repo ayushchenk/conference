@@ -1,9 +1,8 @@
-﻿using ConferenceManager.Core.Common.Model.Responses;
-using MediatR;
+﻿using MediatR;
 
 namespace ConferenceManager.Core.Conferences.RemoveParticipant
 {
-    public class RemoveParticipantCommand : IRequest<EmptyResponse>
+    public class RemoveParticipantCommand : IRequest
     {
         public int ConferenceId { get; }
 

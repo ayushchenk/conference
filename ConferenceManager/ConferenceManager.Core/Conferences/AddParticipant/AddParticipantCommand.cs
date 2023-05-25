@@ -1,9 +1,8 @@
-﻿using ConferenceManager.Core.Common.Model.Responses;
-using MediatR;
+﻿using MediatR;
 
 namespace ConferenceManager.Core.Conferences.AddParticipant
 {
-    public class AddParticipantCommand : IRequest<EmptyResponse>
+    public class AddParticipantCommand : IRequest
     {
         public int ConferenceId { get; }
 

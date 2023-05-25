@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ConferenceManager.Core.Submissions.Update
 {
-    public class UpdateSubmissionCommandHandler : DbContextRequestHandler<UpdateSubmissionCommand, UpdateEntityResponse>
+    public class UpdateSubmissionCommandHandler : DbContextRequestHandler<UpdateSubmissionCommand>
     {
         public UpdateSubmissionCommandHandler(
             IApplicationDbContext context,
@@ -16,7 +16,7 @@ namespace ConferenceManager.Core.Submissions.Update
         {
         }
 
-        public override async Task<UpdateEntityResponse> Handle(UpdateSubmissionCommand request, CancellationToken cancellationToken)
+        public override async Task Handle(UpdateSubmissionCommand request, CancellationToken cancellationToken)
         {
             var oldSubmission = await Context.Submissions
                 .AsNoTracking()
@@ -36,8 +36,6 @@ namespace ConferenceManager.Core.Submissions.Update
 
             Context.Submissions.Update(newSubmission);
             await Context.SaveChangesAsync(cancellationToken);
-
-            return UpdateEntityResponse.Success;
         }
     }
 }

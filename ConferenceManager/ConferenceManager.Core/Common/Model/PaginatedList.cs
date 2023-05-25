@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ConferenceManager.Core.Common.Queries;
+using Microsoft.EntityFrameworkCore;
 using System.Collections;
 
 namespace ConferenceManager.Core.Common.Model;

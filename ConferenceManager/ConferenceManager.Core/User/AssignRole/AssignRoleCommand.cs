@@ -1,9 +1,9 @@
-﻿using ConferenceManager.Core.Common.Commands;
+﻿using MediatR;
 using System.Text.Json.Serialization;
 
 namespace ConferenceManager.Core.User.AddRole
 {
-    public class AssignRoleCommand : IUpdateEntityCommand
+    public class AssignRoleCommand : IRequest
     {
         [JsonIgnore]
         public int Id { get; }

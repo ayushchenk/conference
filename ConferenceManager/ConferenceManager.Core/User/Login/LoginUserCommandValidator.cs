@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace ConferenceManager.Core.Account.Login
+namespace ConferenceManager.Core.User.Login
 {
     public class LoginUserCommandValidator : AbstractValidator<LoginUserCommand>
     {

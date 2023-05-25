@@ -1,9 +1,10 @@
 ﻿using ConferenceManager.Api.Abstract;
-using ConferenceManager.Core.Account.Login;
-using ConferenceManager.Core.Account.Register;
 using ConferenceManager.Core.User.AddRole;
 using ConferenceManager.Core.User.Delete;
 using ConferenceManager.Core.User.Get;
+using ConferenceManager.Core.User.Login;
+using ConferenceManager.Core.User.Page;
+using ConferenceManager.Core.User.Register;
 using ConferenceManager.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -41,14 +42,23 @@ namespace ConferenceManager.Api.Controllers
             return OkOrNotFound(result);
         }
 
+        [HttpGet]
+        [Authorize(Roles = ApplicationRole.Admin)]
+        public async Task<IActionResult> GetPage(int pageIndex, int pageSize, CancellationToken cancellation)
+        {
+            var result = await Mediator.Send(new GetUserPageQuery(pageIndex, pageSize), cancellation);
+
+            return OkOrNotFound(result);
+        }
+
         [HttpDelete]
         [Route("{id}")]
         [Authorize(Roles = ApplicationRole.Admin)]
         public async Task<IActionResult> Delete(int id, CancellationToken cancellation)
         {
-            var result = await Mediator.Send(new DeleteUserCommand(id), cancellation);
+            await Mediator.Send(new DeleteUserCommand(id), cancellation);
 
-            return DeletedOrNotFound(result);
+            return NoContent();
         }
 
         [HttpPost]
@@ -58,7 +68,7 @@ namespace ConferenceManager.Api.Controllers
         {
             await Mediator.Send(new AssignRoleCommand(id, command.Role), cancellation);
 
-            return Ok();
+            return NoContent();
         }
 
         [HttpDelete]
@@ -68,7 +78,7 @@ namespace ConferenceManager.Api.Controllers
         {
             await Mediator.Send(new UnassignRoleCommand(id, command.Role), cancellation);
 
-            return Ok();
+            return NoContent();
         }
     }
 }

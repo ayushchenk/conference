@@ -1,13 +1,12 @@
 ﻿using ConferenceManager.Core.Common;
 using ConferenceManager.Core.Common.Exceptions;
 using ConferenceManager.Core.Common.Interfaces;
-using ConferenceManager.Core.Common.Model.Responses;
 using ConferenceManager.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace ConferenceManager.Core.Conferences.Update
 {
-    public class UpdateConferenceCommandHandler : DbContextRequestHandler<UpdateConferenceCommand, UpdateEntityResponse>
+    public class UpdateConferenceCommandHandler : DbContextRequestHandler<UpdateConferenceCommand>
     {
         public UpdateConferenceCommandHandler(
             IApplicationDbContext context,
@@ -16,7 +15,7 @@ namespace ConferenceManager.Core.Conferences.Update
         {
         }
 
-        public override async Task<UpdateEntityResponse> Handle(UpdateConferenceCommand request, CancellationToken cancellationToken)
+        public override async Task Handle(UpdateConferenceCommand request, CancellationToken cancellationToken)
         {
             var oldConference = await Context.Conferences
                 .AsNoTracking()
@@ -31,8 +30,6 @@ namespace ConferenceManager.Core.Conferences.Update
 
             Context.Conferences.Update(newConference);
             await Context.SaveChangesAsync(cancellationToken);
-
-            return UpdateEntityResponse.Success;
         }
     }
 }

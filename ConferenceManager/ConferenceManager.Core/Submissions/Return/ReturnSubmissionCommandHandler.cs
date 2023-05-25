@@ -1,12 +1,11 @@
 ﻿using ConferenceManager.Core.Common;
 using ConferenceManager.Core.Common.Exceptions;
 using ConferenceManager.Core.Common.Interfaces;
-using ConferenceManager.Core.Common.Model.Responses;
 using ConferenceManager.Domain.Enums;
 
 namespace ConferenceManager.Core.Submissions.Return
 {
-    public class ReturnSubmissionCommandHandler : DbContextRequestHandler<ReturnSubmissionCommand, UpdateEntityResponse>
+    public class ReturnSubmissionCommandHandler : DbContextRequestHandler<ReturnSubmissionCommand>
     {
         public ReturnSubmissionCommandHandler(
             IApplicationDbContext context,
@@ -15,7 +14,7 @@ namespace ConferenceManager.Core.Submissions.Return
         {
         }
 
-        public override async Task<UpdateEntityResponse> Handle(ReturnSubmissionCommand request, CancellationToken cancellationToken)
+        public override async Task Handle(ReturnSubmissionCommand request, CancellationToken cancellationToken)
         {
             var submission = await Context.Submissions.FindAsync(request.Id, cancellationToken);
 
@@ -38,8 +37,6 @@ namespace ConferenceManager.Core.Submissions.Return
 
             Context.Submissions.Update(submission);
             await Context.SaveChangesAsync(cancellationToken);
-
-            return UpdateEntityResponse.Success;
         }
     }
 }
