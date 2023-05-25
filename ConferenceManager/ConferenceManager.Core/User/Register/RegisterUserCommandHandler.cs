@@ -3,7 +3,7 @@ using ConferenceManager.Core.Common.Model.Token;
 using ConferenceManager.Domain.Entities;
 using MediatR;
 
-namespace ConferenceManager.Core.Account.Register
+namespace ConferenceManager.Core.User.Register
 {
     public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, TokenResponse>
     {

@@ -1,9 +1,10 @@
 ﻿using ConferenceManager.Api.Abstract;
-using ConferenceManager.Core.Account.Login;
-using ConferenceManager.Core.Account.Register;
 using ConferenceManager.Core.User.AddRole;
 using ConferenceManager.Core.User.Delete;
 using ConferenceManager.Core.User.Get;
+using ConferenceManager.Core.User.Login;
+using ConferenceManager.Core.User.Page;
+using ConferenceManager.Core.User.Register;
 using ConferenceManager.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -37,6 +38,15 @@ namespace ConferenceManager.Api.Controllers
         public async Task<IActionResult> Get(int id, CancellationToken cancellation)
         {
             var result = await Mediator.Send(new GetUserQuery(id), cancellation);
+
+            return OkOrNotFound(result);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = ApplicationRole.Admin)]
+        public async Task<IActionResult> GetPage(int pageIndex, int pageSize, CancellationToken cancellation)
+        {
+            var result = await Mediator.Send(new GetUserPageQuery(pageIndex, pageSize), cancellation);
 
             return OkOrNotFound(result);
         }

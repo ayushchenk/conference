@@ -1,7 +1,7 @@
 ﻿using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Domain.Entities;
 
-namespace ConferenceManager.Core.Account.Register
+namespace ConferenceManager.Core.User.Register
 {
     public class RegisterUserCommandMapper : IMapper<RegisterUserCommand, ApplicationUser>
     {

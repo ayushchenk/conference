@@ -22,6 +22,14 @@ namespace ConferenceManager.Core.Submissions.AddReviewer
 
         public override async Task Handle(AddReviewerCommand request, CancellationToken cancellationToken)
         {
+            var existingAssignment = await Context.SubmissionReviewers
+                .FindAsync(new object[] { request.SubmissionId, request.UserId }, cancellationToken);
+
+            if (existingAssignment != null)
+            {
+                return;
+            }
+
             var submission = await Context.Submissions.FindAsync(request.SubmissionId, cancellationToken);
 
             if (submission == null)

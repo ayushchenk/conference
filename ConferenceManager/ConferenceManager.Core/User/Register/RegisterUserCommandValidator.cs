@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace ConferenceManager.Core.Account.Register
+namespace ConferenceManager.Core.User.Register
 {
     public class RegisterUserCommandValidator : AbstractValidator<RegisterUserCommand>
     {

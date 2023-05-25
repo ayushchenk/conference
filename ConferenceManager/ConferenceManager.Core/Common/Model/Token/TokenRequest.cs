@@ -1,6 +1,4 @@
-﻿using ConferenceManager.Core.Account.Login;
-
-namespace ConferenceManager.Core.Common.Model.Token
+﻿namespace ConferenceManager.Core.Common.Model.Token
 {
     public class TokenRequest
     {

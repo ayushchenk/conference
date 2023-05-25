@@ -1,7 +1,7 @@
 ﻿using ConferenceManager.Core.Common.Model.Token;
 using MediatR;
 
-namespace ConferenceManager.Core.Account.Login
+namespace ConferenceManager.Core.User.Login
 {
     public class LoginUserCommand : IRequest<TokenResponse>
     {

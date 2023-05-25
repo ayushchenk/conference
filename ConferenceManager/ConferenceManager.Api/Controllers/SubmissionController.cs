@@ -1,6 +1,7 @@
 ﻿using ConferenceManager.Api.Abstract;
 using ConferenceManager.Core.Submissions.AddReviewer;
 using ConferenceManager.Core.Submissions.Create;
+using ConferenceManager.Core.Submissions.CreateReview;
 using ConferenceManager.Core.Submissions.Get;
 using ConferenceManager.Core.Submissions.GetReviewers;
 using ConferenceManager.Core.Submissions.Papers;
@@ -10,7 +11,6 @@ using ConferenceManager.Core.Submissions.Update;
 using ConferenceManager.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace ConferenceManager.Api.Controllers
 {
@@ -20,6 +20,17 @@ namespace ConferenceManager.Api.Controllers
         [Authorize(Roles = ApplicationRole.Author)]
         public async Task<IActionResult> Post([FromForm] CreateSubmissionCommand command, CancellationToken cancellation)
         {
+            var result = await Mediator.Send(command, cancellation);
+
+            return Created(nameof(SubmissionController), result);
+        }
+
+        [HttpPost]
+        [Route("{id}/reviews")]
+        [Authorize(Roles = ApplicationRole.Reviewer)]
+        public async Task<IActionResult> Post(int id, CreateReviewCommand command, CancellationToken cancellation)
+        {
+            command.SubmissionId = id;
             var result = await Mediator.Send(command, cancellation);
 
             return Created(nameof(SubmissionController), result);
