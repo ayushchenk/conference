@@ -1,9 +1,8 @@
-﻿using ConferenceManager.Core.Common.Model.Responses;
-using MediatR;
+﻿using MediatR;
 
 namespace ConferenceManager.Core.Common.Commands
 {
-    public abstract class DeleteEntityCommand : IRequest<DeleteEntityResponse>
+    public abstract class DeleteEntityCommand : IRequest
     {
         public int Id { get; }
 

@@ -70,7 +70,7 @@ namespace ConferenceManager.Api.Controllers
         {
             await Mediator.Send(new AddParticipantCommand(id, userId), cancellation);
 
-            return Ok();
+            return NoContent();
         }
 
         [HttpDelete]
@@ -80,7 +80,7 @@ namespace ConferenceManager.Api.Controllers
         {
             await Mediator.Send(new RemoveParticipantCommand(id, userId), cancellation);
 
-            return Ok();
+            return NoContent();
         }
 
         [HttpGet]

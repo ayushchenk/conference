@@ -46,9 +46,9 @@ namespace ConferenceManager.Api.Controllers
         [Authorize(Roles = ApplicationRole.Admin)]
         public async Task<IActionResult> Delete(int id, CancellationToken cancellation)
         {
-            var result = await Mediator.Send(new DeleteUserCommand(id), cancellation);
+            await Mediator.Send(new DeleteUserCommand(id), cancellation);
 
-            return DeletedOrNotFound(result);
+            return NoContent();
         }
 
         [HttpPost]
@@ -58,7 +58,7 @@ namespace ConferenceManager.Api.Controllers
         {
             await Mediator.Send(new AssignRoleCommand(id, command.Role), cancellation);
 
-            return Ok();
+            return NoContent();
         }
 
         [HttpDelete]
@@ -68,7 +68,7 @@ namespace ConferenceManager.Api.Controllers
         {
             await Mediator.Send(new UnassignRoleCommand(id, command.Role), cancellation);
 
-            return Ok();
+            return NoContent();
         }
     }
 }

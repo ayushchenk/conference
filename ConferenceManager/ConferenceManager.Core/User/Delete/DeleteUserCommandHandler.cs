@@ -1,10 +1,9 @@
 ﻿using ConferenceManager.Core.Common.Interfaces;
-using ConferenceManager.Core.Common.Model.Responses;
 using MediatR;
 
 namespace ConferenceManager.Core.User.Delete
 {
-    public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand, DeleteEntityResponse>
+    public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand>
     {
         private readonly IIdentityService _identityService;
 
@@ -13,11 +12,9 @@ namespace ConferenceManager.Core.User.Delete
             _identityService = identityService;
         }
 
-        public async Task<DeleteEntityResponse> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
+        public async Task Handle(DeleteUserCommand request, CancellationToken cancellationToken)
         {
             await _identityService.DeleteUser(request.Id);
-
-            return DeleteEntityResponse.Success;
         }
     }
 }

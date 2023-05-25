@@ -1,13 +1,12 @@
 ﻿using ConferenceManager.Core.Common;
 using ConferenceManager.Core.Common.Exceptions;
 using ConferenceManager.Core.Common.Interfaces;
-using ConferenceManager.Core.Common.Model.Responses;
 using ConferenceManager.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace ConferenceManager.Core.Conferences.AddParticipant
 {
-    public class AddParticipantCommandHandler : DbContextRequestHandler<AddParticipantCommand, EmptyResponse>
+    public class AddParticipantCommandHandler : DbContextRequestHandler<AddParticipantCommand>
     {
         public AddParticipantCommandHandler(
             IApplicationDbContext context,
@@ -16,7 +15,7 @@ namespace ConferenceManager.Core.Conferences.AddParticipant
         {
         }
 
-        public override async Task<EmptyResponse> Handle(AddParticipantCommand request, CancellationToken cancellationToken)
+        public override async Task Handle(AddParticipantCommand request, CancellationToken cancellationToken)
         {
             var conference = await Context.Conferences.FindAsync(request.ConferenceId, cancellationToken);
             var user = await Context.Users.FindAsync(request.UserId, cancellationToken);
@@ -31,7 +30,7 @@ namespace ConferenceManager.Core.Conferences.AddParticipant
 
             if (participation != null)
             {
-                return EmptyResponse.Value;
+                return;
             }
 
             Context.ConferenceParticipants.Add(new ConferenceParticipant()
@@ -41,8 +40,6 @@ namespace ConferenceManager.Core.Conferences.AddParticipant
             });
 
             await Context.SaveChangesAsync(cancellationToken);
-
-            return EmptyResponse.Value;
         }
     }
 }

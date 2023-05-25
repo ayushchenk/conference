@@ -18,7 +18,7 @@ namespace ConferenceManager.Api.Controllers
         {
             var result = await Mediator.Send(command, cancellation);
 
-            return Ok(result);
+            return Created(nameof(SubmissionController), result);
         }
 
         [HttpGet]

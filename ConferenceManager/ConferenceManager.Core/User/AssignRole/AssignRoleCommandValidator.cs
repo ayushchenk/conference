@@ -11,7 +11,6 @@ namespace ConferenceManager.Core.User.AssignRole
             RuleFor(x => x.Role)
                 .Must(role => ApplicationRole.SupportedRoles.Contains(role))
                 .WithMessage(x => $"Role {x.Role} does not exist");
-
         }
     }
 }
