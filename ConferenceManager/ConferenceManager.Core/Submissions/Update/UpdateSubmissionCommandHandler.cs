@@ -1,9 +1,7 @@
 ﻿using ConferenceManager.Core.Common;
-using ConferenceManager.Core.Common.Exceptions;
 using ConferenceManager.Core.Common.Interfaces;
-using ConferenceManager.Core.Common.Model.Responses;
 using ConferenceManager.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
+
 
 namespace ConferenceManager.Core.Submissions.Update
 {
@@ -18,23 +16,9 @@ namespace ConferenceManager.Core.Submissions.Update
 
         public override async Task Handle(UpdateSubmissionCommand request, CancellationToken cancellationToken)
         {
-            var oldSubmission = await Context.Submissions
-                .AsNoTracking()
-                .FirstOrDefaultAsync(s => s.Id == request.Id, cancellationToken);
+            var submission = Mapper.Map<UpdateSubmissionCommand, Submission>(request);
 
-            if (oldSubmission == null)
-            {
-                throw new NotFoundException("Submission not found");
-            }
-
-            if (!oldSubmission.IsValidForUpdate)
-            {
-                throw new ForbiddenException("Can only update returned submissions");
-            }
-
-            var newSubmission = Mapper.Map<UpdateSubmissionCommand, Submission>(request);
-
-            Context.Submissions.Update(newSubmission);
+            Context.Submissions.Update(submission);
             await Context.SaveChangesAsync(cancellationToken);
         }
     }

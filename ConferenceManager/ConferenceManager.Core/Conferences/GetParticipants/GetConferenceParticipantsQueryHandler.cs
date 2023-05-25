@@ -1,6 +1,5 @@
 ﻿using ConferenceManager.Core.Account.Common;
 using ConferenceManager.Core.Common;
-using ConferenceManager.Core.Common.Exceptions;
 using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Core.Common.Model;
 using ConferenceManager.Core.Common.Model.Responses;
@@ -24,15 +23,8 @@ namespace ConferenceManager.Core.Conferences.GetParticipants
 
         public override async Task<EntityPageResponse<UserDto>> Handle(GetConferenceParticipantsQuery request, CancellationToken cancellationToken)
         {
-            var conference = await Context.Conferences.FindAsync(request.ConferenceId, cancellationToken);
-
-            if (conference == null)
-            {
-                throw new NotFoundException("Conference not found");
-            }
-
             var participants = Context.Users
-                .Where(u => u.ConferenceParticipations.Select(c => c.Id).Contains(conference.Id))
+                .Where(u => u.ConferenceParticipations.Select(c => c.Id).Contains(request.ConferenceId))
                 .OrderBy(u => u.Id);
 
             var page = await PaginatedList<ApplicationUser>.CreateAsync(participants, request.PageIndex, request.PageSize);

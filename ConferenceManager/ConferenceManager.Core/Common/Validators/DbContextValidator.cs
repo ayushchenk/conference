@@ -1,7 +1,7 @@
 ﻿using ConferenceManager.Core.Common.Interfaces;
 using FluentValidation;
 
-namespace ConferenceManager.Core.Common
+namespace ConferenceManager.Core.Common.Validators
 {
     public abstract class DbContextValidator<T> : AbstractValidator<T>
     {
@@ -11,7 +11,7 @@ namespace ConferenceManager.Core.Common
 
         protected DbContextValidator(IApplicationDbContext context, ICurrentUserService currentUser)
         {
-            Context = context; 
+            Context = context;
             CurrentUser = currentUser;
             ClassLevelCascadeMode = CascadeMode.Stop;
         }

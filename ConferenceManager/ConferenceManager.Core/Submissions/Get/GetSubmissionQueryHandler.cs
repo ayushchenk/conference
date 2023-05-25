@@ -1,5 +1,4 @@
 ﻿using ConferenceManager.Core.Common;
-using ConferenceManager.Core.Common.Exceptions;
 using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Core.Submissions.Common;
 using ConferenceManager.Domain.Entities;
@@ -19,17 +18,7 @@ namespace ConferenceManager.Core.Submissions.Get
         {
             var submission = await Context.Submissions.FindAsync(request.Id, cancellationToken);
 
-            if (submission == null)
-            {
-                throw new NotFoundException("Submission not found");
-            }
-
-            if (!CurrentUser.IsParticipantOf(submission.Conference))
-            {
-                throw new ForbiddenException("Is not part of conference");
-            }
-
-            return Mapper.Map<Submission, SubmissionDto>(submission);
+            return Mapper.Map<Submission, SubmissionDto>(submission!);
         }
     }
 }
