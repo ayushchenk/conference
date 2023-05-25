@@ -15,8 +15,8 @@ namespace ConferenceManager.Core.Submissions.RemoveReviewer
 
         public override async Task Handle(RemoveReviewerCommand request, CancellationToken cancellationToken)
         {
-            var reviewAssignment = Context.SubmissionReviewers
-                .FirstOrDefault(sr => sr.ReviewerId == request.UserId && sr.SubmissionId == request.SubmissionId);
+            var reviewAssignment = await Context.SubmissionReviewers
+                .FindAsync(new object[] { request.SubmissionId, request.UserId }, cancellationToken);
 
             if (reviewAssignment == null)
             {

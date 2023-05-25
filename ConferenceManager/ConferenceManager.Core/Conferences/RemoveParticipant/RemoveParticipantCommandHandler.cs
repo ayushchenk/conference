@@ -15,8 +15,8 @@ namespace ConferenceManager.Core.Conferences.RemoveParticipant
 
         public override async Task Handle(RemoveParticipantCommand request, CancellationToken cancellationToken)
         {
-            var participation = Context.ConferenceParticipants
-                .FirstOrDefault(p => p.ConferenceId == request.ConferenceId && p.UserId == request.UserId);
+            var participation = await Context.ConferenceParticipants
+                .FindAsync(new object[] { request.UserId, request.ConferenceId }, cancellationToken);
 
             if (participation == null)
             {
