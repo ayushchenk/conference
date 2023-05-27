@@ -17,18 +17,6 @@ namespace ConferenceManager.Core.Submissions.Create
 
         public override async Task<CreateEntityResponse> Handle(CreateSubmissionCommand request, CancellationToken cancellationToken)
         {
-            var conference = await Context.Conferences.FindAsync(request.ConferenceId, cancellationToken);
-
-            if (conference == null)
-            {
-                throw new NotFoundException("Conference not found");
-            }
-
-            if (!CurrentUser.IsParticipantOf(conference))
-            {
-                throw new ForbiddenException("Is not part of conference");
-            }
-
             var submission = Mapper.Map<CreateSubmissionCommand, Submission>(request);
 
             Context.Submissions.Add(submission);

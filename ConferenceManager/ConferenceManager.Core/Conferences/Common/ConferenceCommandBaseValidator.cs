@@ -11,7 +11,7 @@ namespace ConferenceManager.Core.Conferences.Common
                 .NotEmpty().WithMessage("Title is required")
                 .MaximumLength(100).WithMessage("Maximum length for Title is 100");
 
-            RuleFor(x => x.Acronyn)
+            RuleFor(x => x.Acronym)
                 .NotEmpty().WithMessage("Acronym is required")
                 .MaximumLength(20).WithMessage("Maximum length for Acronym is 20");
 

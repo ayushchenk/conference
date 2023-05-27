@@ -17,18 +17,11 @@ namespace ConferenceManager.Core.Conferences.Update
 
         public override async Task Handle(UpdateConferenceCommand request, CancellationToken cancellationToken)
         {
-            var oldConference = await Context.Conferences
-                .AsNoTracking()
-                .FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
 
-            if (oldConference == null)
-            {
-                throw new NotFoundException("Conference not found");
-            }
 
-            var newConference = Mapper.Map<UpdateConferenceCommand, Conference>(request);
+            var conference = Mapper.Map<UpdateConferenceCommand, Conference>(request);
 
-            Context.Conferences.Update(newConference);
+            Context.Conferences.Update(conference);
             await Context.SaveChangesAsync(cancellationToken);
         }
     }
