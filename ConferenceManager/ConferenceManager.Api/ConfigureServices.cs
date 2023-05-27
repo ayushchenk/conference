@@ -1,4 +1,5 @@
-﻿using ConferenceManager.Api.Services;
+﻿using ConferenceManager.Api.Filters;
+using ConferenceManager.Api.Services;
 using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Core.Common.Model.Settings;
 using ConferenceManager.Domain.Entities;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 using System.Text;
 
 namespace ConferenceManager.Api
@@ -74,6 +76,11 @@ namespace ConferenceManager.Api
                         new string[] { }
                     }
                 });
+
+                var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+
+                options.OperationFilter<SwaggerRolesFilter>();
             });
 
             services.Configure<SecurityStampValidatorOptions>(options =>

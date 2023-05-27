@@ -1,6 +1,5 @@
 ﻿using ConferenceManager.Domain.Common;
 using ConferenceManager.Domain.Enums;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ConferenceManager.Domain.Entities
 {
@@ -31,5 +30,12 @@ namespace ConferenceManager.Domain.Entities
         public virtual IList<Comment> Comments { set; get; } = null!;
 
         public virtual IList<Paper> Papers { set; get; } = null!;
+
+        public bool HasReviewFrom(int userId)
+        {
+            return Reviews
+                .Select(r => r.CreatedById)
+                .Contains(userId);
+        }
     }
 }

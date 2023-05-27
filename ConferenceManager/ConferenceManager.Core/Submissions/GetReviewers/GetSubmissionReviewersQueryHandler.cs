@@ -20,6 +20,7 @@ namespace ConferenceManager.Core.Submissions.GetReviewers
 
             return submission!
                 .ActualReviewers
+                .OrderBy(u => u.Id)
                 .Select(Mapper.Map<ApplicationUser, UserDto>);
         }
     }
