@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace ConferenceManager.Core.User.AddRole
@@ -8,6 +9,7 @@ namespace ConferenceManager.Core.User.AddRole
         [JsonIgnore]
         public int Id { get; }
 
+        [Required]
         public string Role { get; }
 
         public AssignRoleCommand(int id, string role)

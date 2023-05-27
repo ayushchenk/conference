@@ -31,19 +31,25 @@ namespace ConferenceManager.Core.Submissions.CreateReview
                 .NotEmpty().WithMessage("Confidence is required")
                 .Must(x => SupportedConfidences.Contains(x)).WithMessage("Provided Confidence is out of range");
 
-            RuleFor(x => x).Custom((command, valContext) =>
+            RuleFor(x => x).CustomAsync(async (command, context, cancelToken) =>
             {
-                var submission = Context.Submissions.Find(command.SubmissionId);
+                var submission = await Context.Submissions.FindAsync(command.SubmissionId, cancelToken);
 
                 if (submission == null)
                 {
-                    valContext.AddException(new NotFoundException("Submission not found"));
+                    context.AddException(new NotFoundException("Submission not found"));
                     return;
                 }
 
-                if (!currentUser.IsReviewerOf(submission))
+                if (!CurrentUser.IsReviewerOf(submission))
                 {
-                    valContext.AddException(new ForbiddenException("Not a reviewer of submission"));
+                    context.AddException(new ForbiddenException("Not a reviewer of submission"));
+                    return;
+                }
+
+                if (submission.HasReviewFrom(CurrentUser.Id))
+                {
+                    context.AddException(new ForbiddenException("Already reviewed"));
                 }
             });
         }

@@ -49,9 +49,7 @@ namespace ConferenceManager.Api.Services
                 throw new IdentityException("Incorrect password");
             }
 
-            var roles = await _manager.GetRolesAsync(user);
-
-            return GenerateJwtToken(user, roles);
+            return await GenerateJwtToken(user);
         }
 
         public async Task<TokenResponse> CreateUser(ApplicationUser user, string password)
@@ -110,7 +108,7 @@ namespace ConferenceManager.Api.Services
             await _manager.UpdateSecurityStampAsync(user);
         }
 
-        private TokenResponse GenerateJwtToken(ApplicationUser user, IEnumerable<string> roles)
+        private async Task<TokenResponse> GenerateJwtToken(ApplicationUser user)
         {
             byte[] key = Encoding.ASCII.GetBytes(_settings.Key);
 
@@ -128,6 +126,8 @@ namespace ConferenceManager.Api.Services
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 })
             };
+
+            var roles = await _manager.GetRolesAsync(user);
 
             foreach (var role in roles)
             {

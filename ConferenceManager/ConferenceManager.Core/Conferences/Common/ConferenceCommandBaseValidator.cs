@@ -28,6 +28,9 @@ namespace ConferenceManager.Core.Conferences.Common
             RuleFor(x => x.Keywords)
                 .MaximumLength(100).WithMessage("Maximum length for Keywords is 100");
 
+            RuleFor(x => x.Abstract)
+                .MaximumLength(1000).WithMessage("Maximum length for Abstract is 1000");
+
             RuleFor(x => x.Webpage)
                 .MaximumLength(100).WithMessage("Maximum length for Webpage is 100");
 

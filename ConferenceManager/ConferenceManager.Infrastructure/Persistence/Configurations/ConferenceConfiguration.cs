@@ -35,6 +35,10 @@ namespace ConferenceManager.Infrastructure.Persistence.Configurations
                 .IsRequired(false)
                 .HasMaxLength(100);
 
+            builder.Property(x => x.Abstract)
+               .IsRequired(false)
+               .HasMaxLength(1000);
+
             builder.Property(x => x.Webpage)
                 .IsRequired(false)
                 .HasMaxLength(100);
