@@ -4,7 +4,7 @@
     {
         public string Title { get; set; } = null!;
 
-        public string Acronyn { get; set; } = null!;
+        public string Acronym { get; set; } = null!;
 
         public string Organizer { get; set; } = null!;
 

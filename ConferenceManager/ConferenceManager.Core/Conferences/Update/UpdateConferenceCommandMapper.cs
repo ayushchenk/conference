@@ -11,7 +11,7 @@ namespace ConferenceManager.Core.Conferences.Update
             {
                 Id = source.Id,
                 Title = source.Title,
-                Acronyn = source.Acronyn,
+                Acronyn = source.Acronym,
                 Organizer = source.Organizer,
                 StartDate = source.StartDate,
                 EndDate = source.EndDate,
