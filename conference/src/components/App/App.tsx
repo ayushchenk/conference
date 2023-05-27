@@ -1,27 +1,26 @@
-import axios from 'axios';
+import axios from "axios";
 import { BrowserRouter, Route, Routes} from "react-router-dom";
 import { Header } from "../Header";
 import { ConferencesPage } from "../../pages/Conferences";
 import { Protected } from "../ProtectedRoute/Protected";
 import { SignUpPage, LoginPage } from "../../pages/Auth";
+import { Auth } from "../../logic/Auth";
 
+axios.interceptors.request.use(function (config) {
+    const token = Auth.getToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+});
 
 export const App = () => {
-    const logIn = (token: string) => {
-        localStorage.setItem("accessToken", token);
-        axios.defaults.headers.common = {'Authorization': `bearer ${token}`}
-    };
-    const logOut = () => {
-        localStorage.removeItem("accessToken");
-        delete axios.defaults.headers.common["Authorization"];
-    };
-
     return (
         <BrowserRouter>
             <Header />
             <Routes>
-                <Route path="/sign-up" element={<SignUpPage logIn={logIn} />}></Route>
-                <Route path="/login" element={<LoginPage logIn={logIn} />}></Route>
+                <Route path="/sign-up" element={<SignUpPage />}></Route>
+                <Route path="/login" element={<LoginPage />}></Route>
                 <Route path="/" element={
                     <Protected> 
                         <ConferencesPage />
