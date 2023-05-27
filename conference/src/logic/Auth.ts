@@ -47,7 +47,7 @@ export namespace Auth {
         return authData.roles;
     }
 
-    export function isGlobalAdmin() {
-        return getRoles().includes("Global Admin");
+    export function isAdmin() {
+        return getRoles().includes("Admin");
     }
 }

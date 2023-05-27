@@ -19,13 +19,13 @@ export const validationSchema = yup.object({
         .required("Affiliation is required"),
         webpage: yup
         .string(),
-    password1: yup
+    password: yup
         .string()
         .min(8, "Password should be of minimum 8 characters length")
         .required("Password is required"),
-    password2: yup
+    passwordRepeat: yup
         .string()
-        .oneOf([yup.ref("password1")], "Passwords must match")
+        .oneOf([yup.ref("password")], "Passwords must match")
         .min(8, "Password should be of minimum 8 characters length")
         .required("Password is required"),
 });

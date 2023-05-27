@@ -32,13 +32,7 @@ export const LoginForm: React.FC<{}> = () => {
       password: "",
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      const formData = {
-        email: values.email,
-        password: values.password
-      };
-      post(formData);
-    },
+    onSubmit: post
   });
 
   return (

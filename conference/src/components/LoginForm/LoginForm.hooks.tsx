@@ -11,7 +11,7 @@ export const usePostLoginApi = () => {
     });
 
     const post = useCallback((data: LoginRequest) => {
-        axios.post("/Account/Login", data)
+        axios.post("/User/Login", data)
             .then(response => {
                 setResponse({
                     data: response.data,

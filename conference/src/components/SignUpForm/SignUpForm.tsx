@@ -20,23 +20,12 @@ export const SignUpForm: React.FC<{}> = () => {
       country: "",
       affiliation: "",
       webpage: "",
-      password1: "",
-      password2: ""
+      password: "",
+      passwordRepeat: ""
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      const formData = {
-        email: values.email,
-        firstName: values.firstName,
-        lastName: values.lastName,
-        country: values.country,
-        affiliation: values.affiliation,
-        webpage: values.webpage,
-        password: values.password1
-      };
-      post(formData);
-    },
-  });
+      onSubmit: post
+    });
 
   if (!isLoading && !isError && data) {
     Auth.login(data);
@@ -125,27 +114,27 @@ export const SignUpForm: React.FC<{}> = () => {
         fullWidth
         required
         margin="normal"
-        id="password1"
-        name="password1"
+        id="password"
+        name="password"
         label="Password"
         type="password"
-        value={formik.values.password1}
+        value={formik.values.password}
         onChange={formik.handleChange}
-        error={formik.touched.password1 && Boolean(formik.errors.password1)}
-        helperText={formik.touched.password1 && formik.errors.password1}
+        error={formik.touched.password && Boolean(formik.errors.password)}
+        helperText={formik.touched.password && formik.errors.password}
       />
       <TextField
         fullWidth
         required
         margin="normal"
-        id="password2"
-        name="password2"
+        id="passwordRepeat"
+        name="passwordRepeat"
         label="Repeat password"
         type="password"
-        value={formik.values.password2}
+        value={formik.values.passwordRepeat}
         onChange={formik.handleChange}
-        error={formik.touched.password2 && Boolean(formik.errors.password2)}
-        helperText={formik.touched.password2 && formik.errors.password2}
+        error={formik.touched.passwordRepeat && Boolean(formik.errors.passwordRepeat)}
+        helperText={formik.touched.passwordRepeat && formik.errors.passwordRepeat}
       />
       <Collapse in={isError} sx={{ my: "10px" }}>
         <Alert severity="error">Something went wrong while creating your account.</Alert>

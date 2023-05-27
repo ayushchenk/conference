@@ -11,7 +11,7 @@ export const usePostSignUpApi = () => {
     });
 
     const post = useCallback((data: SignUpRequest) => {
-        axios.post("/Account/Register", data)
+        axios.post("/User/Register", data)
             .then(response => {
                 setResponse({
                     data: response.data,
