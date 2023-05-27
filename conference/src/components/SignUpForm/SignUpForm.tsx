@@ -6,9 +6,9 @@ import Alert from "@mui/material/Alert";
 import Collapse from "@mui/material/Collapse";
 import { usePostSignUpApi } from "./SignUpForm.hooks";
 import { validationSchema } from "./SignUpForm.validator";
+import { Auth } from "../../logic/Auth";
 
-
-export const SignUpForm = () => {
+export const SignUpForm: React.FC<{}> = () => {
   const { data, isError, isLoading, post } = usePostSignUpApi();
   const navigate = useNavigate();
 
@@ -38,7 +38,8 @@ export const SignUpForm = () => {
     },
   });
 
-  if (!isLoading && !isError) {
+  if (!isLoading && !isError && data) {
+    Auth.login(data);
     navigate("/");
   };
 
@@ -146,9 +147,9 @@ export const SignUpForm = () => {
         error={formik.touched.password2 && Boolean(formik.errors.password2)}
         helperText={formik.touched.password2 && formik.errors.password2}
       />
-        <Collapse in={isError} sx={{my: "10px"}}>
+      <Collapse in={isError} sx={{ my: "10px" }}>
         <Alert severity="error">Something went wrong while creating your account.</Alert>
-        </Collapse>
+      </Collapse>
       <Button color="primary" variant="contained" fullWidth type="submit">
         Submit
       </Button>

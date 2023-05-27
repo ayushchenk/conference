@@ -7,9 +7,3 @@ export type SignUpRequest = {
     webpage: string,
     password: string
 }
-
-export type SignUpResponse = {
-    data: object,
-    isError: boolean,
-    isLoading: boolean
-}

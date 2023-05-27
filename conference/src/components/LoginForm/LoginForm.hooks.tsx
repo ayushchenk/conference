@@ -1,17 +1,17 @@
 import axios from "axios";
 import { useCallback, useState } from "react";
-import { SignUpRequest } from "./SignUpForm.types";
+import { LoginRequest } from "./LoginForm.types";
 import { AuthResponse } from "../../types/Auth";
 
-export const usePostSignUpApi = () => {
+export const usePostLoginApi = () => {
     const [response, setResponse] = useState<AuthResponse>({
         data: null,
         isError: false,
         isLoading: true
     });
 
-    const post = useCallback((data: SignUpRequest) => {
-        axios.post("/Account/Register", data)
+    const post = useCallback((data: LoginRequest) => {
+        axios.post("/Account/Login", data)
             .then(response => {
                 setResponse({
                     data: response.data,
