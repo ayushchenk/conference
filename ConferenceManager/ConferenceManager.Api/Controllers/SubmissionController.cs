@@ -62,7 +62,7 @@ namespace ConferenceManager.Api.Controllers
         /// </summary>
         /// <remarks>
         /// Author can only update submission, if it was returned by reviewer. <br/>
-        /// All payload except File is required, when File is present, new records in Papers table is created.
+        /// All payload except File is required, when File is present, new record in Papers table is created.
         /// </remarks>
         [HttpPut]
         [Authorize(Roles = ApplicationRole.Author)]
@@ -81,7 +81,7 @@ namespace ConferenceManager.Api.Controllers
         /// Returns submission by id
         /// </summary>
         /// <remarks>
-        /// User can only access submissions from conferences, that he is part of
+        /// User can only access submissions from conferences, that he is part of (not requried for Admin)
         /// </remarks>
         [HttpGet]
         [Route("{id}")]

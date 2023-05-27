@@ -139,7 +139,7 @@ namespace ConferenceManager.Api.Controllers
         /// Returns conference submissions page
         /// </summary>
         /// <remarks>
-        /// Users should be part of conference (not required for Admin)
+        /// User should be part of conference where submission is located (not required for Admin)
         /// </remarks>
         [HttpGet]
         [Route("{id}/submissions")]
