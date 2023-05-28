@@ -6,6 +6,7 @@ import { Protected } from "../ProtectedRoute/Protected";
 import { SignUpPage, LoginPage } from "../../pages/Auth";
 import { Auth } from "../../logic/Auth";
 import { CreateConferencePage } from "../../pages/Conferences/CreateConferencePage";
+import { UsersPage } from "../../pages/Users";
 
 axios.interceptors.request.use(function (config) {
   const token = Auth.getToken();
@@ -22,6 +23,14 @@ export const App = () => {
       <Routes>
         <Route path="/sign-up" element={<SignUpPage />}></Route>
         <Route path="/login" element={<LoginPage />}></Route>
+        <Route
+          path="/users"
+          element={
+            <Protected>
+              <UsersPage />
+            </Protected>
+          }
+        />
         <Route
           path="/"
           element={

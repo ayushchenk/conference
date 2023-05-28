@@ -17,6 +17,11 @@ export const Header = () => {
       <Toolbar variant="dense">
         <Box className="header__box">
           <Button color="inherit">
+            <Link className="header__link" to="/users">
+              Users
+            </Link>
+          </Button>
+          <Button color="inherit">
             <Link className="header__link" to="/">
               Conferences
             </Link>
