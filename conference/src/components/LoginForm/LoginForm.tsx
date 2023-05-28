@@ -23,7 +23,7 @@ export const LoginForm: React.FC<{}> = () => {
     if (!isLoading && !isError && data) {
       Auth.login(data);
       navigate("/");
-    };
+    }
   }, [data, isError, isLoading]);
 
   const formik = useFormik({
@@ -32,7 +32,7 @@ export const LoginForm: React.FC<{}> = () => {
       password: "",
     },
     validationSchema: validationSchema,
-    onSubmit: post
+    onSubmit: post,
   });
 
   return (
