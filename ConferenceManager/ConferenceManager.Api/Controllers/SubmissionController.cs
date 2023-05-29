@@ -36,28 +36,6 @@ namespace ConferenceManager.Api.Controllers
         }
 
         /// <summary>
-        /// Creates new review for submission
-        /// </summary>
-        /// <remarks>
-        /// Reviewer can only create one review for a submission. <br/>
-        /// Reviewer can only send reviews to submissions, that he is assigned to.
-        /// </remarks>
-        [HttpPost]
-        [Route("{id}/reviews")]
-        [Authorize(Roles = ApplicationRole.Reviewer)]
-        [Produces("application/json")]
-        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CreateEntityResponse))]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
-        public async Task<IActionResult> Post(int id, CreateReviewCommand command, CancellationToken cancellation)
-        {
-            command.SubmissionId = id;
-            var result = await Mediator.Send(command, cancellation);
-
-            return Created(nameof(SubmissionController), result);
-        }
-
-        /// <summary>
         /// Updates submission information
         /// </summary>
         /// <remarks>
@@ -98,7 +76,52 @@ namespace ConferenceManager.Api.Controllers
         }
 
         /// <summary>
-        /// Returns submission to author
+        /// Returns submission papers
+        /// </summary>
+        /// <remarks>
+        /// Papers are ordered by created on descending. <br/>
+        /// Author can only get papers of his own submission. <br/>
+        /// Reviewer can only get papers of submission, that he is assigned to. <br/>
+        /// Admin can access everything.
+        /// </remarks>
+        [HttpGet]
+        [Route("{id}/papers")]
+        [Authorize]
+        [Produces("application/json")]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = (typeof(IEnumerable<PaperDto>)))]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
+        public async Task<IActionResult> GetPapers(int id, CancellationToken cancellation)
+        {
+            var result = await Mediator.Send(new GetSubmissionPapersQuery(id), cancellation);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Creates new review for submission
+        /// </summary>
+        /// <remarks>
+        /// Reviewer can only create one review for a submission. <br/>
+        /// Reviewer can only send reviews to submissions, that he is assigned to.
+        /// </remarks>
+        [HttpPost]
+        [Route("{id}/reviews")]
+        [Authorize(Roles = ApplicationRole.Reviewer)]
+        [Produces("application/json")]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CreateEntityResponse))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
+        public async Task<IActionResult> Post(int id, CreateReviewCommand command, CancellationToken cancellation)
+        {
+            command.SubmissionId = id;
+            var result = await Mediator.Send(command, cancellation);
+
+            return Created(nameof(SubmissionController), result);
+        }
+
+        /// <summary>
+        /// Marks submission to be updated by author
         /// </summary>
         /// <remarks>
         /// Reviwer can only return submission after it was created or updated by author. <br/>
@@ -119,23 +142,21 @@ namespace ConferenceManager.Api.Controllers
         }
 
         /// <summary>
-        /// Returns submission papers
+        /// Returns reviewers of submission
         /// </summary>
         /// <remarks>
-        /// Papers are ordered by created on descending. <br/>
-        /// Author can only get papers of his own submission. <br/>
-        /// Reviewer can only get papers of submission, that he is assigned to. <br/>
+        /// Ordered by user id. <br/>
+        /// Reviewer should be in the same conference as submission
         /// </remarks>
         [HttpGet]
-        [Route("{id}/papers")]
-        [Authorize]
+        [Route("{id}/reviewers")]
+        [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Reviewer}")]
         [Produces("application/json")]
-        [SwaggerResponse(StatusCodes.Status200OK, Type = (typeof(IEnumerable<PaperDto>)))]
-        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = (typeof(IEnumerable<UserDto>)))]
         [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
-        public async Task<IActionResult> GetPapers(int id, CancellationToken cancellation)
+        public async Task<IActionResult> GetReviewers(int id, CancellationToken cancellation)
         {
-            var result = await Mediator.Send(new GetSubmissionPapersQuery(id), cancellation);
+            var result = await Mediator.Send(new GetSubmissionReviewersQuery(id), cancellation);
 
             return Ok(result);
         }
@@ -174,26 +195,6 @@ namespace ConferenceManager.Api.Controllers
             await Mediator.Send(new RemoveReviewerCommand(id, userId), cancellation);
 
             return NoContent();
-        }
-
-        /// <summary>
-        /// Returns reviewers of submission
-        /// </summary>
-        /// <remarks>
-        /// Ordered by user id. <br/>
-        /// Reviewer should be in the same conference as submission
-        /// </remarks>
-        [HttpGet]
-        [Route("{id}/reviewers")]
-        [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Reviewer}")]
-        [Produces("application/json")]
-        [SwaggerResponse(StatusCodes.Status200OK, Type = (typeof(IEnumerable<UserDto>)))]
-        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
-        public async Task<IActionResult> GetReviewers(int id, CancellationToken cancellation)
-        {
-            var result = await Mediator.Send(new GetSubmissionReviewersQuery(id), cancellation);
-
-            return Ok(result);
         }
     }
 }

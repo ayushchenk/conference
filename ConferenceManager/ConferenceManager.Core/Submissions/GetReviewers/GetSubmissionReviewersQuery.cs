@@ -1,9 +1,9 @@
 ﻿using ConferenceManager.Core.Account.Common;
-using MediatR;
+using ConferenceManager.Core.Common.Queries;
 
 namespace ConferenceManager.Core.Submissions.GetReviewers
 {
-    public class GetSubmissionReviewersQuery : IRequest<IEnumerable<UserDto>>
+    public class GetSubmissionReviewersQuery : GetEntitiesQuery<UserDto>
     {
         public int SubmissionId { get; }
 

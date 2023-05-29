@@ -22,39 +22,6 @@ namespace ConferenceManager.Api.Controllers
     public class ConferenceController : ApiControllerBase
     {
         /// <summary>
-        /// Returns conference by id
-        /// </summary>
-        [HttpGet]
-        [Route("{id}")]
-        [Authorize]
-        [Produces("application/json")]
-        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(ConferenceDto))]
-        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
-        public async Task<IActionResult> Get(int id, CancellationToken cancellation)
-        {
-            var result = await Mediator.Send(new GetConferenceQuery(id), cancellation);
-
-            return OkOrNotFound(result);
-        }
-
-        /// <summary>
-        /// Returns conference page
-        /// </summary>
-        /// <remarks>
-        /// Page is ordered by end date descending
-        /// </remarks>
-        [HttpGet]
-        [Authorize]
-        [Produces("application/json")]
-        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(EntityPageResponse<ConferenceDto>))]
-        public async Task<IActionResult> Get(int pageIndex, int pageSize, CancellationToken cancellation)
-        {
-            var result = await Mediator.Send(new GetConferencePageQuery(pageIndex, pageSize), cancellation);
-
-            return Ok(result);
-        }
-
-        /// <summary>
         /// Creates new conference
         /// </summary>
         [HttpPost]
@@ -85,6 +52,40 @@ namespace ConferenceManager.Api.Controllers
             await Mediator.Send(command, cancellation);
 
             return NoContent();
+        }
+
+
+        /// <summary>
+        /// Returns conference page
+        /// </summary>
+        /// <remarks>
+        /// Page is ordered by end date descending
+        /// </remarks>
+        [HttpGet]
+        [Authorize]
+        [Produces("application/json")]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(EntityPageResponse<ConferenceDto>))]
+        public async Task<IActionResult> Get(int pageIndex, int pageSize, CancellationToken cancellation)
+        {
+            var result = await Mediator.Send(new GetConferencePageQuery(pageIndex, pageSize), cancellation);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Returns conference by id
+        /// </summary>
+        [HttpGet]
+        [Route("{id}")]
+        [Authorize]
+        [Produces("application/json")]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(ConferenceDto))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
+        public async Task<IActionResult> Get(int id, CancellationToken cancellation)
+        {
+            var result = await Mediator.Send(new GetConferenceQuery(id), cancellation);
+
+            return OkOrNotFound(result);
         }
 
         /// <summary>
@@ -139,7 +140,8 @@ namespace ConferenceManager.Api.Controllers
         /// Returns conference submissions page
         /// </summary>
         /// <remarks>
-        /// User should be part of conference where submission is located (not required for Admin)
+        /// User should be part of conference where submission is located (not required for Admin). <br/>
+        /// Page is ordered by createdon descending 
         /// </remarks>
         [HttpGet]
         [Route("{id}/submissions")]

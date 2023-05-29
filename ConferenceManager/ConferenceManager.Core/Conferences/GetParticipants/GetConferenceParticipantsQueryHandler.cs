@@ -29,16 +29,16 @@ namespace ConferenceManager.Core.Conferences.GetParticipants
 
             var page = await PaginatedList<ApplicationUser>.CreateAsync(participants, request.PageIndex, request.PageSize);
 
-            var dtos = await Task.WhenAll(page.Select(async (u) =>
+            var dtos = page.Select(async (u) =>
             {
                 var dto = Mapper.Map<ApplicationUser, UserDto>(u);
                 dto.Roles = await _userManager.GetRolesAsync(u);
                 return dto;
-            }));
+            });
 
             return new EntityPageResponse<UserDto>()
             {
-                Items = dtos,
+                Items = dtos.Select(x => x.Result),
                 TotalCount = page.TotalCount,
                 TotalPages = page.TotalPages
             };
