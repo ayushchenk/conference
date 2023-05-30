@@ -11,7 +11,8 @@ namespace ConferenceManager.Infrastructure.Persistence
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, int>, IApplicationDbContext
     {
         private readonly IMediator _mediator;
-        private readonly AuditableEntitySaveChangesInterceptor _auditableEntitySaveChangesInterceptor;
+        private readonly AuditableEntitySaveChangesInterceptor _auditableEntityInterceptor;
+        private readonly ForeignKeysSaveChangesInterceptor _foreignKeysInterceptor;
 
         public DbSet<Conference> Conferences => Set<Conference>();
 
@@ -31,12 +32,14 @@ namespace ConferenceManager.Infrastructure.Persistence
 
         public ApplicationDbContext(
             DbContextOptions<ApplicationDbContext> options,
-            IMediator mediator,
-            AuditableEntitySaveChangesInterceptor auditableEntitySaveChangesInterceptor
+            AuditableEntitySaveChangesInterceptor auditableEntityInterceptor,
+            ForeignKeysSaveChangesInterceptor foreignKeysInterceptor,
+            IMediator mediator
             ) : base(options)
         {
+            _auditableEntityInterceptor = auditableEntityInterceptor;
+            _foreignKeysInterceptor = foreignKeysInterceptor;
             _mediator = mediator;
-            _auditableEntitySaveChangesInterceptor = auditableEntitySaveChangesInterceptor;
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -48,7 +51,7 @@ namespace ConferenceManager.Infrastructure.Persistence
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.AddInterceptors(_auditableEntitySaveChangesInterceptor);
+            optionsBuilder.AddInterceptors(_auditableEntityInterceptor, _foreignKeysInterceptor);
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

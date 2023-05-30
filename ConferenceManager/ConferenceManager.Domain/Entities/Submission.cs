@@ -5,9 +5,7 @@ namespace ConferenceManager.Domain.Entities
 {
     public class Submission : BaseAuditableEntity
     {
-        public required int AuthorId { set; get; }
-        
-        public required int ConferenceId { set; get; }
+        public int ConferenceId { set; get; }
 
         public required string Title { set; get; }
 
@@ -19,6 +17,10 @@ namespace ConferenceManager.Domain.Entities
 
         public virtual Conference Conference { set; get; } = null!;
 
+        public bool IsValidForReturn => Status == SubmissionStatus.Created || Status == SubmissionStatus.Updated;
+
+        public bool IsValidForUpdate => Status == SubmissionStatus.Returned;
+
         public virtual IList<ApplicationUser> ActualReviewers { set; get; } = null!;
 
         public virtual IList<ApplicationUser> AppliedReviewers { set; get; } = null!;
@@ -27,6 +29,13 @@ namespace ConferenceManager.Domain.Entities
 
         public virtual IList<Comment> Comments { set; get; } = null!;
 
-        public virtual IList<Paper> Papers { set; get; } = null!; 
+        public virtual IList<Paper> Papers { set; get; } = null!;
+
+        public bool HasReviewFrom(int userId)
+        {
+            return Reviews
+                .Select(r => r.CreatedById)
+                .Contains(userId);
+        }
     }
 }
