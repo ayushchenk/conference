@@ -2,24 +2,19 @@ import { useEffect, useState } from "react";
 import { DataGrid, GridPaginationModel } from "@mui/x-data-grid";
 import { useParticipantUsersGridProps } from "./ParticipantUsersGrid.hooks";
 import { useGetUsersApi } from "../UsersGrid/UsersGrid.hooks";
+import { defaultPage } from "../../util/Constants";
 
 type ParticipantUsersGridProps = {
   handleAddParticipant: (params: { id: number }) => void;
 };
 
 export const ParticipantUsersGrid: React.FC<ParticipantUsersGridProps> = ({ handleAddParticipant }) => {
-  const [currentPage, setCurrentPage] = useState<GridPaginationModel>({
-    page: 0,
-    pageSize: 10,
-  });
+  const [currentPage, setCurrentPage] = useState<GridPaginationModel>(defaultPage);
+  
   const users = useGetUsersApi(currentPage);
 
   const [rowCountState, setRowCountState] = useState(users?.data.totalCount || 0);
-  useEffect(() => {
-    setRowCountState((prevRowCountState) =>
-      users?.data.totalCount !== undefined ? users?.data.totalCount : prevRowCountState
-    );
-  }, [users?.data.totalCount, setRowCountState]);
+  setRowCountState((prevRowCountState) => users?.data.totalCount ?? prevRowCountState);
 
   const [rows, columns] = useParticipantUsersGridProps(users, handleAddParticipant);
   return (
