@@ -8,7 +8,7 @@ import { User } from "../../types/User";
 
 export const useGetUsersApi = (paging: GridPaginationModel) => {
   const [response, setResponse] = useState<GetUsersResponse>({
-    data: { items: [] },
+    data: { items: [], totalCount: 0, totalPages: 0 },
     isError: false,
     isLoading: true,
   });
@@ -26,7 +26,7 @@ export const useGetUsersApi = (paging: GridPaginationModel) => {
       .catch((error) => {
         console.error(error);
         setResponse({
-          data: { items: [] },
+          data: { items: [], totalCount: 0, totalPages: 0 },
           isError: true,
           isLoading: false,
         });

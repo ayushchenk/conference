@@ -1,16 +1,14 @@
 import { User } from "../../types/User";
 
-export type GetUsersResponse = {
+export type GetParticipantsResponse = {
   data: {
     items: User[];
-    totalCount: number;
-    totalPages: number;
   };
   isLoading: boolean;
   isError: boolean;
 };
 
-export type DeleteUserResponse = {
+export type DeleteParticipantResponse = {
   data: { userId: number | null };
   isLoading: boolean;
   isError: boolean;

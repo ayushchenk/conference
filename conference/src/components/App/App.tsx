@@ -1,7 +1,7 @@
 import axios from "axios";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Header } from "../Header";
-import { ConferencesPage } from "../../pages/Conferences";
+import { ConferencesPage, ParticipantsPage } from "../../pages/Conferences";
 import { Protected } from "../ProtectedRoute/Protected";
 import { SignUpPage, LoginPage } from "../../pages/Auth";
 import { Auth } from "../../logic/Auth";
@@ -40,10 +40,18 @@ export const App = () => {
           }
         />
         <Route
-          path="/conferences/:id"
+          path="/conferences/:conferenceId"
           element={
             <Protected>
               <div>test</div>
+            </Protected>
+          }
+        />
+        <Route
+          path="/conferences/:conferenceId/participants"
+          element={
+            <Protected>
+              <ParticipantsPage />
             </Protected>
           }
         />
