@@ -1,6 +1,7 @@
 ﻿using ConferenceManager.Api.Abstract;
 using ConferenceManager.Core.Account.Common;
 using ConferenceManager.Core.Common.Model.Responses;
+using ConferenceManager.Core.Submissions.AddPreference;
 using ConferenceManager.Core.Submissions.AddReviewer;
 using ConferenceManager.Core.Submissions.Common;
 using ConferenceManager.Core.Submissions.Create;
@@ -215,6 +216,27 @@ namespace ConferenceManager.Api.Controllers
         public async Task<IActionResult> RemoveReviewer(int id, int userId, CancellationToken cancellation)
         {
             await Mediator.Send(new RemoveReviewerCommand(id, userId), cancellation);
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Submits preference for a submission review
+        /// </summary>
+        /// <remarks>
+        /// Reviewer should be in the same conference with sumbission
+        /// </remarks>
+        [HttpPost]
+        [Route("{id}/preference")]
+        [Authorize(Roles = ApplicationRole.Reviewer)]
+        [Produces("application/json")]
+        [SwaggerResponse(StatusCodes.Status204NoContent)]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
+        public async Task<IActionResult> AddPreference(int id, CancellationToken cancellation)
+        {
+            await Mediator.Send(new AddSubmissionPreferenceCommand(id), cancellation);
 
             return NoContent();
         }
