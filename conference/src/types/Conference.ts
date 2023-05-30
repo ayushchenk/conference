@@ -4,14 +4,14 @@ export type Conference = {
   title: string;
   keywords: string;
   abstract: string;
-  createdon: Date;
-  updatedon: Date;
+  createdon: string;
+  updatedon: string;
   acronym: string;
   webpage: string;
   venue: string;
   city: string;
-  startDate: Date;
-  endDate: Date;
+  startDate: string;
+  endDate: string;
   primaryResearchArea: string;
   secondaryResearchArea: string;
   areaNotes: string;

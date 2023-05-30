@@ -35,7 +35,6 @@ export const ParticipantsGrid = () => {
     addParticipant(id);
   };
   useEffect(() => {
-    console.log(isAddLoading, isAddError, "@");
     if (!isAddLoading && !isAddError) {
       setOpenAddParticipantDialog(false);
       setCurrentPage({
