@@ -1,4 +1,5 @@
 using ConferenceManager.Api;
+using ConferenceManager.Api.Middleware;
 using ConferenceManager.Core;
 using ConferenceManager.Core.Common.Model.Settings;
 using ConferenceManager.Infrastructure;
@@ -15,7 +16,6 @@ builder.Services.AddCoreServices(builder.Configuration);
 builder.Services.AddApiServices(builder.Configuration);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -23,8 +23,6 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    app.UseDeveloperExceptionPage();
-    app.UseMigrationsEndPoint();
 }
 
 using (var scope = app.Services.CreateScope())
@@ -35,6 +33,8 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseAuthentication();
 

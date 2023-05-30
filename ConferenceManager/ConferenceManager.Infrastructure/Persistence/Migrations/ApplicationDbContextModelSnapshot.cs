@@ -18,6 +18,9 @@ namespace ConferenceManager.Infrastructure.Persistence.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.5")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -65,7 +68,8 @@ namespace ConferenceManager.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Affiliation")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -73,7 +77,8 @@ namespace ConferenceManager.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Country")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -84,11 +89,13 @@ namespace ConferenceManager.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -124,7 +131,8 @@ namespace ConferenceManager.Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("Webpage")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
@@ -147,13 +155,13 @@ namespace ConferenceManager.Infrastructure.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CreatedById")
+                    b.Property<int>("CreatedById")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifiedById")
+                    b.Property<int>("ModifiedById")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("ModifiedOn")
@@ -166,9 +174,6 @@ namespace ConferenceManager.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -190,7 +195,8 @@ namespace ConferenceManager.Infrastructure.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Abstract")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("Acronyn")
                         .IsRequired()
@@ -209,7 +215,7 @@ namespace ConferenceManager.Infrastructure.Persistence.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<int?>("CreatedById")
+                    b.Property<int>("CreatedById")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedOn")
@@ -222,7 +228,7 @@ namespace ConferenceManager.Infrastructure.Persistence.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int?>("ModifiedById")
+                    b.Property<int>("ModifiedById")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("ModifiedOn")
@@ -252,9 +258,6 @@ namespace ConferenceManager.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Venue")
                         .HasMaxLength(100)
@@ -296,10 +299,7 @@ namespace ConferenceManager.Infrastructure.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AuthorId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CreatedById")
+                    b.Property<int>("CreatedById")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedOn")
@@ -309,7 +309,12 @@ namespace ConferenceManager.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<int?>("ModifiedById")
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("ModifiedById")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("ModifiedOn")
@@ -340,7 +345,7 @@ namespace ConferenceManager.Infrastructure.Persistence.Migrations
                     b.Property<byte>("Confidence")
                         .HasColumnType("tinyint");
 
-                    b.Property<int?>("CreatedById")
+                    b.Property<int>("CreatedById")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedOn")
@@ -351,14 +356,11 @@ namespace ConferenceManager.Infrastructure.Persistence.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<int?>("ModifiedById")
+                    b.Property<int>("ModifiedById")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("ModifiedOn")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("ReviewerId")
-                        .HasColumnType("int");
 
                     b.Property<int>("SubmissionId")
                         .HasColumnType("int");
@@ -402,13 +404,10 @@ namespace ConferenceManager.Infrastructure.Persistence.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<int>("AuthorId")
-                        .HasColumnType("int");
-
                     b.Property<int>("ConferenceId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CreatedById")
+                    b.Property<int>("CreatedById")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedOn")
@@ -419,7 +418,7 @@ namespace ConferenceManager.Infrastructure.Persistence.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int?>("ModifiedById")
+                    b.Property<int>("ModifiedById")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("ModifiedOn")
@@ -567,12 +566,14 @@ namespace ConferenceManager.Infrastructure.Persistence.Migrations
                     b.HasOne("ConferenceManager.Domain.Entities.ApplicationUser", "CreatedBy")
                         .WithMany("CreatedComments")
                         .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("ConferenceManager.Domain.Entities.ApplicationUser", "ModifiedBy")
                         .WithMany("ModifiedComments")
                         .HasForeignKey("ModifiedById")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("ConferenceManager.Domain.Entities.Submission", "Submission")
                         .WithMany("Comments")
@@ -592,12 +593,14 @@ namespace ConferenceManager.Infrastructure.Persistence.Migrations
                     b.HasOne("ConferenceManager.Domain.Entities.ApplicationUser", "CreatedBy")
                         .WithMany("CreatedConferences")
                         .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("ConferenceManager.Domain.Entities.ApplicationUser", "ModifiedBy")
                         .WithMany("ModifiedConferences")
                         .HasForeignKey("ModifiedById")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("CreatedBy");
 
@@ -628,12 +631,14 @@ namespace ConferenceManager.Infrastructure.Persistence.Migrations
                     b.HasOne("ConferenceManager.Domain.Entities.ApplicationUser", "CreatedBy")
                         .WithMany("CreatedPapers")
                         .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("ConferenceManager.Domain.Entities.ApplicationUser", "ModifiedBy")
                         .WithMany("ModifiedPapers")
                         .HasForeignKey("ModifiedById")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("ConferenceManager.Domain.Entities.Submission", "Submission")
                         .WithMany("Papers")
@@ -653,12 +658,14 @@ namespace ConferenceManager.Infrastructure.Persistence.Migrations
                     b.HasOne("ConferenceManager.Domain.Entities.ApplicationUser", "CreatedBy")
                         .WithMany("CreatedReviews")
                         .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("ConferenceManager.Domain.Entities.ApplicationUser", "ModifiedBy")
                         .WithMany("ModifiedReviews")
                         .HasForeignKey("ModifiedById")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("ConferenceManager.Domain.Entities.Submission", "Submission")
                         .WithMany("Reviews")
@@ -703,12 +710,14 @@ namespace ConferenceManager.Infrastructure.Persistence.Migrations
                     b.HasOne("ConferenceManager.Domain.Entities.ApplicationUser", "CreatedBy")
                         .WithMany("CreatedSubmissions")
                         .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("ConferenceManager.Domain.Entities.ApplicationUser", "ModifiedBy")
                         .WithMany("ModifiedSubmissions")
                         .HasForeignKey("ModifiedById")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("Conference");
 
