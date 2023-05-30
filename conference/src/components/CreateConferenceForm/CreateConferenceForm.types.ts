@@ -23,3 +23,21 @@ export type CreateConferenceResponse = {
   isError: boolean;
   isLoading: boolean;
 };
+
+export const initialValues: CreateConferenceRequest = {
+  title: "",
+  keywords: "",
+  abstract: "",
+  acronym: "",
+  webpage: "",
+  venue: "",
+  city: "",
+  startDate: new Date(),
+  endDate: new Date(),
+  primaryResearchArea: "",
+  secondaryResearchArea: "",
+  areaNotes: "",
+  organizer: "",
+  organizerWebpage: "",
+  contactPhoneNumber: "",
+};

@@ -17,14 +17,14 @@ export const LoginForm: React.FC<{}> = () => {
     if (Auth.isAuthed()) {
       navigate("/");
     }
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     if (!isLoading && !isError && data) {
       Auth.login(data);
       navigate("/");
     }
-  }, [data, isError, isLoading]);
+  }, [data, isError, isLoading, navigate]);
 
   const formik = useFormik({
     initialValues: {

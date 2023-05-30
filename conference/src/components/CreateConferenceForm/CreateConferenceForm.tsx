@@ -11,6 +11,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { usePostCreateConferenceApi } from "./CreateConferenceForm.hooks";
 import { validationSchema } from "./CreateConferenceForm.validator";
+import { initialValues } from "./CreateConferenceForm.types";
 
 export const CreateConferenceForm = () => {
   const { data, isError, isLoading, post } = usePostCreateConferenceApi();
@@ -20,26 +21,10 @@ export const CreateConferenceForm = () => {
     if (!isLoading && !isError && data) {
       navigate(`/conferences/${data["id"]}`);
     }
-  }, [data, isError, isLoading]);
+  }, [data, isError, isLoading, navigate]);
 
   const formik = useFormik({
-    initialValues: {
-      title: "",
-      keywords: "",
-      abstract: "",
-      acronym: "",
-      webpage: "",
-      venue: "",
-      city: "",
-      startDate: new Date(),
-      endDate: new Date(),
-      primaryResearchArea: "",
-      secondaryResearchArea: "",
-      areaNotes: "",
-      organizer: "",
-      organizerWebpage: "",
-      contactPhoneNumber: "",
-    },
+    initialValues: initialValues,
     validationSchema: validationSchema,
     onSubmit: post,
   });

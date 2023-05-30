@@ -1,42 +1,21 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { GetConferencesResponse } from "./ConferencesGrid.types";
+import { GetConferencesData, GetConferencesResponse } from "./ConferencesGrid.types";
 import { GridRowsProp, GridColDef, GridPaginationModel } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
 import moment from "moment";
+import { useGetApi } from "../../hooks/UseGetApi";
+import { AxiosRequestConfig } from "axios";
+import { useMemo } from "react";
 
-export const useGetConferencesApi = (paging: GridPaginationModel) => {
-  const [response, setResponse] = useState<GetConferencesResponse>({
-    data: { items: [] },
-    isError: false,
-    isLoading: true,
-  });
+export const useGetConferencesApi = (paging: GridPaginationModel): GetConferencesResponse => {
+  const config: AxiosRequestConfig<any> = useMemo(() => ({
+    params: { pageIndex: paging.page, pageSize: paging.pageSize }
+  }), [paging]);
 
-  useEffect(() => {
-    axios
-      .get(`/Conference`, { params: { pageIndex: paging["page"], pageSize: paging["pageSize"] } })
-      .then((response) => {
-        setResponse({
-          data: response.data,
-          isError: false,
-          isLoading: false,
-        });
-      })
-      .catch((error) => {
-        console.error(error);
-        setResponse({
-          data: { items: [] },
-          isError: true,
-          isLoading: false,
-        });
-      });
-  }, []);
-
-  return response;
+  return useGetApi<GetConferencesData>(`/Conference`, config);
 };
 
 export const useConferencesGridProps = (conferences: GetConferencesResponse): [GridRowsProp, GridColDef[]] => {
-  const rows: GridRowsProp = conferences.data.items;
+  const rows: GridRowsProp = conferences.data?.items ?? [];
   const columns: GridColDef[] = [
     {
       headerName: "#",
@@ -54,13 +33,13 @@ export const useConferencesGridProps = (conferences: GetConferencesResponse): [G
     },
     {
       headerName: "Start Date",
-      field: "start",
+      field: "startDate",
       minWidth: 120,
       valueFormatter: (params) => moment(params?.value).format("DD/MM/YYYY"),
     },
     {
       headerName: "End Date",
-      field: "end",
+      field: "endDate",
       minWidth: 120,
       valueFormatter: (params) => moment(params?.value).format("DD/MM/YYYY"),
     },

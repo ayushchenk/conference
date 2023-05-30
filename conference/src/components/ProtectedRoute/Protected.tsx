@@ -1,7 +1,7 @@
 import { Navigate } from "react-router-dom";
 import { Auth } from "../../logic/Auth";
 
-interface ProtectedProps {
+export interface ProtectedProps {
   children: React.ReactNode;
 }
 
