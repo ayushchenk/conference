@@ -14,14 +14,14 @@ import { validationSchema } from "./CreateConferenceForm.validator";
 import { initialValues } from "./CreateConferenceForm.types";
 
 export const CreateConferenceForm = () => {
-  const { data, isError, isLoading, post } = usePostCreateConferenceApi();
+  const { response, post } = usePostCreateConferenceApi();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isLoading && !isError && data && "id" in data) {
-      navigate(`/conferences/${data.id}`);
+    if (response.data && "id" in response.data) {
+      navigate(`/conferences/${response.data.id}`);
     }
-  }, [data, isError, isLoading, navigate]);
+  }, [response, navigate]);
 
   const formik = useFormik({
     initialValues: initialValues,
@@ -221,8 +221,11 @@ export const CreateConferenceForm = () => {
         error={formik.touched.contactPhoneNumber && Boolean(formik.errors.contactPhoneNumber)}
         helperText={formik.touched.contactPhoneNumber && formik.errors.contactPhoneNumber}
       />
-      <Collapse in={isError} sx={{ my: "10px" }}>
-        <Alert severity="error">Something went wrong while creating the conference.</Alert>
+      <Collapse in={response.isError} sx={{ my: "10px" }}>
+        <Alert severity="error">
+          Something went wrong while creating the conference.<br />
+          {response.error?.detail}
+        </Alert>
       </Collapse>
       <Button color="primary" variant="contained" fullWidth type="submit">
         Submit

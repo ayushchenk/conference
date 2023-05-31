@@ -33,7 +33,3 @@ export const initialValues: CreateConferenceRequest = {
   organizerWebpage: "",
   contactPhoneNumber: "",
 };
-
-export type CreateConferenceResponse = {
-  id: number;
-};

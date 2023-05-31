@@ -1,12 +1,13 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { useEffect, useState } from "react";
-import { ApiResponse } from "../types/GetResponse";
+import { ApiResponse } from "../types/ApiResponse";
 
 export function useGetApi<TData>(path: string, config?: AxiosRequestConfig<any> | undefined) {
     const [response, setResponse] = useState<ApiResponse<TData>>({
         data: null,
         isError: false,
-        isLoading: true
+        isLoading: true,
+        error: null
     });
 
     useEffect(() => {
@@ -17,6 +18,7 @@ export function useGetApi<TData>(path: string, config?: AxiosRequestConfig<any> 
                     data: response.data,
                     isError: false,
                     isLoading: false,
+                    error: null
                 });
             })
             .catch((error) => {
@@ -25,6 +27,7 @@ export function useGetApi<TData>(path: string, config?: AxiosRequestConfig<any> 
                     data: null,
                     isError: true,
                     isLoading: false,
+                    error: error.response.data
                 });
             });
     }, [path, config]);

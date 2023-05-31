@@ -7,3 +7,14 @@ export type SignUpRequest = {
     webpage: string,
     password: string
 }
+
+export const initialValues = {
+    email: "",
+    firstName: "",
+    lastName: "",
+    country: "",
+    affiliation: "",
+    webpage: "",
+    password: "",
+    passwordRepeat: ""
+};

@@ -10,9 +10,3 @@ export type AuthData = {
     userId: number,
     roles: string[],
 }
-
-export type AuthResponse = {
-    data: AuthData | null,
-    isError: boolean,
-    isLoading: boolean
-}
