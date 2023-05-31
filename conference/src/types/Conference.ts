@@ -19,7 +19,3 @@ export type Conference = {
   organizerWebpage: string;
   contactPhoneNumber: string;
 };
-
-export type ConferenceResponse = {
-  id: number;
-};

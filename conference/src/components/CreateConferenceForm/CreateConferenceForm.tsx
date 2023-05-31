@@ -18,8 +18,8 @@ export const CreateConferenceForm = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isLoading && !isError && data) {
-      navigate(`/conferences/${data["id"]}`);
+    if (!isLoading && !isError && data && "id" in data) {
+      navigate(`/conferences/${data.id}`);
     }
   }, [data, isError, isLoading, navigate]);
 

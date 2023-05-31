@@ -1,5 +1,3 @@
-import { ConferenceResponse } from "../../types/Conference";
-
 export type CreateConferenceRequest = {
   title: string;
   acronym: string;
@@ -18,12 +16,6 @@ export type CreateConferenceRequest = {
   contactPhoneNumber: string;
 };
 
-export type CreateConferenceResponse = {
-  data: ConferenceResponse | null;
-  isError: boolean;
-  isLoading: boolean;
-};
-
 export const initialValues: CreateConferenceRequest = {
   title: "",
   keywords: "",
@@ -40,4 +32,8 @@ export const initialValues: CreateConferenceRequest = {
   organizer: "",
   organizerWebpage: "",
   contactPhoneNumber: "",
+};
+
+export type CreateConferenceResponse = {
+  id: number;
 };
