@@ -22,6 +22,6 @@ export type ApiError = {
     };
 };
 
-export type CreateResponse = {
+export type CreateResponseData = {
     id: number;
 }
