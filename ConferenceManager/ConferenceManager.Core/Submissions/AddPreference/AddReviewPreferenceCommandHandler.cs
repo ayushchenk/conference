@@ -4,16 +4,16 @@ using ConferenceManager.Domain.Entities;
 
 namespace ConferenceManager.Core.Submissions.AddPreference
 {
-    public class AddSubmissionPreferenceCommandHandler : DbContextRequestHandler<AddSubmissionPreferenceCommand>
+    public class AddreviewPreferenceCommandHandler : DbContextRequestHandler<AddReviewPreferenceCommand>
     {
-        public AddSubmissionPreferenceCommandHandler(
+        public AddreviewPreferenceCommandHandler(
             IApplicationDbContext context,
             ICurrentUserService currentUser,
             IMappingHost mapper) : base(context, currentUser, mapper)
         {
         }
 
-        public override async Task Handle(AddSubmissionPreferenceCommand request, CancellationToken cancellationToken)
+        public override async Task Handle(AddReviewPreferenceCommand request, CancellationToken cancellationToken)
         {
             var existingPreference = await Context.ReviewPreferences
                 .FindAsync(new object[] { request.SubmissionId, CurrentUser.Id }, cancellationToken);

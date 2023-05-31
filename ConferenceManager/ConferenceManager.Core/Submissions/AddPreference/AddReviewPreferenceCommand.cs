@@ -2,11 +2,11 @@
 
 namespace ConferenceManager.Core.Submissions.AddPreference
 {
-    public class AddSubmissionPreferenceCommand : IRequest
+    public class AddReviewPreferenceCommand : IRequest
     {
         public int SubmissionId { get; }
 
-        public AddSubmissionPreferenceCommand(int submissionId)
+        public AddReviewPreferenceCommand(int submissionId)
         {
             SubmissionId = submissionId;
         }

@@ -6,9 +6,9 @@ using FluentValidation;
 
 namespace ConferenceManager.Core.Submissions.AddPreference
 {
-    public class AddSubmissionPreferenceCommandValidator : DbContextValidator<AddSubmissionPreferenceCommand>
+    public class AddReviewPreferenceCommandValidator : DbContextValidator<AddReviewPreferenceCommand>
     {
-        public AddSubmissionPreferenceCommandValidator(IApplicationDbContext context, ICurrentUserService currentUser) : base(context, currentUser)
+        public AddReviewPreferenceCommandValidator(IApplicationDbContext context, ICurrentUserService currentUser) : base(context, currentUser)
         {
             RuleForId(x => x.SubmissionId);
 
@@ -22,7 +22,7 @@ namespace ConferenceManager.Core.Submissions.AddPreference
                     return;
                 }
 
-                if (!currentUser!.IsParticipantOf(submission!.Conference))
+                if (!currentUser.IsParticipantOf(submission.Conference))
                 {
                     context.AddException(new ForbiddenException("User is not part of conference"));
                 }
