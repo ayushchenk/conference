@@ -10,20 +10,10 @@ namespace ConferenceManager.Core.Submissions.Create
     {
         public CreateSubmissionCommandValidator(IApplicationDbContext context, ICurrentUserService currentUser) : base(context, currentUser)
         {
-            RuleFor(x => x.ConferenceId)
-                .GreaterThan(0).WithMessage("ConferenceId is required");
-
-            RuleFor(x => x.Title)
-                .NotEmpty().WithMessage("Title is required")
-                .MaximumLength(100).WithMessage("Maximum length for Title is 100");
-
-            RuleFor(x => x.Keywords)
-                .NotEmpty().WithMessage("Keywords are required")
-                .MaximumLength(100).WithMessage("Maximum length for Keywords is 100");
-
-            RuleFor(x => x.Abstract)
-                .NotEmpty().WithMessage("Abstract is required")
-                .MaximumLength(1000).WithMessage("Maximum length for Abstract is 1000");
+            RuleForId(x => x.ConferenceId);
+            RuleForString(x => x.Title, 100, true);
+            RuleForString(x => x.Keywords, 100, true);
+            RuleForString(x => x.Abstract, 1000, true);
 
             RuleFor(x => x.File)
                 .NotEmpty().WithMessage("File is required");

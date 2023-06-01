@@ -20,16 +20,9 @@ namespace ConferenceManager.Core.Submissions.CreateReview
 
         public CreateReviewCommandValidator(IApplicationDbContext context, ICurrentUserService currentUser) : base(context, currentUser)
         {
-            RuleFor(x => x.SubmissionId)
-                .GreaterThan(0).WithMessage("SubmissionId is required");
-
-            RuleFor(x => x.Evaluation)
-                .NotEmpty().WithMessage("Evaluation is required")
-                .MaximumLength(1000).WithMessage("Maximum length for Evaluation 1000");
-
-            RuleFor(x => x.Confidence)
-                .NotEmpty().WithMessage("Confidence is required")
-                .Must(x => SupportedConfidences.Contains(x)).WithMessage("Provided Confidence is out of range");
+            RuleForId(x => x.SubmissionId);
+            RuleForString(x => x.Evaluation, 1000, true);
+            RuleForArray(x => x.Confidence, SupportedConfidences);
 
             RuleFor(x => x).CustomAsync(async (command, context, cancelToken) =>
             {

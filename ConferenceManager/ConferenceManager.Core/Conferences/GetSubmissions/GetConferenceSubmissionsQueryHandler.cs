@@ -32,10 +32,9 @@ namespace ConferenceManager.Core.Conferences.GetSubmissions
 
         private IQueryable<Submission> GetSourceQuery(int conferenceId)
         {
-            if (CurrentUser.HasReviewerRole)
+            if (CurrentUser.HasReviewerRole || CurrentUser.HasAdminRole)
             {
                 return Context.Submissions
-                    .Where(s => s.ActualReviewers.Select(r => r.Id).Contains(CurrentUser.Id))
                     .Where(s => s.ConferenceId == conferenceId)
                     .OrderByDescending(s => s.CreatedOn);
             }

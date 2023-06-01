@@ -10,8 +10,7 @@ namespace ConferenceManager.Core.Submissions.Papers
     {
         public GetSubmissionPapersQueryValidator(IApplicationDbContext context, ICurrentUserService currentUser) : base(context, currentUser)
         {
-            RuleFor(x => x.SubmissionId)
-                .GreaterThan(0).WithMessage("SubmissionId is required");
+            RuleForId(x => x.SubmissionId);
 
             RuleFor(x => x).CustomAsync(async (query, context, cancelToken) =>
             {

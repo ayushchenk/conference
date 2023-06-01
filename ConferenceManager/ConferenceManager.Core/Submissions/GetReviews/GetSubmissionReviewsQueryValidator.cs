@@ -10,8 +10,7 @@ namespace ConferenceManager.Core.Submissions.GetReviews
     {
         public GetSubmissionReviewsQueryValidator(IApplicationDbContext context, ICurrentUserService currentUser) : base(context, currentUser)
         {
-            RuleFor(x => x.SubmissionId)
-                .GreaterThan(0).WithMessage("Submission Id is required");
+            RuleForId(x => x.SubmissionId);
 
             RuleFor(x => x).CustomAsync(async (query, context, cancelToken) =>
             {
