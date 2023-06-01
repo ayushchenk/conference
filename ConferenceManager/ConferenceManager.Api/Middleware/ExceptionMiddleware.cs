@@ -3,22 +3,20 @@ using System.Text.Json;
 
 namespace ConferenceManager.Api.Middleware
 {
-    public class ExceptionMiddleware
+    public class ExceptionMiddleware : IMiddleware
     {
-        private readonly RequestDelegate _next;
         private readonly ILogger<ExceptionMiddleware> _logger;
 
-        public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
+        public ExceptionMiddleware(ILogger<ExceptionMiddleware> logger)
         {
-            _next = next;
             _logger = logger;
         }
 
-        public async Task InvokeAsync(HttpContext httpContext)
+        public async Task InvokeAsync(HttpContext httpContext, RequestDelegate next)
         {
             try
             {
-                await _next(httpContext);
+                await next(httpContext);
             }
             catch (Exception ex)
             {

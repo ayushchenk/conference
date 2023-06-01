@@ -1,4 +1,5 @@
 ﻿using ConferenceManager.Api.Filters;
+using ConferenceManager.Api.Middleware;
 using ConferenceManager.Api.Services;
 using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Core.Common.Model.Settings;
@@ -32,6 +33,9 @@ namespace ConferenceManager.Api
             services.AddScoped<SignInManager<ApplicationUser>>();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
             services.AddScoped<IIdentityService, IdentityService>();
+
+            services.AddTransient<ExceptionMiddleware>();
+            services.AddTransient<LoggingMiddleware>();
 
             services.AddAuthorization();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
