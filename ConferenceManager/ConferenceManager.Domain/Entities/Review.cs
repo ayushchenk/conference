@@ -9,6 +9,8 @@ namespace ConferenceManager.Domain.Entities
 
         public required string Evaluation { set; get; }
 
+        public required sbyte Score { set; get; }
+
         public required ReviewConfidence Confidence { set; get; }
 
         public virtual Submission Submission { set; get; } = null!;

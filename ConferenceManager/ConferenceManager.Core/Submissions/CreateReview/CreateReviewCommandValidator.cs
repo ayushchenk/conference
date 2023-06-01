@@ -23,6 +23,9 @@ namespace ConferenceManager.Core.Submissions.CreateReview
             RuleForId(x => x.SubmissionId);
             RuleForString(x => x.Evaluation, 1000, true);
             RuleForArray(x => x.Confidence, SupportedConfidences);
+            RuleFor(x => x.Score)
+                .Must(x => x >= -10 && x <= 10)
+                .WithMessage("Valid range for score is from -10 inclusive to 10 inclusive");
 
             RuleFor(x => x).CustomAsync(async (command, context, cancelToken) =>
             {

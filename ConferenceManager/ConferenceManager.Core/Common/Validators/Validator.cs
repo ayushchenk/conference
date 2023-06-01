@@ -29,7 +29,6 @@ namespace ConferenceManager.Core.Common.Validators
         public IRuleBuilderOptions<TModel, TType> RuleForArray<TType>(Expression<Func<TModel, TType>> expression, TType[] values)
         {
             return RuleFor(expression)
-                .NotEmpty().WithMessage($"{GetPropertyName(expression)} is required")
                 .Must(x => values.Contains(x)).WithMessage($"Value is not supported");
         }
 
