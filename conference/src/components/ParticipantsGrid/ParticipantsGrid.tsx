@@ -8,13 +8,11 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import { ParticipantUsersGrid } from "../ParticipantUsersGrid";
+import { defaultPage } from "../../util/Constants";
 
 export const ParticipantsGrid = () => {
   const { conferenceId } = useParams();
-  const [currentPage, setCurrentPage] = useState<GridPaginationModel>({
-    page: 0,
-    pageSize: 10,
-  });
+  const [currentPage, setCurrentPage] = useState<GridPaginationModel>(defaultPage);
   const participants = useGetParticipantsApi(currentPage, Number(conferenceId));
 
   const {
@@ -37,10 +35,7 @@ export const ParticipantsGrid = () => {
   useEffect(() => {
     if (!isAddLoading && !isAddError) {
       setOpenAddParticipantDialog(false);
-      setCurrentPage({
-        page: 0,
-        pageSize: 10,
-      });
+      setCurrentPage(defaultPage);
     }
   }, [addData, isAddError, isAddLoading]);
 

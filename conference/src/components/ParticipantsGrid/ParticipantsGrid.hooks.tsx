@@ -1,40 +1,21 @@
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
+import { useMemo } from "react";
 import { useCallback, useEffect, useState } from "react";
-import { DeleteParticipantResponse, GetParticipantsResponse } from "./ParticipantsGrid.types";
+import { DeleteParticipantResponse, GetParticipantsData, GetParticipantsResponse } from "./ParticipantsGrid.types";
 import { GridRowsProp, GridColDef, GridPaginationModel, GridActionsCellItem } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { User } from "../../types/User";
+import { useGetApi } from "../../hooks/UseGetApi";
 
-export const useGetParticipantsApi = (paging: GridPaginationModel, conferenceId: number) => {
-  const [response, setResponse] = useState<GetParticipantsResponse>({
-    data: { items: [] },
-    isError: false,
-    isLoading: true,
-  });
+export const useGetParticipantsApi = (paging: GridPaginationModel, conferenceId: number): GetParticipantsResponse => {
+  const config: AxiosRequestConfig<any> = useMemo(
+    () => ({
+      params: { pageIndex: paging.page, pageSize: paging.pageSize },
+    }),
+    [paging]
+  );
 
-  useEffect(() => {
-    axios
-      .get(`/Conference/${conferenceId}/participants`, {
-        params: { pageIndex: paging["page"], pageSize: paging["pageSize"] },
-      })
-      .then((response) => {
-        setResponse({
-          data: response.data,
-          isError: false,
-          isLoading: false,
-        });
-      })
-      .catch((error) => {
-        console.error(error);
-        setResponse({
-          data: { items: [] },
-          isError: true,
-          isLoading: false,
-        });
-      });
-  }, [paging, conferenceId]);
-
-  return response;
+  return useGetApi<GetParticipantsData>(`/Conference/${conferenceId}/participants`, config);
 };
 
 export const useAddParticipantApi = (conferenceId: number) => {
@@ -117,7 +98,7 @@ export const useParticipantsGridProps = (
   users: GetParticipantsResponse,
   conferenceId: number
 ): [GridRowsProp, GridColDef[]] => {
-  const [rows, setRows] = useState<User[]>(users.data.items);
+  const [rows, setRows] = useState<User[]>(users.data?.items ?? []);
   const {
     data: deleteData,
     isError: isDeleteError,
@@ -127,7 +108,7 @@ export const useParticipantsGridProps = (
 
   useEffect(() => {
     if (!users.isLoading && !users.isError) {
-      setRows(users.data.items);
+      setRows(users.data?.items ?? []);
     }
   }, [users]);
 

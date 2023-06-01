@@ -1,39 +1,21 @@
-import axios from "axios";
-import { useCallback, useEffect, useState } from "react";
-import { DeleteUserResponse, GetUsersResponse } from "./UsersGrid.types";
+import axios, { AxiosRequestConfig } from "axios";
+import { useCallback, useEffect, useState, useMemo } from "react";
 import { GridRowsProp, GridColDef, GridPaginationModel, GridActionsCellItem } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
+import { DeleteUserResponse, GetUsersData, GetUsersResponse } from "./UsersGrid.types";
 import { User } from "../../types/User";
+import { useGetApi } from "../../hooks/UseGetApi";
 
-export const useGetUsersApi = (paging: GridPaginationModel) => {
-  const [response, setResponse] = useState<GetUsersResponse>({
-    data: { items: [], totalCount: 0, totalPages: 0 },
-    isError: false,
-    isLoading: true,
-  });
+export const useGetUsersApi = (paging: GridPaginationModel): GetUsersResponse => {
+  const config: AxiosRequestConfig<any> = useMemo(
+    () => ({
+      params: { pageIndex: paging.page, pageSize: paging.pageSize },
+    }),
+    [paging]
+  );
 
-  useEffect(() => {
-    axios
-      .get(`/User`, { params: { pageIndex: paging["page"], pageSize: paging["pageSize"] } })
-      .then((response) => {
-        setResponse({
-          data: response.data,
-          isError: false,
-          isLoading: false,
-        });
-      })
-      .catch((error) => {
-        console.error(error);
-        setResponse({
-          data: { items: [], totalCount: 0, totalPages: 0 },
-          isError: true,
-          isLoading: false,
-        });
-      });
-  }, [paging]);
-
-  return response;
+  return useGetApi<GetUsersData>(`/User`, config);
 };
 
 export const useDeleteUserApi = () => {
@@ -67,12 +49,12 @@ export const useDeleteUserApi = () => {
 };
 
 export const useUsersGridProps = (users: GetUsersResponse): [GridRowsProp, GridColDef[]] => {
-  const [rows, setRows] = useState<User[]>(users.data.items);
+  const [rows, setRows] = useState<User[]>(users.data?.items ?? []);
   const { data: deleteData, isError: isDeleteError, isLoading: isDeleteLoading, deleteUser } = useDeleteUserApi();
 
   useEffect(() => {
     if (!users.isLoading && !users.isError) {
-      setRows(users.data.items);
+      setRows(users.data?.items ?? []);
     }
   }, [users]);
 

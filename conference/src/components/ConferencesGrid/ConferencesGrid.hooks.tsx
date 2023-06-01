@@ -7,9 +7,12 @@ import { AxiosRequestConfig } from "axios";
 import { useMemo } from "react";
 
 export const useGetConferencesApi = (paging: GridPaginationModel): GetConferencesResponse => {
-  const config: AxiosRequestConfig<any> = useMemo(() => ({
-    params: { pageIndex: paging.page, pageSize: paging.pageSize }
-  }), [paging]);
+  const config: AxiosRequestConfig<any> = useMemo(
+    () => ({
+      params: { pageIndex: paging.page, pageSize: paging.pageSize },
+    }),
+    [paging]
+  );
 
   return useGetApi<GetConferencesData>(`/Conference`, config);
 };
