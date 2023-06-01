@@ -9,13 +9,15 @@ namespace ConferenceManager.Core.Submissions.Common
 
         public required int ConferenceId { set; get; }
 
-        public required SubmissionStatus Status { set; get; }
-
-        public required int? AuthorId { set; get; }
+        public required int AuthorId { set; get; }
 
         public required string AuthorEmail { set; get; }
 
         public required string AuthorName { set; get; }
+
+        public required SubmissionStatus Status { set; get; }
+
+        public required string StatusLabel { set; get; }
 
         public required string Title { set; get; }
 

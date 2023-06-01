@@ -4,17 +4,17 @@ namespace ConferenceManager.Core.Conferences.Common
 {
     public class ConferenceDto : IDto
     {
-        public int Id { get; set; }
+        public required int Id { get; set; }
 
-        public string Title { get; set; } = null!;
+        public required string Title { get; set; } 
 
-        public string Acronyn { get; set; } = null!;
+        public required string Acronyn { get; set; }
 
-        public string Organizer { get; set; } = null!;
+        public required string Organizer { get; set; } 
 
-        public DateTime StartDate { get; set; }
+        public required DateTime StartDate { get; set; }
 
-        public DateTime EndDate { get; set; }
+        public required DateTime EndDate { get; set; }
 
         public string? Keywords { get; set; }
 

@@ -4,11 +4,13 @@ using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Core.Common.Validators;
 using FluentValidation;
 
-namespace ConferenceManager.Core.Submissions.Papers
+namespace ConferenceManager.Core.Submissions.GetPreferences
 {
-    public class GetSubmissionPapersQueryValidator : DbContextValidator<GetSubmissionPapersQuery>
+    public class GetReviewPreferencesQueryValidator : DbContextValidator<GetReviewPreferencesQuery>
     {
-        public GetSubmissionPapersQueryValidator(IApplicationDbContext context, ICurrentUserService currentUser) : base(context, currentUser)
+        public GetReviewPreferencesQueryValidator(
+            IApplicationDbContext context,
+            ICurrentUserService currentUser) : base(context, currentUser)
         {
             RuleForId(x => x.SubmissionId);
 
@@ -19,13 +21,6 @@ namespace ConferenceManager.Core.Submissions.Papers
                 if (submission == null)
                 {
                     context.AddException(new NotFoundException("Submission not found"));
-                    return;
-                }
-
-                if ((CurrentUser.HasAuthorRole && !CurrentUser.IsAuthorOf(submission))
-                    || !CurrentUser.IsReviewerOf(submission))
-                {
-                    context.AddException(new ForbiddenException("Must be author or reviewer"));
                 }
             });
         }

@@ -1,13 +1,17 @@
 ﻿using ConferenceManager.Api.Abstract;
 using ConferenceManager.Core.Account.Common;
 using ConferenceManager.Core.Common.Model.Responses;
+using ConferenceManager.Core.Submissions.AddPreference;
 using ConferenceManager.Core.Submissions.AddReviewer;
 using ConferenceManager.Core.Submissions.Common;
 using ConferenceManager.Core.Submissions.Create;
 using ConferenceManager.Core.Submissions.CreateReview;
 using ConferenceManager.Core.Submissions.Get;
+using ConferenceManager.Core.Submissions.GetPreferences;
 using ConferenceManager.Core.Submissions.GetReviewers;
+using ConferenceManager.Core.Submissions.GetReviews;
 using ConferenceManager.Core.Submissions.Papers;
+using ConferenceManager.Core.Submissions.RemovePreference;
 using ConferenceManager.Core.Submissions.RemoveReviewer;
 using ConferenceManager.Core.Submissions.Return;
 using ConferenceManager.Core.Submissions.Update;
@@ -59,7 +63,8 @@ namespace ConferenceManager.Api.Controllers
         /// Returns submission by id
         /// </summary>
         /// <remarks>
-        /// User can only access submissions from conferences, that he is part of (not requried for Admin)
+        /// User can only access submissions from conferences, that he is part of (not requried for Admin).<br/>
+        /// Author can only get his own submissions.
         /// </remarks>
         [HttpGet]
         [Route("{id}")]
@@ -112,12 +117,32 @@ namespace ConferenceManager.Api.Controllers
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CreateEntityResponse))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
         [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
-        public async Task<IActionResult> Post(int id, CreateReviewCommand command, CancellationToken cancellation)
+        public async Task<IActionResult> PostReview(int id, CreateReviewCommand command, CancellationToken cancellation)
         {
             command.SubmissionId = id;
             var result = await Mediator.Send(command, cancellation);
 
             return Created(nameof(SubmissionController), result);
+        }
+
+        /// <summary>
+        /// Returns reviews for submission
+        /// </summary>
+        /// <remarks>
+        /// Reviewer can only see reviews of submission, he is assigned to
+        /// </remarks>
+        [HttpGet]
+        [Route("{id}/reviews")]
+        [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Reviewer}")]
+        [Produces("application/json")]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<ReviewDto>))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
+        public async Task<IActionResult> GetReviews(int id, CancellationToken cancellation)
+        {
+            var result = await Mediator.Send(new GetSubmissionReviewsQuery(id), cancellation);
+
+            return Ok(result);
         }
 
         /// <summary>
@@ -153,7 +178,8 @@ namespace ConferenceManager.Api.Controllers
         [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Reviewer}")]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status200OK, Type = (typeof(IEnumerable<UserDto>)))]
-        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
         public async Task<IActionResult> GetReviewers(int id, CancellationToken cancellation)
         {
             var result = await Mediator.Send(new GetSubmissionReviewersQuery(id), cancellation);
@@ -193,6 +219,62 @@ namespace ConferenceManager.Api.Controllers
         public async Task<IActionResult> RemoveReviewer(int id, int userId, CancellationToken cancellation)
         {
             await Mediator.Send(new RemoveReviewerCommand(id, userId), cancellation);
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Gets all preferences for a submission review
+        /// </summary>
+        [HttpGet]
+        [Route("{id}/preferences")]
+        [Authorize(Roles = ApplicationRole.Admin)]
+        [Produces("application/json")]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<UserDto>))]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
+        public async Task<IActionResult> GetPreferences(int id, CancellationToken cancellation)
+        {
+            var result = await Mediator.Send(new GetReviewPreferencesQuery(id), cancellation);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Submits preference for a submission review
+        /// </summary>
+        /// <remarks>
+        /// Caller (reviwer) should be in the same conference with sumbission
+        /// </remarks>
+        [HttpPost]
+        [Route("{id}/preferences")]
+        [Authorize(Roles = ApplicationRole.Reviewer)]
+        [Produces("application/json")]
+        [SwaggerResponse(StatusCodes.Status204NoContent)]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
+        public async Task<IActionResult> AddPreference(int id, CancellationToken cancellation)
+        {
+            await Mediator.Send(new AddReviewPreferenceCommand(id), cancellation);
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Removes preference for a submission review
+        /// </summary>
+        [HttpDelete]
+        [Route("{id}/preferences")]
+        [Authorize(Roles = ApplicationRole.Reviewer)]
+        [Produces("application/json")]
+        [SwaggerResponse(StatusCodes.Status204NoContent)]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
+        public async Task<IActionResult> RemovePreference(int id, CancellationToken cancellation)
+        {
+            await Mediator.Send(new RemoveReviewPreferenceCommand(id), cancellation);
 
             return NoContent();
         }
