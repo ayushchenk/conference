@@ -7,19 +7,19 @@ export function usePostApi<TRequest, TData>(path: string, config?: AxiosRequestC
     data: null,
     isError: false,
     isLoading: true,
-    error: null
+    error: null,
   });
 
   const post = useCallback(
-    (data: TRequest) => {
+    (data: TRequest, dynamicPath: string = "") => {
       axios
-        .post<TData>(path, data, config)
+        .post<TData>(path + dynamicPath, data, config)
         .then((response) => {
           setResponse({
             data: response.data,
             isError: false,
             isLoading: false,
-            error: null
+            error: null,
           });
         })
         .catch((error) => {
@@ -28,7 +28,7 @@ export function usePostApi<TRequest, TData>(path: string, config?: AxiosRequestC
             data: null,
             isError: true,
             isLoading: false,
-            error: error.response.data
+            error: error.response.data,
           });
         });
     },

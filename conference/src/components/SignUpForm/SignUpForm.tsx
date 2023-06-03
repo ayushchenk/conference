@@ -16,13 +16,15 @@ export const SignUpForm: React.FC<{}> = () => {
   const formik = useFormik({
     initialValues: initialValues,
     validationSchema: validationSchema,
-    onSubmit: post
+    onSubmit: (values) => {
+      post(values);
+    },
   });
 
   if (response.data) {
     Auth.login(response.data);
     navigate("/");
-  };
+  }
 
   return (
     <form onSubmit={formik.handleSubmit}>

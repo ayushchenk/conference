@@ -1,11 +1,18 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { useMemo } from "react";
 import { useCallback, useEffect, useState } from "react";
-import { DeleteParticipantResponse, GetParticipantsData, GetParticipantsResponse } from "./ParticipantsGrid.types";
+import {
+  DeleteParticipantResponse,
+  GetParticipantsData,
+  GetParticipantsResponse,
+  CreateParticipantRequest,
+  CreateParticipantData,
+} from "./ParticipantsGrid.types";
 import { GridRowsProp, GridColDef, GridPaginationModel, GridActionsCellItem } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { User } from "../../types/User";
 import { useGetApi } from "../../hooks/UseGetApi";
+import { usePostApi } from "../../hooks/UsePostApi";
 
 export const useGetParticipantsApi = (paging: GridPaginationModel, conferenceId: number): GetParticipantsResponse => {
   const config: AxiosRequestConfig<any> = useMemo(
@@ -19,41 +26,7 @@ export const useGetParticipantsApi = (paging: GridPaginationModel, conferenceId:
 };
 
 export const useAddParticipantApi = (conferenceId: number) => {
-  const [response, setResponse] = useState<DeleteParticipantResponse>({
-    data: { userId: null },
-    isError: false,
-    isLoading: true,
-  });
-
-  const post = useCallback(
-    (userId: number) => {
-      axios
-        .post(`/Conference/${conferenceId}/participants/${userId}`)
-        .then((response) => {
-          setResponse({
-            data: { userId: userId },
-            isError: false,
-            isLoading: false,
-          });
-        })
-        .catch((error) => {
-          console.error(error);
-          setResponse({
-            data: { userId: userId },
-            isError: true,
-            isLoading: false,
-          });
-        });
-    },
-    [conferenceId]
-  );
-
-  return {
-    data: response.data,
-    isError: response.isError,
-    isLoading: response.isLoading,
-    post: post,
-  };
+  return usePostApi<CreateParticipantRequest, CreateParticipantData>(`/Conference/${conferenceId}/participants/`);
 };
 
 export const useDeleteParticipantApi = (conferenceId: number) => {

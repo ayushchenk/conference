@@ -3,9 +3,10 @@ import { DataGrid, GridPaginationModel } from "@mui/x-data-grid";
 import { useParticipantUsersGridProps } from "./ParticipantUsersGrid.hooks";
 import { useGetUsersApi } from "../UsersGrid/UsersGrid.hooks";
 import { defaultPage } from "../../util/Constants";
+import { User } from "../../types/User";
 
 type ParticipantUsersGridProps = {
-  handleAddParticipant: (params: { id: number }) => void;
+  handleAddParticipant: (user: User) => void;
 };
 
 export const ParticipantUsersGrid: React.FC<ParticipantUsersGridProps> = ({ handleAddParticipant }) => {

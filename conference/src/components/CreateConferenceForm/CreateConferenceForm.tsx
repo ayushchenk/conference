@@ -26,7 +26,9 @@ export const CreateConferenceForm = () => {
   const formik = useFormik({
     initialValues: initialValues,
     validationSchema: validationSchema,
-    onSubmit: post,
+    onSubmit: (values) => {
+      post(values);
+    },
   });
 
   return (
@@ -223,7 +225,8 @@ export const CreateConferenceForm = () => {
       />
       <Collapse in={response.isError} sx={{ my: "10px" }}>
         <Alert severity="error">
-          Something went wrong while creating the conference.<br />
+          Something went wrong while creating the conference.
+          <br />
           {response.error?.detail}
         </Alert>
       </Collapse>
