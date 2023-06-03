@@ -13,8 +13,7 @@ namespace ConferenceManager.Core.Conferences.Update
         {
             Include(new ConferenceCommandBaseValidator());
 
-            RuleFor(x => x.Id)
-                .GreaterThan(0).WithMessage("Id is required");
+            RuleForId(x => x.Id);
 
             RuleFor(x => x).CustomAsync(async (command, context, cancelToken) =>
             {

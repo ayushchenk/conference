@@ -17,6 +17,9 @@ namespace ConferenceManager.Infrastructure.Persistence.Configurations
                 .IsRequired()
                 .HasMaxLength(1000);
 
+            builder.Property(x => x.Score)
+                .IsRequired();
+
             builder.Property(x => x.Confidence)
                 .IsRequired();
         }

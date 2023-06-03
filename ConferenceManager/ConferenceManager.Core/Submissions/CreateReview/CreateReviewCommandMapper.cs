@@ -11,7 +11,8 @@ namespace ConferenceManager.Core.Submissions.CreateReview
             {
                 SubmissionId = source.SubmissionId,
                 Evaluation = source.Evaluation,
-                Confidence = source.Confidence
+                Confidence = source.Confidence,
+                Score = source.Score,
             };
         }
     }

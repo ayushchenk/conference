@@ -15,6 +15,10 @@ namespace ConferenceManager.Core.Submissions.CreateReview
         public string Evaluation { get; init; } = null!;
 
         [Required]
+        [Range(-10, 10)]
+        public sbyte Score { get; init; }
+
+        [Required]
         public ReviewConfidence Confidence { get; init; }
     }
 }

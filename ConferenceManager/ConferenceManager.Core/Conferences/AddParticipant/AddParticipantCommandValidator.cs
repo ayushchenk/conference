@@ -10,11 +10,8 @@ namespace ConferenceManager.Core.Conferences.AddParticipant
     {
         public AddParticipantCommandValidator(IApplicationDbContext context, ICurrentUserService currentUser) : base(context, currentUser)
         {
-            RuleFor(x => x.ConferenceId)
-                .GreaterThan(0).WithMessage("ConferenceId is required");
-
-            RuleFor(x => x.UserId)
-                .GreaterThan(0).WithMessage("UserId is required");
+            RuleForId(x => x.ConferenceId);
+            RuleForId(x => x.UserId);
 
             RuleFor(x => x).CustomAsync(async (command, context, cancelToken) =>
             {

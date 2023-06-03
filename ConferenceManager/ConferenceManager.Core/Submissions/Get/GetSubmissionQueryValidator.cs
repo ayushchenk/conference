@@ -10,8 +10,7 @@ namespace ConferenceManager.Core.Submissions.Get
     {
         public GetSubmissionQueryValidator(IApplicationDbContext context, ICurrentUserService currentUser) : base(context, currentUser)
         {
-            RuleFor(x => x.Id)
-                .GreaterThan(0).WithMessage("Id is required");
+            RuleForId(x => x.Id);
 
             RuleFor(x => x).CustomAsync(async (query, context, cancelToken) =>
             {
@@ -20,6 +19,12 @@ namespace ConferenceManager.Core.Submissions.Get
                 if (submission == null)
                 {
                     context.AddException(new NotFoundException("Submission not found"));
+                    return;
+                }
+
+                if (CurrentUser.HasAuthorRole && !CurrentUser.IsAuthorOf(submission))
+                {
+                    context.AddException(new ForbiddenException("Author can only access his own submissions"));
                     return;
                 }
 

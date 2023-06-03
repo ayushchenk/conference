@@ -1,5 +1,6 @@
 ﻿using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Domain.Entities;
+using Humanizer;
 
 namespace ConferenceManager.Core.Submissions.Common
 {
@@ -11,9 +12,10 @@ namespace ConferenceManager.Core.Submissions.Common
             {
                 Id = source.Id,
                 Status = source.Status,
-                AuthorId = source.CreatedBy?.Id,
-                AuthorEmail = source.CreatedBy?.Email ?? string.Empty,
-                AuthorName = source.CreatedBy?.FullName ?? string.Empty,
+                StatusLabel = source.Status.Humanize(),
+                AuthorId = source.CreatedById,
+                AuthorEmail = source.CreatedBy.Email!,
+                AuthorName = source.CreatedBy.FullName,
                 ConferenceId = source.ConferenceId,
                 Keywords = source.Keywords,
                 Title = source.Title,
