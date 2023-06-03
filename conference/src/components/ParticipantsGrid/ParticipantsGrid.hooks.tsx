@@ -1,12 +1,7 @@
 import { AxiosRequestConfig } from "axios";
 import { useMemo } from "react";
 import { useEffect, useState } from "react";
-import {
-  GetParticipantsData,
-  GetParticipantsResponse,
-  CreateParticipantRequest,
-  CreateParticipantData,
-} from "./ParticipantsGrid.types";
+import { GetParticipantsData, GetParticipantsResponse } from "./ParticipantsGrid.types";
 import { GridRowsProp, GridColDef, GridPaginationModel, GridActionsCellItem } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { User } from "../../types/User";
@@ -26,11 +21,11 @@ export const useGetParticipantsApi = (paging: GridPaginationModel, conferenceId:
 };
 
 export const useAddParticipantApi = (conferenceId: number) => {
-  return usePostApi<CreateParticipantRequest, CreateParticipantData>(`/Conference/${conferenceId}/participants/`);
+  return usePostApi<{}, {}>(`/Conference/${conferenceId}/participants/`);
 };
 
 export const useDeleteParticipantApi = (conferenceId: number) => {
-  return useDeleteApi<null>(`/Conference/${conferenceId}/participants/`);
+  return useDeleteApi<{}>(`/Conference/${conferenceId}/participants/`);
 };
 
 export const useParticipantsGridProps = (

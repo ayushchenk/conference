@@ -20,7 +20,7 @@ export const useGetUsersApi = (paging: GridPaginationModel): GetUsersResponse =>
 };
 
 export const useDeleteUserApi = () => {
-  return useDeleteApi<null>(`/User/`);
+  return useDeleteApi<{}>(`/User/`);
 };
 
 export const useUsersGridProps = (users: GetUsersResponse): [GridRowsProp, GridColDef[]] => {
