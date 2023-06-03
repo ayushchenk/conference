@@ -1,11 +1,12 @@
-import axios, { AxiosRequestConfig } from "axios";
-import { useCallback, useEffect, useState, useMemo } from "react";
+import { AxiosRequestConfig } from "axios";
+import { useEffect, useState, useMemo } from "react";
 import { GridRowsProp, GridColDef, GridPaginationModel, GridActionsCellItem } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
-import { DeleteUserResponse, GetUsersData, GetUsersResponse } from "./UsersGrid.types";
+import { GetUsersData, GetUsersResponse } from "./UsersGrid.types";
 import { User } from "../../types/User";
 import { useGetApi } from "../../hooks/UseGetApi";
+import { useDeleteApi } from "../../hooks/useDeleteApi";
 
 export const useGetUsersApi = (paging: GridPaginationModel): GetUsersResponse => {
   const config: AxiosRequestConfig<any> = useMemo(
@@ -19,38 +20,13 @@ export const useGetUsersApi = (paging: GridPaginationModel): GetUsersResponse =>
 };
 
 export const useDeleteUserApi = () => {
-  const [response, setResponse] = useState<DeleteUserResponse>({
-    data: { userId: null },
-    isError: false,
-    isLoading: true,
-  });
-
-  const deleteUser = useCallback((userId: number) => {
-    axios
-      .delete(`/User/${userId}`)
-      .then((response) => {
-        setResponse({
-          data: { userId: userId },
-          isError: false,
-          isLoading: false,
-        });
-      })
-      .catch((error) => {
-        console.error(error);
-        setResponse({
-          data: { userId: userId },
-          isError: true,
-          isLoading: false,
-        });
-      });
-  }, []);
-
-  return { data: response.data, isError: response.isError, isLoading: response.isLoading, deleteUser: deleteUser };
+  return useDeleteApi<null>(`/User/`);
 };
 
 export const useUsersGridProps = (users: GetUsersResponse): [GridRowsProp, GridColDef[]] => {
   const [rows, setRows] = useState<User[]>(users.data?.items ?? []);
-  const { data: deleteData, isError: isDeleteError, isLoading: isDeleteLoading, deleteUser } = useDeleteUserApi();
+  const [deletedUserId, setDeletedUserId] = useState<number | null>(null);
+  const { response, performDelete: deleteUser } = useDeleteUserApi();
 
   useEffect(() => {
     if (!users.isLoading && !users.isError) {
@@ -58,11 +34,16 @@ export const useUsersGridProps = (users: GetUsersResponse): [GridRowsProp, GridC
     }
   }, [users]);
 
+  function handleDelete(userId: number) {
+    setDeletedUserId(userId);
+    deleteUser(String(userId));
+  }
+
   useEffect(() => {
-    if (!isDeleteError && !isDeleteLoading) {
-      setRows((prevRows) => prevRows.filter((row) => row.id !== deleteData.userId));
+    if (!response.isError && !response.isLoading && deletedUserId) {
+      setRows((prevRows) => prevRows.filter((row) => row.id !== deletedUserId));
     }
-  }, [deleteData, isDeleteError, isDeleteLoading]);
+  }, [response, deletedUserId]);
 
   const columns: GridColDef[] = [
     {
@@ -102,7 +83,7 @@ export const useUsersGridProps = (users: GetUsersResponse): [GridRowsProp, GridC
       width: 80,
       flex: 1,
       getActions: (params) => [
-        <GridActionsCellItem icon={<DeleteIcon />} label="Delete" onClick={() => deleteUser(params.row.id)} />,
+        <GridActionsCellItem icon={<DeleteIcon />} label="Delete" onClick={() => handleDelete(params.row.id)} />,
         <GridActionsCellItem icon={<AddIcon />} label="Add to Conference" showInMenu />,
       ],
     },
