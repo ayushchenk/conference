@@ -5,11 +5,11 @@ namespace ConferenceManager.Domain.Entities
 {
     public class Review : BaseAuditableEntity
     {
-        public required int ReviewerId { set; get; }
-
         public required int SubmissionId { set; get; }
 
         public required string Evaluation { set; get; }
+
+        public required sbyte Score { set; get; }
 
         public required ReviewConfidence Confidence { set; get; }
 

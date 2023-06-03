@@ -84,7 +84,7 @@ public class ApplicationDbContextInitialiser
         if (await _userManager.FindByEmailAsync(admin.Email) == null)
         {
             await _userManager.CreateAsync(admin, _settings.AdminPassword);
-            await _userManager.AddToRoleAsync(admin, ApplicationRole.GlobalAdmin);
+            await _userManager.AddToRoleAsync(admin, ApplicationRole.Admin);
         }
     }
 }

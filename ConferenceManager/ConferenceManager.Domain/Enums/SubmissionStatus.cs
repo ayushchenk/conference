@@ -4,8 +4,9 @@
     {
         Created = 1,
         Returned = 2,
-        PendingReview = 3,
-        Accepted = 4,
-        Rejected = 5
+        Updated = 3,
+        InReview = 4,
+        Accepted = 5,
+        Rejected = 6
     }
 }
