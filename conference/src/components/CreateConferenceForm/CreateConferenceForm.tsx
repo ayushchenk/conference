@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
 import Collapse from "@mui/material/Collapse";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -32,7 +33,7 @@ export const CreateConferenceForm = () => {
   });
 
   return (
-    <form onSubmit={formik.handleSubmit}>
+    <Box component="form" mb={5} onSubmit={formik.handleSubmit}>
       <TextField
         fullWidth
         required
@@ -44,30 +45,7 @@ export const CreateConferenceForm = () => {
         onChange={formik.handleChange}
         error={formik.touched.title && Boolean(formik.errors.title)}
         helperText={formik.touched.title && formik.errors.title}
-      />
-      <TextField
-        fullWidth
-        required
-        margin="normal"
-        id="keywords"
-        name="keywords"
-        label="Keywords"
-        value={formik.values.keywords}
-        onChange={formik.handleChange}
-        error={formik.touched.keywords && Boolean(formik.errors.keywords)}
-        helperText={formik.touched.keywords && formik.errors.keywords}
-      />
-      <TextField
-        fullWidth
-        required
-        margin="normal"
-        id="abstract"
-        name="abstract"
-        label="Abstract"
-        value={formik.values.abstract}
-        onChange={formik.handleChange}
-        error={formik.touched.abstract && Boolean(formik.errors.abstract)}
-        helperText={formik.touched.abstract && formik.errors.abstract}
+        inputProps={{ maxLength: 100 }}
       />
       <TextField
         fullWidth
@@ -80,10 +58,35 @@ export const CreateConferenceForm = () => {
         onChange={formik.handleChange}
         error={formik.touched.acronym && Boolean(formik.errors.acronym)}
         helperText={formik.touched.acronym && formik.errors.acronym}
+        inputProps={{ maxLength: 20 }}
       />
       <TextField
         fullWidth
-        required
+        margin="normal"
+        id="keywords"
+        name="keywords"
+        label="Keywords"
+        value={formik.values.keywords}
+        onChange={formik.handleChange}
+        error={formik.touched.keywords && Boolean(formik.errors.keywords)}
+        helperText={formik.touched.keywords && formik.errors.keywords}
+        inputProps={{ maxLength: 20 }}
+      />
+      <TextField
+        fullWidth
+        multiline
+        margin="normal"
+        id="abstract"
+        name="abstract"
+        label="Abstract"
+        value={formik.values.abstract}
+        onChange={formik.handleChange}
+        error={formik.touched.abstract && Boolean(formik.errors.abstract)}
+        helperText={formik.touched.abstract && formik.errors.abstract}
+        inputProps={{ maxLength: 1000 }}
+      />
+      <TextField
+        fullWidth
         margin="normal"
         id="webpage"
         name="webpage"
@@ -92,10 +95,10 @@ export const CreateConferenceForm = () => {
         onChange={formik.handleChange}
         error={formik.touched.webpage && Boolean(formik.errors.webpage)}
         helperText={formik.touched.webpage && formik.errors.webpage}
+        inputProps={{ maxLength: 100 }}
       />
       <TextField
         fullWidth
-        required
         margin="normal"
         id="venue"
         name="venue"
@@ -104,10 +107,10 @@ export const CreateConferenceForm = () => {
         onChange={formik.handleChange}
         error={formik.touched.venue && Boolean(formik.errors.venue)}
         helperText={formik.touched.venue && formik.errors.venue}
+        inputProps={{ maxLength: 100 }}
       />
       <TextField
         fullWidth
-        required
         margin="normal"
         id="city"
         name="city"
@@ -116,6 +119,7 @@ export const CreateConferenceForm = () => {
         onChange={formik.handleChange}
         error={formik.touched.city && Boolean(formik.errors.city)}
         helperText={formik.touched.city && formik.errors.city}
+        inputProps={{ maxLength: 50 }}
       />
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker
@@ -128,6 +132,7 @@ export const CreateConferenceForm = () => {
               name: "startDate",
               margin: "normal",
               fullWidth: true,
+              required: true,
               variant: "outlined",
               error: formik.touched.startDate && Boolean(formik.errors.startDate),
             },
@@ -145,6 +150,7 @@ export const CreateConferenceForm = () => {
               name: "endDate",
               margin: "normal",
               fullWidth: true,
+              required: true,
               variant: "outlined",
               error: formik.touched.endDate && Boolean(formik.errors.endDate),
             },
@@ -153,7 +159,6 @@ export const CreateConferenceForm = () => {
       </LocalizationProvider>
       <TextField
         fullWidth
-        required
         margin="normal"
         id="primaryResearchArea"
         name="primaryResearchArea"
@@ -162,10 +167,10 @@ export const CreateConferenceForm = () => {
         onChange={formik.handleChange}
         error={formik.touched.primaryResearchArea && Boolean(formik.errors.primaryResearchArea)}
         helperText={formik.touched.primaryResearchArea && formik.errors.primaryResearchArea}
+        inputProps={{ maxLength: 100 }}
       />
       <TextField
         fullWidth
-        required
         margin="normal"
         id="secondaryResearchArea"
         name="secondaryResearchArea"
@@ -174,10 +179,11 @@ export const CreateConferenceForm = () => {
         onChange={formik.handleChange}
         error={formik.touched.secondaryResearchArea && Boolean(formik.errors.secondaryResearchArea)}
         helperText={formik.touched.secondaryResearchArea && formik.errors.secondaryResearchArea}
+        inputProps={{ maxLength: 100 }}
       />
       <TextField
         fullWidth
-        required
+        multiline
         margin="normal"
         id="areaNotes"
         name="areaNotes"
@@ -186,6 +192,7 @@ export const CreateConferenceForm = () => {
         onChange={formik.handleChange}
         error={formik.touched.areaNotes && Boolean(formik.errors.areaNotes)}
         helperText={formik.touched.areaNotes && formik.errors.areaNotes}
+        inputProps={{ maxLength: 500 }}
       />
       <TextField
         fullWidth
@@ -198,10 +205,10 @@ export const CreateConferenceForm = () => {
         onChange={formik.handleChange}
         error={formik.touched.organizer && Boolean(formik.errors.organizer)}
         helperText={formik.touched.organizer && formik.errors.organizer}
+        inputProps={{ maxLength: 100 }}
       />
       <TextField
         fullWidth
-        required
         margin="normal"
         id="organizerWebpage"
         name="organizerWebpage"
@@ -210,10 +217,10 @@ export const CreateConferenceForm = () => {
         onChange={formik.handleChange}
         error={formik.touched.organizerWebpage && Boolean(formik.errors.organizerWebpage)}
         helperText={formik.touched.organizerWebpage && formik.errors.organizerWebpage}
+        inputProps={{ maxLength: 100 }}
       />
       <TextField
         fullWidth
-        required
         margin="normal"
         id="contactPhoneNumber"
         name="contactPhoneNumber"
@@ -222,6 +229,7 @@ export const CreateConferenceForm = () => {
         onChange={formik.handleChange}
         error={formik.touched.contactPhoneNumber && Boolean(formik.errors.contactPhoneNumber)}
         helperText={formik.touched.contactPhoneNumber && formik.errors.contactPhoneNumber}
+        inputProps={{ maxLength: 20 }}
       />
       <Collapse in={response.isError} sx={{ my: "10px" }}>
         <Alert severity="error">
@@ -233,6 +241,6 @@ export const CreateConferenceForm = () => {
       <Button color="primary" variant="contained" fullWidth type="submit">
         Submit
       </Button>
-    </form>
+    </Box>
   );
 };

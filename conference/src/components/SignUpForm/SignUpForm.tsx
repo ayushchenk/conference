@@ -39,6 +39,7 @@ export const SignUpForm: React.FC<{}> = () => {
         onChange={formik.handleChange}
         error={formik.touched.email && Boolean(formik.errors.email)}
         helperText={formik.touched.email && formik.errors.email}
+        inputProps={{ maxLength: 256 }}
       />
       <TextField
         fullWidth
@@ -52,6 +53,7 @@ export const SignUpForm: React.FC<{}> = () => {
         onChange={formik.handleChange}
         error={formik.touched.firstName && Boolean(formik.errors.firstName)}
         helperText={formik.touched.firstName && formik.errors.firstName}
+        inputProps={{ maxLength: 50 }}
       />
       <TextField
         fullWidth
@@ -65,6 +67,7 @@ export const SignUpForm: React.FC<{}> = () => {
         onChange={formik.handleChange}
         error={formik.touched.lastName && Boolean(formik.errors.lastName)}
         helperText={formik.touched.lastName && formik.errors.lastName}
+        inputProps={{ maxLength: 50 }}
       />
       <TextField
         fullWidth
@@ -78,6 +81,7 @@ export const SignUpForm: React.FC<{}> = () => {
         onChange={formik.handleChange}
         error={formik.touched.country && Boolean(formik.errors.country)}
         helperText={formik.touched.country && formik.errors.country}
+        inputProps={{ maxLength: 50 }}
       />
       <TextField
         fullWidth
@@ -91,6 +95,7 @@ export const SignUpForm: React.FC<{}> = () => {
         onChange={formik.handleChange}
         error={formik.touched.affiliation && Boolean(formik.errors.affiliation)}
         helperText={formik.touched.affiliation && formik.errors.affiliation}
+        inputProps={{ maxLength: 100 }}
       />
       <TextField
         fullWidth
@@ -103,6 +108,7 @@ export const SignUpForm: React.FC<{}> = () => {
         onChange={formik.handleChange}
         error={formik.touched.webpage && Boolean(formik.errors.webpage)}
         helperText={formik.touched.webpage && formik.errors.webpage}
+        inputProps={{ maxLength: 100 }}
       />
       <TextField
         fullWidth
@@ -116,6 +122,7 @@ export const SignUpForm: React.FC<{}> = () => {
         onChange={formik.handleChange}
         error={formik.touched.password && Boolean(formik.errors.password)}
         helperText={formik.touched.password && formik.errors.password}
+        inputProps={{ maxLength: 100 }}
       />
       <TextField
         fullWidth
@@ -129,6 +136,7 @@ export const SignUpForm: React.FC<{}> = () => {
         onChange={formik.handleChange}
         error={formik.touched.passwordRepeat && Boolean(formik.errors.passwordRepeat)}
         helperText={formik.touched.passwordRepeat && formik.errors.passwordRepeat}
+        inputProps={{ maxLength: 100 }}
       />
       <Collapse in={response.isError} sx={{ my: "10px" }}>
         <Alert severity="error"> Something went wrong while creating your account.</Alert>

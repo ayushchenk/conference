@@ -28,11 +28,25 @@ export const ConferenceDetails = () => {
           </TableRow>
           <TableRow>
             <TableCell variant="head">Abstract</TableCell>
-            <TableCell>{conference.data?.abstract}</TableCell>
+            <TableCell
+              style={{
+                whiteSpace: "normal",
+                wordBreak: "break-word",
+              }}
+            >
+              {conference.data?.abstract}
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell variant="head">Area Notes</TableCell>
-            <TableCell>{conference.data?.areaNotes}</TableCell>
+            <TableCell
+              style={{
+                whiteSpace: "normal",
+                wordBreak: "break-word",
+              }}
+            >
+              {conference.data?.areaNotes}
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell variant="head">Keywords</TableCell>
@@ -69,6 +83,10 @@ export const ConferenceDetails = () => {
           <TableRow>
             <TableCell variant="head">Start Date</TableCell>
             <TableCell>{moment(conference.data?.startDate).format("DD/MM/YYYY")}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell variant="head">End Date</TableCell>
+            <TableCell>{moment(conference.data?.endDate).format("DD/MM/YYYY")}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell align="center" colSpan={12} variant="head">
