@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import { GridRowsProp, GridColDef, GridActionsCellItem } from "@mui/x-data-grid";
-import { GetUsersResponse } from "./ParticipantUsersGrid.types";
+import { GetParticipantUsersResponse } from "./ParticipantUsersGrid.types";
 import { User } from "../../types/User";
 
 export const useParticipantUsersGridProps = (
-  users: GetUsersResponse,
+  users: GetParticipantUsersResponse,
   handleAddParticipant: Function
 ): [GridRowsProp, GridColDef[]] => {
-  const [rows, setRows] = useState<User[]>(users.data.items);
+  const [rows, setRows] = useState<User[]>(users.data?.items ?? []);
 
   useEffect(() => {
     if (!users.isLoading && !users.isError) {
-      setRows(users.data.items);
+      setRows(users.data?.items ?? []);
     }
   }, [users]);
 

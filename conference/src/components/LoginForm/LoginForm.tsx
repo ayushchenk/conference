@@ -10,21 +10,21 @@ import { validationSchema } from "./LoginForm.validator";
 import { Auth } from "../../logic/Auth";
 
 export const LoginForm: React.FC<{}> = () => {
-  const { data, isError, isLoading, post } = usePostLoginApi();
+  const { response, post } = usePostLoginApi();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (Auth.isAuthed()) {
       navigate("/");
     }
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
-    if (!isLoading && !isError && data) {
-      Auth.login(data);
+    if (response.data) {
+      Auth.login(response.data);
       navigate("/");
     }
-  }, [data, isError, isLoading]);
+  }, [response, navigate]);
 
   const formik = useFormik({
     initialValues: {
@@ -32,7 +32,9 @@ export const LoginForm: React.FC<{}> = () => {
       password: "",
     },
     validationSchema: validationSchema,
-    onSubmit: post,
+    onSubmit: (values) => {
+      post(values);
+    },
   });
 
   return (
@@ -62,8 +64,10 @@ export const LoginForm: React.FC<{}> = () => {
         error={formik.touched.password && Boolean(formik.errors.password)}
         helperText={formik.touched.password && formik.errors.password}
       />
-      <Collapse in={isError} sx={{ my: "10px" }}>
-        <Alert severity="error">Something went wrong while signing in.</Alert>
+      <Collapse in={response.isError} sx={{ my: "10px" }} timeout={5}>
+        <Alert severity="error">
+          {response.error?.errors["Identity"][0] ?? "Something went wrong while signing in."}
+        </Alert>
       </Collapse>
       <Button color="primary" variant="contained" fullWidth type="submit">
         Submit

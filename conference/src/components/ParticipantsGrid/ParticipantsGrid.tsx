@@ -8,41 +8,39 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import { ParticipantUsersGrid } from "../ParticipantUsersGrid";
+import { defaultPage } from "../../util/Constants";
+import { User } from "../../types/User";
 
 export const ParticipantsGrid = () => {
   const { conferenceId } = useParams();
-  const [currentPage, setCurrentPage] = useState<GridPaginationModel>({
-    page: 0,
-    pageSize: 10,
-  });
+  const [currentPage, setCurrentPage] = useState<GridPaginationModel>(defaultPage);
   const participants = useGetParticipantsApi(currentPage, Number(conferenceId));
 
-  const {
-    data: addData,
-    isError: isAddError,
-    isLoading: isAddLoading,
-    post: addParticipant,
-  } = useAddParticipantApi(Number(conferenceId));
+  const { response, post: addParticipant } = useAddParticipantApi(Number(conferenceId));
 
-  const [rows, columns] = useParticipantsGridProps(participants, Number(conferenceId));
+  const [initialRows, columns] = useParticipantsGridProps(participants, Number(conferenceId));
+  const [rows, setRows] = useState(initialRows);
   const [openAddParticipantDialog, setOpenAddParticipantDialog] = useState(false);
+
+  useEffect(() => {
+    setRows(initialRows);
+  }, [initialRows]);
+
+  const [newParticipantData, setNewParticipantData] = useState<User | null>(null);
 
   const handleAddParticipantClick = () => {
     setOpenAddParticipantDialog(true);
   };
-
-  const handleAddParticipant = ({ id }: { id: number }) => {
-    addParticipant(id);
+  const handleAddParticipant = (user: User) => {
+    addParticipant({}, String(user.id));
+    setNewParticipantData(user);
   };
   useEffect(() => {
-    if (!isAddLoading && !isAddError) {
+    if (!response.isLoading && !response.isError && newParticipantData) {
       setOpenAddParticipantDialog(false);
-      setCurrentPage({
-        page: 0,
-        pageSize: 10,
-      });
+      setRows((rows) => [...rows, newParticipantData]);
     }
-  }, [addData, isAddError, isAddLoading]);
+  }, [response, newParticipantData]);
 
   return (
     <>

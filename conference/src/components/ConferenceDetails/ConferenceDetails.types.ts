@@ -1,7 +1,4 @@
 import { Conference } from "../../types/Conference";
+import { ApiResponse } from "../../types/ApiResponse";
 
-export type GetConferenceResponse = {
-  data: Conference | null;
-  isLoading: boolean;
-  isError: boolean;
-};
+export type GetConferenceResponse = ApiResponse<Conference>;

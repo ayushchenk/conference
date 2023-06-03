@@ -11,37 +11,24 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { usePostCreateConferenceApi } from "./CreateConferenceForm.hooks";
 import { validationSchema } from "./CreateConferenceForm.validator";
+import { initialValues } from "./CreateConferenceForm.types";
 
 export const CreateConferenceForm = () => {
-  const { data, isError, isLoading, post } = usePostCreateConferenceApi();
+  const { response, post } = usePostCreateConferenceApi();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isLoading && !isError && data) {
-      navigate(`/conferences/${data["id"]}`);
+    if (response.data && "id" in response.data) {
+      navigate(`/conferences/${response.data.id}`);
     }
-  }, [data, isError, isLoading]);
+  }, [response, navigate]);
 
   const formik = useFormik({
-    initialValues: {
-      title: "",
-      keywords: "",
-      abstract: "",
-      acronym: "",
-      webpage: "",
-      venue: "",
-      city: "",
-      startDate: new Date(),
-      endDate: new Date(),
-      primaryResearchArea: "",
-      secondaryResearchArea: "",
-      areaNotes: "",
-      organizer: "",
-      organizerWebpage: "",
-      contactPhoneNumber: "",
-    },
+    initialValues: initialValues,
     validationSchema: validationSchema,
-    onSubmit: post,
+    onSubmit: (values) => {
+      post(values);
+    },
   });
 
   return (
@@ -236,8 +223,12 @@ export const CreateConferenceForm = () => {
         error={formik.touched.contactPhoneNumber && Boolean(formik.errors.contactPhoneNumber)}
         helperText={formik.touched.contactPhoneNumber && formik.errors.contactPhoneNumber}
       />
-      <Collapse in={isError} sx={{ my: "10px" }}>
-        <Alert severity="error">Something went wrong while creating the conference.</Alert>
+      <Collapse in={response.isError} sx={{ my: "10px" }}>
+        <Alert severity="error">
+          Something went wrong while creating the conference.
+          <br />
+          {response.error?.detail}
+        </Alert>
       </Collapse>
       <Button color="primary" variant="contained" fullWidth type="submit">
         Submit

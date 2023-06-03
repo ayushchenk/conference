@@ -1,13 +1,10 @@
 import { DataGrid, GridPaginationModel } from "@mui/x-data-grid";
 import { useConferencesGridProps, useGetConferencesApi } from "./ConferencesGrid.hooks";
 import { useState } from "react";
+import { defaultPage } from "../../util/Constants";
 
 export const ConferencesGrid = () => {
-  const [currentPage, setCurrentPage] = useState<GridPaginationModel>({
-    page: 0,
-    pageSize: 10,
-  });
-
+  const [currentPage, setCurrentPage] = useState<GridPaginationModel>(defaultPage);
   const conferences = useGetConferencesApi(currentPage);
   const [rows, columns] = useConferencesGridProps(conferences);
 

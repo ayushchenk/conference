@@ -1,15 +1,5 @@
 import { User } from "../../types/User";
+import { ApiResponse, PageData } from "../../types/ApiResponse";
 
-export type GetParticipantsResponse = {
-  data: {
-    items: User[];
-  };
-  isLoading: boolean;
-  isError: boolean;
-};
-
-export type DeleteParticipantResponse = {
-  data: { userId: number | null };
-  isLoading: boolean;
-  isError: boolean;
-};
+export type GetParticipantsData = PageData<User>;
+export type GetParticipantsResponse = ApiResponse<GetParticipantsData>;

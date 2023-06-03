@@ -7,6 +7,7 @@ import { SignUpPage, LoginPage } from "../../pages/Auth";
 import { Auth } from "../../logic/Auth";
 import { CreateConferencePage } from "../../pages/Conferences/CreateConferencePage";
 import { UsersPage } from "../../pages/Users";
+import { AdminProtected } from "../ProtectedRoute/AdminProtected";
 
 axios.interceptors.request.use(function (config) {
   const token = Auth.getToken();
@@ -26,9 +27,9 @@ export const App = () => {
         <Route
           path="/users"
           element={
-            <Protected>
+            <AdminProtected>
               <UsersPage />
-            </Protected>
+            </AdminProtected>
           }
         />
         <Route
@@ -50,17 +51,17 @@ export const App = () => {
         <Route
           path="/conferences/:conferenceId/participants"
           element={
-            <Protected>
+            <AdminProtected>
               <ParticipantsPage />
-            </Protected>
+            </AdminProtected>
           }
         />
         <Route
           path="/create-conference"
           element={
-            <Protected>
+            <AdminProtected>
               <CreateConferencePage />
-            </Protected>
+            </AdminProtected>
           }
         />
       </Routes>

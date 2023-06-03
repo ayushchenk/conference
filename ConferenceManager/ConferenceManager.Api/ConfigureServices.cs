@@ -28,7 +28,6 @@ namespace ConferenceManager.Api
                       }));
 
             services.AddDatabaseDeveloperPageExceptionFilter();
-
             services.AddLogging(loggin =>
             {
                 loggin.AddSimpleConsole(options =>

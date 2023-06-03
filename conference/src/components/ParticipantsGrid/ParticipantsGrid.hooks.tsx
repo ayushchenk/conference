@@ -1,141 +1,57 @@
-import axios from "axios";
-import { useCallback, useEffect, useState } from "react";
-import { DeleteParticipantResponse, GetParticipantsResponse } from "./ParticipantsGrid.types";
+import { AxiosRequestConfig } from "axios";
+import { useMemo } from "react";
+import { useEffect, useState } from "react";
+import { GetParticipantsData, GetParticipantsResponse } from "./ParticipantsGrid.types";
 import { GridRowsProp, GridColDef, GridPaginationModel, GridActionsCellItem } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { User } from "../../types/User";
+import { useGetApi } from "../../hooks/UseGetApi";
+import { usePostApi } from "../../hooks/UsePostApi";
+import { useDeleteApi } from "../../hooks/useDeleteApi";
 
-export const useGetParticipantsApi = (paging: GridPaginationModel, conferenceId: number) => {
-  const [response, setResponse] = useState<GetParticipantsResponse>({
-    data: { items: [] },
-    isError: false,
-    isLoading: true,
-  });
+export const useGetParticipantsApi = (paging: GridPaginationModel, conferenceId: number): GetParticipantsResponse => {
+  const config: AxiosRequestConfig<any> = useMemo(
+    () => ({
+      params: { pageIndex: paging.page, pageSize: paging.pageSize },
+    }),
+    [paging]
+  );
 
-  useEffect(() => {
-    axios
-      .get(`/Conference/${conferenceId}/participants`, {
-        params: { pageIndex: paging["page"], pageSize: paging["pageSize"] },
-      })
-      .then((response) => {
-        setResponse({
-          data: response.data,
-          isError: false,
-          isLoading: false,
-        });
-      })
-      .catch((error) => {
-        console.error(error);
-        setResponse({
-          data: { items: [] },
-          isError: true,
-          isLoading: false,
-        });
-      });
-  }, [paging, conferenceId]);
-
-  return response;
+  return useGetApi<GetParticipantsData>(`/Conference/${conferenceId}/participants`, config);
 };
 
 export const useAddParticipantApi = (conferenceId: number) => {
-  const [response, setResponse] = useState<DeleteParticipantResponse>({
-    data: { userId: null },
-    isError: false,
-    isLoading: true,
-  });
-
-  const post = useCallback(
-    (userId: number) => {
-      axios
-        .post(`/Conference/${conferenceId}/participants/${userId}`)
-        .then((response) => {
-          setResponse({
-            data: { userId: userId },
-            isError: false,
-            isLoading: false,
-          });
-        })
-        .catch((error) => {
-          console.error(error);
-          setResponse({
-            data: { userId: userId },
-            isError: true,
-            isLoading: false,
-          });
-        });
-    },
-    [conferenceId]
-  );
-
-  return {
-    data: response.data,
-    isError: response.isError,
-    isLoading: response.isLoading,
-    post: post,
-  };
+  return usePostApi<{}, {}>(`/Conference/${conferenceId}/participants/`);
 };
 
 export const useDeleteParticipantApi = (conferenceId: number) => {
-  const [response, setResponse] = useState<DeleteParticipantResponse>({
-    data: { userId: null },
-    isError: false,
-    isLoading: true,
-  });
-
-  const deleteParticipant = useCallback(
-    (userId: number) => {
-      axios
-        .delete(`/Conference/${conferenceId}/participants/${userId}`)
-        .then((response) => {
-          setResponse({
-            data: { userId: userId },
-            isError: false,
-            isLoading: false,
-          });
-        })
-        .catch((error) => {
-          console.error(error);
-          setResponse({
-            data: { userId: userId },
-            isError: true,
-            isLoading: false,
-          });
-        });
-    },
-    [conferenceId]
-  );
-
-  return {
-    data: response.data,
-    isError: response.isError,
-    isLoading: response.isLoading,
-    deleteParticipant: deleteParticipant,
-  };
+  return useDeleteApi<{}>(`/Conference/${conferenceId}/participants/`);
 };
 
 export const useParticipantsGridProps = (
   users: GetParticipantsResponse,
   conferenceId: number
 ): [GridRowsProp, GridColDef[]] => {
-  const [rows, setRows] = useState<User[]>(users.data.items);
-  const {
-    data: deleteData,
-    isError: isDeleteError,
-    isLoading: isDeleteLoading,
-    deleteParticipant,
-  } = useDeleteParticipantApi(conferenceId);
+  const [rows, setRows] = useState<User[]>(users.data?.items ?? []);
+  const [deletedUserId, setDeletedUserId] = useState<number | null>(null);
+  const { response, performDelete: deleteParticipant } = useDeleteParticipantApi(conferenceId);
 
   useEffect(() => {
     if (!users.isLoading && !users.isError) {
-      setRows(users.data.items);
+      setRows(users.data?.items ?? []);
     }
   }, [users]);
 
+  function handleDelete(userId: number) {
+    setDeletedUserId(userId);
+    deleteParticipant(String(userId));
+  }
   useEffect(() => {
-    if (!isDeleteError && !isDeleteLoading) {
-      setRows((prevRows) => prevRows.filter((row) => row.id !== deleteData.userId));
+    if (!response.isError && !response.isLoading && deletedUserId) {
+      setRows((prevRows) => prevRows.filter((row) => row.id !== deletedUserId));
+      setDeletedUserId(null);
     }
-  }, [deleteData, isDeleteError, isDeleteLoading]);
+  }, [response, deletedUserId]);
 
   const columns: GridColDef[] = [
     {
@@ -178,7 +94,7 @@ export const useParticipantsGridProps = (
         <GridActionsCellItem
           icon={<DeleteIcon />}
           label="Delete Participant"
-          onClick={() => deleteParticipant(params.row.id)}
+          onClick={() => handleDelete(params.row.id)}
         />,
       ],
     },

@@ -7,30 +7,24 @@ import Collapse from "@mui/material/Collapse";
 import { usePostSignUpApi } from "./SignUpForm.hooks";
 import { validationSchema } from "./SignUpForm.validator";
 import { Auth } from "../../logic/Auth";
+import { initialValues } from "./SignUpForm.types";
 
 export const SignUpForm: React.FC<{}> = () => {
-  const { data, isError, isLoading, post } = usePostSignUpApi();
+  const { response, post } = usePostSignUpApi();
   const navigate = useNavigate();
 
   const formik = useFormik({
-    initialValues: {
-      email: "",
-      firstName: "",
-      lastName: "",
-      country: "",
-      affiliation: "",
-      webpage: "",
-      password: "",
-      passwordRepeat: ""
-    },
+    initialValues: initialValues,
     validationSchema: validationSchema,
-      onSubmit: post
-    });
+    onSubmit: (values) => {
+      post(values);
+    },
+  });
 
-  if (!isLoading && !isError && data) {
-    Auth.login(data);
+  if (response.data) {
+    Auth.login(response.data);
     navigate("/");
-  };
+  }
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -136,8 +130,8 @@ export const SignUpForm: React.FC<{}> = () => {
         error={formik.touched.passwordRepeat && Boolean(formik.errors.passwordRepeat)}
         helperText={formik.touched.passwordRepeat && formik.errors.passwordRepeat}
       />
-      <Collapse in={isError} sx={{ my: "10px" }}>
-        <Alert severity="error">Something went wrong while creating your account.</Alert>
+      <Collapse in={response.isError} sx={{ my: "10px" }}>
+        <Alert severity="error"> Something went wrong while creating your account.</Alert>
       </Collapse>
       <Button color="primary" variant="contained" fullWidth type="submit">
         Submit
