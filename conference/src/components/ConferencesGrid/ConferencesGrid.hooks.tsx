@@ -15,7 +15,7 @@ export const useGetConferencesApi = (paging: GridPaginationModel) => {
     });
 
     useEffect(() => {
-        axios.get("/conferences")
+        axios.get("/Conference")
             .then(response => {
                 setResponse({
                     data: response.data,

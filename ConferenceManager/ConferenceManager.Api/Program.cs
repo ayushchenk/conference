@@ -39,6 +39,8 @@ app.UseMiddleware<LoggingMiddleware>();
 
 app.UseAuthentication();
 
+app.UseCors("local");
+
 app.UseAuthorization();
 
 app.MapControllers();
