@@ -56,9 +56,9 @@ export const App = () => {
         <Route
           path="/conferences/:conferenceId/edit"
           element={
-            <Protected>
+            <AdminProtected>
               <UpdateConferencePage />
-            </Protected>
+            </AdminProtected>
           }
         />
         <Route
