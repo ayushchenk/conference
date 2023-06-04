@@ -32,13 +32,17 @@ export const ParticipantsGrid = () => {
     setOpenAddParticipantDialog(true);
   };
   const handleAddParticipant = (user: User) => {
-    addParticipant({}, String(user.id));
+    addParticipant({}, user.id);
     setNewParticipantData(user);
   };
   useEffect(() => {
     if (!response.isLoading && !response.isError && newParticipantData) {
       setOpenAddParticipantDialog(false);
-      setRows((rows) => [...rows, newParticipantData]);
+
+      //skip new user if already in table
+      if (!rows.map(r => r.id).includes(newParticipantData.id)) {
+        setRows((rows) => [...rows, newParticipantData]);
+      }
     }
   }, [response, newParticipantData]);
 

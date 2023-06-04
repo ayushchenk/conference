@@ -1,5 +1,3 @@
-import { AxiosRequestConfig } from "axios";
-import { useMemo } from "react";
 import { useEffect, useState } from "react";
 import { GetParticipantsData, GetParticipantsResponse } from "./ParticipantsGrid.types";
 import { GridRowsProp, GridColDef, GridPaginationModel, GridActionsCellItem } from "@mui/x-data-grid";
@@ -7,25 +5,20 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { User } from "../../types/User";
 import { useGetApi } from "../../hooks/UseGetApi";
 import { usePostApi } from "../../hooks/UsePostApi";
-import { useDeleteApi } from "../../hooks/useDeleteApi";
+import { useMemoPaging } from "../../hooks/UseMemoPaging";
+import { useDeleteApi } from "../../hooks/UseDeleteApi";
 
 export const useGetParticipantsApi = (paging: GridPaginationModel, conferenceId: number): GetParticipantsResponse => {
-  const config: AxiosRequestConfig<any> = useMemo(
-    () => ({
-      params: { pageIndex: paging.page, pageSize: paging.pageSize },
-    }),
-    [paging]
-  );
-
+  const config = useMemoPaging(paging);
   return useGetApi<GetParticipantsData>(`/Conference/${conferenceId}/participants`, config);
 };
 
 export const useAddParticipantApi = (conferenceId: number) => {
-  return usePostApi<{}, {}>(`/Conference/${conferenceId}/participants/`);
+  return usePostApi<{}, {}>(`/Conference/${conferenceId}/participants/{0}`);
 };
 
 export const useDeleteParticipantApi = (conferenceId: number) => {
-  return useDeleteApi<{}>(`/Conference/${conferenceId}/participants/`);
+  return useDeleteApi<{}>(`/Conference/${conferenceId}/participants/{0}`);
 };
 
 export const useParticipantsGridProps = (
@@ -44,7 +37,7 @@ export const useParticipantsGridProps = (
 
   function handleDelete(userId: number) {
     setDeletedUserId(userId);
-    deleteParticipant(String(userId));
+    deleteParticipant(userId);
   }
   useEffect(() => {
     if (!response.isError && !response.isLoading && deletedUserId) {

@@ -1,27 +1,21 @@
-import { AxiosRequestConfig } from "axios";
 import moment from "moment";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { GridActionsCellItem, GridColDef, GridPaginationModel, GridRowsProp } from "@mui/x-data-grid";
-import { useDeleteApi } from "../../hooks/useDeleteApi";
 import { useGetApi } from "../../hooks/UseGetApi";
 import { Conference } from "../../types/Conference";
 import { GetConferencesData, GetConferencesResponse } from "./ConferencesGrid.types";
+import { useDeleteApi } from "../../hooks/UseDeleteApi";
+import { useMemoPaging } from "../../hooks/UseMemoPaging";
 
 export const useGetConferencesApi = (paging: GridPaginationModel): GetConferencesResponse => {
-  const config: AxiosRequestConfig<any> = useMemo(
-    () => ({
-      params: { pageIndex: paging.page, pageSize: paging.pageSize },
-    }),
-    [paging]
-  );
-
+  const config = useMemoPaging(paging);
   return useGetApi<GetConferencesData>(`/Conference`, config);
 };
 
 export const useDeleteConferenceApi = () => {
-  return useDeleteApi<{}>(`/Conference/`);
+  return useDeleteApi<{}>(`/Conference/{0}`);
 };
 
 export const useConferencesGridProps = (conferences: GetConferencesResponse): [GridRowsProp, GridColDef[]] => {

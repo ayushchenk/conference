@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { useCallback, useState } from "react";
 import { ApiResponse } from "../types/ApiResponse";
+import { format } from "../util/Functions";
 
 export function useDeleteApi<TData>(path: string, config?: AxiosRequestConfig<any> | undefined) {
   const [response, setResponse] = useState<ApiResponse<TData>>({
@@ -11,9 +12,9 @@ export function useDeleteApi<TData>(path: string, config?: AxiosRequestConfig<an
   });
 
   const performDelete = useCallback(
-    (dynamicPath: string = "") => {
+    (...urlParams: (string | number)[]) => {
       axios
-        .delete<TData>(path + dynamicPath, config)
+        .delete<TData>(format(path, urlParams), config)
         .then((response) => {
           setResponse({
             data: response.data,

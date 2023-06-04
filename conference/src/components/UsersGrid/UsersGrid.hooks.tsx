@@ -1,26 +1,20 @@
-import { AxiosRequestConfig } from "axios";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { GridRowsProp, GridColDef, GridPaginationModel, GridActionsCellItem } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import { GetUsersData, GetUsersResponse } from "./UsersGrid.types";
 import { User } from "../../types/User";
 import { useGetApi } from "../../hooks/UseGetApi";
-import { useDeleteApi } from "../../hooks/useDeleteApi";
+import { useDeleteApi } from "../../hooks/UseDeleteApi";
+import { useMemoPaging } from "../../hooks/UseMemoPaging";
 
 export const useGetUsersApi = (paging: GridPaginationModel): GetUsersResponse => {
-  const config: AxiosRequestConfig<any> = useMemo(
-    () => ({
-      params: { pageIndex: paging.page, pageSize: paging.pageSize },
-    }),
-    [paging]
-  );
-
+  const config = useMemoPaging(paging);
   return useGetApi<GetUsersData>(`/User`, config);
 };
 
 export const useDeleteUserApi = () => {
-  return useDeleteApi<{}>(`/User/`);
+  return useDeleteApi<{}>(`/User/{0}`);
 };
 
 export const useUsersGridProps = (users: GetUsersResponse): [GridRowsProp, GridColDef[]] => {
@@ -36,7 +30,7 @@ export const useUsersGridProps = (users: GetUsersResponse): [GridRowsProp, GridC
 
   function handleDelete(userId: number) {
     setDeletedUserId(userId);
-    deleteUser(String(userId));
+    deleteUser(userId);
   }
 
   useEffect(() => {

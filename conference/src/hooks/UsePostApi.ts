@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { useCallback, useState } from "react";
 import { ApiResponse } from "../types/ApiResponse";
+import { format } from "../util/Functions";
 
 export function usePostApi<TRequest, TData>(path: string, config?: AxiosRequestConfig<any> | undefined) {
   const [response, setResponse] = useState<ApiResponse<TData>>({
@@ -11,9 +12,9 @@ export function usePostApi<TRequest, TData>(path: string, config?: AxiosRequestC
   });
 
   const post = useCallback(
-    (data: TRequest, dynamicPath: string = "") => {
+    (data: TRequest, ...urlParams: (string | number)[]) => {
       axios
-        .post<TData>(path + dynamicPath, data, config)
+        .post<TData>(format(path, urlParams), data, config)
         .then((response) => {
           setResponse({
             data: response.data,

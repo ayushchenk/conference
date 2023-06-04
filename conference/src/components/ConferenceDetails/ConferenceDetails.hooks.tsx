@@ -8,5 +8,5 @@ export const useGetConferenceApi = (conferenceId: number): GetConferenceResponse
 };
 
 export const useUpdateConferenceApi = () => {
-  return usePutApi<UpdateConferenceRequest, Conference>(`/Conference/`);
+  return usePutApi<UpdateConferenceRequest, Conference>(`/Conference`);
 };
