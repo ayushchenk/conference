@@ -21,22 +21,3 @@ export type UpdateConferenceRequest = {
   organizerWebpage: string;
   contactPhoneNumber: string;
 };
-
-export const initialValues: UpdateConferenceRequest = {
-  id: null,
-  title: "",
-  keywords: "",
-  abstract: "",
-  acronym: "",
-  webpage: "",
-  venue: "",
-  city: "",
-  startDate: String(new Date()),
-  endDate: String(new Date()),
-  primaryResearchArea: "",
-  secondaryResearchArea: "",
-  areaNotes: "",
-  organizer: "",
-  organizerWebpage: "",
-  contactPhoneNumber: "",
-};

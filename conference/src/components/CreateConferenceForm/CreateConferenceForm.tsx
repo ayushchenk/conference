@@ -13,24 +13,51 @@ import dayjs from "dayjs";
 import { usePostCreateConferenceApi } from "./CreateConferenceForm.hooks";
 import { validationSchema } from "./CreateConferenceForm.validator";
 import { initialValues } from "./CreateConferenceForm.types";
+import { useUpdateConferenceApi } from "../ConferenceDetails/ConferenceDetails.hooks";
+import { ApiResponse, CreateResponseData } from "../../types/ApiResponse";
+import { Conference } from "../../types/Conference";
 
-export const CreateConferenceForm = () => {
-  const { response, post } = usePostCreateConferenceApi();
+export const CreateConferenceForm = ({ conference }: { conference?: Conference | null }) => {
   const navigate = useNavigate();
+  const { response: responseUpdate, put } = useUpdateConferenceApi();
+  const { response: responseCreate, post } = usePostCreateConferenceApi();
+
+  let performRequest: Function;
+  let response: ApiResponse<CreateResponseData | Conference>;
+
+  if (conference === undefined) {
+    performRequest = post;
+    response = responseCreate;
+  } else {
+    performRequest = put;
+    response = responseUpdate;
+  }
 
   useEffect(() => {
-    if (response.data && "id" in response.data) {
-      navigate(`/conferences/${response.data.id}`);
+    let conferenceId;
+    if (conference) {
+      conferenceId = conference.id;
+    } else {
+      conferenceId = response?.data?.id;
     }
-  }, [response, navigate]);
+    if (!response.isLoading && !response.isError && conferenceId) {
+      navigate(`/conferences/${conferenceId}`);
+    }
+  }, [response, conference, navigate]);
 
   const formik = useFormik({
-    initialValues: initialValues,
+    initialValues: conference || initialValues,
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      post(values);
+      performRequest(values);
     },
   });
+
+  useEffect(() => {
+    if (conference && !formik.dirty) {
+      formik.setValues(conference);
+    }
+  }, [conference, formik]);
 
   return (
     <Box component="form" mb={5} onSubmit={formik.handleSubmit}>

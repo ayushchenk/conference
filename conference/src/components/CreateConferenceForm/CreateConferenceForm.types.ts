@@ -2,8 +2,8 @@ export type CreateConferenceRequest = {
   title: string;
   acronym: string;
   organizer: string;
-  startDate: Date;
-  endDate: Date;
+  startDate: string;
+  endDate: string;
   keywords: string;
   abstract: string;
   webpage: string;
@@ -24,8 +24,8 @@ export const initialValues: CreateConferenceRequest = {
   webpage: "",
   venue: "",
   city: "",
-  startDate: new Date(),
-  endDate: new Date(),
+  startDate: String(new Date()),
+  endDate: String(new Date()),
   primaryResearchArea: "",
   secondaryResearchArea: "",
   areaNotes: "",

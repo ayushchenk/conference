@@ -1,13 +1,18 @@
 import axios from "axios";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Header } from "../Header";
-import { ConferenceDetailsPage, ConferencesPage, ParticipantsPage } from "../../pages/Conferences";
-import { Protected } from "../ProtectedRoute/Protected";
-import { SignUpPage, LoginPage } from "../../pages/Auth";
 import { Auth } from "../../logic/Auth";
-import { CreateConferencePage } from "../../pages/Conferences/CreateConferencePage";
+import { LoginPage, SignUpPage } from "../../pages/Auth";
+import {
+  ConferenceDetailsPage,
+  ConferencesPage,
+  CreateConferencePage,
+  ParticipantsPage,
+  UpdateConferencePage,
+} from "../../pages/Conferences";
 import { UsersPage } from "../../pages/Users";
+import { Header } from "../Header";
 import { AdminProtected } from "../ProtectedRoute/AdminProtected";
+import { Protected } from "../ProtectedRoute/Protected";
 
 axios.interceptors.request.use(function (config) {
   const token = Auth.getToken();
@@ -45,6 +50,14 @@ export const App = () => {
           element={
             <Protected>
               <ConferenceDetailsPage />
+            </Protected>
+          }
+        />
+        <Route
+          path="/conferences/:conferenceId/edit"
+          element={
+            <Protected>
+              <UpdateConferencePage />
             </Protected>
           }
         />
