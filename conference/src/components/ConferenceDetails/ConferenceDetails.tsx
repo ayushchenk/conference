@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { useFormik } from "formik";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
@@ -24,22 +24,26 @@ export const ConferenceDetails = () => {
   const { conferenceId } = useParams();
   const conference = useGetConferenceApi(Number(conferenceId));
   const { response, put } = useUpdateConferenceApi();
+  const [isEdited, setIsEdited] = useState(false);
 
   const formik = useFormik({
     initialValues: conference.data ?? initialValues,
     validationSchema: validationSchema,
     onSubmit: (values) => {
       put(values);
+      setIsEdited(false);
     },
   });
 
   useEffect(() => {
+    setIsEdited(false);
     if (conference.data) {
       formik.setValues(conference.data);
     }
   }, [conference, formik]);
 
   const handleFieldChange = (field: string, value: string | null | undefined) => {
+    setIsEdited(true);
     formik.setFieldValue(field, value, true);
   };
 
@@ -145,7 +149,7 @@ export const ConferenceDetails = () => {
             {response.error?.detail}
           </Alert>
         </Collapse>
-        {formik.dirty && (
+        {isEdited && (
           <Button fullWidth sx={{ marginTop: 3 }} variant="contained" type="submit">
             Save
           </Button>
