@@ -99,6 +99,15 @@ export const ConferenceDetails = () => {
           <TableRow>
             <TableCell align="center" colSpan={12} variant="head">
               <Button color="inherit">
+                <Link className="header__link" to={`/conferences/${conferenceId}/submissions`}>
+                  Submissions
+                </Link>
+              </Button>
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell align="center" colSpan={12} variant="head">
+              <Button color="inherit">
                 <Link className="header__link" to={`/conferences/${conferenceId}/edit`}>
                   Edit
                 </Link>
