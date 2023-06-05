@@ -1,0 +1,1 @@
+export { ConferenceDetails } from "./ConferenceDetails";

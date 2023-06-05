@@ -1,7 +1,5 @@
-import { Conference } from "../../types/Conference"
+import { Conference } from "../../types/Conference";
+import { ApiResponse, PageData } from "../../types/ApiResponse";
 
-export type GetConferencesResponse = {
-    data: Conference[],
-    isLoading: boolean,
-    isError: boolean
-}
+export type GetConferencesData = PageData<Conference>;
+export type GetConferencesResponse = ApiResponse<GetConferencesData>;
