@@ -1,3 +1,4 @@
+import moment from "moment";
 import { Link, useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
@@ -6,8 +7,8 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
+import { AdminVisibility } from "../ProtectedRoute/AdminVisibility";
 import { useGetConferenceApi } from "./ConferenceDetails.hooks";
-import moment from "moment";
 
 export const ConferenceDetails = () => {
   const { conferenceId } = useParams();
@@ -96,24 +97,26 @@ export const ConferenceDetails = () => {
               </Button>
             </TableCell>
           </TableRow>
-          <TableRow>
-            <TableCell align="center" colSpan={12} variant="head">
-              <Button color="inherit">
-                <Link className="header__link" to={`/conferences/${conferenceId}/submissions`}>
-                  Submissions
-                </Link>
-              </Button>
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell align="center" colSpan={12} variant="head">
-              <Button color="inherit">
-                <Link className="header__link" to={`/conferences/${conferenceId}/edit`}>
-                  Edit
-                </Link>
-              </Button>
-            </TableCell>
-          </TableRow>
+          <AdminVisibility>
+            <TableRow>
+              <TableCell align="center" colSpan={12} variant="head">
+                <Button color="inherit">
+                  <Link className="header__link" to={`/conferences/${conferenceId}/submissions`}>
+                    Submissions
+                  </Link>
+                </Button>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell align="center" colSpan={12} variant="head">
+                <Button color="inherit">
+                  <Link className="header__link" to={`/conferences/${conferenceId}/edit`}>
+                    Edit
+                  </Link>
+                </Button>
+              </TableCell>
+            </TableRow>
+          </AdminVisibility>
         </TableBody>
       </Table>
     </TableContainer>
