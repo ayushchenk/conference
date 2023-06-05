@@ -7,6 +7,8 @@ import {
   ConferencesPage,
   CreateConferencePage,
   ParticipantsPage,
+  SubmissionDetailsPage,
+  SubmissionsPage,
   UpdateConferencePage,
 } from "../../pages/Conferences";
 import { UsersPage } from "../../pages/Users";
@@ -75,6 +77,22 @@ export const App = () => {
             <AdminProtected>
               <CreateConferencePage />
             </AdminProtected>
+          }
+        />
+        <Route
+          path="/conferences/:conferenceId/submissions"
+          element={
+            <Protected>
+              <SubmissionsPage />
+            </Protected>
+          }
+        />
+        <Route
+          path="/conferences/:conferenceId/submissions/:submissionId"
+          element={
+            <Protected>
+              <SubmissionDetailsPage />
+            </Protected>
           }
         />
       </Routes>

@@ -19,3 +19,16 @@ export type Conference = {
   organizerWebpage: string;
   contactPhoneNumber: string;
 };
+
+export type Submission = {
+  id: number;
+  conferenceId: number;
+  authorId: number;
+  authoutEmail: string | null;
+  authorName: string | null;
+  status: number;
+  statusLabel: string | null;
+  title: string | null;
+  keywords: string | null;
+  abstract: string | null;
+};
