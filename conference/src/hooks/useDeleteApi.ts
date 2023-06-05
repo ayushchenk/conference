@@ -3,7 +3,7 @@ import { useCallback, useState } from "react";
 import { ApiResponse } from "../types/ApiResponse";
 import { format } from "../util/Functions";
 
-export function useDeleteApi<TData>(path: string, config?: AxiosRequestConfig<any> | undefined) {
+export function useDeleteApi<TRequest, TData>(path: string, config?: AxiosRequestConfig<any> | undefined) {
   const [response, setResponse] = useState<ApiResponse<TData>>({
     data: null,
     isError: false,
@@ -12,9 +12,9 @@ export function useDeleteApi<TData>(path: string, config?: AxiosRequestConfig<an
   });
 
   const performDelete = useCallback(
-    (...urlParams: (string | number)[]) => {
+    (data?: TRequest, ...urlParams: (string | number)[]) => {
       axios
-        .delete<TData>(format(path, urlParams), config)
+        .delete<TData>(format(path, urlParams), { data: data, ...config })
         .then((response) => {
           setResponse({
             data: response.data,

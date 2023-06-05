@@ -1,12 +1,28 @@
 import { useEffect, useState } from "react";
-import { GridRowsProp, GridColDef, GridPaginationModel, GridActionsCellItem } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
-import AddIcon from "@mui/icons-material/Add";
-import { GetUsersData, GetUsersResponse } from "./UsersGrid.types";
-import { User } from "../../types/User";
-import { useGetApi } from "../../hooks/UseGetApi";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import { Tooltip } from "@mui/material";
+import {
+  GridActionsCellItem,
+  GridColDef,
+  GridPaginationModel,
+  GridRenderCellParams,
+  GridRowsProp,
+} from "@mui/x-data-grid";
 import { useDeleteApi } from "../../hooks/UseDeleteApi";
+import { useGetApi } from "../../hooks/UseGetApi";
 import { useMemoPaging } from "../../hooks/UseMemoPaging";
+import { usePostApi } from "../../hooks/UsePostApi";
+import { User } from "../../types/User";
+import { AddUserRoleRequest, GetUsersData, GetUsersResponse, RemoveUserRoleRequest } from "./UsersGrid.types";
+
+export const useAddUserRoleApi = () => {
+  return usePostApi<AddUserRoleRequest, {}>("/User/{0}/role");
+};
+
+export const useRemoveUserRoleApi = () => {
+  return useDeleteApi<RemoveUserRoleRequest, {}>("/User/{0}/role");
+};
 
 export const useGetUsersApi = (paging: GridPaginationModel): GetUsersResponse => {
   const config = useMemoPaging(paging);
@@ -14,10 +30,10 @@ export const useGetUsersApi = (paging: GridPaginationModel): GetUsersResponse =>
 };
 
 export const useDeleteUserApi = () => {
-  return useDeleteApi<{}>(`/User/{0}`);
+  return useDeleteApi<{}, {}>(`/User/{0}`);
 };
 
-export const useUsersGridProps = (users: GetUsersResponse): [GridRowsProp, GridColDef[]] => {
+export const useUsersGridProps = (users: GetUsersResponse, openRoleChange: Function): [GridRowsProp, GridColDef[]] => {
   const [rows, setRows] = useState<User[]>(users.data?.items ?? []);
   const [deletedUserId, setDeletedUserId] = useState<number | null>(null);
   const { response, performDelete: deleteUser } = useDeleteUserApi();
@@ -70,6 +86,16 @@ export const useUsersGridProps = (users: GetUsersResponse): [GridRowsProp, GridC
     {
       headerName: "Roles",
       field: "roles",
+      width: 150,
+      renderCell: (params: GridRenderCellParams) => (
+        <div style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+          <Tooltip title={params.value.join(", ")} enterDelay={500}>
+            <div style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              {params.value.join(", ")}
+            </div>
+          </Tooltip>
+        </div>
+      ),
     },
     {
       field: "actions",
@@ -78,7 +104,11 @@ export const useUsersGridProps = (users: GetUsersResponse): [GridRowsProp, GridC
       flex: 1,
       getActions: (params) => [
         <GridActionsCellItem icon={<DeleteIcon />} label="Delete" onClick={() => handleDelete(params.row.id)} />,
-        <GridActionsCellItem icon={<AddIcon />} label="Add to Conference" showInMenu />,
+        <GridActionsCellItem
+          icon={<ManageAccountsIcon />}
+          label="Manage Roles"
+          onClick={() => openRoleChange(params.row)}
+        />,
       ],
     },
   ];
