@@ -18,7 +18,7 @@ export const useAddParticipantApi = (conferenceId: number) => {
 };
 
 export const useDeleteParticipantApi = (conferenceId: number) => {
-  return useDeleteApi<{}>(`/Conference/${conferenceId}/participants/{0}`);
+  return useDeleteApi<{}, {}>(`/Conference/${conferenceId}/participants/{0}`);
 };
 
 export const useParticipantsGridProps = (

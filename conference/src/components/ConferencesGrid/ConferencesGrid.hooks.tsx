@@ -15,7 +15,7 @@ export const useGetConferencesApi = (paging: GridPaginationModel): GetConference
 };
 
 export const useDeleteConferenceApi = () => {
-  return useDeleteApi<{}>(`/Conference/{0}`);
+  return useDeleteApi<{}, {}>(`/Conference/{0}`);
 };
 
 export const useConferencesGridProps = (conferences: GetConferencesResponse): [GridRowsProp, GridColDef[]] => {
