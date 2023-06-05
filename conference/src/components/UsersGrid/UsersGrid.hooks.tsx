@@ -14,14 +14,14 @@ import { useGetApi } from "../../hooks/UseGetApi";
 import { useMemoPaging } from "../../hooks/UseMemoPaging";
 import { usePostApi } from "../../hooks/UsePostApi";
 import { User } from "../../types/User";
-import { AddUserRoleRequest, GetUsersData, GetUsersResponse, RemoveUserRoleRequest } from "./UsersGrid.types";
+import { AdjustUserRoleRequest, GetUsersData, GetUsersResponse } from "./UsersGrid.types";
 
 export const useAddUserRoleApi = () => {
-  return usePostApi<AddUserRoleRequest, {}>("/User/{0}/role");
+  return usePostApi<AdjustUserRoleRequest, {}>("/User/{0}/role");
 };
 
 export const useRemoveUserRoleApi = () => {
-  return useDeleteApi<RemoveUserRoleRequest, {}>("/User/{0}/role");
+  return useDeleteApi<AdjustUserRoleRequest, {}>("/User/{0}/role");
 };
 
 export const useGetUsersApi = (paging: GridPaginationModel): GetUsersResponse => {

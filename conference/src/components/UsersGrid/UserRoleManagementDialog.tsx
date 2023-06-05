@@ -10,7 +10,7 @@ export const UserRoleManagementDialog: React.FC<UserRoleManagementDialogProps> =
   onAddRole,
   onRemoveRole,
 }) => {
-  const [roles, setRoles] = useState<string[]>(user?.roles || ["test"]);
+  const [roles, setRoles] = useState<string[]>(user?.roles || []);
 
   const handleRoleChange = (event: React.ChangeEvent<{}>, value: string | string[]) => {
     value = Array.isArray(value) ? value : [];

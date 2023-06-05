@@ -4,11 +4,7 @@ import { ApiResponse, PageData } from "../../types/ApiResponse";
 export type GetUsersData = PageData<User>;
 export type GetUsersResponse = ApiResponse<GetUsersData>;
 
-export type AddUserRoleRequest = {
-  role: string;
-};
-
-export type RemoveUserRoleRequest = {
+export type AdjustUserRoleRequest = {
   role: string;
 };
 
