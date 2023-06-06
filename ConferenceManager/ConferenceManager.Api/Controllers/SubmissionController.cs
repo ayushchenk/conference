@@ -8,6 +8,7 @@ using ConferenceManager.Core.Submissions.Create;
 using ConferenceManager.Core.Submissions.CreateComment;
 using ConferenceManager.Core.Submissions.CreateReview;
 using ConferenceManager.Core.Submissions.Get;
+using ConferenceManager.Core.Submissions.GetComments;
 using ConferenceManager.Core.Submissions.GetPreferences;
 using ConferenceManager.Core.Submissions.GetReviewers;
 using ConferenceManager.Core.Submissions.GetReviews;
@@ -203,7 +204,7 @@ namespace ConferenceManager.Api.Controllers
         [Route("{id}/comments")]
         [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Reviewer}")]
         [Produces("application/json")]
-        [SwaggerResponse(StatusCodes.Status200OK, Type = (typeof(IEnumerable<UserDto>)))]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = (typeof(IEnumerable<CreateEntityResponse>)))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
         [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
         [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
@@ -211,6 +212,28 @@ namespace ConferenceManager.Api.Controllers
         {
             command.SubmissionId = id;
             var result = await Mediator.Send(command, cancellation);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Returns comments of a submission
+        /// </summary>
+        /// <remarks>
+        /// Reviewer can view comments of submission he is assigned to.
+        /// Comments are orderded by createdon descending.
+        /// </remarks>
+        [HttpGet]
+        [Route("{id}/comments")]
+        [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Reviewer}")]
+        [Produces("application/json")]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = (typeof(IEnumerable<CommentDto>)))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
+        public async Task<IActionResult> GetComments(int id, CancellationToken cancellation)
+        {
+            var result = await Mediator.Send(new GetCommentsQuery(id), cancellation);
 
             return Ok(result);
         }
