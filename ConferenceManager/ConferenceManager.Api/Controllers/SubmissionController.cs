@@ -17,6 +17,7 @@ using ConferenceManager.Core.Submissions.RemovePreference;
 using ConferenceManager.Core.Submissions.RemoveReviewer;
 using ConferenceManager.Core.Submissions.Return;
 using ConferenceManager.Core.Submissions.Update;
+using ConferenceManager.Core.Submissions.UpdateComment;
 using ConferenceManager.Core.Submissions.UpdateReview;
 using ConferenceManager.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -138,7 +139,7 @@ namespace ConferenceManager.Api.Controllers
         [Route("reviews")]
         [Authorize(Roles = ApplicationRole.Reviewer)]
         [Produces("application/json")]
-        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CreateEntityResponse))]
+        [SwaggerResponse(StatusCodes.Status204NoContent)]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
         [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
         [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
@@ -193,15 +194,38 @@ namespace ConferenceManager.Api.Controllers
             return Ok(result);
         }
 
+
+        /// <summary>
+        /// Update comment for a review
+        /// </summary>
+        /// <remarks>
+        /// User can only udpate his own comments.
+        /// </remarks>
+        [HttpPut]
+        [Route("comments")]
+        [Authorize]
+        [Produces("application/json")]
+        [SwaggerResponse(StatusCodes.Status204NoContent)]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
+        public async Task<IActionResult> PutComment(UpdateCommentCommand command, CancellationToken cancellation)
+        {
+            await Mediator.Send(command, cancellation);
+
+            return NoContent();
+        }
+
         /// <summary>
         /// Create comment for a review
         /// </summary>
         /// <remarks>
         /// Reviewer can only leave comments for submission he is assigned to.
+        /// Author can only leave comments for his ows submissions.
         /// </remarks>
         [HttpPost]
         [Route("{id}/comments")]
-        [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Reviewer}")]
+        [Authorize]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status200OK, Type = (typeof(IEnumerable<CreateEntityResponse>)))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]

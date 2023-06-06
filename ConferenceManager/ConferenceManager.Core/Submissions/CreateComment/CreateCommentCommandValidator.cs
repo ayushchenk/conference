@@ -25,9 +25,9 @@ namespace ConferenceManager.Core.Submissions.CreateComment
                     return;
                 }
 
-                if (!CurrentUser.IsReviewerOf(submission))
+                if (!CurrentUser.IsReviewerOf(submission) || !CurrentUser.IsAuthorOf(submission))
                 {
-                    context.AddException(new ForbiddenException("Not a reviewer of submission"));
+                    context.AddException(new ForbiddenException("Not a reviewer or owner of the submission"));
                 }
             });
         }
