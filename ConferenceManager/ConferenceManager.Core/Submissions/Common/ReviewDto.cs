@@ -15,6 +15,8 @@ namespace ConferenceManager.Core.Submissions.Common
 
         public required string ReviewerEmail { set; get; } = null!;
 
+        public required int Score { set; get; }
+
         public required string Evaluation { set; get; } = null!;
 
         public required ReviewConfidence Confidence { set; get; }
