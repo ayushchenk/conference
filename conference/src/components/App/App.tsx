@@ -6,6 +6,7 @@ import {
   ConferenceDetailsPage,
   ConferencesPage,
   CreateConferencePage,
+  CreateSubmissionPage,
   ParticipantsPage,
   SubmissionDetailsPage,
   SubmissionsPage,
@@ -72,7 +73,7 @@ export const App = () => {
           }
         />
         <Route
-          path="/create-conference"
+          path="/conferences/new"
           element={
             <AdminProtected>
               <CreateConferencePage />
@@ -92,6 +93,14 @@ export const App = () => {
           element={
             <Protected>
               <SubmissionDetailsPage />
+            </Protected>
+          }
+        />
+        <Route
+          path="/conferences/:conferenceId/submissions/new"
+          element={
+            <Protected>
+              <CreateSubmissionPage />
             </Protected>
           }
         />
