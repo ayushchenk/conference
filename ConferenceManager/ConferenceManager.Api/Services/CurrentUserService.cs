@@ -1,4 +1,5 @@
 ﻿using ConferenceManager.Core.Common.Interfaces;
+using ConferenceManager.Domain.Common;
 using ConferenceManager.Domain.Entities;
 using System.Security.Claims;
 
@@ -50,9 +51,9 @@ namespace ConferenceManager.Api.Services
                 .Contains(Id);
         }
 
-        public bool IsAuthorOf(Submission submission)
+        public bool IsAuthorOf(BaseAuditableEntity entity)
         {
-            return HasAdminRole || submission.CreatedById == Id;
+            return HasAdminRole || entity.CreatedById == Id;
         }
 
         public bool IsReviewerOf(Submission submission)

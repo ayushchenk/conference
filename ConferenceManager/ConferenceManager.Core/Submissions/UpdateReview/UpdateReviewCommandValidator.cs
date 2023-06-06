@@ -14,7 +14,6 @@ namespace ConferenceManager.Core.Submissions.UpdateReview
         public UpdateReviewCommandValidator(IApplicationDbContext context, ICurrentUserService currentUser) : base(context, currentUser)
         {
             RuleForId(x => x.Id);
-            RuleForId(x => x.SubmissionId);
             RuleForString(x => x.Evaluation, 1000, true);
             RuleForArray(x => x.Confidence, CreateReviewCommandValidator.SupportedConfidences);
             RuleFor(x => x.Score)
@@ -23,21 +22,6 @@ namespace ConferenceManager.Core.Submissions.UpdateReview
 
             RuleFor(x => x).CustomAsync(async (command, context, cancelToken) =>
             {
-                var submission = await Context.Submissions.FindAsync(command.SubmissionId, cancelToken);
-
-                if (submission == null)
-                {
-                    context.AddException(new NotFoundException("Submission not found"));
-                    return;
-                }
-
-                if (submission.Status == SubmissionStatus.Accepted
-                    || submission.Status == SubmissionStatus.Rejected)
-                {
-                    context.AddException(new NotFoundException("Submission is closed"));
-                    return;
-                }
-
                 var review = await Context.Reviews
                     .AsNoTracking()
                     .FirstOrDefaultAsync(r => r.Id == command.Id, cancelToken);
@@ -51,6 +35,15 @@ namespace ConferenceManager.Core.Submissions.UpdateReview
                 if (review.CreatedById != CurrentUser.Id)
                 {
                     context.AddException(new ForbiddenException("Not author of review"));
+                    return;
+                }
+
+                var submission = await Context.Submissions.FindAsync(review.SubmissionId, cancelToken);
+
+                if (submission?.Status == SubmissionStatus.Accepted
+                    || submission?.Status == SubmissionStatus.Rejected)
+                {
+                    context.AddException(new NotFoundException("Submission is closed"));
                     return;
                 }
             });

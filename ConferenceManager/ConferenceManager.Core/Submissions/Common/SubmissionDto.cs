@@ -24,5 +24,9 @@ namespace ConferenceManager.Core.Submissions.Common
         public required string Keywords { set; get; } 
 
         public required string Abstract { set; get; }
+
+        public DateTime CreatedOn { set; get; }
+
+        public DateTime ModifiedOn { set; get; }
     }
 }

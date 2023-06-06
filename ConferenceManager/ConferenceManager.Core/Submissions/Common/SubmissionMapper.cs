@@ -19,7 +19,9 @@ namespace ConferenceManager.Core.Submissions.Common
                 ConferenceId = source.ConferenceId,
                 Keywords = source.Keywords,
                 Title = source.Title,
-                Abstract = source.Abstract
+                Abstract = source.Abstract,
+                CreatedOn = source.CreatedOn,
+                ModifiedOn = source.ModifiedOn
             };
         }
     }

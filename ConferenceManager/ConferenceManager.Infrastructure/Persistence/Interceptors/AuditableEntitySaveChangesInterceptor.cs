@@ -7,14 +7,14 @@ namespace ConferenceManager.Infrastructure.Persistence.Interceptors;
 
 public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
 {
-    private readonly ICurrentUserService _currentUserService;
+    private readonly ICurrentUserService _currentUser;
     private readonly IDateTimeService _dateTime;
 
     public AuditableEntitySaveChangesInterceptor(
         ICurrentUserService currentUserService,
         IDateTimeService dateTime)
     {
-        _currentUserService = currentUserService;
+        _currentUser = currentUserService;
         _dateTime = dateTime;
     }
 
@@ -40,17 +40,18 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
         {
             if (entry.State == EntityState.Added)
             {
-                entry.Entity.CreatedById = _currentUserService.Id;
-                entry.Entity.CreatedOn = _dateTime.Now;
-                entry.Entity.ModifiedById = _currentUserService.Id;
-                entry.Entity.ModifiedOn = _dateTime.Now;
+                var now = _dateTime.Now;
+                entry.Entity.CreatedById = _currentUser.Id;
+                entry.Entity.CreatedOn = now;
+                entry.Entity.ModifiedById = _currentUser.Id;
+                entry.Entity.ModifiedOn = now;
             } 
 
             if (entry.State == EntityState.Modified)
             {
                 entry.Property(p => p.CreatedById).IsModified = false;
                 entry.Property(p => p.CreatedOn).IsModified = false;
-                entry.Entity.ModifiedById = _currentUserService.Id;
+                entry.Entity.ModifiedById = _currentUser.Id;
                 entry.Entity.ModifiedOn = _dateTime.Now;
             }
         }
