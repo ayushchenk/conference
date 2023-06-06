@@ -128,6 +128,28 @@ namespace ConferenceManager.Api.Controllers
         }
 
         /// <summary>
+        /// Updates review for submission
+        /// </summary>
+        /// <remarks>
+        /// Reviewer can only update his own review. <br/>
+        /// Reviewer cannot update review if submission is closed or rejected.
+        /// </remarks>
+        [HttpPut]
+        [Route("reviews")]
+        [Authorize(Roles = ApplicationRole.Reviewer)]
+        [Produces("application/json")]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CreateEntityResponse))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
+        public async Task<IActionResult> PutReview(UpdateReviewCommand command, CancellationToken cancellation)
+        {
+            await Mediator.Send(command, cancellation);
+
+            return NoContent();
+        }
+
+        /// <summary>
         /// Creates new review for submission
         /// </summary>
         /// <remarks>
@@ -148,29 +170,6 @@ namespace ConferenceManager.Api.Controllers
             var result = await Mediator.Send(command, cancellation);
 
             return Created(nameof(SubmissionController), result);
-        }
-
-        /// <summary>
-        /// Updates review for submission
-        /// </summary>
-        /// <remarks>
-        /// Reviewer can only update his own review. <br/>
-        /// Reviewer cannot update review if submission is closed or rejected.
-        /// </remarks>
-        [HttpPut]
-        [Route("{id}/reviews")]
-        [Authorize(Roles = ApplicationRole.Reviewer)]
-        [Produces("application/json")]
-        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CreateEntityResponse))]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
-        public async Task<IActionResult> PutReview(int id, UpdateReviewCommand command, CancellationToken cancellation)
-        {
-            command.SubmissionId = id;
-            await Mediator.Send(command, cancellation);
-
-            return NoContent();
         }
 
         /// <summary>
