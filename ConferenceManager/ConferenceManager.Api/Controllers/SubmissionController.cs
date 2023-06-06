@@ -131,7 +131,7 @@ namespace ConferenceManager.Api.Controllers
         /// Updates review for submission
         /// </summary>
         /// <remarks>
-        /// Reviewer update his own review. <br/>
+        /// Reviewer can only update his own review. <br/>
         /// Reviewer cannot update review if submission is closed or rejected.
         /// </remarks>
         [HttpPut]
