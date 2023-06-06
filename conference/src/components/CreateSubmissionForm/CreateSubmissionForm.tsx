@@ -20,7 +20,7 @@ export const CreateSubmissionForm = () => {
 
   useEffect(() => {
     if (!response.isLoading && !response.isError && response.data) {
-      navigate(`/conferences/${conferenceId}/submission/${response.data.id}`);
+      navigate(`/conferences/${conferenceId}/submissions/${response.data.id}`);
     }
   }, [response, navigate, conferenceId]);
 
