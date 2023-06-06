@@ -3,24 +3,19 @@ using ConferenceManager.Core.Common.Extensions;
 using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Core.Common.Validators;
 using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 
-namespace ConferenceManager.Core.Submissions.UpdateComment
+namespace ConferenceManager.Core.Submissions.DeleteComment
 {
-    public class UpdateCommentCommandValidator : DbContextValidator<UpdateCommentCommand>
+    public class DeleteCommentCommandValidator : DbContextValidator<DeleteCommentCommand>
     {
-        public UpdateCommentCommandValidator(
-            IApplicationDbContext context,
-            ICurrentUserService currentUser) : base(context, currentUser)
+        public DeleteCommentCommandValidator(
+            IApplicationDbContext context, ICurrentUserService currentUser) : base(context, currentUser)
         {
             RuleForId(x => x.Id);
-            RuleForString(x => x.Text, 1000, true);
 
             RuleFor(x => x).CustomAsync(async (command, context, token) =>
             {
-                var comment = await Context.Comments
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(c => c.Id == command.Id, token);
+                var comment = await Context.Comments.FindAsync(command.Id);
 
                 if (comment == null)
                 {
@@ -30,7 +25,7 @@ namespace ConferenceManager.Core.Submissions.UpdateComment
 
                 if (!CurrentUser.IsAuthorOf(comment))
                 {
-                    context.AddException(new ForbiddenException("Not an author of the comment"));
+                    context.AddException(new NotFoundException("Not an author of the comment"));
                 }
             });
         }

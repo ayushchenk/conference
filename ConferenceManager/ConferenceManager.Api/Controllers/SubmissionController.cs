@@ -7,6 +7,7 @@ using ConferenceManager.Core.Submissions.Common;
 using ConferenceManager.Core.Submissions.Create;
 using ConferenceManager.Core.Submissions.CreateComment;
 using ConferenceManager.Core.Submissions.CreateReview;
+using ConferenceManager.Core.Submissions.DeleteComment;
 using ConferenceManager.Core.Submissions.Get;
 using ConferenceManager.Core.Submissions.GetComments;
 using ConferenceManager.Core.Submissions.GetPreferences;
@@ -174,7 +175,7 @@ namespace ConferenceManager.Api.Controllers
         }
 
         /// <summary>
-        /// Returns reviews for submission
+        /// Returns reviews for the submission
         /// </summary>
         /// <remarks>
         /// Reviewer can only see reviews of submission, he is assigned to
@@ -194,12 +195,11 @@ namespace ConferenceManager.Api.Controllers
             return Ok(result);
         }
 
-
         /// <summary>
-        /// Update comment for a review
+        /// Update comment for submission
         /// </summary>
         /// <remarks>
-        /// User can only udpate his own comments.
+        /// User can only update his own comments (Admin can update everything)
         /// </remarks>
         [HttpPut]
         [Route("comments")]
@@ -216,8 +216,29 @@ namespace ConferenceManager.Api.Controllers
             return NoContent();
         }
 
+
         /// <summary>
-        /// Create comment for a review
+        /// Delete comment for submission
+        /// </summary>
+        /// <remarks>
+        /// User can only delete his own comments (Admin can delete everything)
+        /// </remarks>
+        [HttpDelete]
+        [Route("comments/{id}")]
+        [Authorize]
+        [Produces("application/json")]
+        [SwaggerResponse(StatusCodes.Status204NoContent)]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
+        public async Task<IActionResult> DeleteComment(int id, CancellationToken cancellation)
+        {
+            await Mediator.Send(new DeleteCommentCommand(id), cancellation);
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Create comment for a submission
         /// </summary>
         /// <remarks>
         /// Reviewer can only leave comments for submission he is assigned to.
