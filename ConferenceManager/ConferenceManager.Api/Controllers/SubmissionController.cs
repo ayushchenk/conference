@@ -5,6 +5,7 @@ using ConferenceManager.Core.Submissions.AddPreference;
 using ConferenceManager.Core.Submissions.AddReviewer;
 using ConferenceManager.Core.Submissions.Common;
 using ConferenceManager.Core.Submissions.Create;
+using ConferenceManager.Core.Submissions.CreateComment;
 using ConferenceManager.Core.Submissions.CreateReview;
 using ConferenceManager.Core.Submissions.Get;
 using ConferenceManager.Core.Submissions.GetPreferences;
@@ -105,6 +106,27 @@ namespace ConferenceManager.Api.Controllers
         }
 
         /// <summary>
+        /// Marks submission to be updated by author
+        /// </summary>
+        /// <remarks>
+        /// Reviwer can only return submission after it was created or updated by author. <br/>
+        /// Reviwer can only return submission that he is assigned to. <br/>
+        /// </remarks>
+        [HttpPost]
+        [Route("{id}/return")]
+        [Authorize(Roles = ApplicationRole.Reviewer)]
+        [Produces("application/json")]
+        [SwaggerResponse(StatusCodes.Status204NoContent)]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
+        public async Task<IActionResult> Return(int id, CancellationToken cancellation)
+        {
+            await Mediator.Send(new ReturnSubmissionCommand(id), cancellation);
+
+            return NoContent();
+        }
+
+        /// <summary>
         /// Creates new review for submission
         /// </summary>
         /// <remarks>
@@ -118,7 +140,7 @@ namespace ConferenceManager.Api.Controllers
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CreateEntityResponse))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
         [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status404NotFound ,Type = typeof(ProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
         public async Task<IActionResult> PostReview(int id, CreateReviewCommand command, CancellationToken cancellation)
         {
             command.SubmissionId = id;
@@ -163,6 +185,7 @@ namespace ConferenceManager.Api.Controllers
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<ReviewDto>))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
         [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
         public async Task<IActionResult> GetReviews(int id, CancellationToken cancellation)
         {
             var result = await Mediator.Send(new GetSubmissionReviewsQuery(id), cancellation);
@@ -171,24 +194,25 @@ namespace ConferenceManager.Api.Controllers
         }
 
         /// <summary>
-        /// Marks submission to be updated by author
+        /// Create comment for a review
         /// </summary>
         /// <remarks>
-        /// Reviwer can only return submission after it was created or updated by author. <br/>
-        /// Reviwer can only return submission that he is assigned to. <br/>
+        /// Reviewer can only leave comments for submission he is assigned to.
         /// </remarks>
         [HttpPost]
-        [Route("{id}/return")]
-        [Authorize(Roles = ApplicationRole.Reviewer)]
+        [Route("{id}/comments")]
+        [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Reviewer}")]
         [Produces("application/json")]
-        [SwaggerResponse(StatusCodes.Status204NoContent)]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = (typeof(IEnumerable<UserDto>)))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
         [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
         [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
-        public async Task<IActionResult> Return(int id, CancellationToken cancellation)
+        public async Task<IActionResult> PostComment(int id, CreateCommentCommand command, CancellationToken cancellation)
         {
-            await Mediator.Send(new ReturnSubmissionCommand(id), cancellation);
+            command.SubmissionId = id;
+            var result = await Mediator.Send(command, cancellation);
 
-            return NoContent();
+            return Ok(result);
         }
 
         /// <summary>
@@ -205,6 +229,7 @@ namespace ConferenceManager.Api.Controllers
         [SwaggerResponse(StatusCodes.Status200OK, Type = (typeof(IEnumerable<UserDto>)))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
         [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
         public async Task<IActionResult> GetReviewers(int id, CancellationToken cancellation)
         {
             var result = await Mediator.Send(new GetSubmissionReviewersQuery(id), cancellation);
