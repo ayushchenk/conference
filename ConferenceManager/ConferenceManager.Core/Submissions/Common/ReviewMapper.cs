@@ -15,6 +15,7 @@ namespace ConferenceManager.Core.Submissions.Common
                 ReviewerId = source.CreatedById,
                 ReviewerName = source.CreatedBy.FullName,
                 ReviewerEmail = source.CreatedBy.Email!,
+                Score = source.Score,
                 Evaluation = source.Evaluation,                
                 Confidence = source.Confidence,
                 ConfidenceLabel = source.Confidence.Humanize()

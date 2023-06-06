@@ -15,6 +15,7 @@ using ConferenceManager.Core.Submissions.RemovePreference;
 using ConferenceManager.Core.Submissions.RemoveReviewer;
 using ConferenceManager.Core.Submissions.Return;
 using ConferenceManager.Core.Submissions.Update;
+using ConferenceManager.Core.Submissions.UpdateReview;
 using ConferenceManager.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -117,12 +118,36 @@ namespace ConferenceManager.Api.Controllers
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CreateEntityResponse))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
         [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status404NotFound ,Type = typeof(ProblemDetails))]
         public async Task<IActionResult> PostReview(int id, CreateReviewCommand command, CancellationToken cancellation)
         {
             command.SubmissionId = id;
             var result = await Mediator.Send(command, cancellation);
 
             return Created(nameof(SubmissionController), result);
+        }
+
+        /// <summary>
+        /// Updates review for submission
+        /// </summary>
+        /// <remarks>
+        /// Reviewer update his own review. <br/>
+        /// Reviewer cannot update review if submission is closed or rejected.
+        /// </remarks>
+        [HttpPut]
+        [Route("{id}/reviews")]
+        [Authorize(Roles = ApplicationRole.Reviewer)]
+        [Produces("application/json")]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CreateEntityResponse))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
+        public async Task<IActionResult> PutReview(int id, UpdateReviewCommand command, CancellationToken cancellation)
+        {
+            command.SubmissionId = id;
+            await Mediator.Send(command, cancellation);
+
+            return NoContent();
         }
 
         /// <summary>
