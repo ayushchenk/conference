@@ -4,6 +4,7 @@ import { FormHeader } from "../FormHeader";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import { useState } from "react";
 import { UserRoleManagementDialog } from "../UsersGrid";
+import { AdminVisibility } from "../ProtectedRoute/AdminVisibility";
 
 export const UserDetails = ({ user }: UserDetailsProps) => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -31,9 +32,11 @@ export const UserDetails = ({ user }: UserDetailsProps) => {
               <TableCell variant="head">Roles</TableCell>
               <TableCell>
                 <label>{user.roles.join(", ")}</label>
-                <IconButton onClick={() => setModalOpen(true)}>
-                  <ManageAccountsIcon/>
-                </IconButton>
+                <AdminVisibility>
+                  <IconButton onClick={() => setModalOpen(true)}>
+                    <ManageAccountsIcon />
+                  </IconButton>
+                </AdminVisibility>
               </TableCell>
             </TableRow>
           </TableBody>
