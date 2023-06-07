@@ -32,3 +32,10 @@ export type Submission = {
   keywords: string | null;
   abstract: string | null;
 };
+
+export type SubmissionPaper = {
+  id: number;
+  submissionId: number;
+  fileName: string;
+  base64Content: string;
+};
