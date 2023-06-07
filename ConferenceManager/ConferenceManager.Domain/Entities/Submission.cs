@@ -19,17 +19,14 @@ namespace ConferenceManager.Domain.Entities
 
         public bool IsValidForReturn => Status == SubmissionStatus.Created || Status == SubmissionStatus.Updated;
 
-        public bool IsValidForUpdate => 
-            Status == SubmissionStatus.Created 
-            || Status == SubmissionStatus.Updated 
-            || Status == SubmissionStatus.Returned;
+        public bool IsValidForUpdate => Status == SubmissionStatus.Created || Status == SubmissionStatus.Returned;
 
         public virtual IList<ApplicationUser> ActualReviewers { set; get; } = null!;
 
         public virtual IList<ApplicationUser> AppliedReviewers { set; get; } = null!;
 
         public virtual IList<Review> Reviews { set; get; } = null!;
-
+        
         public virtual IList<Comment> Comments { set; get; } = null!;
 
         public virtual IList<Paper> Papers { set; get; } = null!;

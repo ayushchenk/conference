@@ -61,29 +61,32 @@ export const useUsersGridProps = (users: GetUsersResponse, openRoleChange: Funct
       headerName: "#",
       field: "id",
       type: "number",
+      width: 60
     },
     {
       headerName: "Email",
       field: "email",
-      width: 256,
+      minWidth: 150,
+      flex: 1,
       renderCell: (params) => <Link to={`/users/${params.row.id}`}>{params.row.email}</Link>
     },
     {
       headerName: "Full Name",
       field: "fullName",
-      maxWidth: 160,
+      minWidth: 150,
+      flex: 1,
     },
     {
       headerName: "Country",
       field: "country",
+      minWidth: 150,
+      flex: 1,
     },
     {
       headerName: "Affiliation",
       field: "affiliation",
-    },
-    {
-      headerName: "Webpage",
-      field: "webpage",
+      minWidth: 150,
+      flex: 1,
     },
     {
       headerName: "Roles",
@@ -102,8 +105,7 @@ export const useUsersGridProps = (users: GetUsersResponse, openRoleChange: Funct
     {
       field: "actions",
       type: "actions",
-      width: 80,
-      flex: 1,
+      width: 100,
       getActions: (params) => [
         <GridActionsCellItem icon={<DeleteIcon />} label="Delete" onClick={() => handleDelete(params.row.id)} />,
         <GridActionsCellItem

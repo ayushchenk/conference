@@ -75,7 +75,6 @@ export const useConferencesGridProps = (conferences: GetConferencesResponse): [G
       field: "actions",
       type: "actions",
       width: 80,
-      flex: 1,
       getActions: (params) => [
         <GridActionsCellItem
           icon={<DeleteIcon />}
