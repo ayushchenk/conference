@@ -11,6 +11,7 @@ import {
   SubmissionDetailsPage,
   SubmissionsPage,
   UpdateConferencePage,
+  UpdateSubmissionPage,
 } from "../../pages/Conferences";
 import { UsersPage } from "../../pages/Users";
 import { Header } from "../Header";
@@ -102,6 +103,14 @@ export const App = () => {
           element={
             <AuthorProtected>
               <CreateSubmissionPage />
+            </AuthorProtected>
+          }
+        />
+        <Route
+          path="/conferences/:conferenceId/submissions/:submissionId/edit"
+          element={
+            <AuthorProtected>
+              <UpdateSubmissionPage />
             </AuthorProtected>
           }
         />

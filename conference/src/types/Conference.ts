@@ -31,6 +31,7 @@ export type Submission = {
   title: string | null;
   keywords: string | null;
   abstract: string | null;
+  file: File | null;
 };
 
 export type SubmissionPaper = {
