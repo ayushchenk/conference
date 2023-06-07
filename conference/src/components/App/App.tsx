@@ -6,6 +6,7 @@ import {
   ConferenceDetailsPage,
   ConferencesPage,
   CreateConferencePage,
+  CreateSubmissionPage,
   ParticipantsPage,
   SubmissionDetailsPage,
   SubmissionsPage,
@@ -16,6 +17,7 @@ import { Header } from "../Header";
 import { AdminProtected } from "../ProtectedRoute/AdminProtected";
 import { Protected } from "../ProtectedRoute/Protected";
 import { ProfilePage } from "../../pages/Users/UserDetails/ProfilePage";
+import { AuthorProtected } from "../ProtectedRoute/AuthorProtected";
 
 axios.interceptors.request.use(function (config) {
   const token = Auth.getToken();
@@ -65,7 +67,7 @@ export const App = () => {
           }
         />
         <Route
-          path="/create-conference"
+          path="/conferences/new"
           element={
             <AdminProtected>
               <CreateConferencePage />
@@ -86,6 +88,14 @@ export const App = () => {
             <Protected>
               <SubmissionDetailsPage />
             </Protected>
+          }
+        />
+        <Route
+          path="/conferences/:conferenceId/submissions/new"
+          element={
+            <AuthorProtected>
+              <CreateSubmissionPage />
+            </AuthorProtected>
           }
         />
         <Route

@@ -5,3 +5,4 @@ export { ConferenceDetailsPage } from "../Conferences/ConferenceDetailsPage";
 export { ParticipantsPage } from "../Conferences/ParticipantsPage";
 export { SubmissionsPage } from "../Conferences/SubmissionsPage";
 export { SubmissionDetailsPage } from "../Conferences/SubmissionDetailsPage";
+export { CreateSubmissionPage } from "../Conferences/CreateSubmissionPage";

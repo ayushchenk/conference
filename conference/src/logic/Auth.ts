@@ -1,15 +1,15 @@
 import { AuthData } from "../types/Auth";
 
 export namespace Auth {
-    const AUTH_DATA = 'authData';
+  const AUTH_DATA = "authData";
 
-    export function login(authData: AuthData) {
-        localStorage.setItem(AUTH_DATA, JSON.stringify(authData));
-    }
+  export function login(authData: AuthData) {
+    localStorage.setItem(AUTH_DATA, JSON.stringify(authData));
+  }
 
-    export function logout() {
-        localStorage.removeItem(AUTH_DATA);
-    }
+  export function logout() {
+    localStorage.removeItem(AUTH_DATA);
+  }
 
     export function isAuthed() {
         const authData = getData();
@@ -47,6 +47,10 @@ export namespace Auth {
 
     export function isAdmin() {
         return getRoles().includes("Admin");
+    }
+
+    export function isAuthor() {
+      return getRoles().includes("Author");
     }
 
     function getData() {

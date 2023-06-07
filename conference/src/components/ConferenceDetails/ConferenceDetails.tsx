@@ -9,6 +9,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 import { AdminVisibility } from "../ProtectedRoute/AdminVisibility";
 import { useGetConferenceApi } from "./ConferenceDetails.hooks";
+import { AuthorVisibility } from "../ProtectedRoute/AuthorVisibility";
 
 export const ConferenceDetails = () => {
   const { conferenceId } = useParams();
@@ -117,6 +118,17 @@ export const ConferenceDetails = () => {
               </TableCell>
             </TableRow>
           </AdminVisibility>
+          <AuthorVisibility>
+            <TableRow>
+              <TableCell align="center" colSpan={12} variant="head">
+                <Button color="inherit">
+                  <Link className="header__link" to={`/conferences/${conferenceId}/submissions/new`}>
+                    Create Submission
+                  </Link>
+                </Button>
+              </TableCell>
+            </TableRow>
+          </AuthorVisibility>
         </TableBody>
       </Table>
     </TableContainer>

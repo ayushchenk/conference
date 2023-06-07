@@ -47,7 +47,7 @@ export const useUsersGridProps = (users: GetUsersResponse, openRoleChange: Funct
 
   function handleDelete(userId: number) {
     setDeletedUserId(userId);
-    deleteUser(userId);
+    deleteUser({}, userId);
   }
 
   useEffect(() => {
