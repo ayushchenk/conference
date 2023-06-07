@@ -97,7 +97,7 @@ export const CreateConferenceForm = ({ conference }: { conference?: Conference |
         onChange={formik.handleChange}
         error={formik.touched.keywords && Boolean(formik.errors.keywords)}
         helperText={formik.touched.keywords && formik.errors.keywords}
-        inputProps={{ maxLength: 20 }}
+        inputProps={{ maxLength: 100 }}
       />
       <TextField
         fullWidth

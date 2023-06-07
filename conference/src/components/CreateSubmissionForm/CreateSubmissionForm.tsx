@@ -12,6 +12,7 @@ import TextField from "@mui/material/TextField";
 import { usePostCreateSubmissionApi } from "./CreateSubmissionForm.hooks";
 import { initialValues } from "./CreateSubmissionForm.types";
 import { validationSchema } from "./CreateSubmissionForm.validator";
+import { buildFormData } from "../../util/Functions";
 
 export const CreateSubmissionForm = () => {
   const navigate = useNavigate();
@@ -28,13 +29,7 @@ export const CreateSubmissionForm = () => {
     initialValues: { ...initialValues, conferenceId: Number(conferenceId) },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      const formData = new FormData();
-      for (const [field, value] of Object.entries(values)) {
-        if (value !== null) {
-          formData.append(field, value instanceof File ? value : String(value));
-        }
-      }
-      post(formData);
+      post(buildFormData(values));
     },
   });
 
@@ -64,7 +59,7 @@ export const CreateSubmissionForm = () => {
         onChange={formik.handleChange}
         error={formik.touched.keywords && Boolean(formik.errors.keywords)}
         helperText={formik.touched.keywords && formik.errors.keywords}
-        inputProps={{ maxLength: 20 }}
+        inputProps={{ maxLength: 100 }}
       />
       <TextField
         fullWidth
