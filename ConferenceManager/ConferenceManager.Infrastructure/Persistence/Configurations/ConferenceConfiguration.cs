@@ -17,7 +17,7 @@ namespace ConferenceManager.Infrastructure.Persistence.Configurations
                 .IsRequired()
                 .HasMaxLength(100);
 
-            builder.Property(x => x.Acronyn)
+            builder.Property(x => x.Acronym)
                 .IsRequired()
                 .HasMaxLength(20);
 

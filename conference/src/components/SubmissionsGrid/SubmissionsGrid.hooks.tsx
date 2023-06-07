@@ -16,6 +16,8 @@ export const useSubmissionsGridProps = (submissions: GetSubmissionsResponse): [G
     {
       headerName: "#",
       field: "id",
+      width: 60,
+      type: "number"
     },
     {
       headerName: "Title",
@@ -28,14 +30,13 @@ export const useSubmissionsGridProps = (submissions: GetSubmissionsResponse): [G
     {
       headerName: "Author",
       field: "authorName",
-    },
-    {
-      headerName: "Author Email",
-      field: "authorEmail",
+      maxWidth: 150,
+      flex: 1
     },
     {
       headerName: "Status",
       field: "statusLabel",
+      width: 120
     },
   ];
 

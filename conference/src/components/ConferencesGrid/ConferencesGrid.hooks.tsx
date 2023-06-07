@@ -46,10 +46,13 @@ export const useConferencesGridProps = (conferences: GetConferencesResponse): [G
     {
       headerName: "#",
       field: "id",
+      width: 60,
+      type: "number"
     },
     {
       headerName: "Acronym",
       field: "acronym",
+      width: 150
     },
     {
       headerName: "Name",
@@ -60,13 +63,13 @@ export const useConferencesGridProps = (conferences: GetConferencesResponse): [G
     {
       headerName: "Start Date",
       field: "startDate",
-      minWidth: 120,
+      width: 120,
       valueFormatter: (params) => moment(params?.value).format("DD/MM/YYYY"),
     },
     {
       headerName: "End Date",
       field: "endDate",
-      minWidth: 120,
+      width: 120,
       valueFormatter: (params) => moment(params?.value).format("DD/MM/YYYY"),
     },
   ];

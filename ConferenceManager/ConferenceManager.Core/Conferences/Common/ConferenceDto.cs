@@ -8,7 +8,7 @@ namespace ConferenceManager.Core.Conferences.Common
 
         public required string Title { get; set; } 
 
-        public required string Acronyn { get; set; }
+        public required string Acronym { get; set; }
 
         public required string Organizer { get; set; } 
 
