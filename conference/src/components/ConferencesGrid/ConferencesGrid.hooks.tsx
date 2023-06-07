@@ -8,6 +8,7 @@ import { Conference } from "../../types/Conference";
 import { GetConferencesData, GetConferencesResponse } from "./ConferencesGrid.types";
 import { useDeleteApi } from "../../hooks/UseDeleteApi";
 import { useMemoPaging } from "../../hooks/UseMemoPaging";
+import { Auth } from "../../logic/Auth";
 
 export const useGetConferencesApi = (paging: GridPaginationModel): GetConferencesResponse => {
   const config = useMemoPaging(paging);
@@ -67,7 +68,10 @@ export const useConferencesGridProps = (conferences: GetConferencesResponse): [G
       minWidth: 120,
       valueFormatter: (params) => moment(params?.value).format("DD/MM/YYYY"),
     },
-    {
+  ];
+
+  if (Auth.isAdmin()) {
+    columns.push({
       field: "actions",
       type: "actions",
       width: 80,
@@ -77,10 +81,10 @@ export const useConferencesGridProps = (conferences: GetConferencesResponse): [G
           icon={<DeleteIcon />}
           label="Delete Conference"
           onClick={() => handleDelete(params.row.id)}
-        />,
+        />
       ],
-    },
-  ];
+    });
+  }
 
   return [rows, columns];
 };
