@@ -14,6 +14,7 @@ import { useGetApi } from "../../hooks/UseGetApi";
 import { useMemoPaging } from "../../hooks/UseMemoPaging";
 import { usePostApi } from "../../hooks/UsePostApi";
 import { User } from "../../types/User";
+import { AdminVisibility } from "../ProtectedRoute/AdminVisibility";
 import { AdjustUserRoleRequest, GetUsersData, GetUsersResponse } from "./UsersGrid.types";
 
 export const useAddUserRoleApi = () => {
@@ -46,7 +47,7 @@ export const useUsersGridProps = (users: GetUsersResponse, openRoleChange: Funct
 
   function handleDelete(userId: number) {
     setDeletedUserId(userId);
-    deleteUser(userId);
+    deleteUser({}, userId);
   }
 
   useEffect(() => {
@@ -103,12 +104,14 @@ export const useUsersGridProps = (users: GetUsersResponse, openRoleChange: Funct
       width: 80,
       flex: 1,
       getActions: (params) => [
-        <GridActionsCellItem icon={<DeleteIcon />} label="Delete" onClick={() => handleDelete(params.row.id)} />,
-        <GridActionsCellItem
-          icon={<ManageAccountsIcon />}
-          label="Manage Roles"
-          onClick={() => openRoleChange(params.row)}
-        />,
+        <AdminVisibility>
+          <GridActionsCellItem icon={<DeleteIcon />} label="Delete" onClick={() => handleDelete(params.row.id)} />
+          <GridActionsCellItem
+            icon={<ManageAccountsIcon />}
+            label="Manage Roles"
+            onClick={() => openRoleChange(params.row)}
+          />
+        </AdminVisibility>,
       ],
     },
   ];

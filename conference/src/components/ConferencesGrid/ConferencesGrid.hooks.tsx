@@ -3,11 +3,12 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { GridActionsCellItem, GridColDef, GridPaginationModel, GridRowsProp } from "@mui/x-data-grid";
-import { useGetApi } from "../../hooks/UseGetApi";
-import { Conference } from "../../types/Conference";
-import { GetConferencesData, GetConferencesResponse } from "./ConferencesGrid.types";
 import { useDeleteApi } from "../../hooks/UseDeleteApi";
+import { useGetApi } from "../../hooks/UseGetApi";
 import { useMemoPaging } from "../../hooks/UseMemoPaging";
+import { Conference } from "../../types/Conference";
+import { AdminVisibility } from "../ProtectedRoute/AdminVisibility";
+import { GetConferencesData, GetConferencesResponse } from "./ConferencesGrid.types";
 
 export const useGetConferencesApi = (paging: GridPaginationModel): GetConferencesResponse => {
   const config = useMemoPaging(paging);
@@ -31,7 +32,7 @@ export const useConferencesGridProps = (conferences: GetConferencesResponse): [G
 
   function handleDelete(conferenceId: number) {
     setDeletedConferenceId(conferenceId);
-    deleteConference(String(conferenceId));
+    deleteConference({}, conferenceId);
   }
   useEffect(() => {
     if (!response.isError && !response.isLoading && deletedConferenceId) {
@@ -73,11 +74,13 @@ export const useConferencesGridProps = (conferences: GetConferencesResponse): [G
       width: 80,
       flex: 1,
       getActions: (params) => [
-        <GridActionsCellItem
-          icon={<DeleteIcon />}
-          label="Delete Conference"
-          onClick={() => handleDelete(params.row.id)}
-        />,
+        <AdminVisibility>
+          <GridActionsCellItem
+            icon={<DeleteIcon />}
+            label="Delete Conference"
+            onClick={() => handleDelete(params.row.id)}
+          />
+        </AdminVisibility>,
       ],
     },
   ];

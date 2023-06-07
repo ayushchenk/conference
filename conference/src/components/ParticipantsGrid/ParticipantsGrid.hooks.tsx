@@ -7,6 +7,7 @@ import { useGetApi } from "../../hooks/UseGetApi";
 import { usePostApi } from "../../hooks/UsePostApi";
 import { useMemoPaging } from "../../hooks/UseMemoPaging";
 import { useDeleteApi } from "../../hooks/UseDeleteApi";
+import { AdminVisibility } from "../ProtectedRoute/AdminVisibility";
 
 export const useGetParticipantsApi = (paging: GridPaginationModel, conferenceId: number): GetParticipantsResponse => {
   const config = useMemoPaging(paging);
@@ -37,7 +38,7 @@ export const useParticipantsGridProps = (
 
   function handleDelete(userId: number) {
     setDeletedUserId(userId);
-    deleteParticipant(userId);
+    deleteParticipant({}, userId);
   }
   useEffect(() => {
     if (!response.isError && !response.isLoading && deletedUserId) {
@@ -84,11 +85,13 @@ export const useParticipantsGridProps = (
       width: 80,
       flex: 1,
       getActions: (params) => [
-        <GridActionsCellItem
-          icon={<DeleteIcon />}
-          label="Delete Participant"
-          onClick={() => handleDelete(params.row.id)}
-        />,
+        <AdminVisibility>
+          <GridActionsCellItem
+            icon={<DeleteIcon />}
+            label="Delete Participant"
+            onClick={() => handleDelete(params.row.id)}
+          />
+        </AdminVisibility>,
       ],
     },
   ];
