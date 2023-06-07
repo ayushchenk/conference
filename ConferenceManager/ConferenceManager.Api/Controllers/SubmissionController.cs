@@ -48,7 +48,7 @@ namespace ConferenceManager.Api.Controllers
         /// Updates submission information
         /// </summary>
         /// <remarks>
-        /// Author can only update submission, if it was returned by reviewer. <br/>
+        /// Author can only update submission, after it was created, or if it was returned by reviewer. <br/>
         /// All payload except File is required, when File is present, new record in Papers table is created.
         /// </remarks>
         [HttpPut]
