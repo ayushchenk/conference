@@ -29,7 +29,7 @@ export const Header = () => {
               </Link>
             </Button>
             <Button color="inherit">
-              <Link className="header__link" to="/create-conference">
+              <Link className="header__link" to="/conferences/new">
                 Create conference
               </Link>
             </Button>

@@ -6,3 +6,5 @@ export const defaultPage: GridPaginationModel = {
 };
 
 export const userRoles: string[] = ["Admin", "Author", "Reviewer"];
+
+export const maxSubmissionFileSizeMB: number = 2;

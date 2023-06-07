@@ -1,53 +1,57 @@
 import { AuthData } from "../types/Auth";
 
 export namespace Auth {
-    const AUTH_DATA = 'authData';
+  const AUTH_DATA = "authData";
 
-    export function login(authData: AuthData) {
-        localStorage.setItem(AUTH_DATA, JSON.stringify(authData));
+  export function login(authData: AuthData) {
+    localStorage.setItem(AUTH_DATA, JSON.stringify(authData));
+  }
+
+  export function logout() {
+    localStorage.removeItem(AUTH_DATA);
+  }
+
+  export function isAuthed() {
+    const authDataString = localStorage.getItem(AUTH_DATA);
+
+    if (!authDataString) {
+      return false;
     }
 
-    export function logout() {
-        localStorage.removeItem(AUTH_DATA);
+    const authData = JSON.parse(authDataString) as AuthData;
+
+    return new Date(authData.token.expiry) > new Date();
+  }
+
+  export function getToken() {
+    const authDataString = localStorage.getItem(AUTH_DATA);
+
+    if (!authDataString) {
+      return null;
     }
 
-    export function isAuthed() {
-        const authDataString = localStorage.getItem(AUTH_DATA);
+    const authData = JSON.parse(authDataString) as AuthData;
 
-        if (!authDataString) {
-            return false;
-        }
+    return authData.token.accessToken;
+  }
 
-        const authData = JSON.parse(authDataString) as AuthData;
+  export function getRoles() {
+    const authDataString = localStorage.getItem(AUTH_DATA);
 
-        return new Date(authData.token.expiry) > new Date();
+    if (!authDataString) {
+      return [];
     }
 
-    export function getToken() {
-        const authDataString = localStorage.getItem(AUTH_DATA);
+    const authData = JSON.parse(authDataString) as AuthData;
 
-        if (!authDataString) {
-            return null;
-        }
+    return authData.roles;
+  }
 
-        const authData = JSON.parse(authDataString) as AuthData;
+  export function isAdmin() {
+    return getRoles().includes("Admin");
+  }
 
-        return authData.token.accessToken;
-    }
-
-    export function getRoles() {
-        const authDataString = localStorage.getItem(AUTH_DATA);
-
-        if (!authDataString) {
-            return [];
-        }
-
-        const authData = JSON.parse(authDataString) as AuthData;
-
-        return authData.roles;
-    }
-
-    export function isAdmin() {
-        return getRoles().includes("Admin");
-    }
+  export function isAuthor() {
+    return getRoles().includes("Author");
+  }
 }
