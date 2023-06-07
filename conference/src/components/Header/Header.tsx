@@ -1,9 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import { AppBar, Box, Button, Toolbar } from "@mui/material";
+import { AppBar, Box, Button, IconButton, Toolbar } from "@mui/material";
 import { Link } from "react-router-dom";
 import { Auth } from "../../logic/Auth";
 import "./Header.css";
 import { AdminVisibility } from "../ProtectedRoute/AdminVisibility";
+import AccountCircle from '@mui/icons-material/AccountCircle';
 
 export const Header = () => {
   const navigate = useNavigate();
@@ -12,6 +13,10 @@ export const Header = () => {
     Auth.logout();
     navigate("/login");
   }
+
+  const handleProfile = () => {
+    navigate("/profile");
+  };
 
   return (
     <AppBar position="static">
@@ -36,9 +41,14 @@ export const Header = () => {
           </AdminVisibility>
         </Box>
         {Auth.isAuthed() ? (
-          <Button color="inherit" className="header__link" onClick={handleLogout}>
-            Logout
-          </Button>
+          <>
+            <Button color="inherit" className="header__link" onClick={handleLogout}>
+              Logout
+            </Button>
+            <IconButton size="large" color="inherit" onClick={handleProfile}>
+              <AccountCircle />
+            </IconButton>
+          </>
         ) : (
           <>
             <Button color="inherit">

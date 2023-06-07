@@ -15,6 +15,7 @@ import { useMemoPaging } from "../../hooks/UseMemoPaging";
 import { usePostApi } from "../../hooks/UsePostApi";
 import { User } from "../../types/User";
 import { AdjustUserRoleRequest, GetUsersData, GetUsersResponse } from "./UsersGrid.types";
+import { Link } from "react-router-dom";
 
 export const useAddUserRoleApi = () => {
   return usePostApi<AdjustUserRoleRequest, {}>("/User/{0}/role");
@@ -65,6 +66,7 @@ export const useUsersGridProps = (users: GetUsersResponse, openRoleChange: Funct
       headerName: "Email",
       field: "email",
       width: 256,
+      renderCell: (params) => <Link to={`/users/${params.row.id}`}>{params.row.email}</Link>
     },
     {
       headerName: "Full Name",
