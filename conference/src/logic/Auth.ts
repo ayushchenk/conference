@@ -11,55 +11,55 @@ export namespace Auth {
     localStorage.removeItem(AUTH_DATA);
   }
 
-    export function isAuthed() {
-        const authData = getData();
+  export function isAuthed() {
+    const authData = getData();
 
-        if (!authData) {
-            return false;
-        }
-
-        return new Date(authData.token.expiry) > new Date();
+    if (!authData) {
+      return false;
     }
 
-    export function getToken() {
-        const authData = getData();
+    return new Date(authData.token.expiry) > new Date();
+  }
 
-        return authData?.token.accessToken && isAuthed()
-            ? authData.token.accessToken
-            : null;
+  export function getToken() {
+    const authData = getData();
+
+    return authData?.token.accessToken && isAuthed()
+      ? authData.token.accessToken
+      : null;
+  }
+
+  export function getId() {
+    const authData = getData();
+
+    return authData?.userId && isAuthed()
+      ? authData.userId
+      : null;
+  }
+
+  export function getRoles() {
+    const authData = getData();
+
+    return authData?.roles && isAuthed()
+      ? authData.roles
+      : [];
+  }
+
+  export function isAdmin() {
+    return getRoles().includes("Admin");
+  }
+
+  export function isAuthor() {
+    return getRoles().includes("Author");
+  }
+
+  function getData() {
+    const authDataString = localStorage.getItem(AUTH_DATA);
+
+    if (!authDataString) {
+      return null;
     }
 
-    export function getId() {
-        const authData = getData();
-
-        return authData?.userId && isAuthed()
-            ? authData.userId
-            : null;
-    }
-
-    export function getRoles() {
-        const authData = getData();
-
-        return authData?.roles && isAuthed()
-            ? authData.roles
-            : [];
-    }
-
-    export function isAdmin() {
-        return getRoles().includes("Admin");
-    }
-
-    export function isAuthor() {
-      return getRoles().includes("Author");
-    }
-
-    function getData() {
-        const authDataString = localStorage.getItem(AUTH_DATA);
-
-        if (!authDataString) {
-            return null;
-        }
-
-        return JSON.parse(authDataString) as AuthData;
-    }
+    return JSON.parse(authDataString) as AuthData;
+  }
 }
