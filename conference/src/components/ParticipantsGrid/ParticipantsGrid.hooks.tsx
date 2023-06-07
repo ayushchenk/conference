@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
-import { GetParticipantsData, GetParticipantsResponse } from "./ParticipantsGrid.types";
-import { GridRowsProp, GridColDef, GridPaginationModel, GridActionsCellItem } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { User } from "../../types/User";
-import { useGetApi } from "../../hooks/UseGetApi";
-import { usePostApi } from "../../hooks/UsePostApi";
-import { useMemoPaging } from "../../hooks/UseMemoPaging";
+import { GridActionsCellItem, GridColDef, GridPaginationModel, GridRowsProp } from "@mui/x-data-grid";
 import { useDeleteApi } from "../../hooks/UseDeleteApi";
-import { AdminVisibility } from "../ProtectedRoute/AdminVisibility";
+import { useGetApi } from "../../hooks/UseGetApi";
+import { useMemoPaging } from "../../hooks/UseMemoPaging";
+import { usePostApi } from "../../hooks/UsePostApi";
+import { User } from "../../types/User";
+import { GetParticipantsData, GetParticipantsResponse } from "./ParticipantsGrid.types";
 
 export const useGetParticipantsApi = (paging: GridPaginationModel, conferenceId: number): GetParticipantsResponse => {
   const config = useMemoPaging(paging);
@@ -85,13 +84,11 @@ export const useParticipantsGridProps = (
       width: 80,
       flex: 1,
       getActions: (params) => [
-        <AdminVisibility>
-          <GridActionsCellItem
-            icon={<DeleteIcon />}
-            label="Delete Participant"
-            onClick={() => handleDelete(params.row.id)}
-          />
-        </AdminVisibility>,
+        <GridActionsCellItem
+          icon={<DeleteIcon />}
+          label="Delete Participant"
+          onClick={() => handleDelete(params.row.id)}
+        />,
       ],
     },
   ];
