@@ -1,13 +1,13 @@
+import { useFormik } from "formik";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useFormik } from "formik";
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Alert from "@mui/material/Alert";
 import Collapse from "@mui/material/Collapse";
+import TextField from "@mui/material/TextField";
+import { Auth } from "../../logic/Auth";
+import { FormErrorAlert } from "../FormErrorAlert/FormErrorAlert";
 import { usePostLoginApi } from "./LoginForm.hooks";
 import { validationSchema } from "./LoginForm.validator";
-import { Auth } from "../../logic/Auth";
 
 export const LoginForm: React.FC<{}> = () => {
   const { response, post } = usePostLoginApi();
@@ -65,9 +65,7 @@ export const LoginForm: React.FC<{}> = () => {
         helperText={formik.touched.password && formik.errors.password}
       />
       <Collapse in={response.isError} sx={{ my: "10px" }} timeout={5}>
-        <Alert severity="error">
-          {response.error?.errors["Identity"][0] ?? "Something went wrong while signing in."}
-        </Alert>
+        <FormErrorAlert error={response.error} />
       </Collapse>
       <Button color="primary" variant="contained" fullWidth type="submit">
         Submit

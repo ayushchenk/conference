@@ -1,21 +1,21 @@
+import dayjs from "dayjs";
+import { useFormik } from "formik";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useFormik } from "formik";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
-import Alert from "@mui/material/Alert";
+import Button from "@mui/material/Button";
 import Collapse from "@mui/material/Collapse";
+import TextField from "@mui/material/TextField";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import dayjs from "dayjs";
-import { usePostCreateConferenceApi } from "./CreateConferenceForm.hooks";
-import { validationSchema } from "./CreateConferenceForm.validator";
-import { initialValues } from "./CreateConferenceForm.types";
-import { useUpdateConferenceApi } from "../ConferenceDetails/ConferenceDetails.hooks";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { ApiResponse, CreateResponseData } from "../../types/ApiResponse";
 import { Conference } from "../../types/Conference";
+import { useUpdateConferenceApi } from "../ConferenceDetails/ConferenceDetails.hooks";
+import { FormErrorAlert } from "../FormErrorAlert/FormErrorAlert";
+import { usePostCreateConferenceApi } from "./CreateConferenceForm.hooks";
+import { initialValues } from "./CreateConferenceForm.types";
+import { validationSchema } from "./CreateConferenceForm.validator";
 
 export const CreateConferenceForm = ({ conference }: { conference?: Conference | null }) => {
   const navigate = useNavigate();
@@ -259,11 +259,7 @@ export const CreateConferenceForm = ({ conference }: { conference?: Conference |
         inputProps={{ maxLength: 20 }}
       />
       <Collapse in={response.isError} sx={{ my: "10px" }}>
-        <Alert severity="error">
-          Something went wrong while creating the conference.
-          <br />
-          {response.error?.detail}
-        </Alert>
+        <FormErrorAlert error={response.error} />
       </Collapse>
       <Button color="primary" variant="contained" fullWidth type="submit">
         Submit

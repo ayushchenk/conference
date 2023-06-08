@@ -2,7 +2,6 @@ import { useFormik } from "formik";
 import { ChangeEvent, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import UploadFile from "@mui/icons-material/UploadFile";
-import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Collapse from "@mui/material/Collapse";
@@ -12,6 +11,7 @@ import TextField from "@mui/material/TextField";
 import { ApiResponse, CreateResponseData } from "../../types/ApiResponse";
 import { Submission } from "../../types/Conference";
 import { buildFormData } from "../../util/Functions";
+import { FormErrorAlert } from "../FormErrorAlert/FormErrorAlert";
 import { usePostCreateSubmissionApi, useUpdateSubmissionApi } from "./CreateSubmissionForm.hooks";
 import { initialValues } from "./CreateSubmissionForm.types";
 import { createValidationSchema, updateValidationSchema } from "./CreateSubmissionForm.validator";
@@ -124,11 +124,7 @@ export const CreateSubmissionForm = ({ submission }: { submission?: Submission |
         {formik.touched.file && formik.errors.file && <FormHelperText>{formik.errors.file}</FormHelperText>}
       </FormControl>
       <Collapse in={response.isError} sx={{ my: "10px" }}>
-        <Alert severity="error">
-          Something went wrong while creating the submission.
-          <br />
-          {response.error?.detail}
-        </Alert>
+        <FormErrorAlert error={response.error} />
       </Collapse>
       <Button color="primary" variant="contained" fullWidth type="submit">
         Submit
