@@ -47,6 +47,18 @@ export namespace Auth {
     return authData.roles;
   }
 
+  export function getuserId() {
+    const authDataString = localStorage.getItem(AUTH_DATA);
+
+    if (!authDataString) {
+      return [];
+    }
+
+    const authData = JSON.parse(authDataString) as AuthData;
+
+    return authData.userId;
+  }
+
   export function isAdmin() {
     return getRoles().includes("Admin");
   }

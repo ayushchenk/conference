@@ -10,6 +10,8 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 import Tabs from "@mui/material/Tabs";
+import { Auth } from "../../logic/Auth";
+import { editableSubmissionStatuses } from "../../util/Constants";
 import { AuthorVisibility } from "../ProtectedRoute/AuthorVisibility";
 import { useGetSubmissionApi } from "./SubmissionDetails.hooks";
 import { SubmissionPapersTable } from "./SubmissionPapersTable";
@@ -24,6 +26,13 @@ export const SubmissionDetails = () => {
     setTabValue(newValue);
   };
 
+  function isSubmissionAuthor(): boolean {
+    return submission?.data! && submission.data.authorId === Auth.getuserId();
+  }
+
+  function isSubmissionEditable(): boolean {
+    return submission?.data! && editableSubmissionStatuses.includes(submission.data.status);
+  }
   return (
     <>
       <TableContainer component={Paper}>
@@ -57,15 +66,20 @@ export const SubmissionDetails = () => {
               <TableCell>{submission.data?.keywords}</TableCell>
             </TableRow>
             <AuthorVisibility>
-              <TableRow>
-                <TableCell align="center" colSpan={12} variant="head">
-                  <Button color="inherit">
-                    <Link className="header__link" to={`/conferences/${conferenceId}/submissions/${submissionId}/edit`}>
-                      Edit
-                    </Link>
-                  </Button>
-                </TableCell>
-              </TableRow>
+              {isSubmissionAuthor() && (
+                <TableRow>
+                  <TableCell align="center" colSpan={12} variant="head">
+                    <Button color="inherit" disabled={!isSubmissionEditable()}>
+                      <Link
+                        className="header__link"
+                        to={`/conferences/${conferenceId}/submissions/${submissionId}/edit`}
+                      >
+                        Edit
+                      </Link>
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              )}
             </AuthorVisibility>
           </TableBody>
         </Table>
