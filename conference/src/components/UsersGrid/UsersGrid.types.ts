@@ -12,6 +12,4 @@ export interface UserRoleManagementDialogProps {
   open: boolean;
   user: User | null;
   onClose: () => void;
-  onAddRole: (userId: number, role: string) => void;
-  onRemoveRole: (userId: number, role: string) => void;
 }

@@ -6,7 +6,7 @@ namespace ConferenceManager.Domain.Entities
     {
         public required string Title { set; get; }
 
-        public required string Acronyn { set; get; }
+        public required string Acronym { set; get; }
 
         public required string Organizer { set; get; }
 

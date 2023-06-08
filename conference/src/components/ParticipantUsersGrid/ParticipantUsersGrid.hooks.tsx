@@ -21,38 +21,42 @@ export const useParticipantUsersGridProps = (
       headerName: "#",
       field: "id",
       type: "number",
+      width: 60
     },
     {
       headerName: "Email",
       field: "email",
-      width: 120,
+      minWidth: 200,
+      flex: 1
     },
     {
       headerName: "Full Name",
       field: "fullName",
-      maxWidth: 160,
+      minWidth: 200,
+      flex: 1
     },
     {
       headerName: "Country",
       field: "country",
+      minWidth: 150,
+      flex: 1
     },
     {
       headerName: "Affiliation",
       field: "affiliation",
-    },
-    {
-      headerName: "Webpage",
-      field: "webpage",
+      minWidth: 150,
+      flex: 1
     },
     {
       headerName: "Roles",
       field: "roles",
+      minWidth: 150,
+      flex: 1
     },
     {
       field: "actions",
       type: "actions",
-      width: 20,
-      flex: 1,
+      width: 50,
       getActions: (params) => {
         const handleAddClick = () => {
           handleAddParticipant(params.row);

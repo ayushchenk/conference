@@ -9,6 +9,7 @@ import { useMemoPaging } from "../../hooks/UseMemoPaging";
 import { Conference } from "../../types/Conference";
 import { AdminVisibility } from "../ProtectedRoute/AdminVisibility";
 import { GetConferencesData, GetConferencesResponse } from "./ConferencesGrid.types";
+import { Auth } from "../../logic/Auth";
 
 export const useGetConferencesApi = (paging: GridPaginationModel): GetConferencesResponse => {
   const config = useMemoPaging(paging);
@@ -45,10 +46,13 @@ export const useConferencesGridProps = (conferences: GetConferencesResponse): [G
     {
       headerName: "#",
       field: "id",
+      width: 60,
+      type: "number"
     },
     {
       headerName: "Acronym",
       field: "acronym",
+      width: 150
     },
     {
       headerName: "Name",
@@ -59,31 +63,31 @@ export const useConferencesGridProps = (conferences: GetConferencesResponse): [G
     {
       headerName: "Start Date",
       field: "startDate",
-      minWidth: 120,
+      width: 120,
       valueFormatter: (params) => moment(params?.value).format("DD/MM/YYYY"),
     },
     {
       headerName: "End Date",
       field: "endDate",
-      minWidth: 120,
+      width: 120,
       valueFormatter: (params) => moment(params?.value).format("DD/MM/YYYY"),
     },
-    {
+  ];
+
+  if (Auth.isAdmin()) {
+    columns.push({
       field: "actions",
       type: "actions",
       width: 80,
-      flex: 1,
       getActions: (params) => [
-        <AdminVisibility>
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete Conference"
             onClick={() => handleDelete(params.row.id)}
           />
-        </AdminVisibility>,
       ],
-    },
-  ];
+    });
+  }
 
   return [rows, columns];
 };

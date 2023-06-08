@@ -1,10 +1,11 @@
 import { Container } from "@mui/material";
 import { UsersGrid } from "../../components/UsersGrid";
+import { FormHeader } from "../../components/FormHeader";
 
 export const UsersPage = () => {
   return (
     <Container>
-      <h2>Users</h2>
+      <FormHeader>Users</FormHeader>
       <UsersGrid />
     </Container>
   );

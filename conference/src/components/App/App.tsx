@@ -12,10 +12,11 @@ import {
   SubmissionsPage,
   UpdateConferencePage,
 } from "../../pages/Conferences";
-import { UsersPage } from "../../pages/Users";
+import { UserDetailsPage, UsersPage } from "../../pages/Users";
 import { Header } from "../Header";
 import { AdminProtected } from "../ProtectedRoute/AdminProtected";
 import { Protected } from "../ProtectedRoute/Protected";
+import { ProfilePage } from "../../pages/Users/UserDetails/ProfilePage";
 import { AuthorProtected } from "../ProtectedRoute/AuthorProtected";
 
 axios.interceptors.request.use(function (config) {
@@ -33,14 +34,6 @@ export const App = () => {
       <Routes>
         <Route path="/sign-up" element={<SignUpPage />}></Route>
         <Route path="/login" element={<LoginPage />}></Route>
-        <Route
-          path="/users"
-          element={
-            <AdminProtected>
-              <UsersPage />
-            </AdminProtected>
-          }
-        />
         <Route
           path="/"
           element={
@@ -103,6 +96,30 @@ export const App = () => {
             <AuthorProtected>
               <CreateSubmissionPage />
             </AuthorProtected>
+          }
+        />
+        <Route
+          path="/users"
+          element={
+            <AdminProtected>
+              <UsersPage />
+            </AdminProtected>
+          }
+        />
+        <Route
+          path="/users/:userId"
+          element={
+            <AdminProtected>
+              <UserDetailsPage />
+            </AdminProtected>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <Protected>
+              <ProfilePage />
+            </Protected>
           }
         />
       </Routes>

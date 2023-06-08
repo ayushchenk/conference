@@ -12,39 +12,37 @@ export namespace Auth {
   }
 
   export function isAuthed() {
-    const authDataString = localStorage.getItem(AUTH_DATA);
+    const authData = getData();
 
-    if (!authDataString) {
+    if (!authData) {
       return false;
     }
-
-    const authData = JSON.parse(authDataString) as AuthData;
 
     return new Date(authData.token.expiry) > new Date();
   }
 
   export function getToken() {
-    const authDataString = localStorage.getItem(AUTH_DATA);
+    const authData = getData();
 
-    if (!authDataString) {
-      return null;
-    }
+    return authData?.token.accessToken && isAuthed()
+      ? authData.token.accessToken
+      : null;
+  }
 
-    const authData = JSON.parse(authDataString) as AuthData;
+  export function getId() {
+    const authData = getData();
 
-    return authData.token.accessToken;
+    return authData?.userId && isAuthed()
+      ? authData.userId
+      : null;
   }
 
   export function getRoles() {
-    const authDataString = localStorage.getItem(AUTH_DATA);
+    const authData = getData();
 
-    if (!authDataString) {
-      return [];
-    }
-
-    const authData = JSON.parse(authDataString) as AuthData;
-
-    return authData.roles;
+    return authData?.roles && isAuthed()
+      ? authData.roles
+      : [];
   }
 
   export function isAdmin() {
@@ -53,5 +51,15 @@ export namespace Auth {
 
   export function isAuthor() {
     return getRoles().includes("Author");
+  }
+
+  function getData() {
+    const authDataString = localStorage.getItem(AUTH_DATA);
+
+    if (!authDataString) {
+      return null;
+    }
+
+    return JSON.parse(authDataString) as AuthData;
   }
 }

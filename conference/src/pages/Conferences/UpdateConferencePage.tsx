@@ -4,6 +4,7 @@ import { Container } from "@mui/material";
 import { useGetConferenceApi } from "../../components/ConferenceDetails/ConferenceDetails.hooks";
 import { CreateConferenceForm } from "../../components/CreateConferenceForm";
 import { Conference } from "../../types/Conference";
+import { FormHeader } from "../../components/FormHeader";
 
 export const UpdateConferencePage = () => {
   const { conferenceId } = useParams();
@@ -18,7 +19,7 @@ export const UpdateConferencePage = () => {
 
   return (
     <Container>
-      <h2>Update conference</h2>
+      <FormHeader>Update conference</FormHeader>
       <CreateConferenceForm conference={conference} />
     </Container>
   );
