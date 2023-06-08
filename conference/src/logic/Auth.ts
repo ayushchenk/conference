@@ -66,4 +66,8 @@ export namespace Auth {
   export function isAuthor() {
     return getRoles().includes("Author");
   }
+
+  export function isReviewer() {
+    return getRoles().includes("Reviewer");
+  }
 }
