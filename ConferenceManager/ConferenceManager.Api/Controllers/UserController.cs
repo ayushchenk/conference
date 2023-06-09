@@ -77,11 +77,15 @@ namespace ConferenceManager.Api.Controllers
         /// <summary>
         /// Returns user by id
         /// </summary>
+        /// <remarks>
+        /// Non-admins can only query their data
+        /// </remarks>
         [HttpGet]
         [Route("{id}")]
-        [Authorize(Roles = ApplicationRole.Admin)]
+        [Authorize]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(UserDto))]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
         [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
         public async Task<IActionResult> Get(int id, CancellationToken cancellation)
         {

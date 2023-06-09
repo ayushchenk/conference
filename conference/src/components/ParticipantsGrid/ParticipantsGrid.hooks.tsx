@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { GetParticipantsData, GetParticipantsResponse } from "./ParticipantsGrid.types";
-import { GridRowsProp, GridColDef, GridPaginationModel, GridActionsCellItem } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { User } from "../../types/User";
-import { useGetApi } from "../../hooks/UseGetApi";
-import { usePostApi } from "../../hooks/UsePostApi";
-import { useMemoPaging } from "../../hooks/UseMemoPaging";
+import { GridActionsCellItem, GridColDef, GridPaginationModel, GridRowsProp } from "@mui/x-data-grid";
 import { useDeleteApi } from "../../hooks/UseDeleteApi";
+import { useGetApi } from "../../hooks/UseGetApi";
+import { useMemoPaging } from "../../hooks/UseMemoPaging";
+import { usePostApi } from "../../hooks/UsePostApi";
+import { User } from "../../types/User";
+import { GetParticipantsData, GetParticipantsResponse } from "./ParticipantsGrid.types";
 
 export const useGetParticipantsApi = (paging: GridPaginationModel, conferenceId: number): GetParticipantsResponse => {
   const config = useMemoPaging(paging);
@@ -37,7 +37,7 @@ export const useParticipantsGridProps = (
 
   function handleDelete(userId: number) {
     setDeletedUserId(userId);
-    deleteParticipant(userId);
+    deleteParticipant({}, userId);
   }
   useEffect(() => {
     if (!response.isError && !response.isLoading && deletedUserId) {
@@ -51,38 +51,41 @@ export const useParticipantsGridProps = (
       headerName: "#",
       field: "id",
       type: "number",
+      width: 60
     },
     {
       headerName: "Email",
       field: "email",
-      width: 256,
+      minWidth: 150,
+      flex: 1,
     },
     {
       headerName: "Full Name",
       field: "fullName",
-      maxWidth: 160,
+      minWidth: 150,
+      flex: 1,
     },
     {
       headerName: "Country",
       field: "country",
+      minWidth: 150,
+      flex: 1,
     },
     {
       headerName: "Affiliation",
       field: "affiliation",
-    },
-    {
-      headerName: "Webpage",
-      field: "webpage",
+      minWidth: 150,
+      flex: 1,
     },
     {
       headerName: "Roles",
       field: "roles",
+      width: 150
     },
     {
       field: "actions",
       type: "actions",
       width: 80,
-      flex: 1,
       getActions: (params) => [
         <GridActionsCellItem
           icon={<DeleteIcon />}

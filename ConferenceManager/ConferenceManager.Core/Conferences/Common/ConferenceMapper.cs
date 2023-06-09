@@ -11,7 +11,7 @@ namespace ConferenceManager.Core.Conferences.Common
             {
                 Id = source.Id,
                 Abstract = source.Abstract,
-                Acronyn = source.Acronyn,
+                Acronym = source.Acronym,
                 AreaNotes = source.AreaNotes,
                 City = source.City,
                 ContactPhoneNumber = source.ContactPhoneNumber,

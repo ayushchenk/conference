@@ -31,7 +31,7 @@ export const ConferenceDetails = () => {
             <TableCell variant="head">Abstract</TableCell>
             <TableCell
               style={{
-                whiteSpace: "normal",
+                whiteSpace: "pre-line",
                 wordBreak: "break-word",
               }}
             >
@@ -42,7 +42,7 @@ export const ConferenceDetails = () => {
             <TableCell variant="head">Area Notes</TableCell>
             <TableCell
               style={{
-                whiteSpace: "normal",
+                whiteSpace: "pre-line",
                 wordBreak: "break-word",
               }}
             >
@@ -92,8 +92,8 @@ export const ConferenceDetails = () => {
           <TableRow>
             <TableCell align="center" colSpan={12} variant="head">
               <Button color="inherit">
-                <Link className="header__link" to={`/conferences/${conferenceId}/participants`}>
-                  Participants
+                <Link className="header__link" to={`/conferences/${conferenceId}/submissions`}>
+                  Submissions
                 </Link>
               </Button>
             </TableCell>
@@ -102,8 +102,8 @@ export const ConferenceDetails = () => {
             <TableRow>
               <TableCell align="center" colSpan={12} variant="head">
                 <Button color="inherit">
-                  <Link className="header__link" to={`/conferences/${conferenceId}/submissions`}>
-                    Submissions
+                  <Link className="header__link" to={`/conferences/${conferenceId}/participants`}>
+                    Participants
                   </Link>
                 </Button>
               </TableCell>

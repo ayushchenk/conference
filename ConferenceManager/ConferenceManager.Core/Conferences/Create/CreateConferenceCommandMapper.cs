@@ -10,7 +10,7 @@ namespace ConferenceManager.Core.Conferences.Create
             return new Conference()
             {
                 Title = source.Title,
-                Acronyn = source.Acronym,
+                Acronym = source.Acronym,
                 Organizer = source.Organizer,
                 StartDate = source.StartDate,
                 EndDate = source.EndDate,

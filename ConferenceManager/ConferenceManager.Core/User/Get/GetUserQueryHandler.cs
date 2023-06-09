@@ -23,13 +23,8 @@ namespace ConferenceManager.Core.User.Get
         {
             var user = await Context.Users.FindAsync(request.Id, cancellationToken);
 
-            if (user == null)
-            {
-                return null;
-            }
-
-            var dto = Mapper.Map<ApplicationUser, UserDto>(user);
-            dto.Roles = await _userManager.GetRolesAsync(user);
+            var dto = Mapper.Map<ApplicationUser, UserDto>(user!);
+            dto.Roles = await _userManager.GetRolesAsync(user!);
 
             return dto;
         }

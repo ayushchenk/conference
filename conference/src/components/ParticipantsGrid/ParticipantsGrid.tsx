@@ -57,7 +57,7 @@ export const ParticipantsGrid = () => {
         onPaginationModelChange={setCurrentPage}
         loading={participants.isLoading}
       />
-      <Dialog maxWidth="md" open={openAddParticipantDialog} onClose={() => setOpenAddParticipantDialog(false)}>
+      <Dialog maxWidth="xl" open={openAddParticipantDialog} onClose={() => setOpenAddParticipantDialog(false)}>
         <DialogTitle>Add new user to the conference</DialogTitle>
         <DialogContent>
           <ParticipantUsersGrid handleAddParticipant={handleAddParticipant} />

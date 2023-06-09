@@ -5,8 +5,11 @@ using ConferenceManager.Core.Submissions.AddPreference;
 using ConferenceManager.Core.Submissions.AddReviewer;
 using ConferenceManager.Core.Submissions.Common;
 using ConferenceManager.Core.Submissions.Create;
+using ConferenceManager.Core.Submissions.CreateComment;
 using ConferenceManager.Core.Submissions.CreateReview;
+using ConferenceManager.Core.Submissions.DeleteComment;
 using ConferenceManager.Core.Submissions.Get;
+using ConferenceManager.Core.Submissions.GetComments;
 using ConferenceManager.Core.Submissions.GetPreferences;
 using ConferenceManager.Core.Submissions.GetReviewers;
 using ConferenceManager.Core.Submissions.GetReviews;
@@ -15,6 +18,8 @@ using ConferenceManager.Core.Submissions.RemovePreference;
 using ConferenceManager.Core.Submissions.RemoveReviewer;
 using ConferenceManager.Core.Submissions.Return;
 using ConferenceManager.Core.Submissions.Update;
+using ConferenceManager.Core.Submissions.UpdateComment;
+using ConferenceManager.Core.Submissions.UpdateReview;
 using ConferenceManager.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -43,7 +48,7 @@ namespace ConferenceManager.Api.Controllers
         /// Updates submission information
         /// </summary>
         /// <remarks>
-        /// Author can only update submission, if it was returned by reviewer. <br/>
+        /// Author can only update submission, after it was created, or if it was returned by reviewer. <br/>
         /// All payload except File is required, when File is present, new record in Papers table is created.
         /// </remarks>
         [HttpPut]
@@ -104,48 +109,6 @@ namespace ConferenceManager.Api.Controllers
         }
 
         /// <summary>
-        /// Creates new review for submission
-        /// </summary>
-        /// <remarks>
-        /// Reviewer can only create one review for a submission. <br/>
-        /// Reviewer can only send reviews to submissions, that he is assigned to.
-        /// </remarks>
-        [HttpPost]
-        [Route("{id}/reviews")]
-        [Authorize(Roles = ApplicationRole.Reviewer)]
-        [Produces("application/json")]
-        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CreateEntityResponse))]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
-        public async Task<IActionResult> PostReview(int id, CreateReviewCommand command, CancellationToken cancellation)
-        {
-            command.SubmissionId = id;
-            var result = await Mediator.Send(command, cancellation);
-
-            return Created(nameof(SubmissionController), result);
-        }
-
-        /// <summary>
-        /// Returns reviews for submission
-        /// </summary>
-        /// <remarks>
-        /// Reviewer can only see reviews of submission, he is assigned to
-        /// </remarks>
-        [HttpGet]
-        [Route("{id}/reviews")]
-        [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Reviewer}")]
-        [Produces("application/json")]
-        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<ReviewDto>))]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
-        public async Task<IActionResult> GetReviews(int id, CancellationToken cancellation)
-        {
-            var result = await Mediator.Send(new GetSubmissionReviewsQuery(id), cancellation);
-
-            return Ok(result);
-        }
-
-        /// <summary>
         /// Marks submission to be updated by author
         /// </summary>
         /// <remarks>
@@ -167,6 +130,159 @@ namespace ConferenceManager.Api.Controllers
         }
 
         /// <summary>
+        /// Updates review for submission
+        /// </summary>
+        /// <remarks>
+        /// Reviewer can only update his own review. <br/>
+        /// Reviewer cannot update review if submission is closed or rejected.
+        /// </remarks>
+        [HttpPut]
+        [Route("reviews")]
+        [Authorize(Roles = ApplicationRole.Reviewer)]
+        [Produces("application/json")]
+        [SwaggerResponse(StatusCodes.Status204NoContent)]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
+        public async Task<IActionResult> PutReview(UpdateReviewCommand command, CancellationToken cancellation)
+        {
+            await Mediator.Send(command, cancellation);
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Creates new review for submission
+        /// </summary>
+        /// <remarks>
+        /// Reviewer can only create one review for a submission. <br/>
+        /// Reviewer can only send reviews to submissions, that he is assigned to.
+        /// </remarks>
+        [HttpPost]
+        [Route("{id}/reviews")]
+        [Authorize(Roles = ApplicationRole.Reviewer)]
+        [Produces("application/json")]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CreateEntityResponse))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
+        public async Task<IActionResult> PostReview(int id, CreateReviewCommand command, CancellationToken cancellation)
+        {
+            command.SubmissionId = id;
+            var result = await Mediator.Send(command, cancellation);
+
+            return Created(nameof(SubmissionController), result);
+        }
+
+        /// <summary>
+        /// Returns reviews for the submission
+        /// </summary>
+        /// <remarks>
+        /// Reviewer can only see reviews of submission, he is assigned to
+        /// </remarks>
+        [HttpGet]
+        [Route("{id}/reviews")]
+        [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Reviewer}")]
+        [Produces("application/json")]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<ReviewDto>))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
+        public async Task<IActionResult> GetReviews(int id, CancellationToken cancellation)
+        {
+            var result = await Mediator.Send(new GetSubmissionReviewsQuery(id), cancellation);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Update comment for submission
+        /// </summary>
+        /// <remarks>
+        /// User can only update his own comments (Admin can update everything)
+        /// </remarks>
+        [HttpPut]
+        [Route("comments")]
+        [Authorize]
+        [Produces("application/json")]
+        [SwaggerResponse(StatusCodes.Status204NoContent)]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
+        public async Task<IActionResult> PutComment(UpdateCommentCommand command, CancellationToken cancellation)
+        {
+            await Mediator.Send(command, cancellation);
+
+            return NoContent();
+        }
+
+
+        /// <summary>
+        /// Delete comment for submission
+        /// </summary>
+        /// <remarks>
+        /// User can only delete his own comments (Admin can delete everything)
+        /// </remarks>
+        [HttpDelete]
+        [Route("comments/{id}")]
+        [Authorize]
+        [Produces("application/json")]
+        [SwaggerResponse(StatusCodes.Status204NoContent)]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
+        public async Task<IActionResult> DeleteComment(int id, CancellationToken cancellation)
+        {
+            await Mediator.Send(new DeleteCommentCommand(id), cancellation);
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Create comment for a submission
+        /// </summary>
+        /// <remarks>
+        /// Reviewer can only leave comments for submission he is assigned to.
+        /// Author can only leave comments for his ows submissions.
+        /// </remarks>
+        [HttpPost]
+        [Route("{id}/comments")]
+        [Authorize]
+        [Produces("application/json")]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = (typeof(IEnumerable<CreateEntityResponse>)))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
+        public async Task<IActionResult> PostComment(int id, CreateCommentCommand command, CancellationToken cancellation)
+        {
+            command.SubmissionId = id;
+            var result = await Mediator.Send(command, cancellation);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Returns comments of a submission
+        /// </summary>
+        /// <remarks>
+        /// Reviewer can view comments of submission he is assigned to.
+        /// Comments are orderded by createdon descending.
+        /// </remarks>
+        [HttpGet]
+        [Route("{id}/comments")]
+        [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Reviewer}")]
+        [Produces("application/json")]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = (typeof(IEnumerable<CommentDto>)))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
+        public async Task<IActionResult> GetComments(int id, CancellationToken cancellation)
+        {
+            var result = await Mediator.Send(new GetCommentsQuery(id), cancellation);
+
+            return Ok(result);
+        }
+
+        /// <summary>
         /// Returns reviewers of submission
         /// </summary>
         /// <remarks>
@@ -180,6 +296,7 @@ namespace ConferenceManager.Api.Controllers
         [SwaggerResponse(StatusCodes.Status200OK, Type = (typeof(IEnumerable<UserDto>)))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
         [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
         public async Task<IActionResult> GetReviewers(int id, CancellationToken cancellation)
         {
             var result = await Mediator.Send(new GetSubmissionReviewersQuery(id), cancellation);

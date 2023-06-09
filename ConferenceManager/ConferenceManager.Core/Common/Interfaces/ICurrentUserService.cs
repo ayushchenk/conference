@@ -1,4 +1,5 @@
-﻿using ConferenceManager.Domain.Entities;
+﻿using ConferenceManager.Domain.Common;
+using ConferenceManager.Domain.Entities;
 
 namespace ConferenceManager.Core.Common.Interfaces
 {
@@ -16,7 +17,7 @@ namespace ConferenceManager.Core.Common.Interfaces
 
         bool IsParticipantOf(Conference conference);
 
-        bool IsAuthorOf(Submission submission);
+        bool IsAuthorOf(BaseAuditableEntity entity);
 
         bool IsReviewerOf(Submission submission);
     }

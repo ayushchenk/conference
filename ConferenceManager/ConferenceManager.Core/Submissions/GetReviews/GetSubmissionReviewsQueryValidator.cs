@@ -24,7 +24,7 @@ namespace ConferenceManager.Core.Submissions.GetReviews
 
                 if (!CurrentUser.IsReviewerOf(submission))
                 {
-                    context.AddException(new NotFoundException("User is not a reviewer of this submission"));
+                    context.AddException(new ForbiddenException("User is not a reviewer of this submission"));
                 }
             });
         }

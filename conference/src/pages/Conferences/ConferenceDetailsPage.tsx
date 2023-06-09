@@ -1,10 +1,11 @@
 import { Container } from "@mui/material";
 import { ConferenceDetails } from "../../components/ConferenceDetails";
+import { FormHeader } from "../../components/FormHeader";
 
 export const ConferenceDetailsPage = () => {
   return (
     <Container>
-      <h2>Conference details</h2>
+      <FormHeader>Conference details</FormHeader>
       <ConferenceDetails />
     </Container>
   );
