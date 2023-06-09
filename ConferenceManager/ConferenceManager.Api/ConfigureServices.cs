@@ -33,7 +33,6 @@ namespace ConferenceManager.Api
                 loggin.AddSimpleConsole(options =>
                 {
                     options.UseUtcTimestamp = true;
-                    options.SingleLine = true;
                     options.TimestampFormat = "[yyyy-MM-ddTHH:mm:ss.fffZ] ";
                 });
             });
