@@ -2,36 +2,64 @@ import { useFormik } from "formik";
 import { ChangeEvent, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import UploadFile from "@mui/icons-material/UploadFile";
-import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Collapse from "@mui/material/Collapse";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
 import TextField from "@mui/material/TextField";
-import { usePostCreateSubmissionApi } from "./CreateSubmissionForm.hooks";
-import { initialValues } from "./CreateSubmissionForm.types";
-import { validationSchema } from "./CreateSubmissionForm.validator";
+import { ApiResponse, CreateResponseData } from "../../types/ApiResponse";
+import { Submission } from "../../types/Conference";
 import { buildFormData } from "../../util/Functions";
+import { FormErrorAlert } from "../FormErrorAlert/FormErrorAlert";
+import { usePostCreateSubmissionApi, useUpdateSubmissionApi } from "./CreateSubmissionForm.hooks";
+import { initialValues } from "./CreateSubmissionForm.types";
+import { createValidationSchema, updateValidationSchema } from "./CreateSubmissionForm.validator";
 
-export const CreateSubmissionForm = () => {
+export const CreateSubmissionForm = ({ submission }: { submission?: Submission | null }) => {
   const navigate = useNavigate();
   const { conferenceId } = useParams();
-  const { response, post } = usePostCreateSubmissionApi();
+  const { response: responseUpdate, put } = useUpdateSubmissionApi();
+  const { response: responseCreate, post } = usePostCreateSubmissionApi();
+
+  let performRequest: Function;
+  let response: ApiResponse<CreateResponseData | Submission>;
+  let validationSchema;
+
+  if (submission === undefined) {
+    performRequest = post;
+    response = responseCreate;
+    validationSchema = createValidationSchema;
+  } else {
+    performRequest = put;
+    response = responseUpdate;
+    validationSchema = updateValidationSchema;
+  }
 
   useEffect(() => {
-    if (!response.isLoading && !response.isError && response.data) {
-      navigate(`/conferences/${conferenceId}/submissions/${response.data.id}`);
+    let submissionId;
+    if (submission) {
+      submissionId = submission.id;
+    } else {
+      submissionId = response?.data?.id;
     }
-  }, [response, navigate, conferenceId]);
+    if (!response.isLoading && !response.isError && submissionId) {
+      navigate(`/conferences/${conferenceId}/submissions/${submissionId}`);
+    }
+  }, [response, navigate, conferenceId, submission]);
 
   const formik = useFormik({
-    initialValues: { ...initialValues, conferenceId: Number(conferenceId) },
+    initialValues: { ...(submission || initialValues), conferenceId: Number(conferenceId) },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      post(buildFormData(values));
+      performRequest(buildFormData(values));
     },
   });
+
+  useEffect(() => {
+    if (submission && !formik.dirty) {
+      formik.setValues(submission);
+    }
+  }, [submission, formik]);
 
   return (
     <Box component="form" mb={5} onSubmit={formik.handleSubmit}>
@@ -94,13 +122,7 @@ export const CreateSubmissionForm = () => {
         <FormHelperText>{formik.values.file?.name}</FormHelperText>
         {formik.touched.file && formik.errors.file && <FormHelperText>{formik.errors.file}</FormHelperText>}
       </FormControl>
-      <Collapse in={response.isError} sx={{ my: "10px" }}>
-        <Alert severity="error">
-          Something went wrong while creating the submission.
-          <br />
-          {response.error?.detail}
-        </Alert>
-      </Collapse>
+      <FormErrorAlert response={response} />
       <Button color="primary" variant="contained" fullWidth type="submit">
         Submit
       </Button>

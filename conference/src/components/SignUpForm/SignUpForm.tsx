@@ -1,13 +1,12 @@
-import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
+import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import Alert from "@mui/material/Alert";
-import Collapse from "@mui/material/Collapse";
-import { usePostSignUpApi } from "./SignUpForm.hooks";
-import { validationSchema } from "./SignUpForm.validator";
 import { Auth } from "../../logic/Auth";
+import { FormErrorAlert } from "../FormErrorAlert/FormErrorAlert";
+import { usePostSignUpApi } from "./SignUpForm.hooks";
 import { initialValues } from "./SignUpForm.types";
+import { validationSchema } from "./SignUpForm.validator";
 
 export const SignUpForm: React.FC<{}> = () => {
   const { response, post } = usePostSignUpApi();
@@ -138,9 +137,7 @@ export const SignUpForm: React.FC<{}> = () => {
         helperText={formik.touched.passwordRepeat && formik.errors.passwordRepeat}
         inputProps={{ maxLength: 100 }}
       />
-      <Collapse in={response.isError} sx={{ my: "10px" }}>
-        <Alert severity="error"> Something went wrong while creating your account.</Alert>
-      </Collapse>
+      <FormErrorAlert response={response} />
       <Button color="primary" variant="contained" fullWidth type="submit">
         Submit
       </Button>
