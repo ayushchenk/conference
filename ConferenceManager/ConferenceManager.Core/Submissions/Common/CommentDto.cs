@@ -21,5 +21,7 @@ namespace ConferenceManager.Core.Submissions.Common
         public DateTime ModifiedOn { set; get; }
 
         public bool IsModified => CreatedOn != ModifiedOn;
+
+        public bool IsAuthor { set; get; }
     }
 }

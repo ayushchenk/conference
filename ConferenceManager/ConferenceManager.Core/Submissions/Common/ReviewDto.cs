@@ -22,5 +22,7 @@ namespace ConferenceManager.Core.Submissions.Common
         public required ReviewConfidence Confidence { set; get; }
 
         public required string ConfidenceLabel { set; get; } = null!;
+
+        public required bool IsAuthor { set; get; }
     }
 }

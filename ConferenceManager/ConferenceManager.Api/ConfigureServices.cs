@@ -33,6 +33,7 @@ namespace ConferenceManager.Api
                 loggin.AddSimpleConsole(options =>
                 {
                     options.UseUtcTimestamp = true;
+                    options.SingleLine = true;
                     options.TimestampFormat = "[yyyy-MM-ddTHH:mm:ss.fffZ] ";
                 });
             });
@@ -120,7 +121,7 @@ namespace ConferenceManager.Api
 
             foreach (var mapper in mappers)
             {
-                services.Add(new ServiceDescriptor(mapper.Service, mapper.Implementation, ServiceLifetime.Singleton));
+                services.Add(new ServiceDescriptor(mapper.Service, mapper.Implementation, ServiceLifetime.Scoped));
             }
 
             services.AddSingleton<List<MapperDescription>>(mappers);

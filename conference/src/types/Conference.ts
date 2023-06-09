@@ -18,6 +18,7 @@ export type Conference = {
   organizer: string;
   organizerWebpage: string;
   contactPhoneNumber: string;
+  isParticipant: string;
 };
 
 export type Submission = {
@@ -31,6 +32,11 @@ export type Submission = {
   title: string | null;
   keywords: string | null;
   abstract: string | null;
+  isReviewer: boolean,
+  isAuthor: boolean,
+  isParticipant: boolean,
+  isValidForReturn: boolean,
+  isValidForUpdate: boolean
 };
 
 export type SubmissionPaper = {

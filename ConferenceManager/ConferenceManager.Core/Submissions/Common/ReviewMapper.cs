@@ -6,6 +6,13 @@ namespace ConferenceManager.Core.Submissions.Common
 {
     public class ReviewMapper : IMapper<Review, ReviewDto>
     {
+        private readonly ICurrentUserService _currentUser;
+
+        public ReviewMapper(ICurrentUserService currentUser)
+        {
+            _currentUser = currentUser;
+        }
+
         public ReviewDto Map(Review source)
         {
             return new ReviewDto()
@@ -18,7 +25,8 @@ namespace ConferenceManager.Core.Submissions.Common
                 Score = source.Score,
                 Evaluation = source.Evaluation,                
                 Confidence = source.Confidence,
-                ConfidenceLabel = source.Confidence.Humanize()
+                ConfidenceLabel = source.Confidence.Humanize(),
+                IsAuthor = _currentUser.IsAuthorOf(source)
             };
         }
     }
