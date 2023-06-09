@@ -5,6 +5,13 @@ namespace ConferenceManager.Core.Conferences.Common
 {
     public class ConferenceDtoMapper : IMapper<Conference, ConferenceDto>
     {
+        private readonly ICurrentUserService _currentUser;
+
+        public ConferenceDtoMapper(ICurrentUserService currentUser)
+        {
+            _currentUser = currentUser;
+        }
+
         public ConferenceDto Map(Conference source)
         {
             return new ConferenceDto()
@@ -24,7 +31,8 @@ namespace ConferenceManager.Core.Conferences.Common
                 StartDate = source.StartDate,
                 Title = source.Title,
                 Venue = source.Venue,
-                Webpage = source.Webpage
+                Webpage = source.Webpage,
+                IsParticipant = _currentUser.IsParticipantOf(source),
             };
         }
     }

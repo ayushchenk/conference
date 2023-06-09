@@ -5,6 +5,13 @@ namespace ConferenceManager.Core.Submissions.Common
 {
     public class CommentMapper : IMapper<Comment, CommentDto>
     {
+        private readonly ICurrentUserService _currentUser;
+
+        public CommentMapper(ICurrentUserService currentUser) 
+        {
+            _currentUser = currentUser;
+        }
+
         public CommentDto Map(Comment source)
         {
             return new CommentDto()
@@ -16,7 +23,8 @@ namespace ConferenceManager.Core.Submissions.Common
                 AuthorEmail = source.CreatedBy.Email!,
                 Text = source.Text,
                 CreatedOn = source.CreatedOn,
-                ModifiedOn = source.ModifiedOn
+                ModifiedOn = source.ModifiedOn,
+                IsAuthor = _currentUser.IsAuthorOf(source)
             };
         }
     }

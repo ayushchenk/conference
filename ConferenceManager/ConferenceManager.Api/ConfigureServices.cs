@@ -120,7 +120,7 @@ namespace ConferenceManager.Api
 
             foreach (var mapper in mappers)
             {
-                services.Add(new ServiceDescriptor(mapper.Service, mapper.Implementation, ServiceLifetime.Singleton));
+                services.Add(new ServiceDescriptor(mapper.Service, mapper.Implementation, ServiceLifetime.Scoped));
             }
 
             services.AddSingleton<List<MapperDescription>>(mappers);

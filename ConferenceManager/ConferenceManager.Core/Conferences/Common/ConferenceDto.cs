@@ -35,5 +35,7 @@ namespace ConferenceManager.Core.Conferences.Common
         public string? OrganizerWebpage { get; set; }
 
         public string? ContactPhoneNumber { get; set; }
+
+        public bool IsParticipant { get; set; }
     }
 }
