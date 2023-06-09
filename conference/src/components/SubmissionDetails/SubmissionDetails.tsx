@@ -45,7 +45,7 @@ export const SubmissionDetails = () => {
               <TableCell variant="head">Abstract</TableCell>
               <TableCell
                 style={{
-                  whiteSpace: "normal",
+                  whiteSpace: "pre-line",
                   wordBreak: "break-word",
                 }}
               >

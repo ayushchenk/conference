@@ -3,6 +3,7 @@ import { GridColDef, GridPaginationModel, GridRowsProp } from "@mui/x-data-grid"
 import { useGetApi } from "../../hooks/UseGetApi";
 import { useMemoPaging } from "../../hooks/UseMemoPaging";
 import { GetSubmissionsData, GetSubmissionsResponse } from "./SubmissionsGrid.types";
+import moment from "moment";
 
 export const useGetSubmissionsApi = (paging: GridPaginationModel, conferenceId: number): GetSubmissionsResponse => {
   const config = useMemoPaging(paging);
@@ -37,6 +38,12 @@ export const useSubmissionsGridProps = (submissions: GetSubmissionsResponse): [G
       headerName: "Status",
       field: "statusLabel",
       width: 120
+    },
+    {
+      headerName: "Upload Date",
+      field: "createdOn",
+      width: 120,
+      valueFormatter: (params) => moment(params?.value).format("DD/MM/YYYY"),
     },
   ];
 
