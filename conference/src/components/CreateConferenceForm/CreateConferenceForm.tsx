@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Collapse from "@mui/material/Collapse";
 import TextField from "@mui/material/TextField";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -258,9 +257,7 @@ export const CreateConferenceForm = ({ conference }: { conference?: Conference |
         helperText={formik.touched.contactPhoneNumber && formik.errors.contactPhoneNumber}
         inputProps={{ maxLength: 20 }}
       />
-      <Collapse in={response.isError} sx={{ my: "10px" }}>
-        <FormErrorAlert error={response.error} />
-      </Collapse>
+      <FormErrorAlert response={response} />
       <Button color="primary" variant="contained" fullWidth type="submit">
         Submit
       </Button>

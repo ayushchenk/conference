@@ -4,7 +4,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import UploadFile from "@mui/icons-material/UploadFile";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Collapse from "@mui/material/Collapse";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
 import TextField from "@mui/material/TextField";
@@ -123,9 +122,7 @@ export const CreateSubmissionForm = ({ submission }: { submission?: Submission |
         <FormHelperText>{formik.values.file?.name}</FormHelperText>
         {formik.touched.file && formik.errors.file && <FormHelperText>{formik.errors.file}</FormHelperText>}
       </FormControl>
-      <Collapse in={response.isError} sx={{ my: "10px" }}>
-        <FormErrorAlert error={response.error} />
-      </Collapse>
+      <FormErrorAlert response={response} />
       <Button color="primary" variant="contained" fullWidth type="submit">
         Submit
       </Button>

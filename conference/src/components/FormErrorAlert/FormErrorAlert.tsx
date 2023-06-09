@@ -1,21 +1,27 @@
 import Alert from "@mui/material/Alert";
-import { ApiError } from "../../types/ApiResponse";
+import { FormErrorAlertProps } from "./FormErrorAlert.types";
+import Collapse from "@mui/material/Collapse";
 
-export const FormErrorAlert = ({ error }: { error: ApiError | null }) => {
-  const errors = error?.errors;
+export const FormErrorAlert = ({ response }: FormErrorAlertProps) => {
+  const errors = response.error?.errors;
+
   if (errors) {
     const errorMessages = Object.values(errors).flat();
     if (errorMessages.length > 0) {
       return (
-        <>
+        <Collapse in={response.isError} sx={{ my: "10px" }}>
           {errorMessages.map((errorMessage, index) => (
             <Alert severity="error" key={index}>
               {errorMessage}
             </Alert>
           ))}
-        </>
+        </Collapse>
       );
     }
   }
-  return <Alert severity="error">{error?.detail ?? "Something went wrong while processing the request."}</Alert>;
+  return (
+    <Collapse in={response.isError} sx={{ my: "10px" }}>
+      <Alert severity="error">{response.error?.detail ?? "Something went wrong while processing the request."}</Alert>
+    </Collapse>
+  );
 };

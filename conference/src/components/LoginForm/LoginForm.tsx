@@ -2,7 +2,6 @@ import { useFormik } from "formik";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
-import Collapse from "@mui/material/Collapse";
 import TextField from "@mui/material/TextField";
 import { Auth } from "../../logic/Auth";
 import { FormErrorAlert } from "../FormErrorAlert/FormErrorAlert";
@@ -64,9 +63,7 @@ export const LoginForm: React.FC<{}> = () => {
         error={formik.touched.password && Boolean(formik.errors.password)}
         helperText={formik.touched.password && formik.errors.password}
       />
-      <Collapse in={response.isError} sx={{ my: "10px" }} timeout={5}>
-        <FormErrorAlert error={response.error} />
-      </Collapse>
+      <FormErrorAlert response={response} />
       <Button color="primary" variant="contained" fullWidth type="submit">
         Submit
       </Button>
