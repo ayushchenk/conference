@@ -10,8 +10,11 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 import Tabs from "@mui/material/Tabs";
+import { Auth } from "../../logic/Auth";
+import { editableSubmissionStatuses, returnableSubmissionStatuses } from "../../util/Constants";
 import { AuthorVisibility } from "../ProtectedRoute/AuthorVisibility";
-import { useGetSubmissionApi } from "./SubmissionDetails.hooks";
+import { ReviewerVisibility } from "../ProtectedRoute/ReviewerVisibility";
+import { useGetSubmissionApi, usePostReturnSubmissionAPI } from "./SubmissionDetails.hooks";
 import { SubmissionPapersTable } from "./SubmissionPapersTable";
 import { TabPanel } from "./TabPanel";
 
@@ -19,11 +22,27 @@ export const SubmissionDetails = () => {
   const { conferenceId, submissionId } = useParams();
   const submission = useGetSubmissionApi(Number(submissionId));
   const [tabValue, setTabValue] = useState(0);
+  const { post: returnSubmission } = usePostReturnSubmissionAPI(Number(submissionId));
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
 
+  const handleReturnSubmission = () => {
+    returnSubmission({});
+  };
+
+  function isSubmissionAuthor(): boolean {
+    return submission?.data! && submission.data.authorId === Auth.getId();
+  }
+
+  function isSubmissionEditable(): boolean {
+    return submission?.data! && editableSubmissionStatuses.includes(submission.data.status);
+  }
+
+  function isSubmissionReturnable(): boolean {
+    return submission?.data! && returnableSubmissionStatuses.includes(submission.data.status);
+  }
   return (
     <>
       <TableContainer component={Paper}>
@@ -57,16 +76,30 @@ export const SubmissionDetails = () => {
               <TableCell>{submission.data?.keywords}</TableCell>
             </TableRow>
             <AuthorVisibility>
+              {isSubmissionAuthor() && (
+                <TableRow>
+                  <TableCell align="center" colSpan={12} variant="head">
+                    <Button color="inherit" disabled={!isSubmissionEditable()}>
+                      <Link
+                        className="header__link"
+                        to={`/conferences/${conferenceId}/submissions/${submissionId}/edit`}
+                      >
+                        Edit
+                      </Link>
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              )}
+            </AuthorVisibility>
+            <ReviewerVisibility>
               <TableRow>
                 <TableCell align="center" colSpan={12} variant="head">
-                  <Button color="inherit">
-                    <Link className="header__link" to={`/conferences/${conferenceId}/submissions/${submissionId}/edit`}>
-                      Edit
-                    </Link>
+                  <Button color="inherit" onClick={handleReturnSubmission} disabled={!isSubmissionReturnable()}>
+                    Return
                   </Button>
                 </TableCell>
               </TableRow>
-            </AuthorVisibility>
+            </ReviewerVisibility>
           </TableBody>
         </Table>
       </TableContainer>

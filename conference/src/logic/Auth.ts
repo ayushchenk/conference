@@ -24,25 +24,19 @@ export namespace Auth {
   export function getToken() {
     const authData = getData();
 
-    return authData?.token.accessToken && isAuthed()
-      ? authData.token.accessToken
-      : null;
+    return authData?.token.accessToken && isAuthed() ? authData.token.accessToken : null;
   }
 
   export function getId() {
     const authData = getData();
 
-    return authData?.userId && isAuthed()
-      ? authData.userId
-      : null;
+    return authData?.userId && isAuthed() ? authData.userId : null;
   }
 
   export function getRoles() {
     const authData = getData();
 
-    return authData?.roles && isAuthed()
-      ? authData.roles
-      : [];
+    return authData?.roles && isAuthed() ? authData.roles : [];
   }
 
   export function isAdmin() {
@@ -51,6 +45,10 @@ export namespace Auth {
 
   export function isAuthor() {
     return getRoles().includes("Author");
+  }
+
+  export function isReviewer() {
+    return getRoles().includes("Reviewer");
   }
 
   function getData() {
