@@ -26,7 +26,7 @@ namespace ConferenceManager.Core.Conferences.Common
                 Keywords = source.Keywords,
                 Organizer = source.Organizer,
                 OrganizerWebpage = source.OrganizerWebpage,
-                ResearchAreas = source.ResearchAreas.Split(Conference.ResearchAreasSeparator),
+                ResearchAreas = source.ResearchAreas.Split(Conference.ResearchAreasSeparator, StringSplitOptions.RemoveEmptyEntries),
                 StartDate = source.StartDate,
                 Title = source.Title,
                 Venue = source.Venue,
