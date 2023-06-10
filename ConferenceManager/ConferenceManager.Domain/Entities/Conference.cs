@@ -4,6 +4,8 @@ namespace ConferenceManager.Domain.Entities
 {
     public class Conference : BaseAuditableEntity
     {
+        public const string ResearchAreasSeparator = "|";
+
         public required string Title { set; get; }
 
         public required string Acronym { set; get; }
@@ -24,9 +26,7 @@ namespace ConferenceManager.Domain.Entities
 
         public string? City { set; get; }
 
-        public string? PrimaryResearchArea { set; get; }
-
-        public string? SecondaryResearchArea { set; get; }
+        public required string ResearchAreas { set; get; }
 
         public string? AreaNotes { set; get; }
 

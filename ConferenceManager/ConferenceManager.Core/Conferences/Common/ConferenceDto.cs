@@ -26,9 +26,7 @@ namespace ConferenceManager.Core.Conferences.Common
 
         public string? City { get; set; }
 
-        public string? PrimaryResearchArea { get; set; }
-
-        public string? SecondaryResearchArea { get; set; }
+        public required string ResearchAreas { get; set; }
 
         public string? AreaNotes { get; set; }
 

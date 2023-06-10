@@ -51,13 +51,9 @@ namespace ConferenceManager.Infrastructure.Persistence.Configurations
                 .IsRequired(false)
                 .HasMaxLength(50);
 
-            builder.Property(x => x.PrimaryResearchArea)
-                .IsRequired(false)
-                .HasMaxLength(100);
-
-            builder.Property(x => x.SecondaryResearchArea)
-                .IsRequired(false)
-                .HasMaxLength(100);
+            builder.Property(x => x.ResearchAreas)
+                .IsRequired()
+                .HasMaxLength(500);
 
             builder.Property(x => x.AreaNotes)
                 .IsRequired(false)
