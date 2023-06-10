@@ -32,7 +32,8 @@ namespace ConferenceManager.Core.Conferences.Common
                 Title = source.Title,
                 Venue = source.Venue,
                 Webpage = source.Webpage,
-                IsParticipant = _currentUser.IsParticipantOf(source),
+                IsAnonymizedFileRequired = source.IsAnonymizedFileRequired,
+                IsParticipant = _currentUser.IsParticipantOf(source)
             };
         }
     }

@@ -51,5 +51,8 @@ namespace ConferenceManager.Core.Conferences.Model
 
         [MaxLength(20)]
         public string? ContactPhoneNumber { get; set; }
+
+        [Required]
+        public bool IsAnonymizedFileRequired { get; set; }
     }
 }

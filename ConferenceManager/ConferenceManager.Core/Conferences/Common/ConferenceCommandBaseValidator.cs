@@ -9,7 +9,7 @@ namespace ConferenceManager.Core.Conferences.Common
         public ConferenceCommandBaseValidator()
         {
             RuleForString(x => x.Title, 100, true);
-            RuleForString(x => x.Acronym, 200, true);
+            RuleForString(x => x.Acronym, 20, true);
             RuleForString(x => x.Organizer, 100, true);
 
             RuleFor(x => x.StartDate)
@@ -20,13 +20,13 @@ namespace ConferenceManager.Core.Conferences.Common
 
             RuleForString(x => x.Keywords, 100, false);
             RuleForString(x => x.Abstract, 1000, false);
-            RuleForString(x => x.Webpage, 1000, false);
+            RuleForString(x => x.Webpage, 100, false);
             RuleForString(x => x.Venue, 100, false);
             RuleForString(x => x.City, 100, false);
             RuleForString(x => x.SecondaryResearchArea, 100, false);
             RuleForString(x => x.AreaNotes, 500, false);
             RuleForString(x => x.OrganizerWebpage, 100, false);
-            RuleForString(x => x.ContactPhoneNumber, 200, false);
+            RuleForString(x => x.ContactPhoneNumber, 20, false);
         }
     }
 }
