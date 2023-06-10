@@ -29,7 +29,7 @@ export function usePostApi<TRequest, TData>(path: string, config?: AxiosRequestC
             data: null,
             isError: true,
             isLoading: false,
-            error: error.response.data,
+            error: error?.response?.data,
           });
         });
     },

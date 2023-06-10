@@ -27,7 +27,7 @@ export function useGetApi<TData>(path: string, config?: AxiosRequestConfig<any> 
                     data: null,
                     isError: true,
                     isLoading: false,
-                    error: error.response.data
+                    error: error?.response?.data
                 });
             });
     }, [path, config]);
