@@ -39,6 +39,10 @@ export const ConferenceDetails = () => {
               <TableCell>{conference.data?.acronym}</TableCell>
             </TableRow>
             <TableRow>
+              <TableCell variant="head">Keywords</TableCell>
+              <TableCell>{conference.data?.keywords}</TableCell>
+            </TableRow>
+            <TableRow>
               <TableCell variant="head">Abstract</TableCell>
               <TableCell
                 style={{
@@ -50,27 +54,24 @@ export const ConferenceDetails = () => {
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell variant="head">Area Notes</TableCell>
-              <TableCell
-                style={{
-                  whiteSpace: "pre-line",
-                  wordBreak: "break-word",
-                }}
-              >
-                {conference.data?.areaNotes}
-              </TableCell>
+              <TableCell variant="head">Webpage</TableCell>
+              <TableCell>{conference.data?.webpage}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell variant="head">Keywords</TableCell>
-              <TableCell>{conference.data?.keywords}</TableCell>
+              <TableCell variant="head">Venue</TableCell>
+              <TableCell>{conference.data?.venue}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell variant="head">Organizer</TableCell>
-              <TableCell>{conference.data?.organizer}</TableCell>
+              <TableCell variant="head">City</TableCell>
+              <TableCell>{conference.data?.city}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell variant="head">Organizer Webpage</TableCell>
-              <TableCell>{conference.data?.organizerWebpage}</TableCell>
+              <TableCell variant="head">Start Date</TableCell>
+              <TableCell>{moment(conference.data?.startDate).format("DD/MM/YYYY")}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell variant="head">End Date</TableCell>
+              <TableCell>{moment(conference.data?.endDate).format("DD/MM/YYYY")}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell variant="head">Primary Research Area</TableCell>
@@ -81,24 +82,27 @@ export const ConferenceDetails = () => {
               <TableCell>{conference.data?.secondaryResearchArea}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell variant="head">City</TableCell>
-              <TableCell>{conference.data?.city}</TableCell>
+              <TableCell variant="head">Research Area Notes</TableCell>
+              <TableCell
+                style={{
+                  whiteSpace: "pre-line",
+                  wordBreak: "break-word",
+                }}
+              >
+                {conference.data?.areaNotes}
+              </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell variant="head">Venue</TableCell>
-              <TableCell>{conference.data?.venue}</TableCell>
+              <TableCell variant="head">Organizer</TableCell>
+              <TableCell>{conference.data?.organizer}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell variant="head">Webpage</TableCell>
-              <TableCell>{conference.data?.webpage}</TableCell>
+              <TableCell variant="head">Organizer Webpage</TableCell>
+              <TableCell>{conference.data?.organizerWebpage}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell variant="head">Start Date</TableCell>
-              <TableCell>{moment(conference.data?.startDate).format("DD/MM/YYYY")}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell variant="head">End Date</TableCell>
-              <TableCell>{moment(conference.data?.endDate).format("DD/MM/YYYY")}</TableCell>
+              <TableCell variant="head">Anonymized File Requried</TableCell>
+              <TableCell>{String(conference.data?.isAnonymizedFileRequired)}</TableCell>
             </TableRow>
             {
               conference.data?.isParticipant &&

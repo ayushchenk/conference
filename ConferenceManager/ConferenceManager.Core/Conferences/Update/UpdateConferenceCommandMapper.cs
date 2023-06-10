@@ -24,7 +24,8 @@ namespace ConferenceManager.Core.Conferences.Update
                 PrimaryResearchArea = source.PrimaryResearchArea,
                 SecondaryResearchArea = source.SecondaryResearchArea,
                 Venue = source.Venue,
-                Webpage = source.Webpage
+                Webpage = source.Webpage,
+                IsAnonymizedFileRequired = source.IsAnonymizedFileRequired
             };
         }
     }

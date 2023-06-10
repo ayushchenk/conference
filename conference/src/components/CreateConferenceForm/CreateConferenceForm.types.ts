@@ -14,6 +14,7 @@ export type CreateConferenceRequest = {
   areaNotes: string;
   organizerWebpage: string;
   contactPhoneNumber: string;
+  isAnonymizedFileRequired: boolean;
 };
 
 export const initialValues: CreateConferenceRequest = {
@@ -32,4 +33,5 @@ export const initialValues: CreateConferenceRequest = {
   organizer: "",
   organizerWebpage: "",
   contactPhoneNumber: "",
+  isAnonymizedFileRequired: false
 };

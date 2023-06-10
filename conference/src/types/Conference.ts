@@ -19,6 +19,7 @@ export type Conference = {
   organizerWebpage: string;
   contactPhoneNumber: string;
   isParticipant: string;
+  isAnonymizedFileRequired: boolean;
 };
 
 export type Submission = {

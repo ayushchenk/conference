@@ -24,6 +24,7 @@ namespace ConferenceManager.Core.Conferences.Create
                 SecondaryResearchArea = source.SecondaryResearchArea,
                 Venue = source.Venue,
                 Webpage = source.Webpage,
+                IsAnonymizedFileRequired = source.IsAnonymizedFileRequired,
                 Participants = new List<ApplicationUser>()
             };
         }

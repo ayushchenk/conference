@@ -15,6 +15,7 @@ import { FormErrorAlert } from "../FormErrorAlert/FormErrorAlert";
 import { usePostCreateConferenceApi } from "./CreateConferenceForm.hooks";
 import { initialValues } from "./CreateConferenceForm.types";
 import { validationSchema } from "./CreateConferenceForm.validator";
+import { FormHelperText, Checkbox, FormControlLabel } from "@mui/material";
 
 export const CreateConferenceForm = ({ conference }: { conference?: Conference | null }) => {
   const navigate = useNavigate();
@@ -257,6 +258,17 @@ export const CreateConferenceForm = ({ conference }: { conference?: Conference |
         helperText={formik.touched.contactPhoneNumber && formik.errors.contactPhoneNumber}
         inputProps={{ maxLength: 20 }}
       />
+      <div>
+        <FormControlLabel label={"Is anonymized file requried for submissions"} control={
+          <Checkbox
+            id="isAnonymizedFileRequired"
+            name="isAnonymizedFileRequired"
+            checked={formik.values.isAnonymizedFileRequired}
+            value={formik.values.isAnonymizedFileRequired}
+            onChange={formik.handleChange} />
+        } />
+        <FormHelperText id="my-helper-text">Anonymized file should not contain any references to the authors of the submission, so fair and not biased review process can be guaranteed</FormHelperText>
+      </div>
       <FormErrorAlert response={response} />
       <Button color="primary" variant="contained" fullWidth type="submit">
         Submit
