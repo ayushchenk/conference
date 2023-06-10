@@ -10,10 +10,9 @@ export const validationSchema = yup.object({
   city: yup.string().trim(),
   startDate: yup.date().required("Start date is required"),
   endDate: yup.date().min(yup.ref("startDate"), "End date can't be before start date").required("End date is required"),
-  primaryResearchArea: yup.string().trim(),
-  secondaryResearchArea: yup.string().trim(),
+  researchAreas: yup.array().min(1, "Research areas are requried").max(10, "Maximum 10 research areas are supported"),
   areaNotes: yup.string().trim(),
   organizer: yup.string().trim().required("Organizer is required"),
-  organizerWebpage: yup.string().trim(),
+  organizerWebpage: yup.string().trim().url("Should be a valid URL"),
   contactPhoneNumber: yup.string().trim(),
 });

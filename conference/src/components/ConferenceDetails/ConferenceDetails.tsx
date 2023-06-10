@@ -11,8 +11,9 @@ import { AdminVisibility } from "../ProtectedRoute/AdminVisibility";
 import { useGetConferenceApi } from "./ConferenceDetails.hooks";
 import { AuthorVisibility } from "../ProtectedRoute/AuthorVisibility";
 import { FormHeader } from "../FormHeader";
-import { IconButton } from "@mui/material";
+import { IconButton, Tooltip, Typography } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 export const ConferenceDetails = () => {
   const { conferenceId } = useParams();
@@ -74,12 +75,12 @@ export const ConferenceDetails = () => {
               <TableCell>{moment(conference.data?.endDate).format("DD/MM/YYYY")}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell variant="head">Primary Research Area</TableCell>
-              <TableCell>{conference.data?.primaryResearchArea}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell variant="head">Secondary Research Area</TableCell>
-              <TableCell>{conference.data?.secondaryResearchArea}</TableCell>
+              <TableCell variant="head">Research Areas</TableCell>
+              <TableCell>
+                {conference.data?.researchAreas.map((area, index) => (
+                  <div key={index}>{area}</div>
+                ))}
+              </TableCell>
             </TableRow>
             <TableRow>
               <TableCell variant="head">Research Area Notes</TableCell>
@@ -101,8 +102,21 @@ export const ConferenceDetails = () => {
               <TableCell>{conference.data?.organizerWebpage}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell variant="head">Anonymized File Requried</TableCell>
-              <TableCell>{String(conference.data?.isAnonymizedFileRequired)}</TableCell>
+              <TableCell variant="head">
+                Anonymized File Requried
+                <Tooltip
+                  arrow
+                  enterDelay={0}
+                  leaveDelay={100}
+                  title={<Typography variant="body1">Anonymized file should not contain any references to the authors of the submission, so fair and not biased review process can be guaranteed</Typography>}>
+                  <IconButton>
+                    <InfoOutlinedIcon />
+                  </IconButton>
+                </Tooltip>
+              </TableCell>
+              <TableCell>
+                {String(conference.data?.isAnonymizedFileRequired)}
+              </TableCell>
             </TableRow>
             {
               conference.data?.isParticipant &&

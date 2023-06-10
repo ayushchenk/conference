@@ -32,15 +32,15 @@ namespace ConferenceManager.Core.Conferences.Common
                 .NotEmpty().WithMessage("ResearchAreas is required")
                 .Custom((areas, context) =>
                 {
-                    if(areas.Length > 10)
+                    if (areas.Length > 10)
                     {
-                        context.AddFailure("ResearchAreas", "Maximum length of array if 10");
+                        context.AddFailure("ResearchAreas", "Maximum length of Research Areas array is 10");
                     }
 
                     string joined = string.Join(Conference.ResearchAreasSeparator, areas);
-                    if(joined.Length > 500)
+                    if (joined.Length > 500)
                     {
-                        context.AddFailure("ResearchAreas", "Total length of joined strings in the array should be less then 500");
+                        context.AddFailure("ResearchAreas", "Total length of joined strings in the Research Areas array should be less than 500");
                     }
                 });
         }
