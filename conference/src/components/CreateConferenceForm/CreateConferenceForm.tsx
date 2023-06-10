@@ -244,7 +244,7 @@ export const CreateConferenceForm = ({ conference }: { conference?: Conference |
         inputProps={{ maxLength: 20 }}
       />
       <div>
-        <FormControlLabel label={"Is anonymized file requried for submissions"} control={
+        <FormControlLabel label={"Is anonymized file required for submissions"} control={
           <Checkbox
             id="isAnonymizedFileRequired"
             name="isAnonymizedFileRequired"
