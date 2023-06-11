@@ -14,14 +14,38 @@ namespace ConferenceManager.Core.Submissions.Papers
         {
         }
 
-        public override Task<IEnumerable<PaperDto>> Handle(GetSubmissionPapersQuery request, CancellationToken cancellationToken)
+        public override async Task<IEnumerable<PaperDto>> Handle(GetSubmissionPapersQuery request, CancellationToken cancellationToken)
         {
+            if (CurrentUser.HasReviewerRole)
+            {
+                return await GetPapersForReviewer(request, cancellationToken);
+            }
+
             var papers = Context.Papers
                     .Where(p => p.SubmissionId == request.SubmissionId)
                     .OrderByDescending(p => p.CreatedOn)
                     .Select(Mapper.Map<Paper, PaperDto>);
 
-            return Task.FromResult(papers);
+            return papers;
+        }
+
+        private async Task<IEnumerable<PaperDto>> GetPapersForReviewer(GetSubmissionPapersQuery request, CancellationToken cancellationToken)
+        {
+            var submisison = await Context.Submissions.FindAsync(request.SubmissionId, cancellationToken);
+
+            if (submisison!.Conference.IsAnonymizedFileRequired)
+            {
+                return Context.Papers
+                    .Where(p => p.SubmissionId == request.SubmissionId)
+                    .Where(p => p.Type == Domain.Enums.PaperType.Anonymized)
+                    .OrderByDescending(p => p.CreatedOn)
+                    .Select(Mapper.Map<Paper, PaperDto>);
+            }
+
+            return Context.Papers
+                    .Where(p => p.SubmissionId == request.SubmissionId)
+                    .OrderByDescending(p => p.CreatedOn)
+                    .Select(Mapper.Map<Paper, PaperDto>);
         }
     }
 }

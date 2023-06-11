@@ -19,6 +19,9 @@ namespace ConferenceManager.Infrastructure.Persistence.Configurations
             builder.Property(x => x.FileName)
                 .IsRequired()
                 .HasMaxLength(100);
+
+            builder.Property(x => x.Type)
+                .IsRequired();
         }
     }
 }

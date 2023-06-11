@@ -36,11 +36,12 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
     {
         if (context == null) return;
 
+        var now = _dateTime.Now;
+
         foreach (var entry in context.ChangeTracker.Entries<BaseAuditableEntity>())
         {
             if (entry.State == EntityState.Added)
             {
-                var now = _dateTime.Now;
                 entry.Entity.CreatedById = _currentUser.Id;
                 entry.Entity.CreatedOn = now;
                 entry.Entity.ModifiedById = _currentUser.Id;
@@ -52,7 +53,7 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
                 entry.Property(p => p.CreatedById).IsModified = false;
                 entry.Property(p => p.CreatedOn).IsModified = false;
                 entry.Entity.ModifiedById = _currentUser.Id;
-                entry.Entity.ModifiedOn = _dateTime.Now;
+                entry.Entity.ModifiedOn = now;
             }
         }
     }

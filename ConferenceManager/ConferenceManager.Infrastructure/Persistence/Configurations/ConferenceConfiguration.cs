@@ -66,6 +66,9 @@ namespace ConferenceManager.Infrastructure.Persistence.Configurations
             builder.Property(x => x.ContactPhoneNumber)
                 .IsRequired(false)
                 .HasMaxLength(20);
+
+            builder.Property(x => x.IsAnonymizedFileRequired)
+                .IsRequired();
         }
     }
 }
