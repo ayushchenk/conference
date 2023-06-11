@@ -9,7 +9,7 @@ import {
   GridRenderCellParams,
   GridRowsProp,
 } from "@mui/x-data-grid";
-import { useDeleteApi } from "../../hooks/UseDeleteApi";
+import { useDeleteApi } from "../../hooks/useDeleteApi";
 import { useGetApi } from "../../hooks/UseGetApi";
 import { useMemoPaging } from "../../hooks/UseMemoPaging";
 import { usePostApi } from "../../hooks/UsePostApi";
