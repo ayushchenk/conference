@@ -1,5 +1,4 @@
-﻿using Castle.Components.DictionaryAdapter.Xml;
-using ConferenceManager.Core.Common.Interfaces;
+﻿using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Domain.Entities;
 using ConferenceManager.Infrastructure.Persistence.Interceptors;
 using MediatR;
