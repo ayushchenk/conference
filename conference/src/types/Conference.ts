@@ -25,14 +25,13 @@ export type Submission = {
   id: number;
   conferenceId: number;
   authorId: number;
-  authoutEmail: string | null;
-  authorName: string | null;
+  authoutEmail: string;
+  authorName: string;
   status: number;
-  statusLabel: string | null;
-  title: string | null;
-  keywords: string | null;
-  abstract: string | null;
-  file: File | null;
+  statusLabel: string;
+  title: string;
+  keywords: string;
+  abstract: string;
   isReviewer: boolean,
   isAuthor: boolean,
   isParticipant: boolean,
@@ -45,4 +44,6 @@ export type SubmissionPaper = {
   submissionId: number;
   fileName: string;
   base64Content: string;
+  createdOn: string;
+  typeLabel: string;
 };

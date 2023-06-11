@@ -71,7 +71,7 @@ namespace ConferenceManager.Api.Controllers
         {
             var result = await Mediator.Send(new GetUserPageQuery(pageIndex, pageSize), cancellation);
 
-            return OkOrNotFound(result);
+            return Ok(result);
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace ConferenceManager.Api.Controllers
         {
             var result = await Mediator.Send(new GetUserQuery(id), cancellation);
 
-            return OkOrNotFound(result);
+            return Ok(result);
         }
 
         /// <summary>

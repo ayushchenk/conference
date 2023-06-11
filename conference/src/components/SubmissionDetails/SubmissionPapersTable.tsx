@@ -11,10 +11,23 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import { useGetSubmissionPapersApi } from "./SubmissionDetails.hooks";
+import moment from "moment";
+import _ from "lodash";
 
 export const SubmissionPapersTable = () => {
   const { submissionId } = useParams();
   const papers = useGetSubmissionPapersApi(Number(submissionId));
+
+  if (papers.isLoading || !papers.data) {
+    return null;
+  }
+
+  const groupByType = _.groupBy(papers.data, "typeLabel");
+  const latestDates = new Map<string, string>();
+
+  for (const type of Object.keys(groupByType)) {
+    latestDates.set(type, groupByType[type].find(p => p.createdOn)?.createdOn!);
+  }
 
   return (
     <TableContainer component={Paper}>
@@ -22,7 +35,9 @@ export const SubmissionPapersTable = () => {
         <TableHead>
           <TableRow>
             <TableCell>#</TableCell>
+            <TableCell>Type</TableCell>
             <TableCell>File</TableCell>
+            <TableCell>Upload Date</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -30,6 +45,9 @@ export const SubmissionPapersTable = () => {
             <TableRow key={paper.id}>
               <TableCell component="th" scope="row">
                 {index + 1}
+              </TableCell>
+              <TableCell component="th" scope="row">
+                {`${paper.typeLabel} ${latestDates.get(paper.typeLabel) === paper.createdOn ? '(latest)' : ''}`}
               </TableCell>
               <TableCell>
                 <Link
@@ -42,6 +60,9 @@ export const SubmissionPapersTable = () => {
                     <FileDownloadIcon fontSize="medium" />
                   </Stack>
                 </Link>
+              </TableCell>
+              <TableCell>
+                {moment(new Date(paper.createdOn)).local().format("DD/MM/YYYY HH:mm:ss")}
               </TableCell>
             </TableRow>
           ))}

@@ -44,7 +44,7 @@ export const ParticipantsGrid = () => {
         setRows((rows) => [...rows, newParticipantData]);
       }
     }
-  }, [response, newParticipantData]);
+  }, [response, newParticipantData, rows]);
 
   return (
     <>

@@ -1,18 +1,12 @@
 ﻿using ConferenceManager.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ConferenceManager.Infrastructure.Persistence.Configurations
 {
-    public class ConferenceConfiguration : IEntityTypeConfiguration<Conference>
+    public class ConferenceConfiguration : BaseAuditableEntityConfiguration<Conference>
     {
-        public void Configure(EntityTypeBuilder<Conference> builder)
+        protected override void ConfigureInner(EntityTypeBuilder<Conference> builder)
         {
-            builder.HasKey(x => x.Id);
-
-            builder.Property(x => x.Id)
-                .ValueGeneratedOnAdd();
-
             builder.Property(x => x.Title)
                 .IsRequired()
                 .HasMaxLength(100);

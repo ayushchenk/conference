@@ -1,15 +1,17 @@
 export type CreateSubmissionRequest = {
-  conferenceId: string;
+  conferenceId: number;
   title: string;
   keywords: string;
   abstract: string;
-  file: File | null;
+  mainFile?: File;
+  presentationFile?: File;
+  anonymizedFile?: File;
+  otherFiles?: File[];
 };
 
 export const initialValues: CreateSubmissionRequest = {
-  conferenceId: "",
+  conferenceId: 0,
   title: "",
   keywords: "",
-  abstract: "",
-  file: null,
+  abstract: ""
 };

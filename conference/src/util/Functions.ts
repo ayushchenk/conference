@@ -8,7 +8,19 @@ export function format(str: string, ...params: any[]) {
 export function buildFormData(values: { [key: string]: any }): FormData {
   const formData = new FormData();
   for (const [field, value] of Object.entries(values)) {
-    formData.append(field, value instanceof File ? value : String(value));
+    if (value instanceof File) {
+      formData.append(field, value);
+      continue;
+    }
+
+    if (Array.isArray(value)) {
+      const values = Array.from(value);
+      for (const val of values) {
+        formData.append(field, val instanceof File ? val : String(val));
+      }
+    }
+
+    formData.append(field, String(value));
   }
   return formData;
 }

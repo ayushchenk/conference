@@ -7,7 +7,6 @@ import { useDeleteApi } from "../../hooks/UseDeleteApi";
 import { useGetApi } from "../../hooks/UseGetApi";
 import { useMemoPaging } from "../../hooks/UseMemoPaging";
 import { Conference } from "../../types/Conference";
-import { AdminVisibility } from "../ProtectedRoute/AdminVisibility";
 import { GetConferencesData, GetConferencesResponse } from "./ConferencesGrid.types";
 import { Auth } from "../../logic/Auth";
 

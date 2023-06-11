@@ -4,15 +4,10 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ConferenceManager.Infrastructure.Persistence.Configurations
 {
-    public class SubmissionConfiguration : IEntityTypeConfiguration<Submission>
+    public class SubmissionConfiguration : BaseAuditableEntityConfiguration<Submission>
     {
-        public void Configure(EntityTypeBuilder<Submission> builder)
+        protected override void ConfigureInner(EntityTypeBuilder<Submission> builder)
         {
-            builder.HasKey(x => x.Id);
-
-            builder.Property(x => x.Id)
-                .ValueGeneratedOnAdd();
-
             builder.Property(x => x.Title)
                 .IsRequired()
                 .HasMaxLength(100);
