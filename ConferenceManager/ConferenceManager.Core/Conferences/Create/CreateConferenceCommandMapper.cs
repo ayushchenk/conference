@@ -20,10 +20,10 @@ namespace ConferenceManager.Core.Conferences.Create
                 ContactPhoneNumber = source.ContactPhoneNumber,
                 Keywords = source.Keywords,
                 OrganizerWebpage = source.OrganizerWebpage,
-                PrimaryResearchArea = source.PrimaryResearchArea,
-                SecondaryResearchArea = source.SecondaryResearchArea,
+                ResearchAreas = string.Join(Conference.ResearchAreasSeparator, source.ResearchAreas),
                 Venue = source.Venue,
                 Webpage = source.Webpage,
+                IsAnonymizedFileRequired = source.IsAnonymizedFileRequired,
                 Participants = new List<ApplicationUser>()
             };
         }

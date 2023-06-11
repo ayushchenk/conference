@@ -6,7 +6,7 @@ export const validationSchema = yup.object({
   lastName: yup.string().trim().required("Last name is required"),
   country: yup.string().trim().required("Country is required"),
   affiliation: yup.string().trim().required("Affiliation is required"),
-  webpage: yup.string().trim(),
+  webpage: yup.string().trim().url("Should be a valid URL"),
   password: yup
     .string()
     .trim()

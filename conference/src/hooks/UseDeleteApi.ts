@@ -29,7 +29,7 @@ export function useDeleteApi<TRequest, TData>(path: string, config?: AxiosReques
             data: null,
             isError: true,
             isLoading: false,
-            error: error.response.data,
+            error: error?.response?.data,
           });
         });
     },

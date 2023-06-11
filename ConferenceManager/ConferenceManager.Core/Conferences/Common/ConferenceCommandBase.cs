@@ -37,11 +37,8 @@ namespace ConferenceManager.Core.Conferences.Model
         [MaxLength(50)]
         public string? City { get; set; }
 
-        [MaxLength(100)]
-        public string? PrimaryResearchArea { get; set; }
-
-        [MaxLength(100)]
-        public string? SecondaryResearchArea { get; set; }
+        [Required]
+        public string[] ResearchAreas { get; set; } = null!;
 
         [MaxLength(500)]
         public string? AreaNotes { get; set; }
@@ -51,5 +48,8 @@ namespace ConferenceManager.Core.Conferences.Model
 
         [MaxLength(20)]
         public string? ContactPhoneNumber { get; set; }
+
+        [Required]
+        public bool IsAnonymizedFileRequired { get; set; }
     }
 }

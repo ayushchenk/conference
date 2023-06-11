@@ -26,13 +26,13 @@ namespace ConferenceManager.Core.Conferences.Common
                 Keywords = source.Keywords,
                 Organizer = source.Organizer,
                 OrganizerWebpage = source.OrganizerWebpage,
-                PrimaryResearchArea = source.PrimaryResearchArea,
-                SecondaryResearchArea = source.SecondaryResearchArea,
+                ResearchAreas = source.ResearchAreas.Split(Conference.ResearchAreasSeparator, StringSplitOptions.RemoveEmptyEntries),
                 StartDate = source.StartDate,
                 Title = source.Title,
                 Venue = source.Venue,
                 Webpage = source.Webpage,
-                IsParticipant = _currentUser.IsParticipantOf(source),
+                IsAnonymizedFileRequired = source.IsAnonymizedFileRequired,
+                IsParticipant = _currentUser.IsParticipantOf(source)
             };
         }
     }

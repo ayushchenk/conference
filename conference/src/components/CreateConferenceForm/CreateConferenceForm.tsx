@@ -8,37 +8,24 @@ import TextField from "@mui/material/TextField";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { ApiResponse, CreateResponseData } from "../../types/ApiResponse";
 import { Conference } from "../../types/Conference";
 import { useUpdateConferenceApi } from "../ConferenceDetails/ConferenceDetails.hooks";
-import { FormErrorAlert } from "../FormErrorAlert/FormErrorAlert";
+import { FormErrorAlert } from "../FormErrorAlert";
 import { usePostCreateConferenceApi } from "./CreateConferenceForm.hooks";
 import { initialValues } from "./CreateConferenceForm.types";
 import { validationSchema } from "./CreateConferenceForm.validator";
+import { FormHelperText, Checkbox, FormControlLabel, Autocomplete, Chip } from "@mui/material";
 
 export const CreateConferenceForm = ({ conference }: { conference?: Conference | null }) => {
   const navigate = useNavigate();
   const { response: responseUpdate, put } = useUpdateConferenceApi();
   const { response: responseCreate, post } = usePostCreateConferenceApi();
 
-  let performRequest: Function;
-  let response: ApiResponse<CreateResponseData | Conference>;
-
-  if (conference === undefined) {
-    performRequest = post;
-    response = responseCreate;
-  } else {
-    performRequest = put;
-    response = responseUpdate;
-  }
+  const performRequest: Function = conference ? put : post;
+  const response = conference ? responseUpdate : responseCreate;
 
   useEffect(() => {
-    let conferenceId;
-    if (conference) {
-      conferenceId = conference.id;
-    } else {
-      conferenceId = response?.data?.id;
-    }
+    const conferenceId = conference ? conference.id : response?.data?.id;
     if (!response.isLoading && !response.isError && conferenceId) {
       navigate(`/conferences/${conferenceId}`);
     }
@@ -183,29 +170,28 @@ export const CreateConferenceForm = ({ conference }: { conference?: Conference |
           }}
         />
       </LocalizationProvider>
-      <TextField
-        fullWidth
-        margin="normal"
-        id="primaryResearchArea"
-        name="primaryResearchArea"
-        label="Primary research area"
-        value={formik.values.primaryResearchArea}
-        onChange={formik.handleChange}
-        error={formik.touched.primaryResearchArea && Boolean(formik.errors.primaryResearchArea)}
-        helperText={formik.touched.primaryResearchArea && formik.errors.primaryResearchArea}
-        inputProps={{ maxLength: 100 }}
-      />
-      <TextField
-        fullWidth
-        margin="normal"
-        id="secondaryResearchArea"
-        name="secondaryResearchArea"
-        label="Secondary research area"
-        value={formik.values.secondaryResearchArea}
-        onChange={formik.handleChange}
-        error={formik.touched.secondaryResearchArea && Boolean(formik.errors.secondaryResearchArea)}
-        helperText={formik.touched.secondaryResearchArea && formik.errors.secondaryResearchArea}
-        inputProps={{ maxLength: 100 }}
+      <Autocomplete
+        multiple
+        options={[]}
+        onChange={(_, value) => formik.setFieldValue("researchAreas", value)}
+        value={formik.values.researchAreas}
+        freeSolo
+        renderTags={(value: readonly string[], getTagProps) =>
+          value.map((option: string, index: number) => (
+            <Chip variant="outlined" label={option} {...getTagProps({ index })} />
+          ))
+        }
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            variant="outlined"
+            margin="normal"
+            error={formik.touched.researchAreas && Boolean(formik.errors.researchAreas)}
+            helperText={formik.touched.researchAreas && formik.errors.researchAreas}
+            label="Research Areas"
+            placeholder="Enter the area and press Enter"
+          />
+        )}
       />
       <TextField
         fullWidth
@@ -257,6 +243,17 @@ export const CreateConferenceForm = ({ conference }: { conference?: Conference |
         helperText={formik.touched.contactPhoneNumber && formik.errors.contactPhoneNumber}
         inputProps={{ maxLength: 20 }}
       />
+      <div>
+        <FormControlLabel label={"Is anonymized file required for submissions"} control={
+          <Checkbox
+            id="isAnonymizedFileRequired"
+            name="isAnonymizedFileRequired"
+            checked={formik.values.isAnonymizedFileRequired}
+            value={formik.values.isAnonymizedFileRequired}
+            onChange={formik.handleChange} />
+        } />
+        <FormHelperText id="my-helper-text">Anonymized file should not contain any references to the authors of the submission, so fair and not biased review process can be guaranteed</FormHelperText>
+      </div>
       <FormErrorAlert response={response} />
       <Button color="primary" variant="contained" fullWidth type="submit">
         Submit

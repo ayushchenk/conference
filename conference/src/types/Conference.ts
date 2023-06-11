@@ -12,13 +12,13 @@ export type Conference = {
   city: string;
   startDate: string;
   endDate: string;
-  primaryResearchArea: string;
-  secondaryResearchArea: string;
+  researchAreas: string[];
   areaNotes: string;
   organizer: string;
   organizerWebpage: string;
   contactPhoneNumber: string;
   isParticipant: string;
+  isAnonymizedFileRequired: boolean;
 };
 
 export type Submission = {

@@ -26,9 +26,7 @@ namespace ConferenceManager.Core.Conferences.Common
 
         public string? City { get; set; }
 
-        public string? PrimaryResearchArea { get; set; }
-
-        public string? SecondaryResearchArea { get; set; }
+        public required string[] ResearchAreas { get; set; }
 
         public string? AreaNotes { get; set; }
 
@@ -36,6 +34,8 @@ namespace ConferenceManager.Core.Conferences.Common
 
         public string? ContactPhoneNumber { get; set; }
 
-        public bool IsParticipant { get; set; }
+        public required bool IsAnonymizedFileRequired { get; set; }
+
+        public required bool IsParticipant { get; set; }
     }
 }

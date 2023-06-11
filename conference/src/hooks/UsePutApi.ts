@@ -28,7 +28,7 @@ export function usePutApi<TRequest, TData>(path: string, config?: AxiosRequestCo
             data: null,
             isError: true,
             isLoading: false,
-            error: error.response.data,
+            error: error?.response?.data,
           });
         });
     },

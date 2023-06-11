@@ -7,7 +7,6 @@ import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
 import TextField from "@mui/material/TextField";
-import { ApiResponse, CreateResponseData } from "../../types/ApiResponse";
 import { Submission } from "../../types/Conference";
 import { buildFormData } from "../../util/Functions";
 import { FormErrorAlert } from "../FormErrorAlert/FormErrorAlert";
@@ -21,27 +20,12 @@ export const CreateSubmissionForm = ({ submission }: { submission?: Submission |
   const { response: responseUpdate, put } = useUpdateSubmissionApi();
   const { response: responseCreate, post } = usePostCreateSubmissionApi();
 
-  let performRequest: Function;
-  let response: ApiResponse<CreateResponseData | Submission>;
-  let validationSchema;
-
-  if (submission === undefined) {
-    performRequest = post;
-    response = responseCreate;
-    validationSchema = createValidationSchema;
-  } else {
-    performRequest = put;
-    response = responseUpdate;
-    validationSchema = updateValidationSchema;
-  }
+  const performRequest: Function = submission ? put : post;
+  const response = submission ? responseUpdate : responseCreate;
+  const validationSchema = submission ? updateValidationSchema : createValidationSchema;
 
   useEffect(() => {
-    let submissionId;
-    if (submission) {
-      submissionId = submission.id;
-    } else {
-      submissionId = response?.data?.id;
-    }
+    const submissionId = submission ? submission.id : response?.data?.id;
     if (!response.isLoading && !response.isError && submissionId) {
       navigate(`/conferences/${conferenceId}/submissions/${submissionId}`);
     }

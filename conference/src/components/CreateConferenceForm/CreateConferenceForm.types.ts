@@ -9,11 +9,11 @@ export type CreateConferenceRequest = {
   webpage: string;
   venue: string;
   city: string;
-  primaryResearchArea: string;
-  secondaryResearchArea: string;
+  researchAreas: string[];
   areaNotes: string;
   organizerWebpage: string;
   contactPhoneNumber: string;
+  isAnonymizedFileRequired: boolean;
 };
 
 export const initialValues: CreateConferenceRequest = {
@@ -26,10 +26,10 @@ export const initialValues: CreateConferenceRequest = {
   city: "",
   startDate: String(new Date()),
   endDate: String(new Date()),
-  primaryResearchArea: "",
-  secondaryResearchArea: "",
+  researchAreas: [],
   areaNotes: "",
   organizer: "",
   organizerWebpage: "",
   contactPhoneNumber: "",
+  isAnonymizedFileRequired: false
 };
