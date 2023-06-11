@@ -1,5 +1,5 @@
 import * as yup from "yup";
-import { maxSubmissionFileSizeMB } from "../../util/Constants";
+import { maxOtherFilesInSubmission, maxSubmissionFileSizeMB } from "../../util/Constants";
 
 const fileValidation = yup
   .mixed<File>()
@@ -24,12 +24,12 @@ export const createValidationSchema = validationSchema.shape({
   mainFile: fileValidation.required("Main submission file is required"),
   anonymizedFile: fileValidation.nullable(),
   presentationFile: fileValidation.nullable(),
-  otherFiles: yup.array(fileValidation).nullable()
+  otherFiles: yup.array(fileValidation).nullable().max(maxOtherFilesInSubmission, "3 other files are allowed")
 });
 
 export const updateValidationSchema = validationSchema.shape({
   mainFile: fileValidation.nullable(),
   anonymizedFile: fileValidation.nullable(),
   presentationFile: fileValidation.nullable(),
-  otherFiles: yup.array(fileValidation).nullable()
+  otherFiles: yup.array(fileValidation).nullable().max(maxOtherFilesInSubmission, "3 other files are allowed")
 });

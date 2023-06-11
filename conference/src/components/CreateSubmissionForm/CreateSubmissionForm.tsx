@@ -115,7 +115,7 @@ export const CreateSubmissionForm = ({ submission }: { submission?: Submission }
         </Box>
         {formik.touched.mainFile && formik.errors.mainFile && <FormHelperText>{formik.errors.mainFile}</FormHelperText>}
       </FormControl>
-      <FormControl fullWidth error={formik.touched.anonymizedFile && Boolean(formik.errors.anonymizedFile)}>
+      <FormControl margin="dense" fullWidth error={formik.touched.anonymizedFile && Boolean(formik.errors.anonymizedFile)}>
         <Box sx={{ display: "flex", mt: 2 }}>
           {formik.values.anonymizedFile &&
             <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -143,7 +143,7 @@ export const CreateSubmissionForm = ({ submission }: { submission?: Submission }
         </Box>
         {formik.touched.anonymizedFile && formik.errors.anonymizedFile && <FormHelperText>{formik.errors.anonymizedFile}</FormHelperText>}
       </FormControl>
-      <FormControl fullWidth error={formik.touched.presentationFile && Boolean(formik.errors.presentationFile)}>
+      <FormControl margin="dense" fullWidth error={formik.touched.presentationFile && Boolean(formik.errors.presentationFile)}>
         <Box sx={{ display: "flex", mt: 2 }}>
           {formik.values.presentationFile &&
             <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -170,7 +170,7 @@ export const CreateSubmissionForm = ({ submission }: { submission?: Submission }
         </Box>
         {formik.touched.presentationFile && formik.errors.presentationFile && <FormHelperText>{formik.errors.presentationFile}</FormHelperText>}
       </FormControl>
-      <FormControl fullWidth error={formik.touched.otherFiles && Boolean(formik.errors.otherFiles)}>
+      <FormControl margin="dense" fullWidth error={formik.touched.otherFiles && Boolean(formik.errors.otherFiles)}>
         <Box sx={{ display: "flex", mt: 2 }}>
           {formik.values.otherFiles &&
             <Box sx={{ display: "flex", alignItems: "center" }}>
