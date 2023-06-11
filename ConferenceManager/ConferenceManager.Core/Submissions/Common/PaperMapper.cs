@@ -1,5 +1,6 @@
 ﻿using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Domain.Entities;
+using Humanizer;
 
 namespace ConferenceManager.Core.Submissions.Common
 {
@@ -11,8 +12,11 @@ namespace ConferenceManager.Core.Submissions.Common
             {
                 Id = source.Id,
                 SubmissionId = source.SubmissionId,
+                Type = source.Type,
+                TypeLabel = source.Type.Humanize(),
                 FileName = source.FileName,
-                Base64Content = Convert.ToBase64String(source.File)
+                Base64Content = Convert.ToBase64String(source.File),
+                CreatedOn = source.CreatedOn
             };
         }
     }

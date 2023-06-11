@@ -15,7 +15,7 @@ namespace ConferenceManager.Core.Submissions.Create
             RuleForString(x => x.Keywords, 100, true);
             RuleForString(x => x.Abstract, 1000, true);
 
-            RuleFor(x => x.File)
+            RuleFor(x => x.MainFile)
                 .NotEmpty().WithMessage("File is required");
 
             RuleFor(x => x).CustomAsync(async (command, context, cancelToken) =>
@@ -31,6 +31,12 @@ namespace ConferenceManager.Core.Submissions.Create
                 if (!CurrentUser.IsParticipantOf(conference))
                 {
                     context.AddException(new ForbiddenException("Is not part of conference"));
+                    return;
+                }
+
+                if (conference.IsAnonymizedFileRequired && command.AnonymizedFile == null)
+                {
+                    context.AddFailure("AnonymizedFile", "Anonymized file is requried by conference settings");
                 }
             });
         }

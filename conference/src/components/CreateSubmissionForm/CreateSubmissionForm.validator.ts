@@ -1,12 +1,12 @@
 import * as yup from "yup";
-import { maxSubmissionFileSizeMB } from "../../util/Constants";
+import { maxOtherFilesInSubmission, maxSubmissionFileSizeMB } from "../../util/Constants";
 
 const fileValidation = yup
-  .mixed()
+  .mixed<File>()
   .test(
     "fileSize",
     `The file size exceeds the maximum limit of ${maxSubmissionFileSizeMB} MB. Please choose a smaller file.`,
-    (value: any) => {
+    function (value: File | undefined) {
       if (value === undefined) {
         return true;
       }
@@ -21,9 +21,15 @@ const validationSchema = yup.object({
 });
 
 export const createValidationSchema = validationSchema.shape({
-  file: fileValidation.required("File is required"),
+  mainFile: fileValidation.required("Main submission file is required"),
+  anonymizedFile: fileValidation.nullable(),
+  presentationFile: fileValidation.nullable(),
+  otherFiles: yup.array(fileValidation).nullable().max(maxOtherFilesInSubmission, "3 other files are allowed")
 });
 
 export const updateValidationSchema = validationSchema.shape({
-  file: fileValidation.nullable(),
+  mainFile: fileValidation.nullable(),
+  anonymizedFile: fileValidation.nullable(),
+  presentationFile: fileValidation.nullable(),
+  otherFiles: yup.array(fileValidation).nullable().max(maxOtherFilesInSubmission, "3 other files are allowed")
 });

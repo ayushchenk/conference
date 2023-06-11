@@ -11,10 +11,12 @@ import { Submission } from "../../types/Conference";
 import { buildFormData } from "../../util/Functions";
 import { FormErrorAlert } from "../FormErrorAlert/FormErrorAlert";
 import { usePostCreateSubmissionApi, useUpdateSubmissionApi } from "./CreateSubmissionForm.hooks";
-import { initialValues } from "./CreateSubmissionForm.types";
+import { CreateSubmissionRequest, initialValues } from "./CreateSubmissionForm.types";
 import { createValidationSchema, updateValidationSchema } from "./CreateSubmissionForm.validator";
+import { IconButton } from "@mui/material";
+import ClearIcon from '@mui/icons-material/Clear';
 
-export const CreateSubmissionForm = ({ submission }: { submission?: Submission | null }) => {
+export const CreateSubmissionForm = ({ submission }: { submission?: Submission }) => {
   const navigate = useNavigate();
   const { conferenceId } = useParams();
   const { response: responseUpdate, put } = useUpdateSubmissionApi();
@@ -31,19 +33,17 @@ export const CreateSubmissionForm = ({ submission }: { submission?: Submission |
     }
   }, [response, navigate, conferenceId, submission]);
 
+  const values: CreateSubmissionRequest = submission
+    ? { ...submission }
+    : { ...initialValues, conferenceId: Number(conferenceId) }
+
   const formik = useFormik({
-    initialValues: { ...(submission || initialValues), conferenceId: Number(conferenceId) },
+    initialValues: values,
     validationSchema: validationSchema,
     onSubmit: (values) => {
       performRequest(buildFormData(values));
     },
   });
-
-  useEffect(() => {
-    if (submission && !formik.dirty) {
-      formik.setValues(submission);
-    }
-  }, [submission, formik]);
 
   return (
     <Box component="form" mb={5} onSubmit={formik.handleSubmit}>
@@ -87,24 +87,120 @@ export const CreateSubmissionForm = ({ submission }: { submission?: Submission |
         helperText={formik.touched.abstract && formik.errors.abstract}
         inputProps={{ maxLength: 1000 }}
       />
-      <FormControl fullWidth error={formik.touched.file && Boolean(formik.errors.file)}>
-        <Button fullWidth sx={{ mt: 1 }} variant="outlined" component="label" startIcon={<UploadFile />}>
-          Upload File
-          <input
-            name="file"
-            accept="application/pdf"
-            id="submission-file"
-            type="file"
-            hidden
-            onChange={(event: ChangeEvent<HTMLInputElement>) => {
-              if (event.target.files) {
-                formik.setFieldValue("file", event.target.files[0]);
-              }
-            }}
-          />
-        </Button>
-        <FormHelperText>{formik.values.file?.name}</FormHelperText>
-        {formik.touched.file && formik.errors.file && <FormHelperText>{formik.errors.file}</FormHelperText>}
+      <FormControl fullWidth error={formik.touched.mainFile && Boolean(formik.errors.mainFile)}>
+        <Box sx={{ display: "flex", mt: 2 }}>
+          {formik.values.mainFile &&
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <FormHelperText>{formik.values.mainFile?.name}</FormHelperText>
+              <IconButton onClick={() => { formik.setFieldValue("mainFile", undefined) }}>
+                <ClearIcon />
+              </IconButton>
+            </Box>
+          }
+          <Button fullWidth variant="outlined" component="label" startIcon={<UploadFile />}>
+            Upload {submission ? 'New' : ''} Main File
+            <input
+              id="mainFile"
+              name="mainFile"
+              accept="application/pdf"
+              type="file"
+              hidden
+              onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                if (event.target.files) {
+                  formik.setFieldValue("mainFile", event.target.files[0]);
+                }
+              }}
+            />
+          </Button>
+        </Box>
+        {formik.touched.mainFile && formik.errors.mainFile && <FormHelperText>{formik.errors.mainFile}</FormHelperText>}
+      </FormControl>
+      <FormControl margin="dense" fullWidth error={formik.touched.anonymizedFile && Boolean(formik.errors.anonymizedFile)}>
+        <Box sx={{ display: "flex", mt: 2 }}>
+          {formik.values.anonymizedFile &&
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <FormHelperText>{formik.values.anonymizedFile?.name}</FormHelperText>
+              <IconButton onClick={() => { formik.setFieldValue("anonymizedFile", undefined) }}>
+                <ClearIcon />
+              </IconButton>
+            </Box>
+          }
+          <Button fullWidth variant="outlined" component="label" startIcon={<UploadFile />}>
+            Upload {submission ? 'New' : ''} Anonymized File
+            <input
+              id="anonymizedFile"
+              name="anonymizedFile"
+              accept="application/pdf"
+              type="file"
+              hidden
+              onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                if (event.target.files) {
+                  formik.setFieldValue("anonymizedFile", event.target.files[0]);
+                }
+              }}
+            />
+          </Button>
+        </Box>
+        {formik.touched.anonymizedFile && formik.errors.anonymizedFile && <FormHelperText>{formik.errors.anonymizedFile}</FormHelperText>}
+      </FormControl>
+      <FormControl margin="dense" fullWidth error={formik.touched.presentationFile && Boolean(formik.errors.presentationFile)}>
+        <Box sx={{ display: "flex", mt: 2 }}>
+          {formik.values.presentationFile &&
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <FormHelperText>{formik.values.presentationFile?.name}</FormHelperText>
+              <IconButton onClick={() => { formik.setFieldValue("presentationFile", undefined) }}>
+                <ClearIcon />
+              </IconButton>
+            </Box>
+          }
+          <Button fullWidth variant="outlined" component="label" startIcon={<UploadFile />}>
+            Upload {submission ? 'New' : ''} Presentation File
+            <input
+              id="presentationFile"
+              name="presentationFile"
+              type="file"
+              hidden
+              onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                if (event.target.files) {
+                  formik.setFieldValue("presentationFile", event.target.files[0]);
+                }
+              }}
+            />
+          </Button>
+        </Box>
+        {formik.touched.presentationFile && formik.errors.presentationFile && <FormHelperText>{formik.errors.presentationFile}</FormHelperText>}
+      </FormControl>
+      <FormControl margin="dense" fullWidth error={formik.touched.otherFiles && Boolean(formik.errors.otherFiles)}>
+        <Box sx={{ display: "flex", mt: 2 }}>
+          {formik.values.otherFiles &&
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Box sx={{width: "500px"}}>
+                {formik.values.otherFiles.map((file, index) => (
+                  <FormHelperText key={index}>{file.name}</FormHelperText>
+                ))}
+              </Box>
+              <IconButton onClick={() => { formik.setFieldValue("otherFiles", undefined) }}>
+                <ClearIcon />
+              </IconButton>
+            </Box>
+          }
+          <Button fullWidth variant="outlined" component="label" startIcon={<UploadFile />}>
+            Upload {submission ? 'New' : ''} Other Files
+            <input
+              id="otherFiles"
+              name="otherFiles"
+              multiple
+              type="file"
+              hidden
+              onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                if (event.target.files) {
+                  formik.setFieldValue("otherFiles", Array.from(event.target.files));
+                }
+              }}
+            />
+          </Button>
+        </Box>
+        {formik.touched.otherFiles && formik.errors.otherFiles && <FormHelperText>{formik.errors.otherFiles}</FormHelperText>}
       </FormControl>
       <FormErrorAlert response={response} />
       <Button color="primary" variant="contained" fullWidth type="submit">

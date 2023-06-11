@@ -1,5 +1,5 @@
 import moment from "moment";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
@@ -8,24 +8,21 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 import { AdminVisibility } from "../ProtectedRoute/AdminVisibility";
-import { useGetConferenceApi } from "./ConferenceDetails.hooks";
 import { AuthorVisibility } from "../ProtectedRoute/AuthorVisibility";
 import { FormHeader } from "../FormHeader";
 import { IconButton, Tooltip, Typography } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import { Conference } from "../../types/Conference";
 
-export const ConferenceDetails = () => {
-  const { conferenceId } = useParams();
-  const conference = useGetConferenceApi(Number(conferenceId));
-
+export const ConferenceDetails = ({ conference }: { conference: Conference }) => {
   return (
     <>
       <FormHeader>
-        <span>{conference.data?.title}</span>
+        <span>{conference.title}</span>
         <AdminVisibility>
           <IconButton>
-            <Link className="header__link" to={`/conferences/${conferenceId}/edit`} >
+            <Link className="header__link" to={`/conferences/${conference.id}/edit`} >
               <EditIcon >
               </EditIcon>
             </Link>
@@ -37,11 +34,11 @@ export const ConferenceDetails = () => {
           <TableBody>
             <TableRow>
               <TableCell variant="head">Acronym</TableCell>
-              <TableCell>{conference.data?.acronym}</TableCell>
+              <TableCell>{conference.acronym}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell variant="head">Keywords</TableCell>
-              <TableCell>{conference.data?.keywords}</TableCell>
+              <TableCell>{conference.keywords}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell variant="head">Abstract</TableCell>
@@ -51,33 +48,33 @@ export const ConferenceDetails = () => {
                   wordBreak: "break-word",
                 }}
               >
-                {conference.data?.abstract}
+                {conference.abstract}
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell variant="head">Webpage</TableCell>
-              <TableCell>{conference.data?.webpage}</TableCell>
+              <TableCell>{conference.webpage}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell variant="head">Venue</TableCell>
-              <TableCell>{conference.data?.venue}</TableCell>
+              <TableCell>{conference.venue}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell variant="head">City</TableCell>
-              <TableCell>{conference.data?.city}</TableCell>
+              <TableCell>{conference.city}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell variant="head">Start Date</TableCell>
-              <TableCell>{moment(conference.data?.startDate).format("DD/MM/YYYY")}</TableCell>
+              <TableCell>{moment(conference.startDate).format("DD/MM/YYYY")}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell variant="head">End Date</TableCell>
-              <TableCell>{moment(conference.data?.endDate).format("DD/MM/YYYY")}</TableCell>
+              <TableCell>{moment(conference.endDate).format("DD/MM/YYYY")}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell variant="head">Research Areas</TableCell>
               <TableCell>
-                {conference.data?.researchAreas.map((area, index) => (
+                {conference.researchAreas.map((area, index) => (
                   <div key={index}>{area}</div>
                 ))}
               </TableCell>
@@ -90,16 +87,16 @@ export const ConferenceDetails = () => {
                   wordBreak: "break-word",
                 }}
               >
-                {conference.data?.areaNotes}
+                {conference.areaNotes}
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell variant="head">Organizer</TableCell>
-              <TableCell>{conference.data?.organizer}</TableCell>
+              <TableCell>{conference.organizer}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell variant="head">Organizer Webpage</TableCell>
-              <TableCell>{conference.data?.organizerWebpage}</TableCell>
+              <TableCell>{conference.organizerWebpage}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell variant="head">
@@ -115,16 +112,16 @@ export const ConferenceDetails = () => {
                 </Tooltip>
               </TableCell>
               <TableCell>
-                {String(conference.data?.isAnonymizedFileRequired)}
+                {String(conference.isAnonymizedFileRequired)}
               </TableCell>
             </TableRow>
             {
-              conference.data?.isParticipant &&
+              conference.isParticipant &&
               <>
                 <TableRow>
                   <TableCell align="center" colSpan={12} variant="head">
                     <Button color="inherit">
-                      <Link className="header__link" to={`/conferences/${conferenceId}/submissions`}>
+                      <Link className="header__link" to={`/conferences/${conference.id}/submissions`}>
                         Submissions
                       </Link>
                     </Button>
@@ -134,7 +131,7 @@ export const ConferenceDetails = () => {
                   <TableRow>
                     <TableCell align="center" colSpan={12} variant="head">
                       <Button color="inherit">
-                        <Link className="header__link" to={`/conferences/${conferenceId}/participants`}>
+                        <Link className="header__link" to={`/conferences/${conference.id}/participants`}>
                           Participants
                         </Link>
                       </Button>
@@ -145,7 +142,7 @@ export const ConferenceDetails = () => {
                   <TableRow>
                     <TableCell align="center" colSpan={12} variant="head">
                       <Button color="inherit">
-                        <Link className="header__link" to={`/conferences/${conferenceId}/submissions/new`}>
+                        <Link className="header__link" to={`/conferences/${conference.id}/submissions/new`}>
                           Create Submission
                         </Link>
                       </Button>

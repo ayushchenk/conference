@@ -1,6 +1,8 @@
 ﻿using ConferenceManager.Core.Common.Extensions;
 using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Domain.Entities;
+using ConferenceManager.Domain.Enums;
+using Microsoft.AspNetCore.Http;
 
 namespace ConferenceManager.Core.Submissions.Create
 {
@@ -14,18 +16,43 @@ namespace ConferenceManager.Core.Submissions.Create
                 ConferenceId = source.ConferenceId,
                 Keywords = source.Keywords,
                 Title = source.Title,
-                Status = Domain.Enums.SubmissionStatus.Created,
+                Status = SubmissionStatus.Created,
                 Papers = new List<Paper>()
+                {
+                    MapPaper(source.MainFile, PaperType.Main)
+                }
             };
 
-            submission.Papers.Add(new Paper() 
+            if (source.AnonymizedFile != null)
             {
-                SubmissionId = 0,
-                FileName = source.File.FileName,
-                File = source.File.ToBytes()
-            });
+                submission.Papers.Add(MapPaper(source.AnonymizedFile, PaperType.Anonymized));
+            }
+
+            if (source.PresentationFile != null)
+            {
+                submission.Papers.Add(MapPaper(source.PresentationFile, PaperType.Presentation));
+            }
+
+            if (source.OtherFiles != null && source.OtherFiles.Any())
+            {
+                foreach (var file in source.OtherFiles)
+                {
+                    submission.Papers.Add(MapPaper(file, PaperType.Other));
+                }
+            }
 
             return submission;
+        }
+
+        private Paper MapPaper(IFormFile file, PaperType type)
+        {
+            return new Paper()
+            {
+                SubmissionId = 0,
+                File = file.ToBytes(),
+                FileName = file.FileName,
+                Type = type
+            };
         }
     }
 }

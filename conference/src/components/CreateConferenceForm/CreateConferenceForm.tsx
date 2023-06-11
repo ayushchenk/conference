@@ -39,12 +39,6 @@ export const CreateConferenceForm = ({ conference }: { conference?: Conference |
     },
   });
 
-  useEffect(() => {
-    if (conference && !formik.dirty) {
-      formik.setValues(conference);
-    }
-  }, [conference, formik]);
-
   return (
     <Box component="form" mb={5} onSubmit={formik.handleSubmit}>
       <TextField

@@ -85,7 +85,7 @@ namespace ConferenceManager.Api.Controllers
         {
             var result = await Mediator.Send(new GetConferenceQuery(id), cancellation);
 
-            return OkOrNotFound(result);
+            return Ok(result);
         }
 
         /// <summary>

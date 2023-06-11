@@ -22,10 +22,16 @@ namespace ConferenceManager.Core.Submissions.Papers
                     return;
                 }
 
-                if ((CurrentUser.HasAuthorRole && !CurrentUser.IsAuthorOf(submission))
-                    || !CurrentUser.IsReviewerOf(submission))
+                if (CurrentUser.HasAuthorRole && !CurrentUser.IsAuthorOf(submission))              
                 {
-                    context.AddException(new ForbiddenException("Must be author or reviewer"));
+                    context.AddException(new ForbiddenException("User is not an author of the submission"));
+                    return;
+                }
+
+                if (CurrentUser.HasReviewerRole && !CurrentUser.IsReviewerOf(submission))
+                {
+                    context.AddException(new ForbiddenException("User is not a reviewer of the submission"));
+                    return;
                 }
             });
         }

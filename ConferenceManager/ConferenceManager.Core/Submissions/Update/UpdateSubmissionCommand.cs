@@ -21,6 +21,12 @@ namespace ConferenceManager.Core.Submissions.Update
         [MaxLength(1000)]
         public string Abstract { set; get; } = null!;
 
-        public IFormFile? File { set; get; }
+        public IFormFile? MainFile { set; get; } = null!;
+
+        public IFormFile? PresentationFile { set; get; }
+
+        public IFormFile? AnonymizedFile { set; get; }
+
+        public IFormFile[]? OtherFiles { set; get; }
     }
 }
