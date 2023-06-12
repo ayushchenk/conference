@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace CleanArchitecture.WebUI.Filters
 {
-    public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
+    public class ApiExceptionFilter : ExceptionFilterAttribute
     {
         private readonly IDictionary<Type, Action<ExceptionContext>> _exceptionHandlers;
 
-        public ApiExceptionFilterAttribute()
+        public ApiExceptionFilter()
         {
             _exceptionHandlers = new Dictionary<Type, Action<ExceptionContext>>
             {

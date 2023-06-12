@@ -114,15 +114,16 @@ namespace ConferenceManager.Api.Controllers
         /// Assigns role to the user
         /// </summary>
         [HttpPost]
-        [Route("{id}/role")]
-        [Authorize(Roles = ApplicationRole.Admin)]
+        [Route("role")]
+        [Authorize(Roles = $"{ApplicationRole.Chair},{ApplicationRole.Chair}")]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status204NoContent)]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
         [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
-        public async Task<IActionResult> AssignRole(int id, AssignRoleCommand command, CancellationToken cancellation)
+        public async Task<IActionResult> AssignRole(AssignRoleCommand command, CancellationToken cancellation)
         {
-            await Mediator.Send(new AssignRoleCommand(id, command.Role), cancellation);
+            await Mediator.Send(command, cancellation);
 
             return NoContent();
         }
@@ -131,15 +132,16 @@ namespace ConferenceManager.Api.Controllers
         /// Unassigns role from the user
         /// </summary>
         [HttpDelete]
-        [Route("{id}/role")]
-        [Authorize(Roles = ApplicationRole.Admin)]
+        [Route("role")]
+        [Authorize(Roles = $"{ApplicationRole.Chair},{ApplicationRole.Chair}")]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status204NoContent)]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
         [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
-        public async Task<IActionResult> UnassignRole(int id, UnassignRoleCommand command, CancellationToken cancellation)
+        public async Task<IActionResult> UnassignRole(UnassignRoleCommand command, CancellationToken cancellation)
         {
-            await Mediator.Send(new UnassignRoleCommand(id, command.Role), cancellation);
+            await Mediator.Send(command, cancellation);
 
             return NoContent();
         }

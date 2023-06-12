@@ -1,21 +1,27 @@
-﻿using ConferenceManager.Core.Common.Interfaces;
+﻿using ConferenceManager.Core.Common;
+using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Core.User.AddRole;
-using MediatR;
+using ConferenceManager.Infrastructure.Util;
+using Microsoft.Extensions.Options;
 
 namespace ConferenceManager.Core.User.AssignRole
 {
-    public class AssignRoleCommandHandler : IRequestHandler<AssignRoleCommand>
+    public class AssignRoleCommandHandler : DbContextRequestHandler<AssignRoleCommand>
     {
-        private readonly IIdentityService _service;
+        private readonly SeedSettings _settings;
 
-        public AssignRoleCommandHandler(IIdentityService service)
+        public AssignRoleCommandHandler(
+            IOptions<SeedSettings> settings,
+            IApplicationDbContext context, 
+            ICurrentUserService currentUser, 
+            IMappingHost mapper) : base(context, currentUser, mapper)
         {
-            _service = service;
+            _settings = settings.Value;
         }
 
-        public async Task Handle(AssignRoleCommand request, CancellationToken cancellationToken)
+        public override async Task Handle(AssignRoleCommand request, CancellationToken cancellationToken)
         {
-            await _service.AssignRole(request.Id, request.Role);
+            throw new NotImplementedException();
         }
     }
 }

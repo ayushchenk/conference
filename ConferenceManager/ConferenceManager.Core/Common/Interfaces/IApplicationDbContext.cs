@@ -23,6 +23,8 @@ namespace ConferenceManager.Core.Common.Interfaces
 
         public DbSet<ConferenceParticipant> ConferenceParticipants { get; }
 
+        public DbSet<UserConferenceRole> UserRoles { get; }
+
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

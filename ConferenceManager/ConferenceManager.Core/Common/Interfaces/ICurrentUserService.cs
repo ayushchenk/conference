@@ -7,18 +7,20 @@ namespace ConferenceManager.Core.Common.Interfaces
     {
         int Id { get; }
 
-        string[] Roles { get; }
+        bool IsAdmin { get; }
 
-        bool HasAdminRole { get; }
+        bool IsAuthorIn(Conference conference);
 
-        bool HasAuthorRole { get; }
+        bool IsReviewerIn(Conference conference);
 
-        bool HasReviewerRole { get; }
+        bool IsChairIn(Conference conference);
 
         bool IsParticipantOf(Conference conference);
 
         bool IsAuthorOf(BaseAuditableEntity entity);
 
         bool IsReviewerOf(Submission submission);
+
+        bool HasRoleIn(Conference conference, string role);
     }
 }

@@ -32,7 +32,7 @@ namespace ConferenceManager.Core.Conferences.GetSubmissions
 
         private IQueryable<Submission> GetSourceQuery(int conferenceId)
         {
-            if (CurrentUser.HasReviewerRole || CurrentUser.HasAdminRole)
+            if (CurrentUser.IsReviwerIn || CurrentUser.IsAdmin)
             {
                 return Context.Submissions
                     .Where(s => s.ConferenceId == conferenceId)

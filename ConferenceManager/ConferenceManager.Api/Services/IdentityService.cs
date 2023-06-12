@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using ConferenceManager.Core.Common.Exceptions;
+﻿using ConferenceManager.Core.Common.Exceptions;
 using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Core.Common.Model.Settings;
 using ConferenceManager.Core.Common.Model.Token;
@@ -127,11 +126,11 @@ namespace ConferenceManager.Api.Services
                 })
             };
 
-            var roles = await _manager.GetRolesAsync(user);
+            var isAdmin = await _manager.IsInRoleAsync(user, ApplicationRole.Admin);
 
-            foreach (var role in roles)
+            if (isAdmin)
             {
-                descriptor.Subject.AddClaim(new Claim(ClaimTypes.Role, role));
+                descriptor.Subject.AddClaim(new Claim(ClaimTypes.Role, ApplicationRole.Admin));
             }
 
             var token = handler.CreateToken(descriptor);
@@ -141,7 +140,7 @@ namespace ConferenceManager.Api.Services
             {
                 UserId = user.Id,
                 Email = user.Email!,
-                Roles = roles,
+                Admin = isAdmin,
                 Token = new Token()
                 {
                     AccessToken = tokenValue,
