@@ -23,7 +23,7 @@ namespace ConferenceManager.Infrastructure
 
             services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
-            services.AddScoped<ApplicationDbContextInitialiser>();
+            services.AddScoped<ApplicationDbContextInitializer>();
 
             services.AddIdentityCore<ApplicationUser>()
                 .AddRoles<ApplicationRole>()

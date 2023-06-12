@@ -2,13 +2,19 @@
 using ConferenceManager.Domain.Entities;
 using ConferenceManager.Infrastructure.Persistence.Interceptors;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 namespace ConferenceManager.Infrastructure.Persistence
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, int>, IApplicationDbContext
+    public class ApplicationDbContext :
+        IdentityDbContext<
+            ApplicationUser, ApplicationRole, int,
+            IdentityUserClaim<int>, UserConferenceRole, IdentityUserLogin<int>,
+            IdentityRoleClaim<int>, IdentityUserToken<int>>,
+        IApplicationDbContext
     {
         private readonly IMediator _mediator;
         private readonly AuditableEntitySaveChangesInterceptor _auditableEntityInterceptor;
@@ -44,9 +50,9 @@ namespace ConferenceManager.Infrastructure.Persistence
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-
             base.OnModelCreating(builder);
+
+            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

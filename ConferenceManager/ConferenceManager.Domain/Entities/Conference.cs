@@ -39,5 +39,7 @@ namespace ConferenceManager.Domain.Entities
         public virtual IList<Submission> Submissions { set; get; } = null!;
 
         public virtual IList<ApplicationUser> Participants { set; get; } = null!;
+
+        public virtual IList<UserConferenceRole> UserRoles { set; get; } = null!;
     }
 }

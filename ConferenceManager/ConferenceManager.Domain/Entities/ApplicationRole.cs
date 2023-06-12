@@ -7,12 +7,16 @@ namespace ConferenceManager.Domain.Entities
         public const string Admin = "Admin";
         public const string Author = "Author";
         public const string Reviewer = "Reviewer";
+        public const string Chair = "Chair";
 
         public static readonly string[] SupportedRoles =
         {
             Admin,
             Author,
-            Reviewer
+            Reviewer,
+            Chair
         };
+
+        public virtual IList<UserConferenceRole> UserRoles { get; set; } = null!;
     }
 }
