@@ -1,5 +1,5 @@
-﻿using ConferenceManager.Core.Common.Interfaces;
-using ConferenceManager.Domain.Entities;
+﻿using ConferenceManager.Api.Util;
+using ConferenceManager.Core.Common.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -23,7 +23,7 @@ namespace ConferenceManager.Api.Filters
 
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            var hasHeader = context.HttpContext.Request.Headers.TryGetValue("x-conference-id", out var header);
+            var hasHeader = context.HttpContext.Request.Headers.TryGetValue(Headers.ConferenceId, out var header);
 
             if (!hasHeader)
             {
@@ -51,7 +51,7 @@ namespace ConferenceManager.Api.Filters
 
             foreach (var role in _roles)
             {
-                if (role == ApplicationRole.Admin && _currentUser.IsAdmin)
+                if (_currentUser.IsAdmin)
                 {
                     hasRole = true;
                     break;
@@ -76,7 +76,7 @@ namespace ConferenceManager.Api.Filters
             {
                 Status = StatusCodes.Status400BadRequest,
                 Title = "Bad request",
-                Detail = "Submission header is missing",
+                Detail = $"{Headers.ConferenceId} header is missing",
                 Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.1"
             });
         }
@@ -87,7 +87,7 @@ namespace ConferenceManager.Api.Filters
             {
                 Status = StatusCodes.Status400BadRequest,
                 Title = "Bad request",
-                Detail = "Submission header value is invalid",
+                Detail = $"{Headers.ConferenceId} header value is invalid",
                 Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.1"
             });
         }

@@ -30,8 +30,7 @@ namespace ConferenceManager.Api.Services
 
         public bool HasRoleIn(Conference conference, string role)
         {
-            return conference.UserRoles
-                .Any(r => r.UserId == Id && r.Role.Name == role);
+            return conference.UserRoles.Any(r => r.UserId == Id && r.Role.Name == role);
         }
 
         public bool IsAuthorIn(Conference conference)
@@ -51,9 +50,7 @@ namespace ConferenceManager.Api.Services
 
         public bool IsParticipantOf(Conference conference)
         {
-            return conference.Participants
-                .Select(p => p.Id)
-                .Contains(Id);
+            return conference.Participants.Any(p => p.Id == Id);
         }
 
         public bool IsAuthorOf(BaseAuditableEntity entity)
@@ -63,9 +60,7 @@ namespace ConferenceManager.Api.Services
 
         public bool IsReviewerOf(Submission submission)
         {
-            return submission.ActualReviewers
-                .Select(r => r.Id)
-                .Contains(Id);
+            return submission.ActualReviewers.Any(r => r.Id == Id);
         }
     }
 }

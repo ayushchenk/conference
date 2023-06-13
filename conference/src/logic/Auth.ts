@@ -33,22 +33,16 @@ export namespace Auth {
     return authData?.userId && isAuthed() ? authData.userId : null;
   }
 
-  export function getRoles() {
-    const authData = getData();
-
-    return authData?.roles && isAuthed() ? authData.roles : [];
-  }
-
   export function isAdmin() {
-    return getRoles().includes("Admin");
+    return getData()?.admin ?? false;
   }
 
   export function isAuthor() {
-    return getRoles().includes("Author");
+    return true;
   }
 
   export function isReviewer() {
-    return getRoles().includes("Reviewer");
+    return true;
   }
 
   function getData() {

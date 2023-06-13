@@ -18,12 +18,6 @@ namespace ConferenceManager.Core.User.AssignRole
 
             RuleFor(x => x).CustomAsync(async (command, context, token) =>
             {
-                if (!CurrentUser.IsAdmin && command.Role == ApplicationRole.Admin)
-                {
-                    context.AddException(new ForbiddenException("Only admin can assign admin role"));
-                    return;
-                }
-
                 var user = await Context.Users.FindAsync(command.Id, token);
 
                 if (user == null)
@@ -42,7 +36,7 @@ namespace ConferenceManager.Core.User.AssignRole
 
                 var isParticipant = conference.Participants.Any(p => p.Id == user.Id);
 
-                if (isParticipant)
+                if (!isParticipant)
                 {
                     context.AddException(new ForbiddenException("User is not part of the conference"));
                     return;

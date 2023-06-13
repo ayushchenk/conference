@@ -94,6 +94,7 @@ namespace ConferenceManager.Api
                 options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 
                 options.OperationFilter<SwaggerRolesFilter>();
+                options.OperationFilter<SwaggerConferenceHeaderFilter>();
             });
 
             services.Configure<SecurityStampValidatorOptions>(options =>

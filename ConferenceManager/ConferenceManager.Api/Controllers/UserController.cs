@@ -1,9 +1,11 @@
 ﻿using ConferenceManager.Api.Abstract;
+using ConferenceManager.Api.Filters;
 using ConferenceManager.Core.Account.Common;
 using ConferenceManager.Core.Common.Model.Responses;
 using ConferenceManager.Core.Common.Model.Token;
 using ConferenceManager.Core.Conferences.Common;
 using ConferenceManager.Core.User.AddRole;
+using ConferenceManager.Core.User.AssignAdminRole;
 using ConferenceManager.Core.User.Delete;
 using ConferenceManager.Core.User.Get;
 using ConferenceManager.Core.User.GetParticipations;
@@ -11,6 +13,7 @@ using ConferenceManager.Core.User.GetSubmissions;
 using ConferenceManager.Core.User.Login;
 using ConferenceManager.Core.User.Page;
 using ConferenceManager.Core.User.Register;
+using ConferenceManager.Core.User.UnassignAdminRole;
 using ConferenceManager.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -114,8 +117,9 @@ namespace ConferenceManager.Api.Controllers
         /// Assigns role to the user
         /// </summary>
         [HttpPost]
-        [Route("role")]
-        [Authorize(Roles = $"{ApplicationRole.Chair},{ApplicationRole.Chair}")]
+        [Route("{id}/role")]
+        [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Chair}")]
+        [ConferenceAuthorization(ApplicationRole.Chair)]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status204NoContent)]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
@@ -132,8 +136,9 @@ namespace ConferenceManager.Api.Controllers
         /// Unassigns role from the user
         /// </summary>
         [HttpDelete]
-        [Route("role")]
-        [Authorize(Roles = $"{ApplicationRole.Chair},{ApplicationRole.Chair}")]
+        [Route("{id}/role")]
+        [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Chair}")]
+        [ConferenceAuthorization(ApplicationRole.Chair)]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status204NoContent)]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
@@ -142,6 +147,40 @@ namespace ConferenceManager.Api.Controllers
         public async Task<IActionResult> UnassignRole(UnassignRoleCommand command, CancellationToken cancellation)
         {
             await Mediator.Send(command, cancellation);
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Assigns admin role to the user
+        /// </summary>
+        [HttpPost]
+        [Route("{id}/role/admin")]
+        [Authorize(Roles = ApplicationRole.Admin)]
+        [Produces("application/json")]
+        [SwaggerResponse(StatusCodes.Status204NoContent)]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
+        public async Task<IActionResult> AssignAdminRole(int id, CancellationToken cancellation)
+        {
+            await Mediator.Send(new AssignAdminRoleCommand(id), cancellation);
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Unassigns admin role from the user
+        /// </summary>
+        [HttpDelete]
+        [Route("{id}/role/admin")]
+        [Authorize(Roles = ApplicationRole.Admin)]
+        [Produces("application/json")]
+        [SwaggerResponse(StatusCodes.Status204NoContent)]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
+        public async Task<IActionResult> UnassignAdminRole(int id, CancellationToken cancellation)
+        {
+            await Mediator.Send(new UnassignAdminRoleCommand(id), cancellation);
 
             return NoContent();
         }

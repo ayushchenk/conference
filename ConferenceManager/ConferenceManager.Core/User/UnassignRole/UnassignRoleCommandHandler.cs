@@ -1,21 +1,38 @@
-﻿using ConferenceManager.Core.Common.Interfaces;
+﻿using ConferenceManager.Core.Common;
+using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Core.User.AddRole;
-using MediatR;
+using ConferenceManager.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace ConferenceManager.Core.User.AssignRole
 {
-    public class UnassignRoleCommandHandler : IRequestHandler<UnassignRoleCommand>
+    public class UnassignRoleCommandHandler : DbContextRequestHandler<UnassignRoleCommand>
     {
-        private readonly IIdentityService _service;
+        private readonly RoleManager<ApplicationRole> _roleManager;
 
-        public UnassignRoleCommandHandler(IIdentityService service)
+        public UnassignRoleCommandHandler(
+            IApplicationDbContext context, 
+            ICurrentUserService currentUser, 
+            IMappingHost mapper,
+            RoleManager<ApplicationRole> roleManager) : base(context, currentUser, mapper)
         {
-            _service = service;
+            _roleManager = roleManager;
         }
 
-        public async Task Handle(UnassignRoleCommand request, CancellationToken cancellationToken)
+        public override async Task Handle(UnassignRoleCommand request, CancellationToken cancellationToken)
         {
-            await _service.UnassignRole(request.Id, request.Role);
+            var role = await _roleManager.FindByNameAsync(request.Role);
+
+            var assignment = await Context.UserRoles
+                .FindAsync(new { UserId = request.Id, RoleId = role!.Id, request.ConferenceId }, cancellationToken);
+
+            if (assignment == null)
+            {
+                return;
+            }
+
+            Context.UserRoles.Remove(assignment);
+            await Context.SaveChangesAsync(cancellationToken);
         }
     }
 }

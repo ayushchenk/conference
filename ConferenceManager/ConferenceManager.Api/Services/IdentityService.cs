@@ -48,7 +48,7 @@ namespace ConferenceManager.Api.Services
                 throw new IdentityException("Incorrect password");
             }
 
-            return await GenerateJwtToken(user);
+            return GenerateJwtToken(user);
         }
 
         public async Task<TokenResponse> CreateUser(ApplicationUser user, string password)
@@ -59,8 +59,6 @@ namespace ConferenceManager.Api.Services
             {
                 throw new IdentityException(createResult.Errors);
             }
-
-            await _manager.AddToRoleAsync(user, ApplicationRole.Author);
 
             return await Authenticate(new TokenRequest()
             {
@@ -107,7 +105,7 @@ namespace ConferenceManager.Api.Services
             await _manager.UpdateSecurityStampAsync(user);
         }
 
-        private async Task<TokenResponse> GenerateJwtToken(ApplicationUser user)
+        private TokenResponse GenerateJwtToken(ApplicationUser user)
         {
             byte[] key = Encoding.ASCII.GetBytes(_settings.Key);
 
@@ -126,7 +124,7 @@ namespace ConferenceManager.Api.Services
                 })
             };
 
-            var isAdmin = await _manager.IsInRoleAsync(user, ApplicationRole.Admin);
+            var isAdmin = user.ConferenceRoles?.Any(r => r.Role.Name == ApplicationRole.Admin) ?? false;
 
             if (isAdmin)
             {

@@ -22,7 +22,7 @@ namespace ConferenceManager.Core.Submissions.Get
                     return;
                 }
 
-                if (CurrentUser.IsAuthorIn && !CurrentUser.IsAuthorOf(submission))
+                if (CurrentUser.IsAuthorIn(submission.Conference) && !CurrentUser.IsAuthorOf(submission))
                 {
                     context.AddException(new ForbiddenException("Author can only access his own submissions"));
                     return;

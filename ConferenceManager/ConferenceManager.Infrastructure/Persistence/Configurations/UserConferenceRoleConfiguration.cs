@@ -23,7 +23,7 @@ namespace ConferenceManager.Infrastructure.Persistence.Configurations
             builder.HasOne(x => x.Conference)
                 .WithMany(y => y.UserRoles)
                 .HasForeignKey(y => y.ConferenceId)
-                .IsRequired(false);
+                .IsRequired();
         }
     }
 }

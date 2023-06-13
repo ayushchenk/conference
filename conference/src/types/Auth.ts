@@ -8,5 +8,5 @@ export type AuthData = {
     email: string,
     token: Token,
     userId: number,
-    roles: string[],
+    admin: boolean;
 }
