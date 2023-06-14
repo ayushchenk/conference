@@ -10,15 +10,11 @@ namespace ConferenceManager.Core.User.Page
 {
     public class GetUserPageQueryHandler : DbContextRequestHandler<GetUserPageQuery, EntityPageResponse<UserDto>>
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-
         public GetUserPageQueryHandler(
             IApplicationDbContext context, 
             ICurrentUserService currentUser, 
-            IMappingHost mapper,
-            UserManager<ApplicationUser> userManager) : base(context, currentUser, mapper)
+            IMappingHost mapper) : base(context, currentUser, mapper)
         {
-            _userManager = userManager;
         }
 
         public override async Task<EntityPageResponse<UserDto>> Handle(GetUserPageQuery request, CancellationToken cancellationToken)
@@ -27,16 +23,9 @@ namespace ConferenceManager.Core.User.Page
 
             var page = await PaginatedList<ApplicationUser>.CreateAsync(source, request.PageIndex, request.PageSize);
 
-            var dtos = page.Select(async (u) =>
-            {
-                var dto = Mapper.Map<ApplicationUser, UserDto>(u);
-                dto.Roles = await _userManager.GetRolesAsync(u);
-                return dto;
-            });
-
             return new EntityPageResponse<UserDto>()
             {
-                Items = dtos.Select(d => d.Result),
+                Items = page.Select(Mapper.Map<ApplicationUser, UserDto>),
                 TotalCount = page.TotalCount,
                 TotalPages = page.TotalPages,
             };

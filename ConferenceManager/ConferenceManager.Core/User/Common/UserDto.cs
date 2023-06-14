@@ -16,6 +16,6 @@ namespace ConferenceManager.Core.Account.Common
 
         public string? Webpage { set; get; }
 
-        public required IEnumerable<string> Roles { set; get; }
+        public required Dictionary<int, string[]> Roles { set; get; }
     }
 }

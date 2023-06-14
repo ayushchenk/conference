@@ -5,9 +5,10 @@ import { CreateConferenceForm } from "../../components/CreateConferenceForm";
 import { FormHeader } from "../../components/FormHeader";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
 import { FormErrorAlert } from "../../components/FormErrorAlert";
+import { useConferenceIdParam } from "../../hooks/UseConferenceIdParam";
 
 export const UpdateConferencePage = () => {
-  const { conferenceId } = useParams();
+  const conferenceId = useConferenceIdParam();
   const response = useGetConferenceApi(Number(conferenceId));
 
   if (response.isLoading) {

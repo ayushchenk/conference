@@ -6,10 +6,15 @@ import { useGetApi } from "../../hooks/UseGetApi";
 import { useMemoPaging } from "../../hooks/UseMemoPaging";
 import { usePostApi } from "../../hooks/UsePostApi";
 import { User } from "../../types/User";
-import { GetParticipantsData, GetParticipantsResponse } from "./ParticipantsGrid.types";
+import { GetParticipantsData, GetParticipantsResponse } from "./ConferenceParticipantsGrid.types";
+import { headers } from "../../util/Constants";
 
 export const useGetParticipantsApi = (paging: GridPaginationModel, conferenceId: number): GetParticipantsResponse => {
   const config = useMemoPaging(paging);
+  config.headers = {
+    [headers.conference]: conferenceId
+  };
+
   return useGetApi<GetParticipantsData>(`/Conference/${conferenceId}/participants`, config);
 };
 
@@ -21,7 +26,7 @@ export const useDeleteParticipantApi = (conferenceId: number) => {
   return useDeleteApi<{}, {}>(`/Conference/${conferenceId}/participants/{0}`);
 };
 
-export const useParticipantsGridProps = (
+export const useConferenceParticipantsGridProps = (
   users: GetParticipantsResponse,
   conferenceId: number
 ): [GridRowsProp, GridColDef[]] => {

@@ -11,8 +11,8 @@ namespace ConferenceManager.Core.User.AssignRole
         private readonly RoleManager<ApplicationRole> _roleManager;
 
         public UnassignRoleCommandHandler(
-            IApplicationDbContext context, 
-            ICurrentUserService currentUser, 
+            IApplicationDbContext context,
+            ICurrentUserService currentUser,
             IMappingHost mapper,
             RoleManager<ApplicationRole> roleManager) : base(context, currentUser, mapper)
         {
@@ -24,7 +24,7 @@ namespace ConferenceManager.Core.User.AssignRole
             var role = await _roleManager.FindByNameAsync(request.Role);
 
             var assignment = await Context.UserRoles
-                .FindAsync(new { UserId = request.Id, RoleId = role!.Id, request.ConferenceId }, cancellationToken);
+                .FindAsync(new object[] { request.Id, role!.Id, request.ConferenceId }, cancellationToken);
 
             if (assignment == null)
             {

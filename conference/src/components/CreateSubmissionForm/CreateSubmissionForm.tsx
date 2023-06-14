@@ -15,10 +15,11 @@ import { CreateSubmissionRequest, initialValues } from "./CreateSubmissionForm.t
 import { createValidationSchema, updateValidationSchema } from "./CreateSubmissionForm.validator";
 import { IconButton } from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
+import { useConferenceIdParam } from "../../hooks/UseConferenceIdParam";
 
 export const CreateSubmissionForm = ({ submission }: { submission?: Submission }) => {
   const navigate = useNavigate();
-  const { conferenceId } = useParams();
+  const conferenceId = useConferenceIdParam();
   const { response: responseUpdate, put } = useUpdateSubmissionApi();
   const { response: responseCreate, post } = usePostCreateSubmissionApi();
 
@@ -35,7 +36,7 @@ export const CreateSubmissionForm = ({ submission }: { submission?: Submission }
 
   const values: CreateSubmissionRequest = submission
     ? { ...submission }
-    : { ...initialValues, conferenceId: Number(conferenceId) }
+    : { ...initialValues, conferenceId: conferenceId }
 
   const formik = useFormik({
     initialValues: values,
@@ -174,7 +175,7 @@ export const CreateSubmissionForm = ({ submission }: { submission?: Submission }
         <Box sx={{ display: "flex", mt: 2 }}>
           {formik.values.otherFiles &&
             <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Box sx={{width: "500px"}}>
+              <Box sx={{ width: "500px" }}>
                 {formik.values.otherFiles.map((file, index) => (
                   <FormHelperText key={index}>{file.name}</FormHelperText>
                 ))}

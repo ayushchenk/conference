@@ -48,12 +48,6 @@ export const useParticipantUsersGridProps = (
       flex: 1
     },
     {
-      headerName: "Roles",
-      field: "roles",
-      minWidth: 150,
-      flex: 1
-    },
-    {
       field: "actions",
       type: "actions",
       width: 50,

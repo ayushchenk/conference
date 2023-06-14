@@ -15,11 +15,12 @@ import { SubmissionPapersTable } from "./SubmissionPapersTable";
 import { TabPanel } from "./TabPanel";
 import { Submission } from "../../types/Conference";
 import { FormHeader } from "../FormHeader";
+import { useConferenceIdParam } from "../../hooks/UseConferenceIdParam";
 
 export const SubmissionDetails = ({ submission }: { submission: Submission }) => {
-  const { conferenceId, submissionId } = useParams();
+  const conferenceId = useConferenceIdParam();
   const [tabValue, setTabValue] = useState(0);
-  const { post: returnSubmission } = usePostReturnSubmissionAPI(Number(submissionId));
+  const { post: returnSubmission } = usePostReturnSubmissionAPI(submission.id);
 
   const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
@@ -64,7 +65,7 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
                   <Button color="inherit" disabled={!submission.isValidForUpdate}>
                     <Link
                       className="header__link"
-                      to={`/conferences/${conferenceId}/submissions/${submissionId}/edit`}
+                      to={`/conferences/${conferenceId}/submissions/${submission.id}/edit`}
                     >
                       Edit
                     </Link>

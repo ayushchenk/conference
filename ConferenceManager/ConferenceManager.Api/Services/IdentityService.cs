@@ -6,6 +6,7 @@ using ConferenceManager.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System.Collections.Immutable;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -79,32 +80,6 @@ namespace ConferenceManager.Api.Services
             await _manager.DeleteAsync(user);
         }
 
-        public async Task AssignRole(int id, string role)
-        {
-            var user = await _manager.FindByIdAsync(id.ToString());
-
-            if (user == null)
-            {
-                throw new NotFoundException("User not found");
-            }
-
-            await _manager.AddToRoleAsync(user, role);
-            await _manager.UpdateSecurityStampAsync(user);
-        }
-
-        public async Task UnassignRole(int id, string role)
-        {
-            var user = await _manager.FindByIdAsync(id.ToString());
-
-            if (user == null)
-            {
-                throw new NotFoundException("User not found");
-            }
-
-            await _manager.RemoveFromRoleAsync(user, role);
-            await _manager.UpdateSecurityStampAsync(user);
-        }
-
         private TokenResponse GenerateJwtToken(ApplicationUser user)
         {
             byte[] key = Encoding.ASCII.GetBytes(_settings.Key);
@@ -131,6 +106,12 @@ namespace ConferenceManager.Api.Services
                 descriptor.Subject.AddClaim(new Claim(ClaimTypes.Role, ApplicationRole.Admin));
             }
 
+            var roles = user.ConferenceRoles
+                ?.Select(r => new { r.ConferenceId, Role = r.Role.Name! })
+                ?.GroupBy(r => r.ConferenceId)
+                ?.ToDictionary(key => key.Key, value => value.Select(v => v.Role).ToArray())
+                ?? new Dictionary<int, string[]>();
+
             var token = handler.CreateToken(descriptor);
             var tokenValue = handler.WriteToken(token);
 
@@ -138,7 +119,7 @@ namespace ConferenceManager.Api.Services
             {
                 UserId = user.Id,
                 Email = user.Email!,
-                Admin = isAdmin,
+                Roles = roles,
                 Token = new Token()
                 {
                     AccessToken = tokenValue,

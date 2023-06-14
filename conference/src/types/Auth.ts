@@ -8,5 +8,7 @@ export type AuthData = {
     email: string,
     token: Token,
     userId: number,
-    admin: boolean;
+    roles: {
+        [conferenceId: number]: string[]
+    };
 }

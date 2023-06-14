@@ -1,14 +1,8 @@
-import { TableContainer, Paper, Table, TableBody, TableRow, TableCell, Container, IconButton } from "@mui/material";
+import { TableContainer, Paper, Table, TableBody, TableRow, TableCell, Container } from "@mui/material";
 import { UserDetailsProps } from "./UserDetails.types";
 import { FormHeader } from "../FormHeader";
-import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
-import { useState } from "react";
-import { UserRoleManagementDialog } from "../UsersGrid";
-import { AdminVisibility } from "../ProtectedRoute/AdminVisibility";
 
 export const UserDetails = ({ user }: UserDetailsProps) => {
-  const [modalOpen, setModalOpen] = useState(false);
-
   const tableRow = (label: string, value: string, link: boolean = false) => {
     return (
       <TableRow>
@@ -28,25 +22,9 @@ export const UserDetails = ({ user }: UserDetailsProps) => {
             {tableRow("Country", user.country)}
             {tableRow("Affiliation", user.affiliation)}
             {tableRow("Webpage", user.webpage, true)}
-            <TableRow>
-              <TableCell variant="head">Roles</TableCell>
-              <TableCell>
-                <label>{user.roles.join(", ")}</label>
-                <AdminVisibility>
-                  <IconButton onClick={() => setModalOpen(true)}>
-                    <ManageAccountsIcon />
-                  </IconButton>
-                </AdminVisibility>
-              </TableCell>
-            </TableRow>
           </TableBody>
         </Table>
       </TableContainer>
-      <UserRoleManagementDialog
-        open={modalOpen}
-        user={user}
-        onClose={() => setModalOpen(false)}
-      />
     </Container>
   );
 } 

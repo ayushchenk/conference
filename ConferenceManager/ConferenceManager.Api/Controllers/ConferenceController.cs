@@ -1,4 +1,5 @@
 ﻿using ConferenceManager.Api.Abstract;
+using ConferenceManager.Api.Filters;
 using ConferenceManager.Core.Account.Common;
 using ConferenceManager.Core.Common.Model.Responses;
 using ConferenceManager.Core.Conferences.AddParticipant;
@@ -43,7 +44,8 @@ namespace ConferenceManager.Api.Controllers
         /// All fields are required, payload replaces existing record in db 
         /// </remarks>
         [HttpPut]
-        [Authorize(Roles = ApplicationRole.Admin)]
+        [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Chair}")]
+        [ConferenceAuthorization(ApplicationRole.Chair)]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CreateEntityResponse))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
@@ -109,7 +111,8 @@ namespace ConferenceManager.Api.Controllers
         /// </summary>
         [HttpPost]
         [Route("{id}/participants/{userId}")]
-        [Authorize(Roles = ApplicationRole.Admin)]
+        [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Chair}")]
+        [ConferenceAuthorization(ApplicationRole.Chair)]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status204NoContent)]
         [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
@@ -146,6 +149,7 @@ namespace ConferenceManager.Api.Controllers
         [HttpGet]
         [Route("{id}/submissions")]
         [Authorize]
+        [ConferenceAuthorization]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(EntityPageResponse<SubmissionDto>))]
         [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
@@ -162,7 +166,8 @@ namespace ConferenceManager.Api.Controllers
         /// </summary>
         [HttpGet]
         [Route("{id}/participants")]
-        [Authorize]
+        [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Chair}")]
+        [ConferenceAuthorization(ApplicationRole.Chair)]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(EntityPageResponse<UserDto>))]
         [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]

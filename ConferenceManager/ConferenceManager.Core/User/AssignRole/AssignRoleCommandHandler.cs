@@ -24,7 +24,7 @@ namespace ConferenceManager.Core.User.AssignRole
             var role = await _roleManager.FindByNameAsync(request.Role);
 
             var existingAssignment = await Context.UserRoles
-                .FindAsync(new { UserId = request.Id, RoleId = role!.Id, request.ConferenceId }, cancellationToken);
+                .FindAsync(new object[] { request.Id, role!.Id, request.ConferenceId }, cancellationToken);
 
             if (existingAssignment != null)
             {

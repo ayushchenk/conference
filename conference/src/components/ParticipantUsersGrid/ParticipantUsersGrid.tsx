@@ -7,10 +7,9 @@ import { ParticipantUsersGridProps } from "./ParticipantUsersGrid.types";
 
 export const ParticipantUsersGrid: React.FC<ParticipantUsersGridProps> = ({ handleAddParticipant }) => {
   const [currentPage, setCurrentPage] = useState<GridPaginationModel>(defaultPage);
-
   const users = useGetUsersApi(currentPage);
-
   const [rowCountState, setRowCountState] = useState(users.data?.totalCount || 0);
+  
   useEffect(() => {
     setRowCountState((prevRowCountState) => users.data?.totalCount ?? prevRowCountState);
   }, [rowCountState, setRowCountState, users]);

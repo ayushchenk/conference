@@ -8,6 +8,11 @@ namespace ConferenceManager.Core.User.Common
     {
         public UserDto Map(ApplicationUser source)
         {
+            var roles = source.ConferenceRoles
+                .Select(r => new { r.ConferenceId, Role = r.Role.Name! })
+                .GroupBy(r => r.ConferenceId)
+                .ToDictionary(key => key.Key, value => value.Select(v => v.Role).ToArray());
+
             return new UserDto()
             {
                 Id = source.Id,
@@ -16,7 +21,7 @@ namespace ConferenceManager.Core.User.Common
                 Affiliation = source.Affiliation,
                 Country = source.Country,
                 Webpage = source.Webpage,
-                Roles = Enumerable.Empty<string>()
+                Roles = roles
             };
         }
     }

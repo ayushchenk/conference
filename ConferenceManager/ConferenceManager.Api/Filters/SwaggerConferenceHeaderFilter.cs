@@ -17,12 +17,15 @@ namespace ConferenceManager.Api.Filters
                 operation.Summary += $" [{Headers.ConferenceId}]";
                 operation.Parameters ??= new List<OpenApiParameter>();
 
-                operation.Parameters.Add(new OpenApiParameter
+                if (!operation.Parameters.Any(p => p.Name == Headers.ConferenceId))
                 {
-                    Name = Headers.ConferenceId,
-                    In = ParameterLocation.Header,
-                    Required = true
-                });
+                    operation.Parameters.Insert(0, new OpenApiParameter
+                    {
+                        Name = Headers.ConferenceId,
+                        In = ParameterLocation.Header,
+                        Required = true
+                    });
+                }
             }
         }
     }

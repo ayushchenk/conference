@@ -1,7 +1,6 @@
 import { DataGrid, GridPaginationModel } from "@mui/x-data-grid";
-import { useParticipantsGridProps, useGetParticipantsApi, useAddParticipantApi } from "./ParticipantsGrid.hooks";
+import { useConferenceParticipantsGridProps, useGetParticipantsApi, useAddParticipantApi } from "./ConferenceParticipantsGrid.hooks";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -10,15 +9,16 @@ import DialogActions from "@mui/material/DialogActions";
 import { ParticipantUsersGrid } from "../ParticipantUsersGrid";
 import { defaultPage } from "../../util/Constants";
 import { User } from "../../types/User";
+import { useConferenceIdParam } from "../../hooks/UseConferenceIdParam";
 
-export const ParticipantsGrid = () => {
-  const { conferenceId } = useParams();
+export const ConferenceParticipantsGrid = () => {
+  const conferenceId = useConferenceIdParam();
   const [currentPage, setCurrentPage] = useState<GridPaginationModel>(defaultPage);
-  const participants = useGetParticipantsApi(currentPage, Number(conferenceId));
+  const participants = useGetParticipantsApi(currentPage, conferenceId);
 
-  const { response, post: addParticipant } = useAddParticipantApi(Number(conferenceId));
+  const { response, post: addParticipant } = useAddParticipantApi(conferenceId);
 
-  const [initialRows, columns] = useParticipantsGridProps(participants, Number(conferenceId));
+  const [initialRows, columns] = useConferenceParticipantsGridProps(participants, conferenceId);
   const [rows, setRows] = useState(initialRows);
   const [openAddParticipantDialog, setOpenAddParticipantDialog] = useState(false);
 

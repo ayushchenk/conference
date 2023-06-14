@@ -1,5 +1,6 @@
 ﻿using ConferenceManager.Api.Abstract;
 using ConferenceManager.Api.Filters;
+using ConferenceManager.Api.Util;
 using ConferenceManager.Core.Account.Common;
 using ConferenceManager.Core.Common.Model.Responses;
 using ConferenceManager.Core.Common.Model.Token;
@@ -125,8 +126,14 @@ namespace ConferenceManager.Api.Controllers
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
         [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
         [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
-        public async Task<IActionResult> AssignRole(AssignRoleCommand command, CancellationToken cancellation)
+        public async Task<IActionResult> AssignRole(
+            [FromHeader(Name = Headers.ConferenceId)] int conferenceId, 
+            int id, 
+            AssignRoleCommand command, 
+            CancellationToken cancellation)
         {
+            command.Id = id;
+            command.ConferenceId = conferenceId;
             await Mediator.Send(command, cancellation);
 
             return NoContent();
@@ -144,8 +151,14 @@ namespace ConferenceManager.Api.Controllers
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
         [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
         [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
-        public async Task<IActionResult> UnassignRole(UnassignRoleCommand command, CancellationToken cancellation)
+        public async Task<IActionResult> UnassignRole(
+            [FromHeader(Name = Headers.ConferenceId)] int conferenceId,
+            int id, 
+            UnassignRoleCommand command, 
+            CancellationToken cancellation)
         {
+            command.Id = id;
+            command.ConferenceId = conferenceId;
             await Mediator.Send(command, cancellation);
 
             return NoContent();

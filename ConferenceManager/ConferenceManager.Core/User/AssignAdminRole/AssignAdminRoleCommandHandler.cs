@@ -32,7 +32,7 @@ namespace ConferenceManager.Core.User.AssignAdminRole
             var role = await _roleManager.FindByNameAsync(ApplicationRole.Admin);
 
             var existingAssignment = await Context.UserRoles
-                .FindAsync(new { UserId = request.Id, RoleId = role!.Id, ConferenceId = adminConference!.Id }, cancellationToken);
+                .FindAsync(new object[] { request.Id, role!.Id, adminConference!.Id }, cancellationToken);
 
             if (existingAssignment != null)
             {

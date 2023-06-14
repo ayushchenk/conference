@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
 import { DataGrid, GridPaginationModel } from "@mui/x-data-grid";
 import { defaultPage } from "../../util/Constants";
 import { useGetSubmissionsApi, useSubmissionsGridProps } from "./SubmissionsGrid.hooks";
+import { useConferenceIdParam } from "../../hooks/UseConferenceIdParam";
 
 export const SubmissionsGrid = () => {
   const [currentPage, setCurrentPage] = useState<GridPaginationModel>(defaultPage);
-  const { conferenceId } = useParams();
+  const conferenceId = useConferenceIdParam();
   const submissions = useGetSubmissionsApi(currentPage, Number(conferenceId));
   const [rows, columns] = useSubmissionsGridProps(submissions);
 

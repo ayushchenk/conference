@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ConferenceManager.Domain.Entities;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ConferenceManager.Api.Filters
 {
@@ -6,7 +7,7 @@ namespace ConferenceManager.Api.Filters
     {
         public ConferenceAuthorizationAttribute(params string[] roles) : base(typeof(ConferenceAuthorizationFilter))
         {
-            Arguments = new object[] { roles };
+            Arguments = new object[] { roles.Any() ? roles : ApplicationRole.SupportedRoles };
         }
     }
 }

@@ -34,15 +34,33 @@ export namespace Auth {
   }
 
   export function isAdmin() {
-    return getData()?.admin ?? false;
+    const authData = getData();
+
+    if (!authData) {
+      return false;
+    }
+
+    for (const conference in authData.roles) {
+      const roles = authData.roles[conference];
+
+      if (roles.find(r => r === "Admin")) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
-  export function isAuthor() {
-    return true;
+  export function isAuthor(conferenceId: number) {
+    return !!getRoles(conferenceId).find(r => r === "Author");
   }
 
-  export function isReviewer() {
-    return true;
+  export function isReviewer(conferenceId: number) {
+    return !!getRoles(conferenceId).find(r => r === "Reviewer");
+  }
+
+  export function isChair(conferenceId: number) {
+    return !!getRoles(conferenceId).find(r => r === "Chair");
   }
 
   function getData() {
@@ -53,5 +71,11 @@ export namespace Auth {
     }
 
     return JSON.parse(authDataString) as AuthData;
+  }
+
+  function getRoles(conferenceId: number) {
+    const authData = getData();
+
+    return authData?.roles[conferenceId] ?? [];
   }
 }

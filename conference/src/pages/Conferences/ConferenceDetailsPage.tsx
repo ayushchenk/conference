@@ -1,13 +1,13 @@
 import { Container } from "@mui/material";
 import { ConferenceDetails } from "../../components/ConferenceDetails";
-import { useParams } from "react-router-dom";
 import { useGetConferenceApi } from "../../components/ConferenceDetails/ConferenceDetails.hooks";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
 import { FormErrorAlert } from "../../components/FormErrorAlert";
+import { useConferenceIdParam } from "../../hooks/UseConferenceIdParam";
 
 export const ConferenceDetailsPage = () => {
-  const { conferenceId } = useParams();
-  const response = useGetConferenceApi(Number(conferenceId));
+  const conferenceId = useConferenceIdParam();
+  const response = useGetConferenceApi(conferenceId);
 
   if (response.isLoading) {
     return <LoadingSpinner />;
