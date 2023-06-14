@@ -1,9 +1,13 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { ApiResponse } from "../types/ApiResponse";
 import { format } from "../util/Functions";
+import { headers } from "../util/Constants";
+import { useConferenceId } from "./UseConferenceId";
 
 export function useDeleteApi<TRequest, TData>(path: string, config?: AxiosRequestConfig<any> | undefined) {
+  const conferenceId = useConferenceId();
+
   const [response, setResponse] = useState<ApiResponse<TData>>({
     data: null,
     isError: false,
@@ -11,10 +15,17 @@ export function useDeleteApi<TRequest, TData>(path: string, config?: AxiosReques
     error: null,
   });
 
+  const configWithHeaders: AxiosRequestConfig<any> = useMemo(() => ({
+    ...config,
+    headers: {
+      [headers.conference]: conferenceId
+    }
+  }), [config, conferenceId]);
+
   const performDelete = useCallback(
     (data?: TRequest, ...urlParams: (string | number)[]) => {
       axios
-        .delete<TData>(format(path, urlParams), { data: data, ...config })
+        .delete<TData>(format(path, urlParams), { data: data, ...configWithHeaders })
         .then((response) => {
           setResponse({
             data: response.data,
@@ -33,7 +44,7 @@ export function useDeleteApi<TRequest, TData>(path: string, config?: AxiosReques
           });
         });
     },
-    [path, config]
+    [path, configWithHeaders]
   );
 
   return { response, performDelete: performDelete };

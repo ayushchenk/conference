@@ -1,3 +1,5 @@
+import { User } from "../types/User";
+
 //string of type "{0} text {1} ..."
 export function format(str: string, ...params: any[]) {
   return str.replace(/{([0-9]+)}/g, function (match, index) {
@@ -23,4 +25,8 @@ export function buildFormData(values: { [key: string]: any }): FormData {
     formData.append(field, String(value));
   }
   return formData;
+}
+
+export function getConferenceRoles(user: User | null, conferenceId: number) {
+  return user?.roles[conferenceId] ?? [];
 }

@@ -1,9 +1,13 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useMemo } from "react";
 import { ApiResponse } from "../types/ApiResponse";
 import { format } from "../util/Functions";
+import { headers } from "../util/Constants";
+import { useConferenceId } from "./UseConferenceId";
 
 export function usePostApi<TRequest, TData>(path: string, config?: AxiosRequestConfig<any> | undefined) {
+  const conferenceId = useConferenceId();
+
   const [response, setResponse] = useState<ApiResponse<TData>>({
     data: null,
     isError: false,
@@ -11,10 +15,17 @@ export function usePostApi<TRequest, TData>(path: string, config?: AxiosRequestC
     error: null,
   });
 
+  const configWithHeaders: AxiosRequestConfig<any> = useMemo(() => ({
+    ...config,
+    headers: {
+      [headers.conference]: conferenceId
+    }
+  }), [config, conferenceId]);
+
   const post = useCallback(
     (data: TRequest, ...urlParams: (string | number)[]) => {
       axios
-        .post<TData>(format(path, urlParams), data, config)
+        .post<TData>(format(path, urlParams), data, configWithHeaders)
         .then((response) => {
           setResponse({
             data: response.data,
@@ -33,7 +44,7 @@ export function usePostApi<TRequest, TData>(path: string, config?: AxiosRequestC
           });
         });
     },
-    [path, config]
+    [path, configWithHeaders]
   );
 
   return { response, post: post };

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
@@ -15,10 +15,10 @@ import { SubmissionPapersTable } from "./SubmissionPapersTable";
 import { TabPanel } from "./TabPanel";
 import { Submission } from "../../types/Conference";
 import { FormHeader } from "../FormHeader";
-import { useConferenceIdParam } from "../../hooks/UseConferenceIdParam";
+import { useConferenceId } from "../../hooks/UseConferenceId";
 
 export const SubmissionDetails = ({ submission }: { submission: Submission }) => {
-  const conferenceId = useConferenceIdParam();
+  const conferenceId = useConferenceId();
   const [tabValue, setTabValue] = useState(0);
   const { post: returnSubmission } = usePostReturnSubmissionAPI(submission.id);
 

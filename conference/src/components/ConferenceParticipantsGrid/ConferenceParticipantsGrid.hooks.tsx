@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { GridActionsCellItem, GridColDef, GridPaginationModel, GridRowsProp } from "@mui/x-data-grid";
 import { useDeleteApi } from "../../hooks/UseDeleteApi";
@@ -7,15 +7,13 @@ import { useMemoPaging } from "../../hooks/UseMemoPaging";
 import { usePostApi } from "../../hooks/UsePostApi";
 import { User } from "../../types/User";
 import { GetParticipantsData, GetParticipantsResponse } from "./ConferenceParticipantsGrid.types";
-import { headers } from "../../util/Constants";
+import { Auth } from "../../logic/Auth";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 
 export const useGetParticipantsApi = (paging: GridPaginationModel, conferenceId: number): GetParticipantsResponse => {
   const config = useMemoPaging(paging);
-  config.headers = {
-    [headers.conference]: conferenceId
-  };
-
-  return useGetApi<GetParticipantsData>(`/Conference/${conferenceId}/participants`, config);
+  const path = useMemo(() => `/Conference/${conferenceId}/participants`, [conferenceId]);
+  return useGetApi<GetParticipantsData>(path, config);
 };
 
 export const useAddParticipantApi = (conferenceId: number) => {
@@ -28,7 +26,8 @@ export const useDeleteParticipantApi = (conferenceId: number) => {
 
 export const useConferenceParticipantsGridProps = (
   users: GetParticipantsResponse,
-  conferenceId: number
+  conferenceId: number,
+  openRoleChange: (user: User) => void,
 ): [GridRowsProp, GridColDef[]] => {
   const [rows, setRows] = useState<User[]>(users.data?.items ?? []);
   const [deletedUserId, setDeletedUserId] = useState<number | null>(null);
@@ -85,9 +84,13 @@ export const useConferenceParticipantsGridProps = (
     {
       headerName: "Roles",
       field: "roles",
-      width: 150
+      width: 150,
+      valueFormatter: (params) => params.value[conferenceId] ?? []
     },
-    {
+  ];
+
+  if (Auth.isAdmin() || Auth.isChair(conferenceId)) {
+    columns.push({
       field: "actions",
       type: "actions",
       width: 80,
@@ -97,9 +100,14 @@ export const useConferenceParticipantsGridProps = (
           label="Delete Participant"
           onClick={() => handleDelete(params.row.id)}
         />,
+        <GridActionsCellItem
+          icon={<ManageAccountsIcon />}
+          label="Manage Roles"
+          onClick={() => openRoleChange(params.row)}
+        />
       ],
-    },
-  ];
+    });
+  }
 
   return [rows, columns];
 };

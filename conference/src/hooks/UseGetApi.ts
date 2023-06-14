@@ -1,36 +1,49 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ApiResponse } from "../types/ApiResponse";
+import { headers } from "../util/Constants";
+import { useConferenceId } from "./UseConferenceId";
 
 export function useGetApi<TData>(path: string, config?: AxiosRequestConfig<any> | undefined) {
-    const [response, setResponse] = useState<ApiResponse<TData>>({
-        data: null,
-        isError: false,
-        isLoading: true,
-        error: null
-    });
+  const conferenceId = useConferenceId();
 
-    useEffect(() => {
-        axios
-            .get<TData>(path, config)
-            .then((response) => {
-                setResponse({
-                    data: response.data,
-                    isError: false,
-                    isLoading: false,
-                    error: null
-                });
-            })
-            .catch((error) => {
-                console.error(error);
-                setResponse({
-                    data: null,
-                    isError: true,
-                    isLoading: false,
-                    error: error?.response?.data
-                });
-            });
-    }, [path, config]);
+  console.log(conferenceId);
 
-    return response;
+  const [response, setResponse] = useState<ApiResponse<TData>>({
+    data: null,
+    isError: false,
+    isLoading: true,
+    error: null
+  });
+
+  const configWithHeaders: AxiosRequestConfig<any> = useMemo(() => ({
+    ...config,
+    headers: {
+      [headers.conference]: conferenceId
+    }
+  }), [config, conferenceId]);
+
+  useEffect(() => {
+    axios
+      .get<TData>(path, configWithHeaders)
+      .then((response) => {
+        setResponse({
+          data: response.data,
+          isError: false,
+          isLoading: false,
+          error: null
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+        setResponse({
+          data: null,
+          isError: true,
+          isLoading: false,
+          error: error?.response?.data
+        });
+      });
+  }, [path, configWithHeaders]);
+
+  return response;
 }

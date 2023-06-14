@@ -1,11 +1,10 @@
 import { Navigate } from "react-router-dom";
 import { Auth } from "../../logic/Auth";
 import { ProtectedProps } from "./Protected";
-import { useContext } from "react";
-import { ConferenceContext } from "../../contexts/ConferenceContext";
+import { useConferenceId } from "../../hooks/UseConferenceId";
 
 export const AuthorProtected = (props: ProtectedProps) => {
-  const { conferenceId } = useContext(ConferenceContext);
+  const conferenceId = useConferenceId();
 
   if (!Auth.isAuthor(conferenceId)) {
     return <Navigate to="/" replace />;

@@ -1,12 +1,11 @@
-import { useContext } from "react";
-import { ConferenceContext } from "../../contexts/ConferenceContext";
+import { useConferenceId } from "../../hooks/UseConferenceId";
 import { Auth } from "../../logic/Auth";
 import { ProtectedProps } from "./Protected";
 
 export const ReviewerVisibility = (props: ProtectedProps) => {
-  const { conferenceId } = useContext(ConferenceContext);
+  const conferenceId = useConferenceId();
 
-  if (Auth.isAuthed() && Auth.isReviewer(conferenceId)) {
+  if (Auth.isReviewer(conferenceId)) {
     return <>{props.children}</>;
   }
   return null;

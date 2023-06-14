@@ -1,6 +1,6 @@
 import { useFormik } from "formik";
 import { ChangeEvent, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import UploadFile from "@mui/icons-material/UploadFile";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -15,11 +15,11 @@ import { CreateSubmissionRequest, initialValues } from "./CreateSubmissionForm.t
 import { createValidationSchema, updateValidationSchema } from "./CreateSubmissionForm.validator";
 import { IconButton } from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
-import { useConferenceIdParam } from "../../hooks/UseConferenceIdParam";
+import { useConferenceId } from "../../hooks/UseConferenceId";
 
 export const CreateSubmissionForm = ({ submission }: { submission?: Submission }) => {
   const navigate = useNavigate();
-  const conferenceId = useConferenceIdParam();
+  const conferenceId = useConferenceId();
   const { response: responseUpdate, put } = useUpdateSubmissionApi();
   const { response: responseCreate, post } = usePostCreateSubmissionApi();
 

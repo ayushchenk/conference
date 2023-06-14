@@ -18,10 +18,6 @@ namespace ConferenceManager.Core.Conferences.Create
         {
             var conference = Mapper.Map<CreateConferenceCommand, Conference>(request);
 
-            var createdby = await Context.Users.FindAsync(CurrentUser.Id, cancellationToken);
-
-            conference.Participants.Add(createdby!);
-
             Context.Conferences.Add(conference);
 
             await Context.SaveChangesAsync(cancellationToken);

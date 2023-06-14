@@ -43,7 +43,7 @@ export namespace Auth {
     for (const conference in authData.roles) {
       const roles = authData.roles[conference];
 
-      if (roles.find(r => r === "Admin")) {
+      if (roles.find(r => r === "Admin" && isAuthed())) {
         return true;
       }
     }
@@ -52,15 +52,15 @@ export namespace Auth {
   }
 
   export function isAuthor(conferenceId: number) {
-    return !!getRoles(conferenceId).find(r => r === "Author");
+    return !!getRoles(conferenceId).find(r => r === "Author") && isAuthed();
   }
 
   export function isReviewer(conferenceId: number) {
-    return !!getRoles(conferenceId).find(r => r === "Reviewer");
+    return !!getRoles(conferenceId).find(r => r === "Reviewer") && isAuthed();
   }
 
   export function isChair(conferenceId: number) {
-    return !!getRoles(conferenceId).find(r => r === "Chair");
+    return !!getRoles(conferenceId).find(r => r === "Chair") && isAuthed();
   }
 
   function getData() {

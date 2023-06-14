@@ -1,8 +1,12 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { ApiResponse } from "../types/ApiResponse";
+import { headers } from "../util/Constants";
+import { useConferenceId } from "./UseConferenceId";
 
 export function usePutApi<TRequest, TData>(path: string, config?: AxiosRequestConfig<any> | undefined) {
+  const conferenceId = useConferenceId();
+
   const [response, setResponse] = useState<ApiResponse<TData>>({
     data: null,
     isError: false,
@@ -10,10 +14,17 @@ export function usePutApi<TRequest, TData>(path: string, config?: AxiosRequestCo
     error: null,
   });
 
+  const configWithHeaders: AxiosRequestConfig<any> = useMemo(() => ({
+    ...config,
+    headers: {
+      [headers.conference]: conferenceId
+    }
+  }), [config, conferenceId]);
+
   const put = useCallback(
     (data: TRequest) => {
       axios
-        .put<TData>(path, data, config)
+        .put<TData>(path, data, configWithHeaders)
         .then((response) => {
           setResponse({
             data: response.data,
@@ -32,7 +43,7 @@ export function usePutApi<TRequest, TData>(path: string, config?: AxiosRequestCo
           });
         });
     },
-    [path, config]
+    [path, configWithHeaders]
   );
 
   return { response, put };

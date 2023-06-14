@@ -3,21 +3,29 @@ import { Dialog, DialogTitle, DialogContent, Box, Autocomplete, Chip, TextField 
 import { UserRoleManagementDialogProps } from "./UsersGrid.types";
 import { userRoles } from "../../util/Constants";
 import { useAddUserRoleApi, useRemoveUserRoleApi } from "./UsersGrid.hooks";
+import { getConferenceRoles } from "../../util/Functions";
+import { useConferenceId } from "../../hooks/UseConferenceId";
 
 export const UserRoleManagementDialog: React.FC<UserRoleManagementDialogProps> = ({
   open,
   user,
   onClose
 }) => {
-  const [roles, setRoles] = useState<string[]>(user?.roles || []);
+  const conferenceId = useConferenceId();
+  const [roles, setRoles] = useState<string[]>(getConferenceRoles(user, conferenceId));
   const { post: addRole } = useAddUserRoleApi();
   const { performDelete: removeRole } = useRemoveUserRoleApi();
 
-  const handleRoleChange = (event: React.ChangeEvent<{}>, value: string | string[]) => {
-    value = Array.isArray(value) ? value : [];
+  useEffect(() => {
+    setRoles(getConferenceRoles(user, conferenceId));
+  }, [user, conferenceId]);
+
+  const handleRoleChange = (_: React.ChangeEvent<{}>, value: string | string[]) => {
+    const newValue = Array.isArray(value) ? value : [];
+
     if (user) {
-      const addedRole = value.find((role) => !roles.includes(role));
-      const removedRole = roles.find((role) => !value.includes(role));
+      const addedRole = newValue.find((role) => !roles.includes(role));
+      const removedRole = roles.find((role) => !newValue.includes(role));
 
       if (addedRole) {
         addRole({ role: addedRole }, user.id);
@@ -28,12 +36,8 @@ export const UserRoleManagementDialog: React.FC<UserRoleManagementDialogProps> =
       }
     }
 
-    setRoles(value);
+    setRoles(newValue);
   };
-
-  useEffect(() => {
-    setRoles(user?.roles || []);
-  }, [user]);
 
   return (
     <Dialog open={open} onClose={onClose}>

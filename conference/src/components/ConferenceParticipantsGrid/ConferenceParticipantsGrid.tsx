@@ -1,6 +1,6 @@
 import { DataGrid, GridPaginationModel } from "@mui/x-data-grid";
 import { useConferenceParticipantsGridProps, useGetParticipantsApi, useAddParticipantApi } from "./ConferenceParticipantsGrid.hooks";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -9,32 +9,40 @@ import DialogActions from "@mui/material/DialogActions";
 import { ParticipantUsersGrid } from "../ParticipantUsersGrid";
 import { defaultPage } from "../../util/Constants";
 import { User } from "../../types/User";
-import { useConferenceIdParam } from "../../hooks/UseConferenceIdParam";
+import { useConferenceId } from "../../hooks/UseConferenceId";
+import { UserRoleManagementDialog } from "../UsersGrid";
 
 export const ConferenceParticipantsGrid = () => {
-  const conferenceId = useConferenceIdParam();
+  const conferenceId = useConferenceId();
   const [currentPage, setCurrentPage] = useState<GridPaginationModel>(defaultPage);
   const participants = useGetParticipantsApi(currentPage, conferenceId);
-
   const { response, post: addParticipant } = useAddParticipantApi(conferenceId);
-
-  const [initialRows, columns] = useConferenceParticipantsGridProps(participants, conferenceId);
-  const [rows, setRows] = useState(initialRows);
   const [openAddParticipantDialog, setOpenAddParticipantDialog] = useState(false);
+  const [openRoleDialog, setOpenRoleDialog] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [newParticipantData, setNewParticipantData] = useState<User | null>(null);
+
+  const handleOpenRoleDialog = useCallback((user: User) => {
+    setSelectedUser(user);
+    setOpenRoleDialog(true);
+  }, []);
+
+  const [initialRows, columns] = useConferenceParticipantsGridProps(participants, conferenceId, handleOpenRoleDialog);
+  const [rows, setRows] = useState(initialRows);
+
+  const handleAddParticipantClick = () => {
+    setOpenAddParticipantDialog(true);
+  };
+
+  const handleAddParticipant = (user: User) => {
+    addParticipant({}, user.id);
+    setNewParticipantData(user);
+  };
 
   useEffect(() => {
     setRows(initialRows);
   }, [initialRows]);
 
-  const [newParticipantData, setNewParticipantData] = useState<User | null>(null);
-
-  const handleAddParticipantClick = () => {
-    setOpenAddParticipantDialog(true);
-  };
-  const handleAddParticipant = (user: User) => {
-    addParticipant({}, user.id);
-    setNewParticipantData(user);
-  };
   useEffect(() => {
     if (!response.isLoading && !response.isError && newParticipantData) {
       setOpenAddParticipantDialog(false);
@@ -66,6 +74,11 @@ export const ConferenceParticipantsGrid = () => {
           <Button onClick={() => setOpenAddParticipantDialog(false)}>Cancel</Button>
         </DialogActions>
       </Dialog>
+      <UserRoleManagementDialog
+        user={selectedUser}
+        open={openRoleDialog}
+        onClose={() => setOpenRoleDialog(false)}
+      />
     </>
   );
 };

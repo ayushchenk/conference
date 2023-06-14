@@ -3,10 +3,10 @@ import { ConferenceDetails } from "../../components/ConferenceDetails";
 import { useGetConferenceApi } from "../../components/ConferenceDetails/ConferenceDetails.hooks";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
 import { FormErrorAlert } from "../../components/FormErrorAlert";
-import { useConferenceIdParam } from "../../hooks/UseConferenceIdParam";
+import { useConferenceId } from "../../hooks/UseConferenceId";
 
 export const ConferenceDetailsPage = () => {
-  const conferenceId = useConferenceIdParam();
+  const conferenceId = useConferenceId();
   const response = useGetConferenceApi(conferenceId);
 
   if (response.isLoading) {
