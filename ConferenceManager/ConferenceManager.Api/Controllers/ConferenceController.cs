@@ -129,6 +129,7 @@ namespace ConferenceManager.Api.Controllers
         [HttpDelete]
         [Route("{id}/participants/{userId}")]
         [Authorize(Roles = ApplicationRole.Admin)]
+        [ConferenceAuthorization(ApplicationRole.Chair)]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status204NoContent)]
         [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]

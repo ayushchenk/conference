@@ -9,17 +9,17 @@ export const ConferenceDetailsPage = () => {
   const conferenceId = useConferenceId();
   const response = useGetConferenceApi(conferenceId);
 
-  if (response.isLoading) {
+  if (response.status === "loading") {
     return <LoadingSpinner />;
   }
 
-  if (response.isError) {
+  if (response.status === "error") {
     return <FormErrorAlert response={response} />;
   }
 
   return (
     <Container>
-      <ConferenceDetails conference={response.data!} />
+      <ConferenceDetails conference={response.data} />
     </Container>
   );
 };

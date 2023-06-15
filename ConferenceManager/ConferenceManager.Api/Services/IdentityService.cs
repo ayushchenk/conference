@@ -6,7 +6,6 @@ using ConferenceManager.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using System.Collections.Immutable;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -24,8 +23,7 @@ namespace ConferenceManager.Api.Services
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IOptions<TokenSettings> settings,
-            IDateTimeService dateTime
-            )
+            IDateTimeService dateTime)
         {
             _manager = userManager;
             _signInManager = signInManager;
@@ -99,18 +97,18 @@ namespace ConferenceManager.Api.Services
                 })
             };
 
-            var isAdmin = user.ConferenceRoles?.Any(r => r.Role.Name == ApplicationRole.Admin) ?? false;
-
-            if (isAdmin)
-            {
-                descriptor.Subject.AddClaim(new Claim(ClaimTypes.Role, ApplicationRole.Admin));
-            }
-
             var roles = user.ConferenceRoles
                 ?.Select(r => new { r.ConferenceId, Role = r.Role.Name! })
                 ?.GroupBy(r => r.ConferenceId)
                 ?.ToDictionary(key => key.Key, value => value.Select(v => v.Role).ToArray())
                 ?? new Dictionary<int, string[]>();
+
+            var uniqueRoles = roles.SelectMany(r => r.Value).Distinct();
+
+            foreach (var role in uniqueRoles)
+            {
+                descriptor.Subject.AddClaim(new Claim(ClaimTypes.Role, role));
+            }
 
             var token = handler.CreateToken(descriptor);
             var tokenValue = handler.WriteToken(token);

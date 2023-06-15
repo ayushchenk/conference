@@ -2,6 +2,7 @@
 using ConferenceManager.Core.Common.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.EntityFrameworkCore;
 
 namespace ConferenceManager.Api.Filters
 {
@@ -39,11 +40,21 @@ namespace ConferenceManager.Api.Filters
                 return;
             }
 
-            var conference = _dbContext.Conferences.Find(conferenceId);
+            var conference = _dbContext.Conferences
+                .AsNoTracking()
+                .Include(c => c.Participants)
+                .Include(c => c.UserRoles)
+                .FirstOrDefault(c => c.Id == conferenceId);
 
             if (conference == null)
             {
                 SetConferenceNotFoundResult(context);
+                return;
+            }
+
+            if (!_currentUser.IsParticipantOf(conference) && !_currentUser.IsAdmin)
+            {
+                SetNotPartOfConferenceResult(context);
                 return;
             }
 
@@ -66,7 +77,7 @@ namespace ConferenceManager.Api.Filters
 
             if (!hasRole)
             {
-                SetForbiddenResult(context);
+                SetInsufficientPermissionsResult(context);
             }
         }
 
@@ -103,16 +114,29 @@ namespace ConferenceManager.Api.Filters
             });
         }
 
-        private void SetForbiddenResult(AuthorizationFilterContext context)
+        private void SetNotPartOfConferenceResult(AuthorizationFilterContext context)
         {
             var result = new ObjectResult(new ProblemDetails()
             {
                 Status = StatusCodes.Status403Forbidden,
-                Title = "Not found",
-                Detail = "Conference not found",
+                Title = "Forbidden",
+                Detail = "User is not part of the conference",
                 Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.3"
             });
-            result.StatusCode = StatusCodes.Status401Unauthorized;
+            result.StatusCode = StatusCodes.Status403Forbidden;
+            context.Result = result;
+        }
+
+        private void SetInsufficientPermissionsResult(AuthorizationFilterContext context)
+        {
+            var result = new ObjectResult(new ProblemDetails()
+            {
+                Status = StatusCodes.Status403Forbidden,
+                Title = "Forbidden",
+                Detail = "User does not have sufficient permissions",
+                Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.3"
+            });
+            result.StatusCode = StatusCodes.Status403Forbidden;
             context.Result = result;
         }
     }

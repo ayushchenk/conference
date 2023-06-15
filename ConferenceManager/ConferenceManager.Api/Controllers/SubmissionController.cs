@@ -39,6 +39,7 @@ namespace ConferenceManager.Api.Controllers
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CreateEntityResponse))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
         public async Task<IActionResult> Post([FromForm] CreateSubmissionCommand command, CancellationToken cancellation)
         {
             var result = await Mediator.Send(command, cancellation);

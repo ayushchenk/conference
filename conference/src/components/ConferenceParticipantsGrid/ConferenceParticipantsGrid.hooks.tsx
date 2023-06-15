@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { GridActionsCellItem, GridColDef, GridPaginationModel, GridRowsProp } from "@mui/x-data-grid";
+import { GridActionsCellItem, GridColDef, GridPaginationModel } from "@mui/x-data-grid";
 import { useDeleteApi } from "../../hooks/UseDeleteApi";
 import { useGetApi } from "../../hooks/UseGetApi";
 import { useMemoPaging } from "../../hooks/UseMemoPaging";
@@ -12,8 +12,7 @@ import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 
 export const useGetParticipantsApi = (paging: GridPaginationModel, conferenceId: number): GetParticipantsResponse => {
   const config = useMemoPaging(paging);
-  const path = useMemo(() => `/Conference/${conferenceId}/participants`, [conferenceId]);
-  return useGetApi<GetParticipantsData>(path, config);
+  return useGetApi<GetParticipantsData>(`/Conference/${conferenceId}/participants`, config);
 };
 
 export const useAddParticipantApi = (conferenceId: number) => {
@@ -24,90 +23,73 @@ export const useDeleteParticipantApi = (conferenceId: number) => {
   return useDeleteApi<{}, {}>(`/Conference/${conferenceId}/participants/{0}`);
 };
 
-export const useConferenceParticipantsGridProps = (
-  users: GetParticipantsResponse,
+export const useConferenceParticipantsGridColumns = (
   conferenceId: number,
-  openRoleChange: (user: User) => void,
-): [GridRowsProp, GridColDef[]] => {
-  const [rows, setRows] = useState<User[]>(users.data?.items ?? []);
-  const [deletedUserId, setDeletedUserId] = useState<number | null>(null);
-  const { response, performDelete: deleteParticipant } = useDeleteParticipantApi(conferenceId);
+  handleDelete: (user: User) => void,
+  openRoleChange: (user: User) => void) => {
 
-  useEffect(() => {
-    if (!users.isLoading && !users.isError) {
-      setRows(users.data?.items ?? []);
+  const columns = useMemo(() => {
+    const columns: GridColDef[] = [
+      {
+        headerName: "#",
+        field: "id",
+        type: "number",
+        width: 60
+      },
+      {
+        headerName: "Email",
+        field: "email",
+        minWidth: 150,
+        flex: 1,
+      },
+      {
+        headerName: "Full Name",
+        field: "fullName",
+        minWidth: 150,
+        flex: 1,
+      },
+      {
+        headerName: "Country",
+        field: "country",
+        minWidth: 150,
+        flex: 1,
+      },
+      {
+        headerName: "Affiliation",
+        field: "affiliation",
+        minWidth: 150,
+        flex: 1,
+      },
+      {
+        headerName: "Roles",
+        field: "roles",
+        width: 150,
+        valueFormatter: (params) => params.value[conferenceId] ?? []
+      },
+    ];
+
+    if (Auth.isAdmin() || Auth.isChair(conferenceId)) {
+      columns.push({
+        field: "actions",
+        type: "actions",
+        width: 80,
+        getActions: (params) => [
+          <GridActionsCellItem
+            icon={<DeleteIcon />}
+            label="Delete Participant"
+            onClick={() => handleDelete(params.row)}
+          />,
+          <GridActionsCellItem
+            icon={<ManageAccountsIcon />}
+            label="Manage Roles"
+            onClick={() => openRoleChange(params.row)}
+          />
+        ],
+      });
     }
-  }, [users]);
 
-  function handleDelete(userId: number) {
-    setDeletedUserId(userId);
-    deleteParticipant({}, userId);
-  }
-  useEffect(() => {
-    if (!response.isError && !response.isLoading && deletedUserId) {
-      setRows((prevRows) => prevRows.filter((row) => row.id !== deletedUserId));
-      setDeletedUserId(null);
-    }
-  }, [response, deletedUserId]);
+    return columns;
+  }, [conferenceId, handleDelete, openRoleChange]);
 
-  const columns: GridColDef[] = [
-    {
-      headerName: "#",
-      field: "id",
-      type: "number",
-      width: 60
-    },
-    {
-      headerName: "Email",
-      field: "email",
-      minWidth: 150,
-      flex: 1,
-    },
-    {
-      headerName: "Full Name",
-      field: "fullName",
-      minWidth: 150,
-      flex: 1,
-    },
-    {
-      headerName: "Country",
-      field: "country",
-      minWidth: 150,
-      flex: 1,
-    },
-    {
-      headerName: "Affiliation",
-      field: "affiliation",
-      minWidth: 150,
-      flex: 1,
-    },
-    {
-      headerName: "Roles",
-      field: "roles",
-      width: 150,
-      valueFormatter: (params) => params.value[conferenceId] ?? []
-    },
-  ];
-
-  if (Auth.isAdmin() || Auth.isChair(conferenceId)) {
-    columns.push({
-      field: "actions",
-      type: "actions",
-      width: 80,
-      getActions: (params) => [
-        <GridActionsCellItem
-          icon={<DeleteIcon />}
-          label="Delete Participant"
-          onClick={() => handleDelete(params.row.id)}
-        />,
-        <GridActionsCellItem
-          icon={<ManageAccountsIcon />}
-          label="Manage Roles"
-          onClick={() => openRoleChange(params.row)}
-        />
-      ],
-    });
-  }
-
-  return [rows, columns];
+  return columns;
 };

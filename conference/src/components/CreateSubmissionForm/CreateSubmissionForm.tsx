@@ -29,7 +29,7 @@ export const CreateSubmissionForm = ({ submission }: { submission?: Submission }
 
   useEffect(() => {
     const submissionId = submission ? submission.id : response?.data?.id;
-    if (!response.isLoading && !response.isError && submissionId) {
+    if (response.status === "success" && submissionId) {
       navigate(`/conferences/${conferenceId}/submissions/${submissionId}`);
     }
   }, [response, navigate, conferenceId, submission]);

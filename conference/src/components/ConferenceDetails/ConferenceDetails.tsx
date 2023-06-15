@@ -14,6 +14,7 @@ import { IconButton, Tooltip, Typography } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { Conference } from "../../types/Conference";
+import { Auth } from "../../logic/Auth";
 
 export const ConferenceDetails = ({ conference }: { conference: Conference }) => {
   return (
@@ -116,7 +117,7 @@ export const ConferenceDetails = ({ conference }: { conference: Conference }) =>
               </TableCell>
             </TableRow>
             {
-              conference.isParticipant &&
+              (conference.isParticipant || Auth.isAdmin()) &&
               <>
                 <TableRow>
                   <TableCell align="center" colSpan={12} variant="head">
