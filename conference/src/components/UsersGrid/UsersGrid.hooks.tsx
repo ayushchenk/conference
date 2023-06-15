@@ -11,13 +11,15 @@ import { useMemoPaging } from "../../hooks/UseMemoPaging";
 import { usePostApi } from "../../hooks/UsePostApi";
 import { AdjustUserRoleRequest, GetUsersData, GetUsersResponse } from "./UsersGrid.types";
 import { Link } from "react-router-dom";
+import { User } from "../../types/User";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 
-export const useAddUserRoleApi = () => {
-  return usePostApi<AdjustUserRoleRequest, {}>("/User/{0}/role");
+export const useAddUserRoleApi = (admin: boolean | undefined) => {
+  return usePostApi<AdjustUserRoleRequest, {}>(`/User/{0}/role${admin ? '/admin' : ''}`);
 };
 
-export const useRemoveUserRoleApi = () => {
-  return useDeleteApi<AdjustUserRoleRequest, {}>("/User/{0}/role");
+export const useRemoveUserRoleApi = (admin: boolean | undefined) => {
+  return useDeleteApi<AdjustUserRoleRequest, {}>(`/User/{0}/role${admin ? '/admin' : ''}`);
 };
 
 export const useGetUsersApi = (paging: GridPaginationModel): GetUsersResponse => {
@@ -29,7 +31,10 @@ export const useDeleteUserApi = () => {
   return useDeleteApi<{}, {}>(`/User/{0}`);
 };
 
-export const useUsersGridColumns = (handleDelete: (userId: number) => void): GridColDef[] => {
+export const useUsersGridColumns = (
+  handleDelete: (user: User) => void,
+  handleRoleDialogOpen: (user: User) => void
+): GridColDef[] => {
   return useMemo(() => {
     return [
       {
@@ -68,9 +73,18 @@ export const useUsersGridColumns = (handleDelete: (userId: number) => void): Gri
         type: "actions",
         width: 100,
         getActions: (params) => [
-          <GridActionsCellItem icon={<DeleteIcon />} label="Delete" onClick={() => handleDelete(params.row.id)} />,
+          <GridActionsCellItem
+            icon={<DeleteIcon />}
+            label="Delete"
+            onClick={() => handleDelete(params.row)}
+          />,
+          <GridActionsCellItem
+            icon={<ManageAccountsIcon />}
+            label="Manage Roles"
+            onClick={() => handleRoleDialogOpen(params.row)}
+          />
         ],
       },
     ];
-  }, [handleDelete]);
+  }, [handleDelete, handleRoleDialogOpen]);
 };

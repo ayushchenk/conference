@@ -11,5 +11,6 @@ export type AdjustUserRoleRequest = {
 export interface UserRoleManagementDialogProps {
   open: boolean;
   user: User | null;
+  admin?: boolean;
   onClose: () => void;
 }
