@@ -1,8 +1,10 @@
 ﻿using ConferenceManager.Api.Util;
 using ConferenceManager.Core.Common.Interfaces;
+using ConferenceManager.Infrastructure.Util;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace ConferenceManager.Api.Filters
 {
@@ -10,15 +12,18 @@ namespace ConferenceManager.Api.Filters
     {
         private readonly IApplicationDbContext _dbContext;
         private readonly ICurrentUserService _currentUser;
+        private readonly SeedSettings _settings;
         private readonly string[] _roles;
 
         public ConferenceAuthorizationFilter(
             IApplicationDbContext dbContext,
             ICurrentUserService currentUser,
+            IOptions<SeedSettings> settings,
             string[] roles)
         {
             _dbContext = dbContext;
             _currentUser = currentUser;
+            _settings = settings.Value;
             _roles = roles;
         }
 
@@ -43,10 +48,10 @@ namespace ConferenceManager.Api.Filters
             var conference = _dbContext.Conferences
                 .AsNoTracking()
                 .Include(c => c.Participants)
-                .Include(c => c.UserRoles)
+                .Include(c => c.UserRoles).ThenInclude(r => r.Role)
                 .FirstOrDefault(c => c.Id == conferenceId);
 
-            if (conference == null)
+            if (conference == null || conference.Title == _settings.AdminConference)
             {
                 SetConferenceNotFoundResult(context);
                 return;

@@ -6,8 +6,6 @@ import { FormErrorAlert } from "../FormErrorAlert";
 import { User } from "../../types/User";
 
 export const UsersGrid = () => {
-  console.log('render');
-
   const [currentPage, setCurrentPage] = useState<GridPaginationModel>(defaultPage);
   const users = useGetUsersApi(currentPage);
   const [rows, setRows] = useState<User[]>([]);
@@ -46,7 +44,10 @@ export const UsersGrid = () => {
         pageSizeOptions={[5, 10, 15, 25]}
         onPaginationModelChange={setCurrentPage}
         loading={users.status === "loading"}
+        paginationMode="server"
+        rowCount={users.data?.totalCount ?? 0}
       />
+      <FormErrorAlert response={users} />
       <FormErrorAlert response={deleteResponse} />
     </>
   );

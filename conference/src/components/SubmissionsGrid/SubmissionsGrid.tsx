@@ -20,6 +20,8 @@ export const SubmissionsGrid = () => {
         pageSizeOptions={[5, 10, 15, 25]}
         onPaginationModelChange={setCurrentPage}
         loading={submissions.status === "loading"}
+        paginationMode="server"
+        rowCount={submissions.data?.totalCount ?? 0}
       />
       <FormErrorAlert response={submissions} />
     </>

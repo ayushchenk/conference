@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -16,19 +16,16 @@ import { TabPanel } from "./TabPanel";
 import { Submission } from "../../types/Conference";
 import { FormHeader } from "../FormHeader";
 import { useConferenceId } from "../../hooks/UseConferenceId";
+import { FormErrorAlert } from "../FormErrorAlert";
 
 export const SubmissionDetails = ({ submission }: { submission: Submission }) => {
   const conferenceId = useConferenceId();
   const [tabValue, setTabValue] = useState(0);
-  const { post: returnSubmission } = usePostReturnSubmissionAPI(submission.id);
+  const { post: returnSubmission, response: returnResponse } = usePostReturnSubmissionAPI(submission.id);
 
-  const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = useCallback((_: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
-  };
-
-  const handleReturnSubmission = () => {
-    returnSubmission({});
-  };
+  }, []);
 
   return (
     <>
@@ -59,7 +56,7 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
               <TableCell variant="head">Keywords</TableCell>
               <TableCell>{submission.keywords}</TableCell>
             </TableRow>
-            {submission.isAuthor && (
+            {submission.isAuthor &&
               <TableRow>
                 <TableCell align="center" colSpan={12} variant="head">
                   <Button color="inherit" disabled={!submission.isValidForUpdate}>
@@ -72,11 +69,11 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
                   </Button>
                 </TableCell>
               </TableRow>
-            )}
+            }
             {submission.isReviewer &&
               <TableRow>
                 <TableCell align="center" colSpan={12} variant="head">
-                  <Button color="inherit" onClick={handleReturnSubmission} disabled={!submission.isValidForReturn}>
+                  <Button color="inherit" onClick={() => returnSubmission({})} disabled={!submission.isValidForReturn}>
                     Return
                   </Button>
                 </TableCell>
@@ -100,6 +97,7 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
           <TabPanel value={tabValue} index={2}></TabPanel>
         </Box>
       }
+      <FormErrorAlert response={returnResponse} />
     </>
   );
 };
