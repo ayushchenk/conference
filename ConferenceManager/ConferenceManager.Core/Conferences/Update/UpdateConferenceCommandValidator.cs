@@ -34,12 +34,6 @@ namespace ConferenceManager.Core.Conferences.Update
                 if (conference == null)
                 {
                     context.AddException(new NotFoundException("Conference not found"));
-                    return;
-                }
-
-                if (!CurrentUser.IsChairIn(conference))
-                {
-                    context.AddException(new NotFoundException("Not a Chair in the conference"));
                 }
             });
         }
