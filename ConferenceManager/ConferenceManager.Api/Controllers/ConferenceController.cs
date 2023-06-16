@@ -41,7 +41,8 @@ namespace ConferenceManager.Api.Controllers
         /// Updates conference information
         /// </summary>
         /// <remarks>
-        /// All fields are required, payload replaces existing record in db 
+        /// All fields are required, payload replaces existing record in db. <br/>
+        /// Chair can only update his conference.
         /// </remarks>
         [HttpPut]
         [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Chair}")]
