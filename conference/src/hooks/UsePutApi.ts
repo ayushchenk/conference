@@ -17,7 +17,6 @@ export function usePutApi<TRequest, TData>(path: string, config?: AxiosRequestCo
           setResponse(createSuccessResponse(response));
         })
         .catch((error) => {
-          console.error(error);
           setResponse(createErrorResponse(error));
         });
     },

@@ -16,7 +16,6 @@ export function useGetApi<TData>(path: string, config?: AxiosRequestConfig<any> 
         setResponse(createSuccessResponse(response));
       })
       .catch((error) => {
-        console.error(error);
         setResponse(createErrorResponse(error));
       });
   }, [path, configWithHeaders]);

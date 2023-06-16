@@ -5,13 +5,6 @@ namespace ConferenceManager.Core.Conferences.Common
 {
     public class ConferenceDtoMapper : IMapper<Conference, ConferenceDto>
     {
-        private readonly ICurrentUserService _currentUser;
-
-        public ConferenceDtoMapper(ICurrentUserService currentUser)
-        {
-            _currentUser = currentUser;
-        }
-
         public ConferenceDto Map(Conference source)
         {
             return new ConferenceDto()
@@ -31,8 +24,7 @@ namespace ConferenceManager.Core.Conferences.Common
                 Title = source.Title,
                 Venue = source.Venue,
                 Webpage = source.Webpage,
-                IsAnonymizedFileRequired = source.IsAnonymizedFileRequired,
-                IsParticipant = _currentUser.IsParticipantOf(source)
+                IsAnonymizedFileRequired = source.IsAnonymizedFileRequired
             };
         }
     }

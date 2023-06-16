@@ -97,7 +97,7 @@ namespace ConferenceManager.Api.Controllers
         /// Papers are ordered by created on descending. <br/>
         /// Author can only get papers of his own submission. <br/>
         /// Reviewer can only get papers of submission, that he is assigned to. <br/>
-        /// Admin can access everything.
+        /// Admin and chair can access everything.
         /// </remarks>
         [HttpGet]
         [Route("{id}/papers")]
@@ -191,7 +191,7 @@ namespace ConferenceManager.Api.Controllers
         /// </remarks>
         [HttpGet]
         [Route("{id}/reviews")]
-        [Authorize(Roles = $"{ApplicationRole.Chair},{ApplicationRole.Reviewer}")]
+        [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Chair},{ApplicationRole.Reviewer}")]
         [ConferenceAuthorization(ApplicationRole.Reviewer)]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<ReviewDto>))]

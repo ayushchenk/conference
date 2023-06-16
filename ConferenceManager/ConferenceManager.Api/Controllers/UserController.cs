@@ -11,6 +11,8 @@ using ConferenceManager.Core.User.Delete;
 using ConferenceManager.Core.User.Get;
 using ConferenceManager.Core.User.GetParticipations;
 using ConferenceManager.Core.User.GetSubmissions;
+using ConferenceManager.Core.User.IsParticipant;
+using ConferenceManager.Core.User.IsReviewer;
 using ConferenceManager.Core.User.Login;
 using ConferenceManager.Core.User.Page;
 using ConferenceManager.Core.User.Register;
@@ -127,9 +129,9 @@ namespace ConferenceManager.Api.Controllers
         [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
         [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
         public async Task<IActionResult> AssignRole(
-            [FromHeader(Name = Headers.ConferenceId)] int conferenceId, 
-            int id, 
-            AssignRoleCommand command, 
+            [FromHeader(Name = Headers.ConferenceId)] int conferenceId,
+            int id,
+            AssignRoleCommand command,
             CancellationToken cancellation)
         {
             command.Id = id;
@@ -153,8 +155,8 @@ namespace ConferenceManager.Api.Controllers
         [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
         public async Task<IActionResult> UnassignRole(
             [FromHeader(Name = Headers.ConferenceId)] int conferenceId,
-            int id, 
-            UnassignRoleCommand command, 
+            int id,
+            UnassignRoleCommand command,
             CancellationToken cancellation)
         {
             command.Id = id;
@@ -232,6 +234,38 @@ namespace ConferenceManager.Api.Controllers
         public async Task<IActionResult> GetSubmissions(int id, CancellationToken cancellation)
         {
             var result = await Mediator.Send(new GetUserSubmissionsQuery(id), cancellation);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Returns true if user is participant of conference
+        /// </summary>
+        [HttpGet]
+        [Route("{id}/is-participant/{conferenceId}")]
+        [Authorize]
+        [ConferenceAuthorization]
+        [Produces("application/json")]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(bool))]
+        public async Task<IActionResult> IsParticipant(int id, int conferenceid, CancellationToken cancellation)
+        {
+            var result = await Mediator.Send(new IsParticipantQuery(id, conferenceid), cancellation);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Returns true if user is reviewer of submission
+        /// </summary>
+        [HttpGet]
+        [Route("{id}/is-reviewer/{submissionId}")]
+        [Authorize(Roles = ApplicationRole.Reviewer)]
+        [ConferenceAuthorization(ApplicationRole.Reviewer)]
+        [Produces("application/json")]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(bool))]
+        public async Task<IActionResult> IsReviewer(int id, int submissionId, CancellationToken cancellation)
+        {
+            var result = await Mediator.Send(new IsReviewerQuery(id, submissionId), cancellation);
 
             return Ok(result);
         }

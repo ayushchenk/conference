@@ -128,7 +128,7 @@ namespace ConferenceManager.Api.Controllers
         /// </summary>
         [HttpDelete]
         [Route("{id}/participants/{userId}")]
-        [Authorize(Roles = ApplicationRole.Admin)]
+        [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Chair}")]
         [ConferenceAuthorization(ApplicationRole.Chair)]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status204NoContent)]
@@ -145,7 +145,8 @@ namespace ConferenceManager.Api.Controllers
         /// </summary>
         /// <remarks>
         /// User should be part of conference where submission is located (not required for Admin). <br/>
-        /// Page is ordered by createdon descending 
+        /// For authors, returns only his submissions. <br/>
+        /// Page is ordered by createdon descending.
         /// </remarks>
         [HttpGet]
         [Route("{id}/submissions")]

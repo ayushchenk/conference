@@ -43,7 +43,7 @@ export namespace Auth {
     for (const conference in authData.roles) {
       const roles = authData.roles[conference];
 
-      if (roles.find(r => r === "Admin" && isAuthed())) {
+      if (roles.includes("Admin") && isAuthed()) {
         return true;
       }
     }
@@ -51,16 +51,24 @@ export namespace Auth {
     return false;
   }
 
+  export function hasAnyRole(conferenceId: number, roles: string[]) {
+    if (roles.includes("Admin") && isAdmin()) {
+      return true;
+    }
+
+    return isAuthed() && getRoles(conferenceId).find(role => roles.includes(role));
+  }
+
   export function isAuthor(conferenceId: number) {
-    return !!getRoles(conferenceId).find(r => r === "Author") && isAuthed();
+    return hasAnyRole(conferenceId, ["Author"]);
   }
 
   export function isReviewer(conferenceId: number) {
-    return !!getRoles(conferenceId).find(r => r === "Reviewer") && isAuthed();
+    return hasAnyRole(conferenceId, ["Reviewer"]);
   }
 
   export function isChair(conferenceId: number) {
-    return !!getRoles(conferenceId).find(r => r === "Chair") && isAuthed();
+    return hasAnyRole(conferenceId, ["Chair"]);
   }
 
   function getData() {

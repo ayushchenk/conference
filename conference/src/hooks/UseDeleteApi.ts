@@ -17,7 +17,6 @@ export function useDeleteApi<TRequest, TData>(path: string, config?: AxiosReques
           setResponse(createSuccessResponse(response));
         })
         .catch((error) => {
-          console.error(error);
           setResponse(createErrorResponse(error));
         });
     },

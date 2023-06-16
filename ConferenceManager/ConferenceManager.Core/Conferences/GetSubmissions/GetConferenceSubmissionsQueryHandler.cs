@@ -34,7 +34,9 @@ namespace ConferenceManager.Core.Conferences.GetSubmissions
         {
             var conference = await Context.Conferences.FindAsync(conferenceId);
 
-            if (CurrentUser.IsReviewerIn(conference!) || CurrentUser.IsAdmin)
+            if (CurrentUser.IsReviewerIn(conference!) 
+                || CurrentUser.IsChairIn(conference!)
+                || CurrentUser.IsAdmin)
             {
                 return Context.Submissions
                     .Where(s => s.ConferenceId == conferenceId)

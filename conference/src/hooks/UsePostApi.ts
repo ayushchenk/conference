@@ -17,7 +17,6 @@ export function usePostApi<TRequest, TData>(path: string, config?: AxiosRequestC
           setResponse(createSuccessResponse(response));
         })
         .catch((error) => {
-          console.error(error);
           setResponse(createErrorResponse(error));
         });
     },

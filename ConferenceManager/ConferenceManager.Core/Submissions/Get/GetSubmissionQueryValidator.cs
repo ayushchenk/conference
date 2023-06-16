@@ -22,15 +22,16 @@ namespace ConferenceManager.Core.Submissions.Get
                     return;
                 }
 
+                if (!CurrentUser.IsParticipantOf(submission.Conference))
+                {
+                    context.AddException(new ForbiddenException("User is not part of the conference"));
+                    return;
+                }
+
                 if (CurrentUser.IsAuthorIn(submission.Conference) && !CurrentUser.IsAuthorOf(submission))
                 {
                     context.AddException(new ForbiddenException("Author can only access his own submissions"));
                     return;
-                }
-
-                if (!CurrentUser.IsParticipantOf(submission.Conference))
-                {
-                    context.AddException(new ForbiddenException("Is not part of conference"));
                 }
             });
         }
