@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import { Dialog, DialogTitle, DialogContent, Box, Autocomplete, Chip, TextField } from "@mui/material";
 import { UserRoleManagementDialogProps } from "./UsersGrid.types";
 import { userRoles } from "../../util/Constants";
-import { useAddUserAdminRoleApi, useRemoveUserAdminRoleApi, } from "./UsersGrid.hooks";
 import { getConferenceRoles } from "../../util/Functions";
 import { useConferenceId } from "../../hooks/UseConferenceId";
 import { FormErrorAlert } from "../FormErrorAlert";
+import { useAddUserRoleApi, useRemoveUserRoleApi } from "./UsersGrid.hooks";
 
 export const UserRoleManagementDialog: React.FC<UserRoleManagementDialogProps> = ({
   open,
@@ -14,8 +14,8 @@ export const UserRoleManagementDialog: React.FC<UserRoleManagementDialogProps> =
 }) => {
   const conferenceId = useConferenceId();
   const [roles, setRoles] = useState<string[]>(getConferenceRoles(user, conferenceId));
-  const { response: postResponse, post: addRole } = useAddUserAdminRoleApi();
-  const { response: deleteResponse, performDelete: removeRole } = useRemoveUserAdminRoleApi();
+  const { response: postResponse, post: addRole } = useAddUserRoleApi();
+  const { response: deleteResponse, performDelete: removeRole } = useRemoveUserRoleApi();
 
   useEffect(() => {
     setRoles(getConferenceRoles(user, conferenceId));

@@ -28,8 +28,8 @@ Prerequisites:
     "ExpiresMinutes": 60
   },
   "SeedSettings": {
-    "AdminPassword":  "C00!P@ssword", //admin login is admin@localhost.com,
-    "AdminConference": "some long unique value"
+    "AdminPassword":  "C00!P@ssword",
+    "AdminEmail": "cool@email.com" //any valid email
   }
 }
 ```
