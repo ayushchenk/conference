@@ -3,7 +3,7 @@ using ConferenceManager.Core.Common.Interfaces;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace CleanArchitecture.Application.Common.Behaviours
+namespace CleanArchitecture.Application.Common.Behaviors
 {
     public class PerformanceBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
     {

@@ -50,12 +50,17 @@ namespace ConferenceManager.Api.Filters
                 return;
             }
 
+            if (_currentUser.IsAdmin)
+            {
+                return;
+            }
+
             var userParticipations = _dbContext.ConferenceParticipants
                 .AsNoTracking()
                 .Where(p => p.UserId == _currentUser.Id)
                 .Select(p => p.ConferenceId);
 
-            if (!userParticipations.Contains(conferenceId) && !_currentUser.IsAdmin)
+            if (!userParticipations.Contains(conferenceId))
             {
                 SetNotPartOfConferenceResult(context);
                 return;
@@ -67,7 +72,7 @@ namespace ConferenceManager.Api.Filters
                 .Where(r => r.UserId == _currentUser.Id && r.ConferenceId == conferenceId)
                 .Select(r => r.Role.Name);
 
-            bool hasRole = userConferenceRoles.Any(role => _roles.Contains(role)) || _currentUser.IsAdmin ;          
+            bool hasRole = userConferenceRoles.Any(role => _roles.Contains(role));          
 
             if (!hasRole)
             {

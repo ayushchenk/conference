@@ -1,9 +1,9 @@
-﻿using CleanArchitecture.Application.Common.Behaviours;
-using MediatR;
+﻿using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using FluentValidation;
+using CleanArchitecture.Application.Common.Behaviors;
 
 namespace ConferenceManager.Core
 {
@@ -19,15 +19,6 @@ namespace ConferenceManager.Core
                 cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
                 cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(PerformanceBehavior<,>));
             });
-
-            //var mappers = Assembly.GetExecutingAssembly().GetTypes()
-            //    .Where(type => type.GetInterface("IMapper`2") != null)
-            //    .Select(type => new { Service = type.GetInterface("IMapper`2")!, Impl = type });
-
-            //foreach(var mapper in mappers)
-            //{
-            //    services.Add(new ServiceDescriptor(mapper.Service, mapper.Impl, ServiceLifetime.Singleton));
-            //}
 
             return services;
         }

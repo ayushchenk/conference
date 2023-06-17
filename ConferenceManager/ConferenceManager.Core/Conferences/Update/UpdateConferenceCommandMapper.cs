@@ -24,6 +24,9 @@ namespace ConferenceManager.Core.Conferences.Update
                 ResearchAreas = string.Join(Conference.ResearchAreasSeparator, source.ResearchAreas),
                 Venue = source.Venue,
                 Webpage = source.Webpage,
+                AuthorInviteCode = null!,
+                ChairInviteCode = null!,
+                ReviewerInviteCode = null!,
                 IsAnonymizedFileRequired = source.IsAnonymizedFileRequired
             };
         }

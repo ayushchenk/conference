@@ -2,7 +2,7 @@
 using MediatR;
 using ValidationException = ConferenceManager.Core.Common.Exceptions.ValidationException;
 
-namespace CleanArchitecture.Application.Common.Behaviours
+namespace CleanArchitecture.Application.Common.Behaviors
 {
     public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
     {
