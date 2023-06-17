@@ -6,9 +6,18 @@ namespace ConferenceManager.Core.User.AssignAdminRole
     {
         public int Id { get; }
 
-        public AssignAdminRoleCommand(int id)
+        public AssignOperation Operation { get; }
+
+        public AssignAdminRoleCommand(int id, AssignOperation operation)
         {
             Id = id;
+            Operation = operation;
         }
+    }
+
+    public enum AssignOperation
+    {
+        Assign,
+        Unassign
     }
 }

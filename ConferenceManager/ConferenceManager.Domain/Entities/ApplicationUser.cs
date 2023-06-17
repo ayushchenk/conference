@@ -20,6 +20,8 @@ namespace ConferenceManager.Domain.Entities
 
         public string? Webpage { set; get; }
 
+        public required bool IsAdmin { set; get; }
+
         public virtual IList<Paper> CreatedPapers { set; get; } = null!;
 
         public virtual IList<Paper> ModifiedPapers { set; get; } = null!;
@@ -46,7 +48,7 @@ namespace ConferenceManager.Domain.Entities
 
         public virtual IList<Review> ModifiedReviews { set; get; } = null!;
 
-        public virtual IList<UserConferenceRole> ConferenceRoles { set; get; } = null!; 
+        public virtual IList<UserConferenceRole> ConferenceRoles { set; get; } = null!;
 
         [NotMapped]
         public IReadOnlyCollection<BaseEvent> DomainEvents => _domainEvents.AsReadOnly();

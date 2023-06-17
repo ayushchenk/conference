@@ -1,7 +1,6 @@
 ﻿using ConferenceManager.Core.Common;
 using ConferenceManager.Core.Common.Exceptions;
 using ConferenceManager.Core.Common.Interfaces;
-using MediatR;
 
 namespace ConferenceManager.Core.Submissions.RemovePreference
 {

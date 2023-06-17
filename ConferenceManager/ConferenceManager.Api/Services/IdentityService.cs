@@ -6,6 +6,7 @@ using ConferenceManager.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -110,6 +111,11 @@ namespace ConferenceManager.Api.Services
                 descriptor.Subject.AddClaim(new Claim(ClaimTypes.Role, role));
             }
 
+            if (user.IsAdmin)
+            {
+                descriptor.Subject.AddClaim(new Claim(ClaimTypes.Role, ApplicationRole.Admin));
+            }
+
             var token = handler.CreateToken(descriptor);
             var tokenValue = handler.WriteToken(token);
 
@@ -118,6 +124,7 @@ namespace ConferenceManager.Api.Services
                 UserId = user.Id,
                 Email = user.Email!,
                 Roles = roles,
+                IsAdmin = user.IsAdmin,
                 Token = new Token()
                 {
                     AccessToken = tokenValue,

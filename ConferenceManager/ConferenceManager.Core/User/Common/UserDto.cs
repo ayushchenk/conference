@@ -16,6 +16,8 @@ namespace ConferenceManager.Core.Account.Common
 
         public string? Webpage { set; get; }
 
+        public required bool IsAdmin { set; get; }
+
         public required Dictionary<int, string[]> Roles { set; get; }
     }
 }

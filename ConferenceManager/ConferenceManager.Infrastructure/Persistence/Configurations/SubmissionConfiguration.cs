@@ -1,5 +1,4 @@
 ﻿using ConferenceManager.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ConferenceManager.Infrastructure.Persistence.Configurations

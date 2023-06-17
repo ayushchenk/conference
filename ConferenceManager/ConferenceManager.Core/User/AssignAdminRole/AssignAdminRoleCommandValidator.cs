@@ -11,6 +11,7 @@ namespace ConferenceManager.Core.User.AssignAdminRole
         public AssignAdminRoleCommandValidator(IApplicationDbContext context, ICurrentUserService currentUser) : base(context, currentUser)
         {
             RuleForId(x => x.Id);
+
             RuleFor(x => x).CustomAsync(async (command, context, token) =>
             {
                 var user = await Context.Users.FindAsync(command.Id);

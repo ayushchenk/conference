@@ -26,7 +26,7 @@ namespace ConferenceManager.Domain.Entities
         public virtual IList<ApplicationUser> AppliedReviewers { set; get; } = null!;
 
         public virtual IList<Review> Reviews { set; get; } = null!;
-        
+
         public virtual IList<Comment> Comments { set; get; } = null!;
 
         public virtual IList<Paper> Papers { set; get; } = null!;

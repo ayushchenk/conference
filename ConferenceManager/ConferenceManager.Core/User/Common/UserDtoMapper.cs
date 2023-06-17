@@ -21,6 +21,7 @@ namespace ConferenceManager.Core.User.Common
                 Affiliation = source.Affiliation,
                 Country = source.Country,
                 Webpage = source.Webpage,
+                IsAdmin = source.IsAdmin,
                 Roles = roles
             };
         }

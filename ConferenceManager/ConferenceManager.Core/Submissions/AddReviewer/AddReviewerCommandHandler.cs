@@ -1,9 +1,7 @@
 ﻿using ConferenceManager.Core.Common;
-using ConferenceManager.Core.Common.Exceptions;
 using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace ConferenceManager.Core.Submissions.AddReviewer
 {
@@ -28,7 +26,7 @@ namespace ConferenceManager.Core.Submissions.AddReviewer
             if (existingAssignment != null)
             {
                 return;
-            }            
+            }
 
             var reviewAssignment = new SubmissionReviewer()
             {

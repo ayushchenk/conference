@@ -14,7 +14,7 @@ namespace ConferenceManager.Core.User.AssignRole
         {
             RuleForId(x => x.Id);
             RuleForId(x => x.ConferenceId);
-            RuleForArray(x => x.Role, new string[] { ApplicationRole.Author, ApplicationRole.Reviewer, ApplicationRole.Chair });
+            RuleForArray(x => x.Role, ApplicationRole.SupportedRoles);
 
             RuleFor(x => x).CustomAsync(async (command, context, token) =>
             {

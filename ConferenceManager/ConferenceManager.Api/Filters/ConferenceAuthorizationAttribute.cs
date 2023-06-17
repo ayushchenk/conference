@@ -5,9 +5,14 @@ namespace ConferenceManager.Api.Filters
 {
     public class ConferenceAuthorizationAttribute : TypeFilterAttribute
     {
+        private static readonly string[] AllRoles = new string[]
+        {
+            ApplicationRole.Admin, ApplicationRole.Chair, ApplicationRole.Reviewer, ApplicationRole.Author
+        };
+
         public ConferenceAuthorizationAttribute(params string[] roles) : base(typeof(ConferenceAuthorizationFilter))
         {
-            Arguments = new object[] { roles.Any() ? roles : ApplicationRole.SupportedRoles };
+            Arguments = new object[] { roles.Any() ? roles : AllRoles };
         }
     }
 }

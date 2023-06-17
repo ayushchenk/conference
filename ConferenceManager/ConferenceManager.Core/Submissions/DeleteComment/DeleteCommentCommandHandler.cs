@@ -6,8 +6,8 @@ namespace ConferenceManager.Core.Submissions.DeleteComment
     public class DeleteCommentCommandHandler : DbContextRequestHandler<DeleteCommentCommand>
     {
         public DeleteCommentCommandHandler(
-            IApplicationDbContext context, 
-            ICurrentUserService currentUser, 
+            IApplicationDbContext context,
+            ICurrentUserService currentUser,
             IMappingHost mapper) : base(context, currentUser, mapper)
         {
         }

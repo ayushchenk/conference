@@ -175,7 +175,7 @@ export const CreateSubmissionForm = ({ submission }: { submission?: Submission }
         <Box sx={{ display: "flex", mt: 2 }}>
           {formik.values.otherFiles &&
             <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Box sx={{ width: "500px" }}>
+              <Box>
                 {formik.values.otherFiles.map((file, index) => (
                   <FormHelperText key={index}>{file.name}</FormHelperText>
                 ))}

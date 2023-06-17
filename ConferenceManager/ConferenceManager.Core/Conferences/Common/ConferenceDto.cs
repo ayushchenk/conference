@@ -6,11 +6,11 @@ namespace ConferenceManager.Core.Conferences.Common
     {
         public required int Id { get; set; }
 
-        public required string Title { get; set; } 
+        public required string Title { get; set; }
 
         public required string Acronym { get; set; }
 
-        public required string Organizer { get; set; } 
+        public required string Organizer { get; set; }
 
         public required DateTime StartDate { get; set; }
 

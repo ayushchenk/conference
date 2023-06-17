@@ -4,15 +4,14 @@ using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Core.Common.Model;
 using ConferenceManager.Core.Common.Model.Responses;
 using ConferenceManager.Domain.Entities;
-using Microsoft.AspNetCore.Identity;
 
 namespace ConferenceManager.Core.User.Page
 {
     public class GetUserPageQueryHandler : DbContextRequestHandler<GetUserPageQuery, EntityPageResponse<UserDto>>
     {
         public GetUserPageQueryHandler(
-            IApplicationDbContext context, 
-            ICurrentUserService currentUser, 
+            IApplicationDbContext context,
+            ICurrentUserService currentUser,
             IMappingHost mapper) : base(context, currentUser, mapper)
         {
         }

@@ -27,7 +27,7 @@ namespace ConferenceManager.Api.Services
             var sourceType = typeof(TSource);
             var destinationType = typeof(TDestination);
             MapperDescription? mapperDescription;
-            
+
             lock (_locker)
             {
                 mapperDescription = _mappings.SingleOrDefault(x => x.Source == sourceType && x.Destination == destinationType);

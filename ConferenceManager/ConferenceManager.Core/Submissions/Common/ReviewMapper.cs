@@ -23,7 +23,7 @@ namespace ConferenceManager.Core.Submissions.Common
                 ReviewerName = source.CreatedBy.FullName,
                 ReviewerEmail = source.CreatedBy.Email!,
                 Score = source.Score,
-                Evaluation = source.Evaluation,                
+                Evaluation = source.Evaluation,
                 Confidence = source.Confidence,
                 ConfidenceLabel = source.Confidence.Humanize(),
                 IsAuthor = _currentUser.IsAuthorOf(source)

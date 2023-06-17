@@ -10,7 +10,7 @@ namespace ConferenceManager.Infrastructure.Persistence.Configurations
         {
             builder.HasKey(x => new { x.UserId, x.RoleId, x.ConferenceId });
 
-            builder.HasOne(x => x.User)               
+            builder.HasOne(x => x.User)
                 .WithMany(y => y.ConferenceRoles)
                 .HasForeignKey(y => y.UserId)
                 .IsRequired();

@@ -40,15 +40,7 @@ export namespace Auth {
       return false;
     }
 
-    for (const conference in authData.roles) {
-      const roles = authData.roles[conference];
-
-      if (roles.includes("Admin") && isAuthed()) {
-        return true;
-      }
-    }
-
-    return false;
+    return isAuthed() && authData.isAdmin;
   }
 
   export function hasAnyRole(conferenceId: number, roles: string[]) {

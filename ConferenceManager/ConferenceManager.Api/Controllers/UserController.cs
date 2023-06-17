@@ -16,7 +16,6 @@ using ConferenceManager.Core.User.IsReviewer;
 using ConferenceManager.Core.User.Login;
 using ConferenceManager.Core.User.Page;
 using ConferenceManager.Core.User.Register;
-using ConferenceManager.Core.User.UnassignAdminRole;
 using ConferenceManager.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -70,7 +69,7 @@ namespace ConferenceManager.Api.Controllers
         /// Page is ordered by user id
         /// </remarks>
         [HttpGet]
-        [Authorize(Roles = ApplicationRole.Admin)]
+        [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Chair}")]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(EntityPageResponse<UserDto>))]
         public async Task<IActionResult> GetPage(int pageIndex, int pageSize, CancellationToken cancellation)
@@ -178,7 +177,7 @@ namespace ConferenceManager.Api.Controllers
         [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
         public async Task<IActionResult> AssignAdminRole(int id, CancellationToken cancellation)
         {
-            await Mediator.Send(new AssignAdminRoleCommand(id), cancellation);
+            await Mediator.Send(new AssignAdminRoleCommand(id, AssignOperation.Assign), cancellation);
 
             return NoContent();
         }
@@ -195,7 +194,7 @@ namespace ConferenceManager.Api.Controllers
         [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
         public async Task<IActionResult> UnassignAdminRole(int id, CancellationToken cancellation)
         {
-            await Mediator.Send(new UnassignAdminRoleCommand(id), cancellation);
+            await Mediator.Send(new AssignAdminRoleCommand(id, AssignOperation.Unassign), cancellation);
 
             return NoContent();
         }

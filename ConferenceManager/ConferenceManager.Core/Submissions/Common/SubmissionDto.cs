@@ -21,7 +21,7 @@ namespace ConferenceManager.Core.Submissions.Common
 
         public required string Title { set; get; }
 
-        public required string Keywords { set; get; } 
+        public required string Keywords { set; get; }
 
         public required string Abstract { set; get; }
 

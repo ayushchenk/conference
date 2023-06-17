@@ -11,7 +11,6 @@ namespace ConferenceManager.Domain.Entities
 
         public static readonly string[] SupportedRoles =
         {
-            Admin,
             Author,
             Reviewer,
             Chair

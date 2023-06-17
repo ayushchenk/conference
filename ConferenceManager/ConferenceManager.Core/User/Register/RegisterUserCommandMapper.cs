@@ -15,6 +15,7 @@ namespace ConferenceManager.Core.User.Register
                 LastName = source.LastName,
                 Email = source.Email,
                 UserName = source.Email,
+                IsAdmin = false,
                 Webpage = source.Webpage
             };
         }

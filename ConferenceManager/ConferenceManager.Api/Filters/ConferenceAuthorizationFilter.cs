@@ -1,10 +1,8 @@
 ﻿using ConferenceManager.Api.Util;
 using ConferenceManager.Core.Common.Interfaces;
-using ConferenceManager.Infrastructure.Util;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace ConferenceManager.Api.Filters
 {
@@ -12,18 +10,15 @@ namespace ConferenceManager.Api.Filters
     {
         private readonly IApplicationDbContext _dbContext;
         private readonly ICurrentUserService _currentUser;
-        private readonly SeedSettings _settings;
         private readonly string[] _roles;
 
         public ConferenceAuthorizationFilter(
             IApplicationDbContext dbContext,
             ICurrentUserService currentUser,
-            IOptions<SeedSettings> settings,
             string[] roles)
         {
             _dbContext = dbContext;
             _currentUser = currentUser;
-            _settings = settings.Value;
             _roles = roles;
         }
 
@@ -47,38 +42,32 @@ namespace ConferenceManager.Api.Filters
 
             var conference = _dbContext.Conferences
                 .AsNoTracking()
-                .Include(c => c.Participants)
-                .Include(c => c.UserRoles).ThenInclude(r => r.Role)
                 .FirstOrDefault(c => c.Id == conferenceId);
 
-            if (conference == null || conference.Title == _settings.AdminConference)
+            if (conference == null)
             {
                 SetConferenceNotFoundResult(context);
                 return;
             }
 
-            if (!_currentUser.IsParticipantOf(conference) && !_currentUser.IsAdmin)
+            var userParticipations = _dbContext.ConferenceParticipants
+                .AsNoTracking()
+                .Where(p => p.UserId == _currentUser.Id)
+                .Select(p => p.ConferenceId);
+
+            if (!userParticipations.Contains(conferenceId) && !_currentUser.IsAdmin)
             {
                 SetNotPartOfConferenceResult(context);
                 return;
             }
 
-            bool hasRole = false;
+            var userConferenceRoles = _dbContext.UserRoles
+                .AsNoTracking()
+                .Include(r => r.Role)
+                .Where(r => r.UserId == _currentUser.Id && r.ConferenceId == conferenceId)
+                .Select(r => r.Role.Name);
 
-            foreach (var role in _roles)
-            {
-                if (_currentUser.IsAdmin)
-                {
-                    hasRole = true;
-                    break;
-                }
-
-                if (_currentUser.HasRoleIn(conference, role))
-                {
-                    hasRole = true;
-                    break;
-                }
-            }
+            bool hasRole = userConferenceRoles.Any(role => _roles.Contains(role)) || _currentUser.IsAdmin ;          
 
             if (!hasRole)
             {

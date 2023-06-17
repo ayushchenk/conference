@@ -35,6 +35,9 @@ namespace ConferenceManager.Infrastructure.Persistence.Configurations
                 .IsRequired(false)
                 .HasMaxLength(100);
 
+            builder.Property(x => x.IsAdmin)
+                .IsRequired();
+
             builder.HasMany(x => x.CreatedComments)
                 .WithOne(y => y.CreatedBy)
                 .OnDelete(DeleteBehavior.NoAction);

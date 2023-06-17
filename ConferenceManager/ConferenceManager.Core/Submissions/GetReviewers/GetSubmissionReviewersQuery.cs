@@ -7,7 +7,7 @@ namespace ConferenceManager.Core.Submissions.GetReviewers
     {
         public int SubmissionId { get; }
 
-        public GetSubmissionReviewersQuery(int id) 
+        public GetSubmissionReviewersQuery(int id)
         {
             SubmissionId = id;
         }

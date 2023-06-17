@@ -18,8 +18,8 @@ namespace ConferenceManager.Core.Common.Exceptions
         {
             IdentityErrors = new IdentityError[]
             {
-                new IdentityError() 
-                { 
+                new IdentityError()
+                {
                     Description = message,
                     Code = "Identity"
                 }

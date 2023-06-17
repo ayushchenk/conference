@@ -7,8 +7,8 @@ namespace ConferenceManager.Core.Submissions.UpdateReview
     public class UpdateReviewCommandHandler : DbContextRequestHandler<UpdateReviewCommand>
     {
         public UpdateReviewCommandHandler(
-            IApplicationDbContext context, 
-            ICurrentUserService currentUser, 
+            IApplicationDbContext context,
+            ICurrentUserService currentUser,
             IMappingHost mapper) : base(context, currentUser, mapper)
         {
         }

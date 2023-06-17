@@ -7,7 +7,7 @@ namespace ConferenceManager.Core.Submissions.Common
     {
         private readonly ICurrentUserService _currentUser;
 
-        public CommentMapper(ICurrentUserService currentUser) 
+        public CommentMapper(ICurrentUserService currentUser)
         {
             _currentUser = currentUser;
         }

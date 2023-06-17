@@ -47,7 +47,7 @@ namespace CleanArchitecture.WebUI.Filters
         {
             var exception = (ValidationException)context.Exception;
 
-            var details = new ValidationProblemDetails(exception.Errors) 
+            var details = new ValidationProblemDetails(exception.Errors)
             {
                 Title = "Validation failed",
                 Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.1"
