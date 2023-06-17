@@ -45,6 +45,17 @@ export const ConferenceParticipantsGrid = () => {
     setNewParticipant(user);
   }, [addParticipant]);
 
+  const handleRoleChange = useCallback((user: User, roles: string[]) => {
+    setRows(prevRows => {
+      const newRows = [...prevRows];
+      const changedUser = newRows.find(r => r.id === user.id);
+      if (changedUser) {
+        changedUser.roles[conferenceId] = roles;
+      }
+      return newRows;
+    });
+  }, [setRows, conferenceId]);
+
   useEffect(() => {
     if (deleteResponse.status === "success" && deletingParticipant) {
       setDeletingParticipant(null);
@@ -93,6 +104,7 @@ export const ConferenceParticipantsGrid = () => {
         user={selectedUser}
         open={openRoleDialog}
         onClose={() => setOpenRoleDialog(false)}
+        onRoleChange={handleRoleChange}
       />
       <FormErrorAlert response={participants} />
       <FormErrorAlert response={addResponse} />

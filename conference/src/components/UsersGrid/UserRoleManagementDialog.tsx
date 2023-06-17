@@ -10,7 +10,8 @@ import { useAddUserRoleApi, useRemoveUserRoleApi } from "./UsersGrid.hooks";
 export const UserRoleManagementDialog: React.FC<UserRoleManagementDialogProps> = ({
   open,
   user,
-  onClose
+  onClose,
+  onRoleChange
 }) => {
   const conferenceId = useConferenceId();
   const [roles, setRoles] = useState<string[]>(getConferenceRoles(user, conferenceId));
@@ -35,6 +36,8 @@ export const UserRoleManagementDialog: React.FC<UserRoleManagementDialogProps> =
       if (removedRole) {
         removeRole({ role: removedRole }, user.id);
       }
+
+      onRoleChange(user, newValue);
     }
 
     setRoles(newValue);
