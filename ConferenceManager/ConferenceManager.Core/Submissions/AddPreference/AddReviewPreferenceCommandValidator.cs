@@ -22,9 +22,15 @@ namespace ConferenceManager.Core.Submissions.AddPreference
                     return;
                 }
 
-                if (!currentUser.IsParticipantOf(submission.Conference))
+                if (!CurrentUser.IsParticipantOf(submission.Conference))
                 {
                     context.AddException(new ForbiddenException("User is not part of conference"));
+                    return;
+                }
+
+                if (!CurrentUser.IsReviewerIn(submission.Conference))
+                {
+                    context.AddException(new ForbiddenException("User is not a reviwer"));
                 }
             });
         }

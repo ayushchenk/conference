@@ -26,7 +26,7 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
   const { post: returnSubmission, response: returnResponse } = usePostReturnSubmissionAPI(submission.id);
 
   const isAuthor = submission.authorId === Auth.getId();
-  const isReviewer = useIsReviewerApi();
+  const isReviewer = useIsReviewerApi(submission.id);
 
   const handleTabChange = useCallback((_: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);

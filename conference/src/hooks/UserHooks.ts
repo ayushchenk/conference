@@ -19,12 +19,10 @@ export const useIsParticipantApi = () => {
   return isParticipant;
 }
 
-export const useIsReviewerApi = () => {
+export const useIsReviewerApi = (submissionId: number) => {
   const [isReviewer, setIsReviewer] = useState(false);
 
-  const conferenceId = useConferenceId();
-
-  const isReviewerResponse = useGetApi<boolean>(`/user/${Auth.getId()}/is-reviewer/${conferenceId}`);
+  const isReviewerResponse = useGetApi<boolean>(`/user/${Auth.getId()}/is-reviewer/${submissionId}`);
 
   useEffect(() => {
     if (isReviewerResponse.status === "success") {

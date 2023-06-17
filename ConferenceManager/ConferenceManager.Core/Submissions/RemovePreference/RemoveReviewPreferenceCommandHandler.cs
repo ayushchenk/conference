@@ -20,7 +20,7 @@ namespace ConferenceManager.Core.Submissions.RemovePreference
 
             if (preference == null)
             {
-                throw new NotFoundException("Preference not found");
+                return;
             }
 
             Context.ReviewPreferences.Remove(preference);

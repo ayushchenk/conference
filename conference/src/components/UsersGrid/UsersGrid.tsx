@@ -1,40 +1,42 @@
 import { useCallback, useEffect, useState } from "react";
 import { DataGrid, GridPaginationModel } from "@mui/x-data-grid";
-import { useDeleteUserApi, useGetUsersApi, useUsersGridColumns } from "./UsersGrid.hooks";
+import { useAddUserAdminRoleApi, useDeleteUserApi, useGetUsersApi, useRemoveUserAdminRoleApi, useUsersGridColumns } from "./UsersGrid.hooks";
 import { defaultPage } from "../../util/Constants";
 import { FormErrorAlert } from "../FormErrorAlert";
 import { User } from "../../types/User";
-import { UserRoleManagementDialog } from "./UserRoleManagementDialog";
 
 export const UsersGrid = () => {
   const [currentPage, setCurrentPage] = useState<GridPaginationModel>(defaultPage);
   const users = useGetUsersApi(currentPage);
-  const { response: deleteResponse, performDelete: deleteUser } = useDeleteUserApi();
+  const { response: deleteResponse, performDelete } = useDeleteUserApi();
+  const { response: addRoleResponse, post: addRole } = useAddUserAdminRoleApi();
+  const { response: removeRoleResponse, performDelete: removeRole } = useRemoveUserAdminRoleApi();
   const [rows, setRows] = useState<User[]>([]);
   const [deletingUser, setDeletingUser] = useState<User | null>(null);
-  const [changingRoleUser, setChangingRoleUser] = useState<User | null>(null);
-  const [roleDialogOpen, setRoleDialogOpen] = useState(false);
 
   const handleDelete = useCallback((user: User) => {
     setDeletingUser(user);
-    deleteUser({}, user.id);
-  }, [deleteUser]);
+    performDelete({}, user.id);
+  }, [performDelete]);
 
-  const handleRoleDialogOpen = useCallback((user: User) => {
-    setChangingRoleUser(user);
-    setRoleDialogOpen(true);
-  }, []);
+  const handleRoleChange = useCallback((user: User, checked: boolean) => {
+    checked ? addRole({}, user.id) : removeRole({}, user.id);
 
-  const handleRoleDialogClose = useCallback(() => {
-    setChangingRoleUser(null);
-    setRoleDialogOpen(false);
-  }, []);
+    setRows(prevRows => {
+      const newRows = [...prevRows];
+      const updatedUser = newRows.find(r => r.id === user.id);
+      if (updatedUser) {
+        updatedUser.isAdmin = checked;
+      }
+      return newRows;
+    });
+  }, [addRole, removeRole]);
 
-  const columns = useUsersGridColumns(handleDelete, handleRoleDialogOpen);
+  const columns = useUsersGridColumns(handleDelete, handleRoleChange);
 
   useEffect(() => {
     if (deleteResponse.status === "success" && deletingUser) {
-      setRows((prevRows) => prevRows.filter((row) => row.id !== deletingUser.id));
+      setRows(prevRows => prevRows.filter((row) => row.id !== deletingUser.id));
     }
   }, [deleteResponse.status, deletingUser]);
 
@@ -60,14 +62,10 @@ export const UsersGrid = () => {
         paginationMode="server"
         rowCount={users.data?.totalCount ?? 0}
       />
-      <UserRoleManagementDialog
-        user={changingRoleUser}
-        open={roleDialogOpen}
-        onClose={handleRoleDialogClose}
-        admin
-      />
       <FormErrorAlert response={users} />
       <FormErrorAlert response={deleteResponse} />
+      <FormErrorAlert response={addRoleResponse} />
+      <FormErrorAlert response={removeRoleResponse} />
     </>
   );
 };

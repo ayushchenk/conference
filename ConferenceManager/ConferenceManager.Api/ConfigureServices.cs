@@ -19,13 +19,12 @@ namespace ConferenceManager.Api
         {
             var tokenSettings = configuration.GetSection("TokenSettings").Get<TokenSettings>()!;
 
-            services.AddCors(o => o.AddPolicy("local",
-                      builder =>
-                      {
-                          builder.WithOrigins("http://localhost:3000")
-                          .AllowAnyMethod()
-                          .AllowAnyHeader();
-                      }));
+            services.AddCors(o => o.AddPolicy("local", builder =>
+            {
+                builder.WithOrigins("http://localhost:3000")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            }));
 
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddLogging(loggin =>
@@ -68,11 +67,11 @@ namespace ConferenceManager.Api
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
                 {
                     Name = "Authorization",
-                    Type = SecuritySchemeType.ApiKey,
+                    Type = SecuritySchemeType.Http,
                     Scheme = "Bearer",
                     BearerFormat = "JWT",
                     In = ParameterLocation.Header,
-                    Description = "Bearer <access_token>",
+                    Description = "Put the token value here (without 'Bearer ')",
                 });
 
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement()

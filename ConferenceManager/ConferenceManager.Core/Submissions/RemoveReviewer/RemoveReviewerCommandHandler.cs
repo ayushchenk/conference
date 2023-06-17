@@ -1,5 +1,4 @@
 ﻿using ConferenceManager.Core.Common;
-using ConferenceManager.Core.Common.Exceptions;
 using ConferenceManager.Core.Common.Interfaces;
 
 namespace ConferenceManager.Core.Submissions.RemoveReviewer
@@ -20,7 +19,7 @@ namespace ConferenceManager.Core.Submissions.RemoveReviewer
 
             if (reviewAssignment == null)
             {
-                throw new NotFoundException();
+                return;
             }
 
             Context.SubmissionReviewers.Remove(reviewAssignment);

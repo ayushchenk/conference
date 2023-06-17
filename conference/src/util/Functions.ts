@@ -30,13 +30,7 @@ export function buildFormData(values: { [key: string]: any }): FormData {
 }
 
 export function getConferenceRoles(user: User | null, conferenceId: number) {
-  if (!user) {
-    return [];
-  }
-
-  return isNaN(conferenceId)
-    ? Object.values(user.roles).flat().includes("Admin") ? ["Admin"] : []
-    : user.roles[conferenceId] ?? [];
+  return user?.roles[conferenceId] ?? [];
 }
 
 export function createLoadingResponse(): LoadingApiResponse {

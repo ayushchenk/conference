@@ -5,6 +5,7 @@ export type User = {
   country: string;
   affiliation: string;
   webpage: string;
+  isAdmin: boolean;
   roles: {
     [id: number]: string[];
   };

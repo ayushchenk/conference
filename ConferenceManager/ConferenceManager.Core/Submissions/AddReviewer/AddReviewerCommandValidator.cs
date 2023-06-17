@@ -6,6 +6,7 @@ using ConferenceManager.Domain.Entities;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace ConferenceManager.Core.Submissions.AddReviewer
 {
@@ -13,8 +14,7 @@ namespace ConferenceManager.Core.Submissions.AddReviewer
     {
         public AddReviewerCommandValidator(
             IApplicationDbContext context,
-            ICurrentUserService currentUser,
-            UserManager<ApplicationUser> userManager) : base(context, currentUser)
+            ICurrentUserService currentUser) : base(context, currentUser)
         {
             RuleFor(x => x).CustomAsync(async (command, context, cancelToken) =>
             {
@@ -26,9 +26,7 @@ namespace ConferenceManager.Core.Submissions.AddReviewer
                     return;
                 }
 
-                var user = await Context.Users
-                    .Include(u => u.ConferenceParticipations)
-                    .FirstOrDefaultAsync(u => u.Id == command.UserId, cancelToken);
+                var user = await Context.Users.FindAsync(command.UserId, cancelToken);
 
                 if (user == null)
                 {
@@ -36,13 +34,21 @@ namespace ConferenceManager.Core.Submissions.AddReviewer
                     return;
                 }
 
-                if (!user.IsParticipantOf(submission.Conference))
+                var userParticipation = await Context.ConferenceParticipants
+                    .FindAsync(new object[] { user.Id, submission.ConferenceId });
+
+                if (userParticipation == null)
                 {
                     context.AddException(new ForbiddenException("User is not part of conference"));
                     return;
                 }
 
-                if (!await userManager.IsInRoleAsync(user, ApplicationRole.Reviewer))
+                var hasReviewerRole = await Context.UserRoles.AnyAsync(r => 
+                    r.UserId == user.Id 
+                    && r.ConferenceId == submission.ConferenceId 
+                    && r.Role.Name == ApplicationRole.Reviewer, cancelToken);
+
+                if (!hasReviewerRole)
                 {
                     context.AddException(new ForbiddenException("User is not a reviewer"));
                 }

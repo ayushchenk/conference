@@ -12,14 +12,22 @@ import { usePostApi } from "../../hooks/UsePostApi";
 import { AdjustUserRoleRequest, GetUsersData, GetUsersResponse } from "./UsersGrid.types";
 import { Link } from "react-router-dom";
 import { User } from "../../types/User";
-import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import { Checkbox } from "@mui/material";
 
-export const useAddUserRoleApi = (admin: boolean | undefined) => {
-  return usePostApi<AdjustUserRoleRequest, {}>(`/User/{0}/role${admin ? '/admin' : ''}`);
+export const useAddUserRoleApi = () => {
+  return usePostApi<AdjustUserRoleRequest, {}>("/User/{0}/role");
 };
 
-export const useRemoveUserRoleApi = (admin: boolean | undefined) => {
-  return useDeleteApi<AdjustUserRoleRequest, {}>(`/User/{0}/role${admin ? '/admin' : ''}`);
+export const useRemoveUserRoleApi = () => {
+  return useDeleteApi<AdjustUserRoleRequest, {}>("/User/{0}/role");
+};
+
+export const useAddUserAdminRoleApi = () => {
+  return usePostApi<{}, {}>('/User/{0}/role/admin');
+};
+
+export const useRemoveUserAdminRoleApi = () => {
+  return useDeleteApi<{}, {}>('/User/{0}/role/admin');
 };
 
 export const useGetUsersApi = (paging: GridPaginationModel): GetUsersResponse => {
@@ -33,7 +41,7 @@ export const useDeleteUserApi = () => {
 
 export const useUsersGridColumns = (
   handleDelete: (user: User) => void,
-  handleRoleDialogOpen: (user: User) => void
+  handleRoleChange: (user: User, checked: boolean) => void
 ): GridColDef[] => {
   return useMemo(() => {
     return [
@@ -69,6 +77,16 @@ export const useUsersGridColumns = (
         flex: 1,
       },
       {
+        headerName: "Is Admin",
+        field: "isAdmin",
+        width: 100,        
+        renderCell: (params) =>
+          <Checkbox
+            checked={params.row.isAdmin}
+            value={params.row.isAdmin}
+            onChange={(event) => handleRoleChange(params.row, event.target.checked)} />
+      },
+      {
         field: "actions",
         type: "actions",
         width: 100,
@@ -77,14 +95,9 @@ export const useUsersGridColumns = (
             icon={<DeleteIcon />}
             label="Delete"
             onClick={() => handleDelete(params.row)}
-          />,
-          <GridActionsCellItem
-            icon={<ManageAccountsIcon />}
-            label="Manage Roles"
-            onClick={() => handleRoleDialogOpen(params.row)}
           />
-        ],
+        ]
       },
     ];
-  }, [handleDelete, handleRoleDialogOpen]);
+  }, [handleDelete, handleRoleChange]);
 };
