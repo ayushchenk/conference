@@ -1,4 +1,10 @@
-export type ApiResponse<T> = LoadingApiResponse | ErrorApiResponse | SuccessApiResponse<T>;
+export type ApiResponse<T> = NotInitiatedResponse | LoadingApiResponse | ErrorApiResponse | SuccessApiResponse<T>;
+
+export type NotInitiatedResponse = {
+    status: "not-initiated",
+    data: null,
+    error: null
+}
 
 export type LoadingApiResponse = {
     status: "loading",

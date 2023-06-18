@@ -9,7 +9,7 @@ export const UserDetailsPage = ({ id }: UserDetailsPageProps) => {
   const { userId } = useParams();
   const response = useGetUserApi(id ?? Number(userId));
 
-  if (response.status === "loading") {
+  if (response.status === "loading" || response.status === "not-initiated") {
     return <LoadingSpinner />;
   }
 

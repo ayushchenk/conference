@@ -38,7 +38,12 @@ export const JoinConferenceDialog = (props: JoinConferenceDialogProps) => {
             helperText={formik.touched.code && formik.errors.code}
             inputProps={{ maxLength: 20 }}
           />
-          <Button color="primary" variant="contained" fullWidth type="submit">
+          <Button
+            disabled={response.status === "loading"}
+            color="primary" 
+            variant="contained" 
+            fullWidth 
+            type="submit">
             Submit
           </Button>
         </form>

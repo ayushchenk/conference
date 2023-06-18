@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 
 namespace ConferenceManager.Core.Conferences.Join
@@ -8,5 +9,8 @@ namespace ConferenceManager.Core.Conferences.Join
         [Required]
         [MaxLength(20)]
         public string Code { get; set; } = null!;
+
+        [JsonIgnore]
+        public int UserId { get; set; }
     }
 }

@@ -64,7 +64,12 @@ export const LoginForm: React.FC<{}> = () => {
         helperText={formik.touched.password && formik.errors.password}
       />
       <FormErrorAlert response={response} />
-      <Button color="primary" variant="contained" fullWidth type="submit">
+      <Button 
+        disabled={response.status === "loading"} 
+        color="primary" 
+        variant="contained" 
+        fullWidth 
+        type="submit">
         Submit
       </Button>
     </form>

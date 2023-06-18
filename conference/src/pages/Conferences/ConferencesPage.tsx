@@ -2,7 +2,7 @@ import { Box, Container, Link } from "@mui/material";
 import { ConferencesGrid } from "../../components/ConferencesGrid";
 import { FormHeader } from "../../components/FormHeader";
 import { useState } from "react";
-import { JoinConferenceDialog } from "../../components/JoinConferenceDialog/JoinConferenceDialog";
+import { JoinConferenceDialog } from "../../components/JoinConferenceDialog";
 
 export const ConferencesPage = () => {
   const [joinDialogOpen, setJoinDialogOpen] = useState(false);

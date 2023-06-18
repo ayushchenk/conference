@@ -9,7 +9,7 @@ export const SubmissionDetailsPage = () => {
   const { submissionId } = useParams();
   const response = useGetSubmissionApi(Number(submissionId));
 
-  if (response.status === "loading") {
+  if (response.status === "loading" || response.status === "not-initiated") {
     return <LoadingSpinner />;
   }
 

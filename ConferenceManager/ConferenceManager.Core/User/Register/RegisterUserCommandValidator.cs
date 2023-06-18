@@ -16,6 +16,7 @@ namespace ConferenceManager.Core.User.Register
             RuleForString(x => x.Country, 50, true);
             RuleForString(x => x.Affiliation, 100, true);
             RuleForString(x => x.Webpage, 100, false);
+            RuleForString(x => x.InviteCode, 20, false);
         }
     }
 }

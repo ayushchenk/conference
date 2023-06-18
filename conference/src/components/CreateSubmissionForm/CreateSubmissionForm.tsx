@@ -204,7 +204,12 @@ export const CreateSubmissionForm = ({ submission }: { submission?: Submission }
         {formik.touched.otherFiles && formik.errors.otherFiles && <FormHelperText>{formik.errors.otherFiles}</FormHelperText>}
       </FormControl>
       <FormErrorAlert response={response} />
-      <Button color="primary" variant="contained" fullWidth type="submit">
+      <Button 
+        disabled={response.status === "loading"}
+        color="primary" 
+        variant="contained" 
+        fullWidth 
+        type="submit">
         Submit
       </Button>
     </Box>

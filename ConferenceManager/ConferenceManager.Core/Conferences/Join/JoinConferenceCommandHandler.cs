@@ -25,31 +25,15 @@ namespace ConferenceManager.Core.Conferences.Join
             var code = await Context.InviteCodes
                 .FirstOrDefaultAsync(c => c.Code == request.Code, cancellationToken);
 
-            await _mediator.Send(new AddParticipantCommand(code!.ConferenceId, CurrentUser.Id), cancellationToken);
+            var userId = request.UserId == default ? CurrentUser.Id : request.UserId;
+
+            await _mediator.Send(new AddParticipantCommand(code!.ConferenceId, userId), cancellationToken);
             await _mediator.Send(new AssignRoleCommand()
             {
-                Id = CurrentUser.Id,
+                Id = userId,
                 ConferenceId = code.ConferenceId,
                 Role = code.Role
             });
         }
-
-        //private async Task AddParticipantIfNotExists(InviteCode code, CancellationToken cancellationToken)
-        //{
-        //    var participation = await Context.ConferenceParticipants
-        //        .FindAsync(new object[] { CurrentUser.Id, code.ConferenceId }, cancellationToken);
-
-        //    if (participation != null)
-        //    {
-        //        return;
-        //    }
-
-        //    participation = new 
-        //}
-
-        //private async Task AddRoleAssignmentIfNotExists(InviteCode code, CancellationToken cancellationToken)
-        //{
-
-        //}
     }
 }
