@@ -25,10 +25,13 @@ namespace ConferenceManager.Core.Conferences.Create
                 Venue = source.Venue,
                 Webpage = source.Webpage,
                 IsAnonymizedFileRequired = source.IsAnonymizedFileRequired,
-                AuthorInviteCode = Password.Generate(10, 3),
-                ReviewerInviteCode = Password.Generate(10, 3),
-                ChairInviteCode = Password.Generate(10, 3),
-                Participants = new List<ApplicationUser>()
+                Participants = new List<ApplicationUser>(),
+                InviteCodes = ApplicationRole.SupportedRoles.Select(role => new InviteCode()
+                {
+                    ConferenceId = 0,
+                    Code = Password.Generate(15, 0),
+                    Role = role
+                }).ToList()
             };
         }
     }

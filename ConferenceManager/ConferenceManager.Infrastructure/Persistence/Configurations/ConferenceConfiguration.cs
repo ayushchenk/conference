@@ -64,18 +64,6 @@ namespace ConferenceManager.Infrastructure.Persistence.Configurations
             builder.Property(x => x.IsAnonymizedFileRequired)
                 .IsRequired();
 
-            builder.Property(x => x.AuthorInviteCode)
-                .IsRequired()
-                .HasMaxLength(10);
-
-            builder.Property(x => x.ReviewerInviteCode)
-                .IsRequired()
-                .HasMaxLength(10);
-
-            builder.Property(x => x.ChairInviteCode)
-                .IsRequired()
-                .HasMaxLength(10);
-
             builder.HasMany(x => x.UserRoles)
                 .WithOne(y => y.Conference)
                 .HasForeignKey(y => y.ConferenceId)

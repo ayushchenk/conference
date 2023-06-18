@@ -25,6 +25,8 @@ namespace ConferenceManager.Core.Common.Interfaces
 
         public DbSet<UserConferenceRole> UserRoles { get; }
 
+        public DbSet<InviteCode> InviteCodes { get; }
+
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

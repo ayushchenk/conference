@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConferenceManager.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230617200200_AddConferenceInviteCodes")]
-    partial class AddConferenceInviteCodes
+    [Migration("20230618110622_AddInviteCodes")]
+    partial class AddInviteCodes
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -213,16 +213,6 @@ namespace ConferenceManager.Infrastructure.Persistence.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("AuthorInviteCode")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<string>("ChairInviteCode")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
                     b.Property<string>("City")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -267,11 +257,6 @@ namespace ConferenceManager.Infrastructure.Persistence.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("ReviewerInviteCode")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
@@ -310,6 +295,53 @@ namespace ConferenceManager.Infrastructure.Persistence.Migrations
                     b.HasIndex("ConferenceId");
 
                     b.ToTable("ConferenceParticipants");
+                });
+
+            modelBuilder.Entity("ConferenceManager.Domain.Entities.InviteCode", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("ConferenceId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CreatedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ModifiedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.HasIndex("ConferenceId");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.ToTable("InviteCodes");
                 });
 
             modelBuilder.Entity("ConferenceManager.Domain.Entities.Paper", b =>
@@ -658,6 +690,33 @@ namespace ConferenceManager.Infrastructure.Persistence.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("ConferenceManager.Domain.Entities.InviteCode", b =>
+                {
+                    b.HasOne("ConferenceManager.Domain.Entities.Conference", "Conference")
+                        .WithMany("InviteCodes")
+                        .HasForeignKey("ConferenceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ConferenceManager.Domain.Entities.ApplicationUser", "CreatedBy")
+                        .WithMany("CreatedInviteCodes")
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("ConferenceManager.Domain.Entities.ApplicationUser", "ModifiedBy")
+                        .WithMany("ModifiedInviteCodes")
+                        .HasForeignKey("ModifiedById")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Conference");
+
+                    b.Navigation("CreatedBy");
+
+                    b.Navigation("ModifiedBy");
+                });
+
             modelBuilder.Entity("ConferenceManager.Domain.Entities.Paper", b =>
                 {
                     b.HasOne("ConferenceManager.Domain.Entities.ApplicationUser", "CreatedBy")
@@ -853,6 +912,8 @@ namespace ConferenceManager.Infrastructure.Persistence.Migrations
 
                     b.Navigation("CreatedConferences");
 
+                    b.Navigation("CreatedInviteCodes");
+
                     b.Navigation("CreatedPapers");
 
                     b.Navigation("CreatedReviews");
@@ -863,6 +924,8 @@ namespace ConferenceManager.Infrastructure.Persistence.Migrations
 
                     b.Navigation("ModifiedConferences");
 
+                    b.Navigation("ModifiedInviteCodes");
+
                     b.Navigation("ModifiedPapers");
 
                     b.Navigation("ModifiedReviews");
@@ -872,6 +935,8 @@ namespace ConferenceManager.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("ConferenceManager.Domain.Entities.Conference", b =>
                 {
+                    b.Navigation("InviteCodes");
+
                     b.Navigation("Submissions");
 
                     b.Navigation("UserRoles");

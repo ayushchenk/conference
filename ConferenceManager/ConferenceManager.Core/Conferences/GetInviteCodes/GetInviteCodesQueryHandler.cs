@@ -1,10 +1,11 @@
 ﻿using ConferenceManager.Core.Common;
 using ConferenceManager.Core.Common.Interfaces;
+using ConferenceManager.Core.Conferences.Common;
 using ConferenceManager.Domain.Entities;
 
 namespace ConferenceManager.Core.Conferences.GetInviteCodes
 {
-    public class GetInviteCodesQueryHandler : DbContextRequestHandler<GetInviteCodesQuery, IEnumerable<InviteCode>>
+    public class GetInviteCodesQueryHandler : DbContextRequestHandler<GetInviteCodesQuery, IEnumerable<InviteCodeDto>>
     {
         public GetInviteCodesQueryHandler(
             IApplicationDbContext context, 
@@ -13,11 +14,13 @@ namespace ConferenceManager.Core.Conferences.GetInviteCodes
         {
         }
 
-        public override async Task<IEnumerable<InviteCode>> Handle(GetInviteCodesQuery request, CancellationToken cancellationToken)
+        public override Task<IEnumerable<InviteCodeDto>> Handle(GetInviteCodesQuery request, CancellationToken cancellationToken)
         {
-            var conference = await Context.Conferences.FindAsync(request.ConferenceId, cancellationToken);
+            var codes = Context.InviteCodes.Where(c => c.ConferenceId == request.ConferenceId);
 
-            return Mapper.Map<Conference, IEnumerable<InviteCode>>(conference!);
+            var dtos = codes.Select(Mapper.Map<InviteCode, InviteCodeDto>);
+
+            return Task.FromResult(dtos);
         }
     }
 }

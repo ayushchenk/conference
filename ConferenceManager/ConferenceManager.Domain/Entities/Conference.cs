@@ -36,16 +36,12 @@ namespace ConferenceManager.Domain.Entities
 
         public bool IsAnonymizedFileRequired { set; get; }
 
-        public required string AuthorInviteCode { set; get; }
-
-        public required string ReviewerInviteCode { set; get; }
-
-        public required string ChairInviteCode { set; get; }
-
         public virtual IList<Submission> Submissions { set; get; } = null!;
 
         public virtual IList<ApplicationUser> Participants { set; get; } = null!;
 
         public virtual IList<UserConferenceRole> UserRoles { set; get; } = null!;
+
+        public virtual IList<InviteCode> InviteCodes { set; get; } = null!;
     }
 }

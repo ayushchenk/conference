@@ -7,7 +7,6 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
-import { AdminVisibility } from "../ProtectedRoute/AdminVisibility";
 import { AuthorVisibility } from "../ProtectedRoute/AuthorVisibility";
 import { FormHeader } from "../FormHeader";
 import { IconButton, Tooltip, Typography } from "@mui/material";
@@ -17,9 +16,40 @@ import { Conference } from "../../types/Conference";
 import { Auth } from "../../logic/Auth";
 import { useIsParticipantApi } from "../../hooks/UserHooks";
 import { AnyRoleVisibility } from "../ProtectedRoute/AnyRoleVisibility";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { useCallback, useEffect, useState } from "react";
+import { useGetInviteCodesApi } from "./ConferenceDetails.hooks";
+import { CodeVisibility } from "./ConferenceDetails.types";
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 export const ConferenceDetails = ({ conference }: { conference: Conference }) => {
   const isParticipant = useIsParticipantApi();
+  const inviteCodes = useGetInviteCodesApi(conference.id);
+  const [codesVisibility, setCodesVisibility] = useState<CodeVisibility[]>([]);
+
+  useEffect(() => {
+    if (inviteCodes.status === "success") {
+      setCodesVisibility(inviteCodes.data.map(code => ({
+        role: code.role,
+        visible: false
+      })));
+    }
+  }, [inviteCodes]);
+
+  const codeVisible = (role: string) =>
+    codesVisibility.find(c => c.role === role)?.visible ?? false;
+
+  const handleCodeClick = useCallback((role: string) => {
+    setCodesVisibility(prevVisibility => {
+      const newVisibility = [...prevVisibility];
+      const clickedCode = newVisibility.find(v => v.role === role);
+      if (clickedCode) {
+        clickedCode.visible = !clickedCode.visible;
+      }
+      return newVisibility;
+    });
+  }, [setCodesVisibility]);
 
   return (
     <>
@@ -120,6 +150,27 @@ export const ConferenceDetails = ({ conference }: { conference: Conference }) =>
                 {String(conference.isAnonymizedFileRequired)}
               </TableCell>
             </TableRow>
+            <AnyRoleVisibility roles={["Admin", "Chair"]}>
+              {inviteCodes.data && inviteCodes.data.map(inviteCode =>
+                <TableRow key={inviteCode.role}>
+                  <TableCell variant="head"> {inviteCode.role} Invite Code </TableCell>
+                  <TableCell>
+                    {codeVisible(inviteCode.role) && <label>{inviteCode.code}</label>}
+                    {codeVisible(inviteCode.role) &&
+                      <IconButton sx={{ ml: 2 }} onClick={() => navigator.clipboard.writeText(inviteCode.code)}>
+                        <ContentCopyIcon fontSize="small" />
+                      </IconButton>
+                    }
+                    <IconButton onClick={() => handleCodeClick(inviteCode.role)}>
+                      {codeVisible(inviteCode.role)
+                        ? <VisibilityOffIcon />
+                        : <VisibilityIcon />
+                      }
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              )}
+            </AnyRoleVisibility>
             {
               (isParticipant || Auth.isAdmin()) &&
               <>
@@ -159,7 +210,7 @@ export const ConferenceDetails = ({ conference }: { conference: Conference }) =>
             }
           </TableBody>
         </Table>
-      </TableContainer >
+      </TableContainer>
     </>
   );
 };

@@ -1,12 +1,32 @@
-import { Container } from "@mui/material";
+import { Box, Container, Link } from "@mui/material";
 import { ConferencesGrid } from "../../components/ConferencesGrid";
 import { FormHeader } from "../../components/FormHeader";
+import { useState } from "react";
+import { JoinConferenceDialog } from "../../components/JoinConferenceDialog/JoinConferenceDialog";
 
 export const ConferencesPage = () => {
+  const [joinDialogOpen, setJoinDialogOpen] = useState(false);
+
   return (
     <Container>
-      <FormHeader>Available conferences</FormHeader>
+      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <FormHeader >
+          Your conferences
+        </FormHeader>
+        <Link
+          component="button"
+          variant="body1"
+          onClick={() => setJoinDialogOpen(true)}
+        >
+          Join using code
+        </Link>
+      </Box>
       <ConferencesGrid />
+      <JoinConferenceDialog
+        open={joinDialogOpen}
+        onClose={() => setJoinDialogOpen(false)}
+        onSuccess={() => window.location.reload()}
+      />
     </Container>
   );
 }

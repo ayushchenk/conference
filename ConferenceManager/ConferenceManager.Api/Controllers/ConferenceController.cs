@@ -10,6 +10,7 @@ using ConferenceManager.Core.Conferences.Get;
 using ConferenceManager.Core.Conferences.GetInviteCodes;
 using ConferenceManager.Core.Conferences.GetParticipants;
 using ConferenceManager.Core.Conferences.GetSubmissions;
+using ConferenceManager.Core.Conferences.Join;
 using ConferenceManager.Core.Conferences.Page;
 using ConferenceManager.Core.Conferences.RemoveParticipant;
 using ConferenceManager.Core.Conferences.Update;
@@ -77,6 +78,7 @@ namespace ConferenceManager.Api.Controllers
         [HttpGet]
         [Route("{id}")]
         [Authorize]
+        [ConferenceAuthorization]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(ConferenceDto))]
         public async Task<IActionResult> Get(int id, CancellationToken cancellation)
         {
@@ -171,12 +173,26 @@ namespace ConferenceManager.Api.Controllers
         [Route("{id}/invite-codes")]
         [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Chair}")]
         [ConferenceAuthorization(ApplicationRole.Chair)]
-        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<InviteCode>))]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<InviteCodeDto>))]
         public async Task<IActionResult> GetInviteCodes(int id, CancellationToken cancellation)
         {
             var result = await Mediator.Send(new GetInviteCodesQuery(id), cancellation);
 
             return Ok(result);
+        }
+
+        /// <summary>
+        /// Allows user to join the conference under given role
+        /// </summary>
+        [HttpPost]
+        [Route("join")]
+        [Authorize]
+        [SwaggerResponse(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> Join(JoinConferenceCommand command, CancellationToken cancellation)
+        {
+            await Mediator.Send(command, cancellation);
+
+            return NoContent();
         }
     }
 }

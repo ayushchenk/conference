@@ -16,22 +16,10 @@ namespace ConferenceManager.Core.Conferences.Update
 
         public override async Task Handle(UpdateConferenceCommand request, CancellationToken cancellationToken)
         {
-            var oldConference = await Context.Conferences
-                .AsNoTracking()
-                .FirstAsync(c => c.Id == request.Id, cancellationToken);
-            var newConference = Mapper.Map<UpdateConferenceCommand, Conference>(request);
+            var conference = Mapper.Map<UpdateConferenceCommand, Conference>(request);
 
-            PersistCodes(oldConference, newConference);
-
-            Context.Conferences.Update(newConference);
+            Context.Conferences.Update(conference);
             await Context.SaveChangesAsync(cancellationToken);
-        }
-
-        private void PersistCodes(Conference old, Conference updated)
-        {
-            updated.AuthorInviteCode = old.AuthorInviteCode;
-            updated.ReviewerInviteCode = old.ReviewerInviteCode;
-            updated.ChairInviteCode = old.ChairInviteCode;
         }
     }
 }

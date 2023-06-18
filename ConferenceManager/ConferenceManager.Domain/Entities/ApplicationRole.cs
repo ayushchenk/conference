@@ -16,6 +16,14 @@ namespace ConferenceManager.Domain.Entities
             Chair
         };
 
+        public static readonly string[] AllRoles =
+        {
+            Admin,
+            Author,
+            Reviewer,
+            Chair
+        };
+
         public virtual IList<UserConferenceRole> UserRoles { get; set; } = null!;
     }
 }

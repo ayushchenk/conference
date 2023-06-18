@@ -43,3 +43,8 @@ export type SubmissionPaper = {
   createdOn: string;
   typeLabel: string;
 };
+
+export type InviteCode = {
+  code: string,
+  role: string
+}
