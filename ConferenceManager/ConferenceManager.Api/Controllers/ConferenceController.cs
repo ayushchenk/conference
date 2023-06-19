@@ -12,6 +12,7 @@ using ConferenceManager.Core.Conferences.GetParticipants;
 using ConferenceManager.Core.Conferences.GetSubmissions;
 using ConferenceManager.Core.Conferences.Join;
 using ConferenceManager.Core.Conferences.Page;
+using ConferenceManager.Core.Conferences.RefreshInviteCode;
 using ConferenceManager.Core.Conferences.RemoveParticipant;
 using ConferenceManager.Core.Conferences.Update;
 using ConferenceManager.Core.Submissions.Common;
@@ -193,6 +194,21 @@ namespace ConferenceManager.Api.Controllers
             await Mediator.Send(command, cancellation);
 
             return NoContent();
+        }
+
+        /// <summary>
+        /// Regenerates invite code
+        /// </summary>
+        [HttpPost]
+        [Route("refresh-code")]
+        [Authorize]
+        [ConferenceAuthorization(ApplicationRole.Chair)]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(InviteCodeDto))]
+        public async Task<IActionResult> Join(RefreshInviteCodeCommand command, CancellationToken cancellation)
+        {
+            var result = await Mediator.Send(command, cancellation);
+
+            return Ok(result);
         }
     }
 }

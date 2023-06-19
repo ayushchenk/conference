@@ -5,5 +5,10 @@ export type GetConferenceResponse = ApiResponse<Conference>;
 
 export type CodeVisibility = {
   role: string,
+  code: string,
   visible: boolean
+}
+
+export type RefreshInviteCodeRequest = {
+  code: string;
 }

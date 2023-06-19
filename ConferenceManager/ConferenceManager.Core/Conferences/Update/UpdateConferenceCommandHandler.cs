@@ -1,7 +1,6 @@
 ﻿using ConferenceManager.Core.Common;
 using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace ConferenceManager.Core.Conferences.Update
 {
