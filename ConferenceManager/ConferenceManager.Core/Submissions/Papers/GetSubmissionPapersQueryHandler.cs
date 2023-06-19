@@ -2,6 +2,7 @@
 using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Core.Submissions.Common;
 using ConferenceManager.Domain.Entities;
+using ConferenceManager.Domain.Enums;
 
 namespace ConferenceManager.Core.Submissions.Papers
 {
@@ -16,36 +17,23 @@ namespace ConferenceManager.Core.Submissions.Papers
 
         public override async Task<IEnumerable<PaperDto>> Handle(GetSubmissionPapersQuery request, CancellationToken cancellationToken)
         {
-            if (CurrentUser.HasReviewerRole)
+            var submission = await Context.Submissions.FindAsync(request.SubmissionId, cancellationToken);
+
+            if (CurrentUser.IsReviewerIn(submission!.Conference))
             {
-                return await GetPapersForReviewer(request, cancellationToken);
+                return Context.Papers
+                .Where(p => p.SubmissionId == submission.Id)
+                .Where(p => submission.Conference.IsAnonymizedFileRequired ? p.Type == PaperType.Anonymized : true)
+                .OrderByDescending(p => p.CreatedOn)
+                .Select(Mapper.Map<Paper, PaperDto>);
             }
 
             var papers = Context.Papers
-                    .Where(p => p.SubmissionId == request.SubmissionId)
-                    .OrderByDescending(p => p.CreatedOn)
-                    .Select(Mapper.Map<Paper, PaperDto>);
+                .Where(p => p.SubmissionId == request.SubmissionId)
+                .OrderByDescending(p => p.CreatedOn)
+                .Select(Mapper.Map<Paper, PaperDto>);
 
             return papers;
-        }
-
-        private async Task<IEnumerable<PaperDto>> GetPapersForReviewer(GetSubmissionPapersQuery request, CancellationToken cancellationToken)
-        {
-            var submisison = await Context.Submissions.FindAsync(request.SubmissionId, cancellationToken);
-
-            if (submisison!.Conference.IsAnonymizedFileRequired)
-            {
-                return Context.Papers
-                    .Where(p => p.SubmissionId == request.SubmissionId)
-                    .Where(p => p.Type == Domain.Enums.PaperType.Anonymized)
-                    .OrderByDescending(p => p.CreatedOn)
-                    .Select(Mapper.Map<Paper, PaperDto>);
-            }
-
-            return Context.Papers
-                    .Where(p => p.SubmissionId == request.SubmissionId)
-                    .OrderByDescending(p => p.CreatedOn)
-                    .Select(Mapper.Map<Paper, PaperDto>);
         }
     }
 }

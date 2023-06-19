@@ -1,27 +1,27 @@
-import { useParams } from "react-router-dom";
 import { Container } from "@mui/material";
 import { useGetConferenceApi } from "../../components/ConferenceDetails/ConferenceDetails.hooks";
 import { CreateConferenceForm } from "../../components/CreateConferenceForm";
 import { FormHeader } from "../../components/FormHeader";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
 import { FormErrorAlert } from "../../components/FormErrorAlert";
+import { useConferenceId } from "../../hooks/UseConferenceId";
 
 export const UpdateConferencePage = () => {
-  const { conferenceId } = useParams();
-  const response = useGetConferenceApi(Number(conferenceId));
+  const conferenceId = useConferenceId();
+  const response = useGetConferenceApi(conferenceId);
 
-  if (response.isLoading) {
+  if (response.status === "loading") {
     return <LoadingSpinner />;
   }
 
-  if (response.isError) {
+  if (response.status === "error") {
     return <FormErrorAlert response={response} />;
   }
 
   return (
     <Container>
       <FormHeader>Update conference</FormHeader>
-      <CreateConferenceForm conference={response.data!} />
+      <CreateConferenceForm conference={response.data} />
     </Container>
   );
 };

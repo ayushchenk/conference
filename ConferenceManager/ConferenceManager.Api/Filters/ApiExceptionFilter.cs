@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace CleanArchitecture.WebUI.Filters
 {
-    public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
+    public class ApiExceptionFilter : ExceptionFilterAttribute
     {
         private readonly IDictionary<Type, Action<ExceptionContext>> _exceptionHandlers;
 
-        public ApiExceptionFilterAttribute()
+        public ApiExceptionFilter()
         {
             _exceptionHandlers = new Dictionary<Type, Action<ExceptionContext>>
             {
@@ -47,7 +47,7 @@ namespace CleanArchitecture.WebUI.Filters
         {
             var exception = (ValidationException)context.Exception;
 
-            var details = new ValidationProblemDetails(exception.Errors) 
+            var details = new ValidationProblemDetails(exception.Errors)
             {
                 Title = "Validation failed",
                 Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.1"

@@ -1,36 +1,24 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { useEffect, useState } from "react";
 import { ApiResponse } from "../types/ApiResponse";
+import { useConfigWithHeaders } from "./UseConfigWithHeaders";
+import { createErrorResponse, createLoadingResponse, createSuccessResponse } from "../util/Functions";
 
 export function useGetApi<TData>(path: string, config?: AxiosRequestConfig<any> | undefined) {
-    const [response, setResponse] = useState<ApiResponse<TData>>({
-        data: null,
-        isError: false,
-        isLoading: true,
-        error: null
-    });
+  const [response, setResponse] = useState<ApiResponse<TData>>(createLoadingResponse());
 
-    useEffect(() => {
-        axios
-            .get<TData>(path, config)
-            .then((response) => {
-                setResponse({
-                    data: response.data,
-                    isError: false,
-                    isLoading: false,
-                    error: null
-                });
-            })
-            .catch((error) => {
-                console.error(error);
-                setResponse({
-                    data: null,
-                    isError: true,
-                    isLoading: false,
-                    error: error?.response?.data
-                });
-            });
-    }, [path, config]);
+  const configWithHeaders = useConfigWithHeaders(config);
 
-    return response;
+  useEffect(() => {
+    axios
+      .get<TData>(path, configWithHeaders)
+      .then((response) => {
+        setResponse(createSuccessResponse(response));
+      })
+      .catch((error) => {
+        setResponse(createErrorResponse(error));
+      });
+  }, [path, configWithHeaders]);
+
+  return response;
 }

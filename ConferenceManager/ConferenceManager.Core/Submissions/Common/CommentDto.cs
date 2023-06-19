@@ -13,7 +13,7 @@ namespace ConferenceManager.Core.Submissions.Common
         public required string AuthorName { set; get; }
 
         public required string AuthorEmail { set; get; }
-        
+
         public required string Text { set; get; }
 
         public DateTime CreatedOn { set; get; }

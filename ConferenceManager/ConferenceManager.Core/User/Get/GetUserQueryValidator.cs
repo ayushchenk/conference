@@ -21,7 +21,7 @@ namespace ConferenceManager.Core.User.Get
                     return;
                 }
 
-                if (!CurrentUser.HasAdminRole && CurrentUser.Id != user.Id)
+                if (!CurrentUser.IsAdmin && CurrentUser.Id != user.Id)
                 {
                     context.AddException(new ForbiddenException("Can only query self"));
                 }

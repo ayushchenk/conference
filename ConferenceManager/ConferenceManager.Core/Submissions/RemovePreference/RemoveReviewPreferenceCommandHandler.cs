@@ -1,7 +1,6 @@
 ﻿using ConferenceManager.Core.Common;
 using ConferenceManager.Core.Common.Exceptions;
 using ConferenceManager.Core.Common.Interfaces;
-using MediatR;
 
 namespace ConferenceManager.Core.Submissions.RemovePreference
 {
@@ -21,7 +20,7 @@ namespace ConferenceManager.Core.Submissions.RemovePreference
 
             if (preference == null)
             {
-                throw new NotFoundException("Preference not found");
+                return;
             }
 
             Context.ReviewPreferences.Remove(preference);

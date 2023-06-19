@@ -21,19 +21,13 @@ namespace ConferenceManager.Core.Submissions.Common
 
         public required string Title { set; get; }
 
-        public required string Keywords { set; get; } 
+        public required string Keywords { set; get; }
 
         public required string Abstract { set; get; }
 
         public required DateTime CreatedOn { set; get; }
 
         public required DateTime ModifiedOn { set; get; }
-
-        public required bool IsReviewer { set; get; }
-
-        public required bool IsAuthor { set; get; }
-
-        public required bool IsParticipant { set; get; }
 
         public required bool IsValidForUpdate { set; get; }
 

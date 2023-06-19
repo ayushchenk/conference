@@ -1,0 +1,1 @@
+export { ConferenceParticipantsGrid } from "./ConferenceParticipantsGrid";

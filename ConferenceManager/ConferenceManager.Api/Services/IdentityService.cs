@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using ConferenceManager.Core.Common.Exceptions;
+﻿using ConferenceManager.Core.Common.Exceptions;
 using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Core.Common.Model.Settings;
 using ConferenceManager.Core.Common.Model.Token;
@@ -7,6 +6,7 @@ using ConferenceManager.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -24,8 +24,7 @@ namespace ConferenceManager.Api.Services
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IOptions<TokenSettings> settings,
-            IDateTimeService dateTime
-            )
+            IDateTimeService dateTime)
         {
             _manager = userManager;
             _signInManager = signInManager;
@@ -49,7 +48,7 @@ namespace ConferenceManager.Api.Services
                 throw new IdentityException("Incorrect password");
             }
 
-            return await GenerateJwtToken(user);
+            return GenerateJwtToken(user);
         }
 
         public async Task<TokenResponse> CreateUser(ApplicationUser user, string password)
@@ -60,8 +59,6 @@ namespace ConferenceManager.Api.Services
             {
                 throw new IdentityException(createResult.Errors);
             }
-
-            await _manager.AddToRoleAsync(user, ApplicationRole.Author);
 
             return await Authenticate(new TokenRequest()
             {
@@ -82,33 +79,7 @@ namespace ConferenceManager.Api.Services
             await _manager.DeleteAsync(user);
         }
 
-        public async Task AssignRole(int id, string role)
-        {
-            var user = await _manager.FindByIdAsync(id.ToString());
-
-            if (user == null)
-            {
-                throw new NotFoundException("User not found");
-            }
-
-            await _manager.AddToRoleAsync(user, role);
-            await _manager.UpdateSecurityStampAsync(user);
-        }
-
-        public async Task UnassignRole(int id, string role)
-        {
-            var user = await _manager.FindByIdAsync(id.ToString());
-
-            if (user == null)
-            {
-                throw new NotFoundException("User not found");
-            }
-
-            await _manager.RemoveFromRoleAsync(user, role);
-            await _manager.UpdateSecurityStampAsync(user);
-        }
-
-        private async Task<TokenResponse> GenerateJwtToken(ApplicationUser user)
+        private TokenResponse GenerateJwtToken(ApplicationUser user)
         {
             byte[] key = Encoding.ASCII.GetBytes(_settings.Key);
 
@@ -127,11 +98,22 @@ namespace ConferenceManager.Api.Services
                 })
             };
 
-            var roles = await _manager.GetRolesAsync(user);
+            var roles = user.ConferenceRoles
+                ?.Select(r => new { r.ConferenceId, Role = r.Role.Name! })
+                ?.GroupBy(r => r.ConferenceId)
+                ?.ToDictionary(key => key.Key, value => value.Select(v => v.Role).ToArray())
+                ?? new Dictionary<int, string[]>();
 
-            foreach (var role in roles)
+            var uniqueRoles = roles.SelectMany(r => r.Value).Distinct();
+
+            foreach (var role in uniqueRoles)
             {
                 descriptor.Subject.AddClaim(new Claim(ClaimTypes.Role, role));
+            }
+
+            if (user.IsAdmin)
+            {
+                descriptor.Subject.AddClaim(new Claim(ClaimTypes.Role, ApplicationRole.Admin));
             }
 
             var token = handler.CreateToken(descriptor);
@@ -142,6 +124,7 @@ namespace ConferenceManager.Api.Services
                 UserId = user.Id,
                 Email = user.Email!,
                 Roles = roles,
+                IsAdmin = user.IsAdmin,
                 Token = new Token()
                 {
                     AccessToken = tokenValue,

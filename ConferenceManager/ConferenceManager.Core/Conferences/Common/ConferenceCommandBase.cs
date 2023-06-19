@@ -16,10 +16,10 @@ namespace ConferenceManager.Core.Conferences.Model
         [MaxLength(100)]
         public string Organizer { get; set; } = null!;
 
-        [Required]        
+        [Required]
         public DateTime StartDate { get; set; }
 
-        [Required]        
+        [Required]
         public DateTime EndDate { get; set; }
 
         [MaxLength(100)]

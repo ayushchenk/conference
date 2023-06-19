@@ -9,13 +9,13 @@ export const UserDetailsPage = ({ id }: UserDetailsPageProps) => {
   const { userId } = useParams();
   const response = useGetUserApi(id ?? Number(userId));
 
-  if (response.isLoading) {
+  if (response.status === "loading") {
     return <LoadingSpinner />;
   }
 
-  if (response.isError) {
+  if (response.status === "error") {
     return <FormErrorAlert response={response} />;
   }
 
-  return <UserDetails user={response.data!} />;
+  return <UserDetails user={response.data} />;
 }

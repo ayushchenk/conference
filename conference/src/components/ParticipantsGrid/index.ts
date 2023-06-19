@@ -1,1 +1,0 @@
-export { ParticipantsGrid } from "./ParticipantsGrid";

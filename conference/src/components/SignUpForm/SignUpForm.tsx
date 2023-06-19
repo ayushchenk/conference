@@ -7,6 +7,7 @@ import { FormErrorAlert } from "../FormErrorAlert/FormErrorAlert";
 import { usePostSignUpApi } from "./SignUpForm.hooks";
 import { initialValues } from "./SignUpForm.types";
 import { validationSchema } from "./SignUpForm.validator";
+import { useEffect } from "react";
 
 export const SignUpForm: React.FC<{}> = () => {
   const { response, post } = usePostSignUpApi();
@@ -20,10 +21,12 @@ export const SignUpForm: React.FC<{}> = () => {
     },
   });
 
-  if (response.data) {
-    Auth.login(response.data);
-    navigate("/");
-  }
+  useEffect(() => {
+    if (response.data) {
+      Auth.login(response.data);
+      navigate("/");
+    }
+  }, [response, navigate]);
 
   return (
     <form onSubmit={formik.handleSubmit}>

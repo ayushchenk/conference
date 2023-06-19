@@ -7,16 +7,16 @@ using Microsoft.Extensions.Options;
 
 namespace ConferenceManager.Infrastructure.Persistence;
 
-public class ApplicationDbContextInitialiser
+public class ApplicationDbContextInitializer
 {
-    private readonly ILogger<ApplicationDbContextInitialiser> _logger;
+    private readonly ILogger<ApplicationDbContextInitializer> _logger;
     private readonly SeedSettings _settings;
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<ApplicationRole> _roleManager;
 
-    public ApplicationDbContextInitialiser(
-        ILogger<ApplicationDbContextInitialiser> logger,
+    public ApplicationDbContextInitializer(
+        ILogger<ApplicationDbContextInitializer> logger,
         IOptions<SeedSettings> appSettings,
         ApplicationDbContext context,
         UserManager<ApplicationUser> userManager,
@@ -38,7 +38,7 @@ public class ApplicationDbContextInitialiser
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred while initialising the database.");
+            _logger.LogError(ex, "An error occurred while initializing the database");
             throw;
         }
     }
@@ -51,14 +51,13 @@ public class ApplicationDbContextInitialiser
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred while seeding the database.");
+            _logger.LogError(ex, "An error occurred while seeding the database");
             throw;
         }
     }
 
     private async Task TrySeedAsync()
     {
-        // Default roles
         foreach (var role in ApplicationRole.SupportedRoles)
         {
             if (await _roleManager.FindByNameAsync(role) == null)
@@ -67,24 +66,27 @@ public class ApplicationDbContextInitialiser
                 {
                     Name = role
                 });
+
+                _logger.LogInformation("Seeded role " + role);
             }
         }
 
-        // Default users
-        var admin = new ApplicationUser()
+        if (await _userManager.FindByEmailAsync(_settings.AdminEmail) == null)
         {
-            UserName = "admin@localhost.com",
-            Email = "admin@localhost.com",
-            Affiliation = "affiliation",
-            Country = "country",
-            FirstName = "Admin",
-            LastName = "Localhost"
-        };
+            var admin = new ApplicationUser()
+            {
+                UserName = _settings.AdminEmail,
+                Email = _settings.AdminEmail,
+                Affiliation = string.Empty,
+                Country = string.Empty,
+                Webpage = string.Empty,
+                IsAdmin = true,
+                FirstName = "Admin",
+                LastName = "User"
+            };
 
-        if (await _userManager.FindByEmailAsync(admin.Email) == null)
-        {
             await _userManager.CreateAsync(admin, _settings.AdminPassword);
-            await _userManager.AddToRoleAsync(admin, ApplicationRole.Admin);
+            _logger.LogInformation("Seeded root user " + admin.Email);
         }
     }
 }

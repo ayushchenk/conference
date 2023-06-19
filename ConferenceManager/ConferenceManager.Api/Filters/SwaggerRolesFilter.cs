@@ -8,12 +8,12 @@ namespace ConferenceManager.Api.Filters
     {
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
-            var roles = context.MethodInfo.
-                 GetCustomAttributes(true)
-                 .OfType<AuthorizeAttribute>()
-                 .Select(a => a.Roles)
-                 .Distinct()
-                 .ToArray();
+            var roles = context.MethodInfo
+                .GetCustomAttributes(true)
+                .OfType<AuthorizeAttribute>()
+                .Select(a => a.Roles)
+                .Distinct()
+                .ToArray();
 
             if (roles.Any())
             {

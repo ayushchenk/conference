@@ -10,7 +10,7 @@ namespace ConferenceManager.Core.Common.Queries
 
         public int PageSize { get; }
 
-        protected GetEntityPageQuery(int pageIndex, int pageSize) 
+        protected GetEntityPageQuery(int pageIndex, int pageSize)
         {
             PageIndex = pageIndex;
             PageSize = pageSize;

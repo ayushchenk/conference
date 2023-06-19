@@ -1,9 +1,22 @@
-export type ApiResponse<T> = {
-    data: T | null;
-    isLoading: boolean;
-    isError: boolean;
-    error: ApiError | null;
-};
+export type ApiResponse<T> = LoadingApiResponse | ErrorApiResponse | SuccessApiResponse<T>;
+
+export type LoadingApiResponse = {
+    status: "loading",
+    data: null,
+    error: null
+}
+
+export type ErrorApiResponse = {
+    status: "error",
+    data: null,
+    error: ApiError
+}
+
+export type SuccessApiResponse<T> = {
+    status: "success",
+    data: T,
+    error: null
+}
 
 export type PageData<T> = {
     items: T[];

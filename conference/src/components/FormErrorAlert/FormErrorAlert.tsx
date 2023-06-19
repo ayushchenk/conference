@@ -1,15 +1,27 @@
 import Alert from "@mui/material/Alert";
 import { FormErrorAlertProps } from "./FormErrorAlert.types";
 import Collapse from "@mui/material/Collapse";
+import { useEffect, useState } from "react";
+import { errorAlertTimeout } from "../../util/Constants";
 
 export const FormErrorAlert = ({ response }: FormErrorAlertProps) => {
-  const errors = response.error?.errors;
+  const [visible, setVisible] = useState(response.status === "error");
 
-  if (errors) {
-    const errorMessages = Object.values(errors).flat();
+  useEffect(() => {
+    setVisible(response.status === "error");
+    const timeout = setTimeout(() => setVisible(false), errorAlertTimeout);
+    return () => clearTimeout(timeout);
+  }, [response]);
+
+  if (response.status !== "error" || !visible) {
+    return null;
+  }
+
+  if (response.error.errors) {
+    const errorMessages = Object.values(response.error.errors).flat();
     if (errorMessages.length > 0) {
       return (
-        <Collapse in={response.isError} sx={{ my: "10px" }}>
+        <Collapse in={true} sx={{ my: "10px" }}>
           {errorMessages.map((errorMessage, index) => (
             <Alert severity="error" key={index}>
               {errorMessage}
@@ -19,9 +31,10 @@ export const FormErrorAlert = ({ response }: FormErrorAlertProps) => {
       );
     }
   }
+
   return (
-    <Collapse in={response.isError} sx={{ my: "10px" }}>
-      <Alert severity="error">{response.error?.detail ?? "Something went wrong while processing the request."}</Alert>
+    <Collapse in={true} sx={{ my: "10px" }}>
+      <Alert severity="error">{response.error.detail ?? "Something went wrong while processing the request"}</Alert>
     </Collapse>
   );
 };

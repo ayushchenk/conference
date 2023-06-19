@@ -1,6 +1,6 @@
 import { useFormik } from "formik";
 import { ChangeEvent, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import UploadFile from "@mui/icons-material/UploadFile";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -15,10 +15,11 @@ import { CreateSubmissionRequest, initialValues } from "./CreateSubmissionForm.t
 import { createValidationSchema, updateValidationSchema } from "./CreateSubmissionForm.validator";
 import { IconButton } from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
+import { useConferenceId } from "../../hooks/UseConferenceId";
 
 export const CreateSubmissionForm = ({ submission }: { submission?: Submission }) => {
   const navigate = useNavigate();
-  const { conferenceId } = useParams();
+  const conferenceId = useConferenceId();
   const { response: responseUpdate, put } = useUpdateSubmissionApi();
   const { response: responseCreate, post } = usePostCreateSubmissionApi();
 
@@ -28,14 +29,14 @@ export const CreateSubmissionForm = ({ submission }: { submission?: Submission }
 
   useEffect(() => {
     const submissionId = submission ? submission.id : response?.data?.id;
-    if (!response.isLoading && !response.isError && submissionId) {
+    if (response.status === "success" && submissionId) {
       navigate(`/conferences/${conferenceId}/submissions/${submissionId}`);
     }
   }, [response, navigate, conferenceId, submission]);
 
   const values: CreateSubmissionRequest = submission
     ? { ...submission }
-    : { ...initialValues, conferenceId: Number(conferenceId) }
+    : { ...initialValues, conferenceId: conferenceId }
 
   const formik = useFormik({
     initialValues: values,
@@ -174,7 +175,7 @@ export const CreateSubmissionForm = ({ submission }: { submission?: Submission }
         <Box sx={{ display: "flex", mt: 2 }}>
           {formik.values.otherFiles &&
             <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Box sx={{width: "500px"}}>
+              <Box>
                 {formik.values.otherFiles.map((file, index) => (
                   <FormHelperText key={index}>{file.name}</FormHelperText>
                 ))}

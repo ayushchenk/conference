@@ -26,7 +26,7 @@ export const CreateConferenceForm = ({ conference }: { conference?: Conference |
 
   useEffect(() => {
     const conferenceId = conference ? conference.id : response?.data?.id;
-    if (!response.isLoading && !response.isError && conferenceId) {
+    if (response.status === "success" && conferenceId) {
       navigate(`/conferences/${conferenceId}`);
     }
   }, [response, conference, navigate]);
@@ -182,7 +182,7 @@ export const CreateConferenceForm = ({ conference }: { conference?: Conference |
             margin="normal"
             error={formik.touched.researchAreas && Boolean(formik.errors.researchAreas)}
             helperText={formik.touched.researchAreas && formik.errors.researchAreas}
-            label="Research Areas"
+            label="Research Areas *"
             placeholder="Enter the area and press Enter"
           />
         )}

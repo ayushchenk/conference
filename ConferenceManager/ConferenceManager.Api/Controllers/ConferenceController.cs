@@ -1,4 +1,5 @@
 ﻿using ConferenceManager.Api.Abstract;
+using ConferenceManager.Api.Filters;
 using ConferenceManager.Core.Account.Common;
 using ConferenceManager.Core.Common.Model.Responses;
 using ConferenceManager.Core.Conferences.AddParticipant;
@@ -40,10 +41,12 @@ namespace ConferenceManager.Api.Controllers
         /// Updates conference information
         /// </summary>
         /// <remarks>
-        /// All fields are required, payload replaces existing record in db 
+        /// All fields are required, payload replaces existing record in db. <br/>
+        /// Chair can only update his conference.
         /// </remarks>
         [HttpPut]
-        [Authorize(Roles = ApplicationRole.Admin)]
+        [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Chair}")]
+        [ConferenceAuthorization(ApplicationRole.Chair)]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CreateEntityResponse))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
@@ -109,7 +112,8 @@ namespace ConferenceManager.Api.Controllers
         /// </summary>
         [HttpPost]
         [Route("{id}/participants/{userId}")]
-        [Authorize(Roles = ApplicationRole.Admin)]
+        [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Chair}")]
+        [ConferenceAuthorization(ApplicationRole.Chair)]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status204NoContent)]
         [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
@@ -125,7 +129,8 @@ namespace ConferenceManager.Api.Controllers
         /// </summary>
         [HttpDelete]
         [Route("{id}/participants/{userId}")]
-        [Authorize(Roles = ApplicationRole.Admin)]
+        [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Chair}")]
+        [ConferenceAuthorization(ApplicationRole.Chair)]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status204NoContent)]
         [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
@@ -141,11 +146,13 @@ namespace ConferenceManager.Api.Controllers
         /// </summary>
         /// <remarks>
         /// User should be part of conference where submission is located (not required for Admin). <br/>
-        /// Page is ordered by createdon descending 
+        /// For authors, returns only his submissions. <br/>
+        /// Page is ordered by createdon descending.
         /// </remarks>
         [HttpGet]
         [Route("{id}/submissions")]
         [Authorize]
+        [ConferenceAuthorization]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(EntityPageResponse<SubmissionDto>))]
         [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
@@ -162,7 +169,8 @@ namespace ConferenceManager.Api.Controllers
         /// </summary>
         [HttpGet]
         [Route("{id}/participants")]
-        [Authorize]
+        [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Chair}")]
+        [ConferenceAuthorization(ApplicationRole.Chair)]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(EntityPageResponse<UserDto>))]
         [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]

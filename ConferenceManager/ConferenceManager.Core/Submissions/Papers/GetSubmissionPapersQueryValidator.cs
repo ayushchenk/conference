@@ -22,13 +22,13 @@ namespace ConferenceManager.Core.Submissions.Papers
                     return;
                 }
 
-                if (CurrentUser.HasAuthorRole && !CurrentUser.IsAuthorOf(submission))              
+                if (CurrentUser.IsAuthorIn(submission.Conference) && !CurrentUser.IsAuthorOf(submission))
                 {
                     context.AddException(new ForbiddenException("User is not an author of the submission"));
                     return;
                 }
 
-                if (CurrentUser.HasReviewerRole && !CurrentUser.IsReviewerOf(submission))
+                if (CurrentUser.IsReviewerIn(submission.Conference) && !CurrentUser.IsReviewerOf(submission))
                 {
                     context.AddException(new ForbiddenException("User is not a reviewer of the submission"));
                     return;

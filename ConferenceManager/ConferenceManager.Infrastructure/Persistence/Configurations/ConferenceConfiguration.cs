@@ -63,6 +63,11 @@ namespace ConferenceManager.Infrastructure.Persistence.Configurations
 
             builder.Property(x => x.IsAnonymizedFileRequired)
                 .IsRequired();
+
+            builder.HasMany(x => x.UserRoles)
+                .WithOne(y => y.Conference)
+                .HasForeignKey(y => y.ConferenceId)
+                .IsRequired(false);
         }
     }
 }

@@ -1,8 +1,11 @@
+import { useConferenceId } from "../../hooks/UseConferenceId";
 import { Auth } from "../../logic/Auth";
 import { ProtectedProps } from "./Protected";
 
 export const ReviewerVisibility = (props: ProtectedProps) => {
-  if (Auth.isAuthed() && Auth.isReviewer()) {
+  const conferenceId = useConferenceId();
+
+  if (Auth.isReviewer(conferenceId)) {
     return <>{props.children}</>;
   }
   return null;

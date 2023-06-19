@@ -14,20 +14,25 @@ import { IconButton, Tooltip, Typography } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { Conference } from "../../types/Conference";
+import { Auth } from "../../logic/Auth";
+import { useIsParticipantApi } from "../../hooks/UserHooks";
+import { AnyRoleVisibility } from "../ProtectedRoute/AnyRoleVisibility";
 
 export const ConferenceDetails = ({ conference }: { conference: Conference }) => {
+  const isParticipant = useIsParticipantApi();
+
   return (
     <>
       <FormHeader>
         <span>{conference.title}</span>
-        <AdminVisibility>
+        <AnyRoleVisibility roles={["Admin", "Chair"]}>
           <IconButton>
             <Link className="header__link" to={`/conferences/${conference.id}/edit`} >
               <EditIcon >
               </EditIcon>
             </Link>
           </IconButton>
-        </AdminVisibility>
+        </AnyRoleVisibility>
       </FormHeader>
       <TableContainer component={Paper}>
         <Table size="small">
@@ -116,7 +121,7 @@ export const ConferenceDetails = ({ conference }: { conference: Conference }) =>
               </TableCell>
             </TableRow>
             {
-              conference.isParticipant &&
+              (isParticipant || Auth.isAdmin()) &&
               <>
                 <TableRow>
                   <TableCell align="center" colSpan={12} variant="head">
@@ -127,7 +132,8 @@ export const ConferenceDetails = ({ conference }: { conference: Conference }) =>
                     </Button>
                   </TableCell>
                 </TableRow>
-                <AdminVisibility>
+                {
+                  (Auth.isAdmin() || Auth.isChair(conference.id)) &&
                   <TableRow>
                     <TableCell align="center" colSpan={12} variant="head">
                       <Button color="inherit">
@@ -137,7 +143,7 @@ export const ConferenceDetails = ({ conference }: { conference: Conference }) =>
                       </Button>
                     </TableCell>
                   </TableRow>
-                </AdminVisibility>
+                }
                 <AuthorVisibility>
                   <TableRow>
                     <TableCell align="center" colSpan={12} variant="head">
@@ -153,7 +159,7 @@ export const ConferenceDetails = ({ conference }: { conference: Conference }) =>
             }
           </TableBody>
         </Table>
-      </TableContainer>
+      </TableContainer >
     </>
   );
 };

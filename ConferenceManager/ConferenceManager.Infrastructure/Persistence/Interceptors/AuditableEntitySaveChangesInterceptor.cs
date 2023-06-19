@@ -40,13 +40,13 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
 
         foreach (var entry in context.ChangeTracker.Entries<BaseAuditableEntity>())
         {
-            if (entry.State == EntityState.Added)
+            if (entry.State == EntityState.Added && entry.Entity.CreatedById == default && entry.Entity.ModifiedById == default)
             {
                 entry.Entity.CreatedById = _currentUser.Id;
                 entry.Entity.CreatedOn = now;
                 entry.Entity.ModifiedById = _currentUser.Id;
                 entry.Entity.ModifiedOn = now;
-            } 
+            }
 
             if (entry.State == EntityState.Modified)
             {

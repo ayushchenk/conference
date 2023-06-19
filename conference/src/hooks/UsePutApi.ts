@@ -1,38 +1,26 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { useCallback, useState } from "react";
 import { ApiResponse } from "../types/ApiResponse";
+import { createErrorResponse, createLoadingResponse, createSuccessResponse } from "../util/Functions";
+import { useConfigWithHeaders } from "./UseConfigWithHeaders";
 
 export function usePutApi<TRequest, TData>(path: string, config?: AxiosRequestConfig<any> | undefined) {
-  const [response, setResponse] = useState<ApiResponse<TData>>({
-    data: null,
-    isError: false,
-    isLoading: true,
-    error: null,
-  });
+  const [response, setResponse] = useState<ApiResponse<TData>>(createLoadingResponse());
+
+  const configWithHeaders = useConfigWithHeaders(config);
 
   const put = useCallback(
     (data: TRequest) => {
       axios
-        .put<TData>(path, data, config)
+        .put<TData>(path, data, configWithHeaders)
         .then((response) => {
-          setResponse({
-            data: response.data,
-            isError: false,
-            isLoading: false,
-            error: null,
-          });
+          setResponse(createSuccessResponse(response));
         })
         .catch((error) => {
-          console.error(error);
-          setResponse({
-            data: null,
-            isError: true,
-            isLoading: false,
-            error: error?.response?.data,
-          });
+          setResponse(createErrorResponse(error));
         });
     },
-    [path, config]
+    [path, configWithHeaders]
   );
 
   return { response, put };

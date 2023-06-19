@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useCallback, useState } from "react";
+import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
@@ -15,19 +15,22 @@ import { SubmissionPapersTable } from "./SubmissionPapersTable";
 import { TabPanel } from "./TabPanel";
 import { Submission } from "../../types/Conference";
 import { FormHeader } from "../FormHeader";
+import { useConferenceId } from "../../hooks/UseConferenceId";
+import { FormErrorAlert } from "../FormErrorAlert";
+import { Auth } from "../../logic/Auth";
+import { useIsReviewerApi } from "../../hooks/UserHooks";
 
 export const SubmissionDetails = ({ submission }: { submission: Submission }) => {
-  const { conferenceId, submissionId } = useParams();
+  const conferenceId = useConferenceId();
   const [tabValue, setTabValue] = useState(0);
-  const { post: returnSubmission } = usePostReturnSubmissionAPI(Number(submissionId));
+  const { post: returnSubmission, response: returnResponse } = usePostReturnSubmissionAPI(submission.id);
 
-  const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
+  const isAuthor = submission.authorId === Auth.getId();
+  const isReviewer = useIsReviewerApi(submission.id);
+
+  const handleTabChange = useCallback((_: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
-  };
-
-  const handleReturnSubmission = () => {
-    returnSubmission({});
-  };
+  }, []);
 
   return (
     <>
@@ -58,24 +61,24 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
               <TableCell variant="head">Keywords</TableCell>
               <TableCell>{submission.keywords}</TableCell>
             </TableRow>
-            {submission.isAuthor && (
+            {isAuthor &&
               <TableRow>
                 <TableCell align="center" colSpan={12} variant="head">
                   <Button color="inherit" disabled={!submission.isValidForUpdate}>
                     <Link
                       className="header__link"
-                      to={`/conferences/${conferenceId}/submissions/${submissionId}/edit`}
+                      to={`/conferences/${conferenceId}/submissions/${submission.id}/edit`}
                     >
                       Edit
                     </Link>
                   </Button>
                 </TableCell>
               </TableRow>
-            )}
-            {submission.isReviewer &&
+            }
+            {isReviewer &&
               <TableRow>
                 <TableCell align="center" colSpan={12} variant="head">
-                  <Button color="inherit" onClick={handleReturnSubmission} disabled={!submission.isValidForReturn}>
+                  <Button color="inherit" onClick={() => returnSubmission({})} disabled={!submission.isValidForReturn}>
                     Return
                   </Button>
                 </TableCell>
@@ -85,7 +88,7 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
         </Table>
       </TableContainer >
       {
-        (submission.isReviewer || submission.isAuthor) &&
+        (isReviewer || isAuthor || Auth.isChair(conferenceId)) &&
         <Box mt={5}>
           <Tabs variant="fullWidth" value={tabValue} onChange={handleTabChange}>
             <Tab label="Papers" />
@@ -99,6 +102,7 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
           <TabPanel value={tabValue} index={2}></TabPanel>
         </Box>
       }
+      <FormErrorAlert response={returnResponse} />
     </>
   );
 };

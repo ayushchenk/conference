@@ -28,7 +28,8 @@ Prerequisites:
     "ExpiresMinutes": 60
   },
   "SeedSettings": {
-    "AdminPassword":  "C00!P@ssword" //admin login is admin@localhost.com
+    "AdminPassword":  "C00!P@ssword",
+    "AdminEmail": "cool@email.com" //any valid email
   }
 }
 ```
@@ -68,10 +69,19 @@ Server=host.docker.internal,1433;User ID=<local sql login>;Password=<local sql p
 
 # Other
 
-## How to create migration
+### How to create migration
 
 Run in Infrastructure folder:
 
 ```shell
  dotnet ef migrations add <name> --output-dir Persistence/Migrations -v --project .\ConferenceManager.Infrastructure.csproj --startup-project ..\ConferenceManager.Api\ConferenceManager.Api.csproj
+```
+
+### How to revert to specific migration and delete the undone
+
+Run in Infrastructure folder:
+
+```shell
+ dotnet ef database update <name> -v --project .\ConferenceManager.Infrastructure.csproj --startup-project ..\ConferenceManager.Api\ConferenceManager.Api.csproj
+ dotnet ef migrations remove --project .\ConferenceManager.Infrastructure.csproj --startup-project ..\ConferenceManager.Api\ConferenceManager.Api.csproj
 ```

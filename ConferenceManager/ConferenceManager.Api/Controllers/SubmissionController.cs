@@ -1,4 +1,5 @@
 ﻿using ConferenceManager.Api.Abstract;
+using ConferenceManager.Api.Filters;
 using ConferenceManager.Core.Account.Common;
 using ConferenceManager.Core.Common.Model.Responses;
 using ConferenceManager.Core.Submissions.AddPreference;
@@ -34,9 +35,11 @@ namespace ConferenceManager.Api.Controllers
         /// </summary>
         [HttpPost]
         [Authorize(Roles = ApplicationRole.Author)]
+        [ConferenceAuthorization(ApplicationRole.Author)]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CreateEntityResponse))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
         public async Task<IActionResult> Post([FromForm] CreateSubmissionCommand command, CancellationToken cancellation)
         {
             var result = await Mediator.Send(command, cancellation);
@@ -53,6 +56,7 @@ namespace ConferenceManager.Api.Controllers
         /// </remarks>
         [HttpPut]
         [Authorize(Roles = ApplicationRole.Author)]
+        [ConferenceAuthorization(ApplicationRole.Author)]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status204NoContent)]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
@@ -74,6 +78,7 @@ namespace ConferenceManager.Api.Controllers
         [HttpGet]
         [Route("{id}")]
         [Authorize]
+        [ConferenceAuthorization]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(SubmissionDto))]
         [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
@@ -92,11 +97,12 @@ namespace ConferenceManager.Api.Controllers
         /// Papers are ordered by created on descending. <br/>
         /// Author can only get papers of his own submission. <br/>
         /// Reviewer can only get papers of submission, that he is assigned to. <br/>
-        /// Admin can access everything.
+        /// Admin and chair can access everything.
         /// </remarks>
         [HttpGet]
         [Route("{id}/papers")]
         [Authorize]
+        [ConferenceAuthorization]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status200OK, Type = (typeof(IEnumerable<PaperDto>)))]
         [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
@@ -118,6 +124,7 @@ namespace ConferenceManager.Api.Controllers
         [HttpPost]
         [Route("{id}/return")]
         [Authorize(Roles = ApplicationRole.Reviewer)]
+        [ConferenceAuthorization(ApplicationRole.Reviewer)]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status204NoContent)]
         [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
@@ -139,6 +146,7 @@ namespace ConferenceManager.Api.Controllers
         [HttpPut]
         [Route("reviews")]
         [Authorize(Roles = ApplicationRole.Reviewer)]
+        [ConferenceAuthorization(ApplicationRole.Reviewer)]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status204NoContent)]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
@@ -161,6 +169,7 @@ namespace ConferenceManager.Api.Controllers
         [HttpPost]
         [Route("{id}/reviews")]
         [Authorize(Roles = ApplicationRole.Reviewer)]
+        [ConferenceAuthorization(ApplicationRole.Reviewer)]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CreateEntityResponse))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
@@ -182,7 +191,8 @@ namespace ConferenceManager.Api.Controllers
         /// </remarks>
         [HttpGet]
         [Route("{id}/reviews")]
-        [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Reviewer}")]
+        [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Chair},{ApplicationRole.Reviewer}")]
+        [ConferenceAuthorization(ApplicationRole.Reviewer)]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<ReviewDto>))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
@@ -204,6 +214,7 @@ namespace ConferenceManager.Api.Controllers
         [HttpPut]
         [Route("comments")]
         [Authorize]
+        [ConferenceAuthorization]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status204NoContent)]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
@@ -226,6 +237,7 @@ namespace ConferenceManager.Api.Controllers
         [HttpDelete]
         [Route("comments/{id}")]
         [Authorize]
+        [ConferenceAuthorization]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status204NoContent)]
         [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
@@ -247,6 +259,7 @@ namespace ConferenceManager.Api.Controllers
         [HttpPost]
         [Route("{id}/comments")]
         [Authorize]
+        [ConferenceAuthorization]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status200OK, Type = (typeof(IEnumerable<CreateEntityResponse>)))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
@@ -269,7 +282,8 @@ namespace ConferenceManager.Api.Controllers
         /// </remarks>
         [HttpGet]
         [Route("{id}/comments")]
-        [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Reviewer}")]
+        [Authorize]
+        [ConferenceAuthorization]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status200OK, Type = (typeof(IEnumerable<CommentDto>)))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
@@ -291,7 +305,8 @@ namespace ConferenceManager.Api.Controllers
         /// </remarks>
         [HttpGet]
         [Route("{id}/reviewers")]
-        [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Reviewer}")]
+        [Authorize(Roles = $"{ApplicationRole.Chair},{ApplicationRole.Reviewer}")]
+        [ConferenceAuthorization(ApplicationRole.Chair, ApplicationRole.Reviewer)]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status200OK, Type = (typeof(IEnumerable<UserDto>)))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
@@ -312,7 +327,8 @@ namespace ConferenceManager.Api.Controllers
         /// </remarks>
         [HttpPost]
         [Route("{id}/reviewers/{userId}")]
-        [Authorize(Roles = ApplicationRole.Admin)]
+        [Authorize(Roles = ApplicationRole.Chair)]
+        [ConferenceAuthorization(ApplicationRole.Chair)]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status204NoContent)]
         [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
@@ -329,7 +345,8 @@ namespace ConferenceManager.Api.Controllers
         /// </summary>
         [HttpDelete]
         [Route("{id}/reviewers/{userId}")]
-        [Authorize(Roles = ApplicationRole.Admin)]
+        [Authorize(Roles = ApplicationRole.Chair)]
+        [ConferenceAuthorization(ApplicationRole.Chair)]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status204NoContent)]
         [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
@@ -345,7 +362,8 @@ namespace ConferenceManager.Api.Controllers
         /// </summary>
         [HttpGet]
         [Route("{id}/preferences")]
-        [Authorize(Roles = ApplicationRole.Admin)]
+        [Authorize(Roles = ApplicationRole.Chair)]
+        [ConferenceAuthorization(ApplicationRole.Chair)]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<UserDto>))]
         [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
@@ -366,6 +384,7 @@ namespace ConferenceManager.Api.Controllers
         [HttpPost]
         [Route("{id}/preferences")]
         [Authorize(Roles = ApplicationRole.Reviewer)]
+        [ConferenceAuthorization(ApplicationRole.Reviewer)]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status204NoContent)]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
@@ -384,6 +403,7 @@ namespace ConferenceManager.Api.Controllers
         [HttpDelete]
         [Route("{id}/preferences")]
         [Authorize(Roles = ApplicationRole.Reviewer)]
+        [ConferenceAuthorization(ApplicationRole.Reviewer)]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status204NoContent)]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]

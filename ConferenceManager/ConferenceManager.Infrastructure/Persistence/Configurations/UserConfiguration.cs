@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ConferenceManager.Infrastructure.Persistence.Configurations
 {
-    public class ApplicationUserConfiguration : IEntityTypeConfiguration<ApplicationUser>
+    public class UserConfiguration : IEntityTypeConfiguration<ApplicationUser>
     {
         public void Configure(EntityTypeBuilder<ApplicationUser> builder)
         {
@@ -34,6 +34,9 @@ namespace ConferenceManager.Infrastructure.Persistence.Configurations
             builder.Property(x => x.Webpage)
                 .IsRequired(false)
                 .HasMaxLength(100);
+
+            builder.Property(x => x.IsAdmin)
+                .IsRequired();
 
             builder.HasMany(x => x.CreatedComments)
                 .WithOne(y => y.CreatedBy)
@@ -81,6 +84,11 @@ namespace ConferenceManager.Infrastructure.Persistence.Configurations
             builder.HasMany(x => x.ConferenceParticipations)
                 .WithMany(y => y.Participants)
                 .UsingEntity<ConferenceParticipant>();
+
+            builder.HasMany(x => x.ConferenceRoles)
+                .WithOne(y => y.User)
+                .HasForeignKey(y => y.UserId)
+                .IsRequired();
         }
     }
 }

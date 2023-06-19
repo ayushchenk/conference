@@ -1,14 +1,13 @@
 import moment from "moment";
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { GridActionsCellItem, GridColDef, GridPaginationModel, GridRowsProp } from "@mui/x-data-grid";
+import { GridActionsCellItem, GridColDef, GridPaginationModel } from "@mui/x-data-grid";
 import { useDeleteApi } from "../../hooks/UseDeleteApi";
 import { useGetApi } from "../../hooks/UseGetApi";
 import { useMemoPaging } from "../../hooks/UseMemoPaging";
-import { Conference } from "../../types/Conference";
 import { GetConferencesData, GetConferencesResponse } from "./ConferencesGrid.types";
 import { Auth } from "../../logic/Auth";
+import { useMemo } from "react";
 
 export const useGetConferencesApi = (paging: GridPaginationModel): GetConferencesResponse => {
   const config = useMemoPaging(paging);
@@ -19,74 +18,56 @@ export const useDeleteConferenceApi = () => {
   return useDeleteApi<{}, {}>(`/Conference/{0}`);
 };
 
-export const useConferencesGridProps = (conferences: GetConferencesResponse): [GridRowsProp, GridColDef[]] => {
-  const [rows, setRows] = useState<Conference[]>(conferences.data?.items ?? []);
-  const [deletedConferenceId, setDeletedConferenceId] = useState<number | null>(null);
-  const { response, performDelete: deleteConference } = useDeleteConferenceApi();
+export const useConferencesGridColumns = (handleDelete: (id: number) => void): GridColDef[] => {
+  return useMemo(() => {
+    const columns: GridColDef[] = [
+      {
+        headerName: "#",
+        field: "id",
+        width: 60,
+        type: "number"
+      },
+      {
+        headerName: "Acronym",
+        field: "acronym",
+        width: 150
+      },
+      {
+        headerName: "Name",
+        field: "title",
+        flex: 1,
+        renderCell: (params) => <Link to={`/conferences/${params.row.id}`}>{params.row.title}</Link>,
+      },
+      {
+        headerName: "Start Date",
+        field: "startDate",
+        width: 120,
+        valueFormatter: (params) => moment(params?.value).format("DD/MM/YYYY"),
+      },
+      {
+        headerName: "End Date",
+        field: "endDate",
+        width: 120,
+        valueFormatter: (params) => moment(params?.value).format("DD/MM/YYYY"),
+      },
+    ];
 
-  useEffect(() => {
-    if (!conferences.isLoading && !conferences.isError) {
-      setRows(conferences.data?.items ?? []);
-    }
-  }, [conferences]);
-
-  function handleDelete(conferenceId: number) {
-    setDeletedConferenceId(conferenceId);
-    deleteConference({}, conferenceId);
-  }
-  useEffect(() => {
-    if (!response.isError && !response.isLoading && deletedConferenceId) {
-      setRows((prevRows) => prevRows.filter((row) => row.id !== deletedConferenceId));
-      setDeletedConferenceId(null);
-    }
-  }, [response, deletedConferenceId]);
-
-  const columns: GridColDef[] = [
-    {
-      headerName: "#",
-      field: "id",
-      width: 60,
-      type: "number"
-    },
-    {
-      headerName: "Acronym",
-      field: "acronym",
-      width: 150
-    },
-    {
-      headerName: "Name",
-      field: "title",
-      flex: 1,
-      renderCell: (params) => <Link to={`/conferences/${params.row.id}`}>{params.row.title}</Link>,
-    },
-    {
-      headerName: "Start Date",
-      field: "startDate",
-      width: 120,
-      valueFormatter: (params) => moment(params?.value).format("DD/MM/YYYY"),
-    },
-    {
-      headerName: "End Date",
-      field: "endDate",
-      width: 120,
-      valueFormatter: (params) => moment(params?.value).format("DD/MM/YYYY"),
-    },
-  ];
-
-  if (Auth.isAdmin()) {
-    columns.push({
-      field: "actions",
-      type: "actions",
-      width: 80,
-      getActions: (params) => [
+    if (Auth.isAdmin()) {
+      columns.push({
+        field: "actions",
+        type: "actions",
+        width: 80,
+        getActions: (params) => [
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete Conference"
             onClick={() => handleDelete(params.row.id)}
           />
-      ],
-    });
-  }
+        ],
+      });
 
-  return [rows, columns];
+    }
+
+    return columns;
+  }, [handleDelete]);
 };

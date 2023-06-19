@@ -6,11 +6,11 @@ namespace ConferenceManager.Core.Conferences.Common
     {
         public required int Id { get; set; }
 
-        public required string Title { get; set; } 
+        public required string Title { get; set; }
 
         public required string Acronym { get; set; }
 
-        public required string Organizer { get; set; } 
+        public required string Organizer { get; set; }
 
         public required DateTime StartDate { get; set; }
 
@@ -35,7 +35,5 @@ namespace ConferenceManager.Core.Conferences.Common
         public string? ContactPhoneNumber { get; set; }
 
         public required bool IsAnonymizedFileRequired { get; set; }
-
-        public required bool IsParticipant { get; set; }
     }
 }

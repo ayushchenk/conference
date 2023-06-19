@@ -26,41 +26,41 @@ namespace ConferenceManager.Api.Services
             }
         }
 
-        public string[] Roles
-        {
-            get
-            {
-                var roleClaims = _httpContextAccessor.HttpContext?.User?.Claims?.Where(claim => claim.Type == ClaimTypes.Role);
+        public bool IsAdmin => _httpContextAccessor.HttpContext?.User?.IsInRole(ApplicationRole.Admin) ?? false;
 
-                return roleClaims == null
-                    ? Array.Empty<string>()
-                    : roleClaims.Select(claim => claim.Value).ToArray();
-            }
+        public bool HasRoleIn(Conference conference, string role)
+        {
+            return conference.UserRoles.Any(r => r.UserId == Id && r.Role.Name == role);
         }
 
-        public bool HasAdminRole => Roles.Contains(ApplicationRole.Admin);
+        public bool IsAuthorIn(Conference conference)
+        {
+            return HasRoleIn(conference, ApplicationRole.Author);
+        }
 
-        public bool HasAuthorRole => Roles.Contains(ApplicationRole.Author);
+        public bool IsReviewerIn(Conference conference)
+        {
+            return HasRoleIn(conference, ApplicationRole.Reviewer);
+        }
 
-        public bool HasReviewerRole => Roles.Contains(ApplicationRole.Reviewer);
+        public bool IsChairIn(Conference conference)
+        {
+            return HasRoleIn(conference, ApplicationRole.Chair);
+        }
 
         public bool IsParticipantOf(Conference conference)
         {
-            return HasAdminRole || conference.Participants
-                .Select(p => p.Id)
-                .Contains(Id);
+            return conference.Participants.Any(p => p.Id == Id);
         }
 
         public bool IsAuthorOf(BaseAuditableEntity entity)
         {
-            return HasAdminRole || entity.CreatedById == Id;
+            return entity.CreatedById == Id;
         }
 
         public bool IsReviewerOf(Submission submission)
         {
-            return HasAdminRole || submission.ActualReviewers
-                .Select(r => r.Id)
-                .Contains(Id);
+            return submission.ActualReviewers.Any(r => r.Id == Id);
         }
     }
 }

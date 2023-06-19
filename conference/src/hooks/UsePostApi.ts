@@ -1,39 +1,26 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { useCallback, useState } from "react";
 import { ApiResponse } from "../types/ApiResponse";
-import { format } from "../util/Functions";
+import { createErrorResponse, createLoadingResponse, createSuccessResponse, format } from "../util/Functions";
+import { useConfigWithHeaders } from "./UseConfigWithHeaders";
 
 export function usePostApi<TRequest, TData>(path: string, config?: AxiosRequestConfig<any> | undefined) {
-  const [response, setResponse] = useState<ApiResponse<TData>>({
-    data: null,
-    isError: false,
-    isLoading: true,
-    error: null,
-  });
+  const [response, setResponse] = useState<ApiResponse<TData>>(createLoadingResponse());
+
+  const configWithHeaders = useConfigWithHeaders(config);
 
   const post = useCallback(
     (data: TRequest, ...urlParams: (string | number)[]) => {
       axios
-        .post<TData>(format(path, urlParams), data, config)
+        .post<TData>(format(path, urlParams), data, configWithHeaders)
         .then((response) => {
-          setResponse({
-            data: response.data,
-            isError: false,
-            isLoading: false,
-            error: null,
-          });
+          setResponse(createSuccessResponse(response));
         })
         .catch((error) => {
-          console.error(error);
-          setResponse({
-            data: null,
-            isError: true,
-            isLoading: false,
-            error: error?.response?.data,
-          });
+          setResponse(createErrorResponse(error));
         });
     },
-    [path, config]
+    [path, configWithHeaders]
   );
 
   return { response, post: post };

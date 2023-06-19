@@ -92,6 +92,9 @@ namespace ConferenceManager.Infrastructure.Persistence.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -464,6 +467,26 @@ namespace ConferenceManager.Infrastructure.Persistence.Migrations
                     b.ToTable("SubmissionReviewers");
                 });
 
+            modelBuilder.Entity("ConferenceManager.Domain.Entities.UserConferenceRole", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ConferenceId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "RoleId", "ConferenceId");
+
+                    b.HasIndex("ConferenceId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.Property<int>("Id")
@@ -531,21 +554,6 @@ namespace ConferenceManager.Infrastructure.Persistence.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("AspNetUserLogins", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
-                {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("AspNetUserRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
@@ -751,6 +759,33 @@ namespace ConferenceManager.Infrastructure.Persistence.Migrations
                     b.Navigation("Submission");
                 });
 
+            modelBuilder.Entity("ConferenceManager.Domain.Entities.UserConferenceRole", b =>
+                {
+                    b.HasOne("ConferenceManager.Domain.Entities.Conference", "Conference")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("ConferenceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ConferenceManager.Domain.Entities.ApplicationRole", "Role")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ConferenceManager.Domain.Entities.ApplicationUser", "User")
+                        .WithMany("ConferenceRoles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Conference");
+
+                    b.Navigation("Role");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.HasOne("ConferenceManager.Domain.Entities.ApplicationRole", null)
@@ -778,21 +813,6 @@ namespace ConferenceManager.Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
-                {
-                    b.HasOne("ConferenceManager.Domain.Entities.ApplicationRole", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ConferenceManager.Domain.Entities.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
                     b.HasOne("ConferenceManager.Domain.Entities.ApplicationUser", null)
@@ -802,8 +822,15 @@ namespace ConferenceManager.Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ConferenceManager.Domain.Entities.ApplicationRole", b =>
+                {
+                    b.Navigation("UserRoles");
+                });
+
             modelBuilder.Entity("ConferenceManager.Domain.Entities.ApplicationUser", b =>
                 {
+                    b.Navigation("ConferenceRoles");
+
                     b.Navigation("CreatedComments");
 
                     b.Navigation("CreatedConferences");
@@ -828,6 +855,8 @@ namespace ConferenceManager.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("ConferenceManager.Domain.Entities.Conference", b =>
                 {
                     b.Navigation("Submissions");
+
+                    b.Navigation("UserRoles");
                 });
 
             modelBuilder.Entity("ConferenceManager.Domain.Entities.Submission", b =>

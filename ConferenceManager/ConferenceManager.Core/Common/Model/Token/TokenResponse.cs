@@ -8,6 +8,8 @@
 
         public required string Email { get; init; }
 
-        public required IEnumerable<string> Roles { get; init; }
+        public required bool IsAdmin { get; init; }
+
+        public required IDictionary<int, string[]> Roles { get; init; }
     }
 }

@@ -33,22 +33,34 @@ export namespace Auth {
     return authData?.userId && isAuthed() ? authData.userId : null;
   }
 
-  export function getRoles() {
+  export function isAdmin() {
     const authData = getData();
 
-    return authData?.roles && isAuthed() ? authData.roles : [];
+    if (!authData) {
+      return false;
+    }
+
+    return isAuthed() && authData.isAdmin;
   }
 
-  export function isAdmin() {
-    return getRoles().includes("Admin");
+  export function hasAnyRole(conferenceId: number, roles: string[]) {
+    if (roles.includes("Admin") && isAdmin()) {
+      return true;
+    }
+
+    return isAuthed() && getRoles(conferenceId).find(role => roles.includes(role));
   }
 
-  export function isAuthor() {
-    return getRoles().includes("Author");
+  export function isAuthor(conferenceId: number) {
+    return hasAnyRole(conferenceId, ["Author"]);
   }
 
-  export function isReviewer() {
-    return getRoles().includes("Reviewer");
+  export function isReviewer(conferenceId: number) {
+    return hasAnyRole(conferenceId, ["Reviewer"]);
+  }
+
+  export function isChair(conferenceId: number) {
+    return hasAnyRole(conferenceId, ["Chair"]);
   }
 
   function getData() {
@@ -59,5 +71,11 @@ export namespace Auth {
     }
 
     return JSON.parse(authDataString) as AuthData;
+  }
+
+  function getRoles(conferenceId: number) {
+    const authData = getData();
+
+    return authData?.roles[conferenceId] ?? [];
   }
 }

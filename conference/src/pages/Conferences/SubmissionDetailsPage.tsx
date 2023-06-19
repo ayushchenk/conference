@@ -9,17 +9,17 @@ export const SubmissionDetailsPage = () => {
   const { submissionId } = useParams();
   const response = useGetSubmissionApi(Number(submissionId));
 
-  if (response.isLoading) {
+  if (response.status === "loading") {
     return <LoadingSpinner />;
   }
 
-  if (response.isError) {
+  if (response.status === "error") {
     return <FormErrorAlert response={response} />;
   }
 
   return (
     <Container>
-      <SubmissionDetails submission={response.data!} />
+      <SubmissionDetails submission={response.data} />
     </Container>
   );
 };

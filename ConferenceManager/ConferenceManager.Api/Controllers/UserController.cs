@@ -1,13 +1,18 @@
 ﻿using ConferenceManager.Api.Abstract;
+using ConferenceManager.Api.Filters;
+using ConferenceManager.Api.Util;
 using ConferenceManager.Core.Account.Common;
 using ConferenceManager.Core.Common.Model.Responses;
 using ConferenceManager.Core.Common.Model.Token;
 using ConferenceManager.Core.Conferences.Common;
 using ConferenceManager.Core.User.AddRole;
+using ConferenceManager.Core.User.AssignAdminRole;
 using ConferenceManager.Core.User.Delete;
 using ConferenceManager.Core.User.Get;
 using ConferenceManager.Core.User.GetParticipations;
 using ConferenceManager.Core.User.GetSubmissions;
+using ConferenceManager.Core.User.IsParticipant;
+using ConferenceManager.Core.User.IsReviewer;
 using ConferenceManager.Core.User.Login;
 using ConferenceManager.Core.User.Page;
 using ConferenceManager.Core.User.Register;
@@ -64,7 +69,7 @@ namespace ConferenceManager.Api.Controllers
         /// Page is ordered by user id
         /// </remarks>
         [HttpGet]
-        [Authorize(Roles = ApplicationRole.Admin)]
+        [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Chair}")]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(EntityPageResponse<UserDto>))]
         public async Task<IActionResult> GetPage(int pageIndex, int pageSize, CancellationToken cancellation)
@@ -115,14 +120,22 @@ namespace ConferenceManager.Api.Controllers
         /// </summary>
         [HttpPost]
         [Route("{id}/role")]
-        [Authorize(Roles = ApplicationRole.Admin)]
+        [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Chair}")]
+        [ConferenceAuthorization(ApplicationRole.Chair)]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status204NoContent)]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
         [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
-        public async Task<IActionResult> AssignRole(int id, AssignRoleCommand command, CancellationToken cancellation)
+        public async Task<IActionResult> AssignRole(
+            [FromHeader(Name = Headers.ConferenceId)] int conferenceId,
+            int id,
+            AssignRoleCommand command,
+            CancellationToken cancellation)
         {
-            await Mediator.Send(new AssignRoleCommand(id, command.Role), cancellation);
+            command.Id = id;
+            command.ConferenceId = conferenceId;
+            await Mediator.Send(command, cancellation);
 
             return NoContent();
         }
@@ -132,14 +145,56 @@ namespace ConferenceManager.Api.Controllers
         /// </summary>
         [HttpDelete]
         [Route("{id}/role")]
+        [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Chair}")]
+        [ConferenceAuthorization(ApplicationRole.Chair)]
+        [Produces("application/json")]
+        [SwaggerResponse(StatusCodes.Status204NoContent)]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
+        public async Task<IActionResult> UnassignRole(
+            [FromHeader(Name = Headers.ConferenceId)] int conferenceId,
+            int id,
+            UnassignRoleCommand command,
+            CancellationToken cancellation)
+        {
+            command.Id = id;
+            command.ConferenceId = conferenceId;
+            await Mediator.Send(command, cancellation);
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Assigns admin role to the user
+        /// </summary>
+        [HttpPost]
+        [Route("{id}/role/admin")]
         [Authorize(Roles = ApplicationRole.Admin)]
         [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status204NoContent)]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
         [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
-        public async Task<IActionResult> UnassignRole(int id, UnassignRoleCommand command, CancellationToken cancellation)
+        public async Task<IActionResult> AssignAdminRole(int id, CancellationToken cancellation)
         {
-            await Mediator.Send(new UnassignRoleCommand(id, command.Role), cancellation);
+            await Mediator.Send(new AssignAdminRoleCommand(id, AssignOperation.Assign), cancellation);
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Unassigns admin role from the user
+        /// </summary>
+        [HttpDelete]
+        [Route("{id}/role/admin")]
+        [Authorize(Roles = ApplicationRole.Admin)]
+        [Produces("application/json")]
+        [SwaggerResponse(StatusCodes.Status204NoContent)]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
+        public async Task<IActionResult> UnassignAdminRole(int id, CancellationToken cancellation)
+        {
+            await Mediator.Send(new AssignAdminRoleCommand(id, AssignOperation.Unassign), cancellation);
 
             return NoContent();
         }
@@ -178,6 +233,38 @@ namespace ConferenceManager.Api.Controllers
         public async Task<IActionResult> GetSubmissions(int id, CancellationToken cancellation)
         {
             var result = await Mediator.Send(new GetUserSubmissionsQuery(id), cancellation);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Returns true if user is participant of conference
+        /// </summary>
+        [HttpGet]
+        [Route("{id}/is-participant/{conferenceId}")]
+        [Authorize]
+        [ConferenceAuthorization]
+        [Produces("application/json")]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(bool))]
+        public async Task<IActionResult> IsParticipant(int id, int conferenceid, CancellationToken cancellation)
+        {
+            var result = await Mediator.Send(new IsParticipantQuery(id, conferenceid), cancellation);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Returns true if user is reviewer of submission
+        /// </summary>
+        [HttpGet]
+        [Route("{id}/is-reviewer/{submissionId}")]
+        [Authorize(Roles = ApplicationRole.Reviewer)]
+        [ConferenceAuthorization(ApplicationRole.Reviewer)]
+        [Produces("application/json")]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(bool))]
+        public async Task<IActionResult> IsReviewer(int id, int submissionId, CancellationToken cancellation)
+        {
+            var result = await Mediator.Send(new IsReviewerQuery(id, submissionId), cancellation);
 
             return Ok(result);
         }

@@ -1,6 +1,4 @@
-import axios from "axios";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Auth } from "../../logic/Auth";
 import { LoginPage, SignUpPage } from "../../pages/Auth";
 import {
   ConferenceDetailsPage,
@@ -19,14 +17,8 @@ import { AdminProtected } from "../ProtectedRoute/AdminProtected";
 import { Protected } from "../ProtectedRoute/Protected";
 import { ProfilePage } from "../../pages/Users/UserDetails/ProfilePage";
 import { AuthorProtected } from "../ProtectedRoute/AuthorProtected";
-
-axios.interceptors.request.use(function (config) {
-  const token = Auth.getToken();
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
+import { ChairProtected } from "../ProtectedRoute/ChairProtected";
+import { AnyRoleProtected } from "../ProtectedRoute/AnyRoleProtected";
 
 export const App = () => {
   return (
@@ -54,17 +46,17 @@ export const App = () => {
         <Route
           path="/conferences/:conferenceId/edit"
           element={
-            <AdminProtected>
+            <AnyRoleProtected roles={["Admin", "Chair"]}>
               <UpdateConferencePage />
-            </AdminProtected>
+            </AnyRoleProtected>
           }
         />
         <Route
           path="/conferences/:conferenceId/participants"
           element={
-            <AdminProtected>
+            <AnyRoleProtected roles={["Admin", "Chair"]}>
               <ParticipantsPage />
-            </AdminProtected>
+            </AnyRoleProtected>
           }
         />
         <Route

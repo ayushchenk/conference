@@ -1,21 +1,45 @@
-﻿using ConferenceManager.Core.Common.Interfaces;
+﻿using ConferenceManager.Core.Common;
+using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Core.User.AddRole;
-using MediatR;
+using ConferenceManager.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace ConferenceManager.Core.User.AssignRole
 {
-    public class AssignRoleCommandHandler : IRequestHandler<AssignRoleCommand>
+    public class AssignRoleCommandHandler : DbContextRequestHandler<AssignRoleCommand>
     {
-        private readonly IIdentityService _service;
+        private readonly RoleManager<ApplicationRole> _roleManager;
 
-        public AssignRoleCommandHandler(IIdentityService service)
+        public AssignRoleCommandHandler(
+            IApplicationDbContext context,
+            ICurrentUserService currentUser,
+            IMappingHost mapper,
+            RoleManager<ApplicationRole> roleManager) : base(context, currentUser, mapper)
         {
-            _service = service;
+            _roleManager = roleManager;
         }
 
-        public async Task Handle(AssignRoleCommand request, CancellationToken cancellationToken)
+        public override async Task Handle(AssignRoleCommand request, CancellationToken cancellationToken)
         {
-            await _service.AssignRole(request.Id, request.Role);
+            var role = await _roleManager.FindByNameAsync(request.Role);
+
+            var existingAssignment = await Context.UserRoles
+                .FindAsync(new object[] { request.Id, role!.Id, request.ConferenceId }, cancellationToken);
+
+            if (existingAssignment != null)
+            {
+                return;
+            }
+
+            var newAssignment = new UserConferenceRole()
+            {
+                UserId = request.Id,
+                RoleId = role!.Id,
+                ConferenceId = request.ConferenceId,
+            };
+
+            Context.UserRoles.Add(newAssignment);
+            await Context.SaveChangesAsync(cancellationToken);
         }
     }
 }
