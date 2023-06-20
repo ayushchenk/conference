@@ -1,11 +1,16 @@
 ﻿using CleanArchitecture.WebUI.Filters;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace ConferenceManager.Api.Abstract
 {
     [ApiController]
     [ApiExceptionFilter]
+    [Produces("application/json")]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
+    [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
     [Route("api/[controller]")]
     public class ApiControllerBase : ControllerBase
     {

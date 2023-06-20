@@ -1,4 +1,5 @@
 ﻿using ConferenceManager.Core.Common.Interfaces;
+using ConferenceManager.Core.Common.Util;
 using ConferenceManager.Domain.Entities;
 
 namespace ConferenceManager.Core.Conferences.Create
@@ -24,7 +25,13 @@ namespace ConferenceManager.Core.Conferences.Create
                 Venue = source.Venue,
                 Webpage = source.Webpage,
                 IsAnonymizedFileRequired = source.IsAnonymizedFileRequired,
-                Participants = new List<ApplicationUser>()
+                Participants = new List<ApplicationUser>(),
+                InviteCodes = ApplicationRole.SupportedRoles.Select(role => new InviteCode()
+                {
+                    ConferenceId = 0,
+                    Code = Password.Generate(15, 0),
+                    Role = role
+                }).ToList()
             };
         }
     }

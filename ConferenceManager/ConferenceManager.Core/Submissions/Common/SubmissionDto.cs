@@ -32,5 +32,7 @@ namespace ConferenceManager.Core.Submissions.Common
         public required bool IsValidForUpdate { set; get; }
 
         public required bool IsValidForReturn { set; get; }
+
+        public bool IsReviewer { set; get; }
     }
 }

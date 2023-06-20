@@ -18,6 +18,7 @@ export type Conference = {
   organizerWebpage: string;
   contactPhoneNumber: string;
   isAnonymizedFileRequired: boolean;
+  isParticipant: boolean;
 };
 
 export type Submission = {
@@ -33,6 +34,7 @@ export type Submission = {
   abstract: string;
   isValidForReturn: boolean,
   isValidForUpdate: boolean
+  isReviewer: boolean;
 };
 
 export type SubmissionPaper = {
@@ -43,3 +45,8 @@ export type SubmissionPaper = {
   createdOn: string;
   typeLabel: string;
 };
+
+export type InviteCode = {
+  code: string,
+  role: string
+}

@@ -17,7 +17,7 @@ export const FormErrorAlert = ({ response }: FormErrorAlertProps) => {
     return null;
   }
 
-  if (response.error.errors) {
+  if (response.error?.errors) {
     const errorMessages = Object.values(response.error.errors).flat();
     if (errorMessages.length > 0) {
       return (
@@ -34,7 +34,7 @@ export const FormErrorAlert = ({ response }: FormErrorAlertProps) => {
 
   return (
     <Collapse in={true} sx={{ my: "10px" }}>
-      <Alert severity="error">{response.error.detail ?? "Something went wrong while processing the request"}</Alert>
+      <Alert severity="error">{response.error?.detail ?? "Something went wrong while processing the request"}</Alert>
     </Collapse>
   );
 };

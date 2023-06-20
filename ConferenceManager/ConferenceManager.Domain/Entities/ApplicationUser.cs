@@ -50,6 +50,10 @@ namespace ConferenceManager.Domain.Entities
 
         public virtual IList<UserConferenceRole> ConferenceRoles { set; get; } = null!;
 
+        public virtual IList<InviteCode> CreatedInviteCodes { set; get; } = null!;
+
+        public virtual IList<InviteCode> ModifiedInviteCodes { set; get; } = null!;
+
         [NotMapped]
         public IReadOnlyCollection<BaseEvent> DomainEvents => _domainEvents.AsReadOnly();
 

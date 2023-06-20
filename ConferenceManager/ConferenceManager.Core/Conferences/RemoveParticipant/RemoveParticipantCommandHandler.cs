@@ -1,5 +1,4 @@
 ﻿using ConferenceManager.Core.Common;
-using ConferenceManager.Core.Common.Exceptions;
 using ConferenceManager.Core.Common.Interfaces;
 
 namespace ConferenceManager.Core.Conferences.RemoveParticipant
@@ -20,12 +19,20 @@ namespace ConferenceManager.Core.Conferences.RemoveParticipant
 
             if (participation == null)
             {
-                throw new NotFoundException();
+                return;
             }
 
             Context.ConferenceParticipants.Remove(participation);
-
             await Context.SaveChangesAsync(cancellationToken);
+
+            var conferenceRoles = Context.UserRoles
+                .Where(r => r.UserId == request.UserId && r.ConferenceId == request.ConferenceId);
+
+            if (conferenceRoles.Any())
+            {
+                Context.UserRoles.RemoveRange(conferenceRoles);
+                await Context.SaveChangesAsync(cancellationToken);
+            }
         }
     }
 }

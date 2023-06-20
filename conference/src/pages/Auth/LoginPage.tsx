@@ -1,10 +1,11 @@
 import { Container } from "@mui/material";
 import { LoginForm } from "../../components/LoginForm";
+import { FormHeader } from "../../components/FormHeader";
 
 export const LoginPage: React.FC<{}> = () => {
     return (
         <Container>
-            <h2>Login</h2>
+            <FormHeader>Login</FormHeader>
             <LoginForm />
         </Container>
     );

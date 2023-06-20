@@ -16,6 +16,26 @@ export type CreateConferenceRequest = {
   isAnonymizedFileRequired: boolean;
 };
 
+export type UpdateConferenceRequest = {
+  id: number | null;
+  title: string;
+  acronym: string;
+  organizer: string;
+  startDate: string;
+  endDate: string;
+  keywords: string;
+  abstract: string;
+  webpage: string;
+  venue: string;
+  city: string;
+  primaryResearchArea: string;
+  secondaryResearchArea: string;
+  areaNotes: string;
+  organizerWebpage: string;
+  contactPhoneNumber: string;
+  isAnonymizedFileRequired: boolean;
+};
+
 export const initialValues: CreateConferenceRequest = {
   title: "",
   keywords: "",

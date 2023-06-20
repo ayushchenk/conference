@@ -32,5 +32,8 @@ namespace ConferenceManager.Core.User.Register
 
         [MaxLength(100)]
         public string? Webpage { get; init; }
+
+        [MaxLength(20)]
+        public string? InviteCode { get; init; }
     }
 }

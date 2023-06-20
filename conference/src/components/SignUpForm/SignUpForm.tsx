@@ -140,8 +140,27 @@ export const SignUpForm: React.FC<{}> = () => {
         helperText={formik.touched.passwordRepeat && formik.errors.passwordRepeat}
         inputProps={{ maxLength: 100 }}
       />
+      <TextField
+        fullWidth
+        margin="normal"
+        id="inviteCode"
+        name="inviteCode"
+        label="Invitation code"
+        placeholder="Leave empty to join the conference later"
+        type="text"
+        value={formik.values.inviteCode}
+        onChange={formik.handleChange}
+        error={formik.touched.inviteCode && Boolean(formik.errors.inviteCode)}
+        helperText={formik.touched.inviteCode && formik.errors.inviteCode}
+        inputProps={{ maxLength: 20 }}
+      />
       <FormErrorAlert response={response} />
-      <Button color="primary" variant="contained" fullWidth type="submit">
+      <Button
+        disabled={response.status === "loading"}
+        color="primary"
+        variant="contained"
+        fullWidth
+        type="submit">
         Submit
       </Button>
     </form>

@@ -1,10 +1,11 @@
 import { Container } from "@mui/material";
 import { SignUpForm } from "../../components/SignUpForm";
+import { FormHeader } from "../../components/FormHeader";
 
 export const SignUpPage: React.FC<{}> = () => {
     return (
         <Container>
-            <h2>Sign Up</h2>
+            <FormHeader>Sign Up</FormHeader>
             <SignUpForm />
         </Container>
     );

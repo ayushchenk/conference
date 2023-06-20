@@ -5,7 +5,8 @@ export type SignUpRequest = {
     country: string,
     affiliation: string,
     webpage: string,
-    password: string
+    password: string,
+    inviteCode: string
 }
 
 export const initialValues = {
@@ -16,5 +17,6 @@ export const initialValues = {
     affiliation: "",
     webpage: "",
     password: "",
-    passwordRepeat: ""
+    passwordRepeat: "",
+    inviteCode: ""
 };

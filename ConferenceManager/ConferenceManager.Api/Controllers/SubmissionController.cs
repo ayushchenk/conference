@@ -36,10 +36,7 @@ namespace ConferenceManager.Api.Controllers
         [HttpPost]
         [Authorize(Roles = ApplicationRole.Author)]
         [ConferenceAuthorization(ApplicationRole.Author)]
-        [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CreateEntityResponse))]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
         public async Task<IActionResult> Post([FromForm] CreateSubmissionCommand command, CancellationToken cancellation)
         {
             var result = await Mediator.Send(command, cancellation);
@@ -57,10 +54,7 @@ namespace ConferenceManager.Api.Controllers
         [HttpPut]
         [Authorize(Roles = ApplicationRole.Author)]
         [ConferenceAuthorization(ApplicationRole.Author)]
-        [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status204NoContent)]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
         public async Task<IActionResult> Put([FromForm] UpdateSubmissionCommand command, CancellationToken cancellation)
         {
             await Mediator.Send(command, cancellation);
@@ -79,10 +73,7 @@ namespace ConferenceManager.Api.Controllers
         [Route("{id}")]
         [Authorize]
         [ConferenceAuthorization]
-        [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(SubmissionDto))]
-        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
         public async Task<IActionResult> Get(int id, CancellationToken cancellation)
         {
             var result = await Mediator.Send(new GetSubmissionQuery(id), cancellation);
@@ -103,10 +94,7 @@ namespace ConferenceManager.Api.Controllers
         [Route("{id}/papers")]
         [Authorize]
         [ConferenceAuthorization]
-        [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status200OK, Type = (typeof(IEnumerable<PaperDto>)))]
-        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
         public async Task<IActionResult> GetPapers(int id, CancellationToken cancellation)
         {
             var result = await Mediator.Send(new GetSubmissionPapersQuery(id), cancellation);
@@ -125,10 +113,7 @@ namespace ConferenceManager.Api.Controllers
         [Route("{id}/return")]
         [Authorize(Roles = ApplicationRole.Reviewer)]
         [ConferenceAuthorization(ApplicationRole.Reviewer)]
-        [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status204NoContent)]
-        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
         public async Task<IActionResult> Return(int id, CancellationToken cancellation)
         {
             await Mediator.Send(new ReturnSubmissionCommand(id), cancellation);
@@ -147,11 +132,7 @@ namespace ConferenceManager.Api.Controllers
         [Route("reviews")]
         [Authorize(Roles = ApplicationRole.Reviewer)]
         [ConferenceAuthorization(ApplicationRole.Reviewer)]
-        [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status204NoContent)]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
         public async Task<IActionResult> PutReview(UpdateReviewCommand command, CancellationToken cancellation)
         {
             await Mediator.Send(command, cancellation);
@@ -170,11 +151,7 @@ namespace ConferenceManager.Api.Controllers
         [Route("{id}/reviews")]
         [Authorize(Roles = ApplicationRole.Reviewer)]
         [ConferenceAuthorization(ApplicationRole.Reviewer)]
-        [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CreateEntityResponse))]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
         public async Task<IActionResult> PostReview(int id, CreateReviewCommand command, CancellationToken cancellation)
         {
             command.SubmissionId = id;
@@ -193,11 +170,7 @@ namespace ConferenceManager.Api.Controllers
         [Route("{id}/reviews")]
         [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Chair},{ApplicationRole.Reviewer}")]
         [ConferenceAuthorization(ApplicationRole.Reviewer)]
-        [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<ReviewDto>))]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
         public async Task<IActionResult> GetReviews(int id, CancellationToken cancellation)
         {
             var result = await Mediator.Send(new GetSubmissionReviewsQuery(id), cancellation);
@@ -215,11 +188,7 @@ namespace ConferenceManager.Api.Controllers
         [Route("comments")]
         [Authorize]
         [ConferenceAuthorization]
-        [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status204NoContent)]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
         public async Task<IActionResult> PutComment(UpdateCommentCommand command, CancellationToken cancellation)
         {
             await Mediator.Send(command, cancellation);
@@ -238,10 +207,7 @@ namespace ConferenceManager.Api.Controllers
         [Route("comments/{id}")]
         [Authorize]
         [ConferenceAuthorization]
-        [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status204NoContent)]
-        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
         public async Task<IActionResult> DeleteComment(int id, CancellationToken cancellation)
         {
             await Mediator.Send(new DeleteCommentCommand(id), cancellation);
@@ -260,11 +226,7 @@ namespace ConferenceManager.Api.Controllers
         [Route("{id}/comments")]
         [Authorize]
         [ConferenceAuthorization]
-        [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status200OK, Type = (typeof(IEnumerable<CreateEntityResponse>)))]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
         public async Task<IActionResult> PostComment(int id, CreateCommentCommand command, CancellationToken cancellation)
         {
             command.SubmissionId = id;
@@ -284,11 +246,7 @@ namespace ConferenceManager.Api.Controllers
         [Route("{id}/comments")]
         [Authorize]
         [ConferenceAuthorization]
-        [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status200OK, Type = (typeof(IEnumerable<CommentDto>)))]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
         public async Task<IActionResult> GetComments(int id, CancellationToken cancellation)
         {
             var result = await Mediator.Send(new GetCommentsQuery(id), cancellation);
@@ -307,11 +265,7 @@ namespace ConferenceManager.Api.Controllers
         [Route("{id}/reviewers")]
         [Authorize(Roles = $"{ApplicationRole.Chair},{ApplicationRole.Reviewer}")]
         [ConferenceAuthorization(ApplicationRole.Chair, ApplicationRole.Reviewer)]
-        [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status200OK, Type = (typeof(IEnumerable<UserDto>)))]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
         public async Task<IActionResult> GetReviewers(int id, CancellationToken cancellation)
         {
             var result = await Mediator.Send(new GetSubmissionReviewersQuery(id), cancellation);
@@ -329,10 +283,7 @@ namespace ConferenceManager.Api.Controllers
         [Route("{id}/reviewers/{userId}")]
         [Authorize(Roles = ApplicationRole.Chair)]
         [ConferenceAuthorization(ApplicationRole.Chair)]
-        [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status204NoContent)]
-        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
         public async Task<IActionResult> AddReviewer(int id, int userId, CancellationToken cancellation)
         {
             await Mediator.Send(new AddReviewerCommand(id, userId), cancellation);
@@ -347,9 +298,7 @@ namespace ConferenceManager.Api.Controllers
         [Route("{id}/reviewers/{userId}")]
         [Authorize(Roles = ApplicationRole.Chair)]
         [ConferenceAuthorization(ApplicationRole.Chair)]
-        [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status204NoContent)]
-        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
         public async Task<IActionResult> RemoveReviewer(int id, int userId, CancellationToken cancellation)
         {
             await Mediator.Send(new RemoveReviewerCommand(id, userId), cancellation);
@@ -364,10 +313,7 @@ namespace ConferenceManager.Api.Controllers
         [Route("{id}/preferences")]
         [Authorize(Roles = ApplicationRole.Chair)]
         [ConferenceAuthorization(ApplicationRole.Chair)]
-        [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<UserDto>))]
-        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
         public async Task<IActionResult> GetPreferences(int id, CancellationToken cancellation)
         {
             var result = await Mediator.Send(new GetReviewPreferencesQuery(id), cancellation);
@@ -385,11 +331,7 @@ namespace ConferenceManager.Api.Controllers
         [Route("{id}/preferences")]
         [Authorize(Roles = ApplicationRole.Reviewer)]
         [ConferenceAuthorization(ApplicationRole.Reviewer)]
-        [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status204NoContent)]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
         public async Task<IActionResult> AddPreference(int id, CancellationToken cancellation)
         {
             await Mediator.Send(new AddReviewPreferenceCommand(id), cancellation);
@@ -404,11 +346,7 @@ namespace ConferenceManager.Api.Controllers
         [Route("{id}/preferences")]
         [Authorize(Roles = ApplicationRole.Reviewer)]
         [ConferenceAuthorization(ApplicationRole.Reviewer)]
-        [Produces("application/json")]
         [SwaggerResponse(StatusCodes.Status204NoContent)]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ProblemDetails))]
-        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
         public async Task<IActionResult> RemovePreference(int id, CancellationToken cancellation)
         {
             await Mediator.Send(new RemoveReviewPreferenceCommand(id), cancellation);

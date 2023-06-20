@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ConferenceManager.Domain.Entities;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace ConferenceManager.Core.Common.Interfaces
 {
@@ -25,6 +26,10 @@ namespace ConferenceManager.Core.Common.Interfaces
 
         public DbSet<UserConferenceRole> UserRoles { get; }
 
+        public DbSet<InviteCode> InviteCodes { get; }
+
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+
+        DatabaseFacade Database { get; }
     }
 }

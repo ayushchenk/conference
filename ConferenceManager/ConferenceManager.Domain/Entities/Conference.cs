@@ -41,5 +41,7 @@ namespace ConferenceManager.Domain.Entities
         public virtual IList<ApplicationUser> Participants { set; get; } = null!;
 
         public virtual IList<UserConferenceRole> UserRoles { set; get; } = null!;
+
+        public virtual IList<InviteCode> InviteCodes { set; get; } = null!;
     }
 }

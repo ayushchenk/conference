@@ -7,7 +7,9 @@ namespace ConferenceManager.Core.Common.Interfaces
     {
         Task<TokenResponse> Authenticate(TokenRequest tokenRequest);
 
-        Task<TokenResponse> CreateUser(ApplicationUser user, string password);
+        TokenResponse GenerateToken(ApplicationUser user);
+
+        Task CreateUser(ApplicationUser user, string password);
 
         Task DeleteUser(int id);
     }

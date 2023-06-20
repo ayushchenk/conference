@@ -9,7 +9,7 @@ export const ConferenceDetailsPage = () => {
   const conferenceId = useConferenceId();
   const response = useGetConferenceApi(conferenceId);
 
-  if (response.status === "loading") {
+  if (response.status === "loading" || response.status === "not-initiated") {
     return <LoadingSpinner />;
   }
 

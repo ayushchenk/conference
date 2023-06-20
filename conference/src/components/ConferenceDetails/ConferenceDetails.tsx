@@ -7,7 +7,6 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
-import { AdminVisibility } from "../ProtectedRoute/AdminVisibility";
 import { AuthorVisibility } from "../ProtectedRoute/AuthorVisibility";
 import { FormHeader } from "../FormHeader";
 import { IconButton, Tooltip, Typography } from "@mui/material";
@@ -15,11 +14,57 @@ import EditIcon from '@mui/icons-material/Edit';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { Conference } from "../../types/Conference";
 import { Auth } from "../../logic/Auth";
-import { useIsParticipantApi } from "../../hooks/UserHooks";
 import { AnyRoleVisibility } from "../ProtectedRoute/AnyRoleVisibility";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { useCallback, useEffect, useState } from "react";
+import { useGetInviteCodesApi, useRefreshCodeApi } from "./ConferenceDetails.hooks";
+import { CodeVisibility } from "./ConferenceDetails.types";
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { FormErrorAlert } from "../FormErrorAlert";
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 export const ConferenceDetails = ({ conference }: { conference: Conference }) => {
-  const isParticipant = useIsParticipantApi();
+  const inviteCodesResponse = useGetInviteCodesApi(conference.id);
+  const [inviteCodes, setInviteCodes] = useState<CodeVisibility[]>([]);
+  const { response: refreshResponse, post: refreshCode } = useRefreshCodeApi();
+
+  useEffect(() => {
+    if (inviteCodesResponse.status === "success") {
+      setInviteCodes(inviteCodesResponse.data.map(code => ({
+        ...code,
+        visible: false
+      })));
+    }
+  }, [inviteCodesResponse]);
+
+  useEffect(() => {
+    if (refreshResponse.status === "success") {
+      setInviteCodes(prevCodes => {
+        const newCodes = [...prevCodes];
+        const refreshedCode = newCodes.find(c => c.role === refreshResponse.data.role);
+        if (refreshedCode) {
+          refreshedCode.code = refreshResponse.data.code;
+        }
+        console.log(newCodes);
+        return newCodes;
+      });
+    }
+  }, [refreshResponse]);
+
+  const codeVisible = (role: string) =>
+    inviteCodes.find(c => c.role === role)?.visible ?? false;
+
+  const handleCodeClick = useCallback((role: string) => {
+    setInviteCodes(prevCodes => {
+      const newCodes = [...prevCodes];
+      const clickedCode = newCodes.find(c => c.role === role);
+      if (clickedCode) {
+        clickedCode.visible = !clickedCode.visible;
+      }
+      return newCodes;
+    });
+  }, [setInviteCodes]);
 
   return (
     <>
@@ -120,8 +165,36 @@ export const ConferenceDetails = ({ conference }: { conference: Conference }) =>
                 {String(conference.isAnonymizedFileRequired)}
               </TableCell>
             </TableRow>
+            <AnyRoleVisibility roles={["Admin", "Chair"]}>
+              {inviteCodes.map(inviteCode =>
+                <TableRow key={inviteCode.role}>
+                  <TableCell variant="head"> {inviteCode.role} Invite Code </TableCell>
+                  <TableCell>
+                    {codeVisible(inviteCode.role) && <>
+                      <label>{inviteCode.code}</label>
+                      <Tooltip enterDelay={0} title="Copy to clipboard">
+                        <IconButton sx={{ ml: 2 }} onClick={() => navigator.clipboard.writeText(inviteCode.code)}>
+                          <ContentCopyIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip enterDelay={0} title="Regenerate code">
+                        <IconButton onClick={() => refreshCode(inviteCode)}>
+                          <RefreshIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </>}
+                    <IconButton onClick={() => handleCodeClick(inviteCode.role)}>
+                      {codeVisible(inviteCode.role)
+                        ? <VisibilityOffIcon />
+                        : <VisibilityIcon />
+                      }
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              )}
+            </AnyRoleVisibility>
             {
-              (isParticipant || Auth.isAdmin()) &&
+              (conference.isParticipant || Auth.isAdmin()) &&
               <>
                 <TableRow>
                   <TableCell align="center" colSpan={12} variant="head">
@@ -159,7 +232,8 @@ export const ConferenceDetails = ({ conference }: { conference: Conference }) =>
             }
           </TableBody>
         </Table>
-      </TableContainer >
+      </TableContainer>
+      <FormErrorAlert response={refreshResponse} />
     </>
   );
 };

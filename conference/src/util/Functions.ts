@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import { ErrorApiResponse, LoadingApiResponse, SuccessApiResponse } from "../types/ApiResponse";
+import { ErrorApiResponse, LoadingApiResponse, NotInitiatedResponse, SuccessApiResponse } from "../types/ApiResponse";
 import { User } from "../types/User";
 
 //string of type "{0} text {1} ..."
@@ -31,6 +31,14 @@ export function buildFormData(values: { [key: string]: any }): FormData {
 
 export function getConferenceRoles(user: User | null, conferenceId: number) {
   return user?.roles[conferenceId] ?? [];
+}
+
+export function createNotInitiatedResponse(): NotInitiatedResponse {
+  return {
+    status: "not-initiated",
+    data: null,
+    error: null
+  }
 }
 
 export function createLoadingResponse(): LoadingApiResponse {

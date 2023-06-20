@@ -36,6 +36,8 @@ namespace ConferenceManager.Infrastructure.Persistence
 
         public DbSet<ConferenceParticipant> ConferenceParticipants => Set<ConferenceParticipant>();
 
+        public DbSet<InviteCode> InviteCodes => Set<InviteCode>();
+
         public ApplicationDbContext(
             DbContextOptions<ApplicationDbContext> options,
             AuditableEntitySaveChangesInterceptor auditableEntityInterceptor,
