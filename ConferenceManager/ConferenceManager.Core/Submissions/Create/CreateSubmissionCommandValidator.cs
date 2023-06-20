@@ -1,6 +1,4 @@
-﻿using ConferenceManager.Core.Common.Exceptions;
-using ConferenceManager.Core.Common.Extensions;
-using ConferenceManager.Core.Common.Interfaces;
+﻿using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Core.Common.Validators;
 using FluentValidation;
 
@@ -22,19 +20,7 @@ namespace ConferenceManager.Core.Submissions.Create
             {
                 var conference = await Context.Conferences.FindAsync(command.ConferenceId, cancelToken);
 
-                if (conference == null)
-                {
-                    context.AddException(new NotFoundException("Conference not found"));
-                    return;
-                }
-
-                if (!CurrentUser.IsParticipantOf(conference))
-                {
-                    context.AddException(new ForbiddenException("Is not part of conference"));
-                    return;
-                }
-
-                if (conference.IsAnonymizedFileRequired && command.AnonymizedFile == null)
+                if (conference!.IsAnonymizedFileRequired && command.AnonymizedFile == null)
                 {
                     context.AddFailure("AnonymizedFile", "Anonymized file is requried by conference settings");
                 }

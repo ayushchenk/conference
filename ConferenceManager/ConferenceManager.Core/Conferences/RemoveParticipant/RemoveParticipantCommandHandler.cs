@@ -22,6 +22,8 @@ namespace ConferenceManager.Core.Conferences.RemoveParticipant
                 return;
             }
 
+            using var transaction = Context.Database.BeginTransaction();
+
             Context.ConferenceParticipants.Remove(participation);
             await Context.SaveChangesAsync(cancellationToken);
 
@@ -33,6 +35,8 @@ namespace ConferenceManager.Core.Conferences.RemoveParticipant
                 Context.UserRoles.RemoveRange(conferenceRoles);
                 await Context.SaveChangesAsync(cancellationToken);
             }
+
+            transaction.Commit();
         }
     }
 }

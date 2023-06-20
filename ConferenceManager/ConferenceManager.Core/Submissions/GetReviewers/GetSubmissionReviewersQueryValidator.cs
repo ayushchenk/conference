@@ -21,11 +21,6 @@ namespace ConferenceManager.Core.Submissions.GetReviewers
                     context.AddException(new NotFoundException("Submission not found"));
                     return;
                 }
-
-                if (!CurrentUser.IsParticipantOf(submission.Conference))
-                {
-                    context.AddException(new ForbiddenException("User is not part of conference"));
-                }
             });
         }
     }

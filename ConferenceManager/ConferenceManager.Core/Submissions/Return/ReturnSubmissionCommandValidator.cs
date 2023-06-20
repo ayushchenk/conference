@@ -22,15 +22,15 @@ namespace ConferenceManager.Core.Submissions.Return
                     return;
                 }
 
+                if (!CurrentUser.IsReviewerOf(submission))
+                {
+                    context.AddException(new ForbiddenException("User is not a reviewer of the submission"));
+                }
+
                 if (!submission.IsValidForReturn)
                 {
                     context.AddException(new ForbiddenException("Can only return created or updated submissions"));
                     return;
-                }
-
-                if (!CurrentUser.IsReviewerOf(submission))
-                {
-                    context.AddException(new ForbiddenException("Can only return reviewing submissions"));
                 }
             });
         }

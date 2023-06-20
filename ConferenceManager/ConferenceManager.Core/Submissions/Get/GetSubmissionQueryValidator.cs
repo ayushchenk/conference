@@ -22,9 +22,8 @@ namespace ConferenceManager.Core.Submissions.Get
                     return;
                 }
 
-                if (!CurrentUser.IsParticipantOf(submission.Conference))
+                if (CurrentUser.IsAdmin || CurrentUser.IsChairIn(submission.Conference))
                 {
-                    context.AddException(new ForbiddenException("User is not part of the conference"));
                     return;
                 }
 

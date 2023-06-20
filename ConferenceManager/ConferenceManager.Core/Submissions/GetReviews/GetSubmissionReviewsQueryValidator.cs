@@ -22,12 +22,10 @@ namespace ConferenceManager.Core.Submissions.GetReviews
                     return;
                 }
 
-                if (!CurrentUser.IsParticipantOf(submission.Conference))
+                if (CurrentUser.IsAdmin || CurrentUser.IsChairIn(submission.Conference))
                 {
-                    context.AddException(new ForbiddenException("User is not a participant of this conference"));
                     return;
                 }
-
                 if (!CurrentUser.IsReviewerOf(submission))
                 {
                     context.AddException(new ForbiddenException("User is not a reviewer of this submission"));
