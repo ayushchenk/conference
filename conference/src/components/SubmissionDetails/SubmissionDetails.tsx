@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
@@ -18,8 +18,11 @@ import { FormHeader } from "../FormHeader";
 import { useConferenceId } from "../../hooks/UseConferenceId";
 import { FormErrorAlert } from "../FormErrorAlert";
 import { Auth } from "../../logic/Auth";
+import { IconButton } from "@mui/material";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 export const SubmissionDetails = ({ submission }: { submission: Submission }) => {
+  const navigate = useNavigate();
   const conferenceId = useConferenceId();
   const [tabValue, setTabValue] = useState(0);
   const { post: returnSubmission, response: returnResponse } = usePostReturnSubmissionAPI(submission.id);
@@ -31,7 +34,12 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
 
   return (
     <>
-      <FormHeader>{submission.title}</FormHeader>
+      <Box sx={{ display: "flex", alignItems: "center" }}>
+        <IconButton sx={{ margin: 0 }} onClick={() => navigate(`/conferences/${conferenceId}/submissions`)}>
+          <ArrowBackIcon />
+        </IconButton>
+        <FormHeader>{submission.title}</FormHeader>
+      </Box>
       <TableContainer component={Paper}>
         <Table size="small">
           <TableBody>

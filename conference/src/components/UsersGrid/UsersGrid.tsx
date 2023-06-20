@@ -4,6 +4,8 @@ import { useAddUserAdminRoleApi, useDeleteUserApi, useGetUsersApi, useRemoveUser
 import { defaultPage } from "../../util/Constants";
 import { FormErrorAlert } from "../FormErrorAlert";
 import { User } from "../../types/User";
+import { NoRowsOverlay } from "../Util/NoRowsOverlay";
+import { NoResultsOverlay } from "../Util/NoResultsOverlay";
 
 export const UsersGrid = () => {
   const [currentPage, setCurrentPage] = useState<GridPaginationModel>(defaultPage);
@@ -53,6 +55,7 @@ export const UsersGrid = () => {
   return (
     <>
       <DataGrid
+        autoHeight
         rows={rows}
         columns={columns}
         initialState={{ pagination: { paginationModel: currentPage } }}
@@ -61,6 +64,10 @@ export const UsersGrid = () => {
         loading={users.status === "loading"}
         paginationMode="server"
         rowCount={users.data?.totalCount ?? 0}
+        slots={{ 
+          noRowsOverlay: NoRowsOverlay,
+          noResultsOverlay: NoResultsOverlay
+        }}
       />
       <FormErrorAlert response={users} />
       <FormErrorAlert response={deleteResponse} />

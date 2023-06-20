@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { defaultPage } from "../../util/Constants";
 import { Conference } from "../../types/Conference";
 import { FormErrorAlert } from "../FormErrorAlert";
+import { NoRowsOverlay } from "../Util/NoRowsOverlay";
 
 export const ConferencesGrid = () => {
   const [currentPage, setCurrentPage] = useState<GridPaginationModel>(defaultPage);
@@ -35,6 +36,7 @@ export const ConferencesGrid = () => {
   return (
     <>
       <DataGrid
+        autoHeight
         rows={rows}
         columns={columns}
         paginationModel={currentPage}
@@ -43,6 +45,13 @@ export const ConferencesGrid = () => {
         loading={conferences.status === "loading"}
         paginationMode="server"
         rowCount={conferences.data?.totalCount ?? 0}
+        slots={{
+          noRowsOverlay: () => <NoRowsOverlay>
+            You don't participate in any conference<br />
+            Either join using code or contact organizer
+          </NoRowsOverlay>,
+          noResultsOverlay: () => <NoRowsOverlay>No results found</NoRowsOverlay>
+        }}
       />
       <FormErrorAlert response={conferences} />
       <FormErrorAlert response={deleteResponse} />
