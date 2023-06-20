@@ -35,7 +35,7 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
   return (
     <>
       <Box sx={{ display: "flex", alignItems: "center" }}>
-        <IconButton sx={{ margin: 0 }} onClick={() => navigate(`/conferences/${conferenceId}/submissions`)}>
+        <IconButton onClick={() => navigate(`/conferences/${conferenceId}/submissions`)}>
           <ArrowBackIcon />
         </IconButton>
         <FormHeader>{submission.title}</FormHeader>

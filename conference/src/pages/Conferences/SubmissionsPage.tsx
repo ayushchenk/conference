@@ -1,4 +1,4 @@
-import { Box, Container, IconButton, Link } from "@mui/material";
+import { Box, Container, IconButton } from "@mui/material";
 import { SubmissionsGrid } from "../../components/SubmissionsGrid";
 import { FormHeader } from "../../components/FormHeader";
 import { useNavigate } from "react-router-dom";
@@ -12,7 +12,7 @@ export const SubmissionsPage = () => {
   return (
     <Container>
       <Box sx={{ display: "flex", alignItems: "center" }}>
-        <IconButton sx={{ margin: 0 }} onClick={() => navigate(`/conferences/${conferenceId}`)}>
+        <IconButton onClick={() => navigate(`/conferences/${conferenceId}`)}>
           <ArrowBackIcon />
         </IconButton>
         <FormHeader> Submissions </FormHeader>

@@ -12,7 +12,7 @@ export const ParticipantsPage = () => {
   return (
     <Container>
       <Box sx={{ display: "flex", alignItems: "center" }}>
-        <IconButton sx={{ margin: 0 }} onClick={() => navigate(`/conferences/${conferenceId}`)}>
+        <IconButton onClick={() => navigate(`/conferences/${conferenceId}`)}>
           <ArrowBackIcon />
         </IconButton>
         <FormHeader> Participants </FormHeader>
