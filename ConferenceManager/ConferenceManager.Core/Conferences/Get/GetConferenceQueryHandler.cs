@@ -18,7 +18,10 @@ namespace ConferenceManager.Core.Conferences.Get
         {
             var conference = await Context.Conferences.FindAsync(request.Id, cancellationToken);
 
-            return Mapper.Map<Conference, ConferenceDto>(conference!);
+            var dto = Mapper.Map<Conference, ConferenceDto>(conference!);
+            dto.IsParticipant = CurrentUser.IsParticipantOf(conference!);
+
+            return dto;
         }
     }
 }

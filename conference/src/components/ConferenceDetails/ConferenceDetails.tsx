@@ -14,7 +14,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { Conference } from "../../types/Conference";
 import { Auth } from "../../logic/Auth";
-import { useIsParticipantApi } from "../../hooks/UserHooks";
 import { AnyRoleVisibility } from "../ProtectedRoute/AnyRoleVisibility";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
@@ -26,7 +25,6 @@ import { FormErrorAlert } from "../FormErrorAlert";
 import RefreshIcon from '@mui/icons-material/Refresh';
 
 export const ConferenceDetails = ({ conference }: { conference: Conference }) => {
-  const isParticipant = useIsParticipantApi();
   const inviteCodesResponse = useGetInviteCodesApi(conference.id);
   const [inviteCodes, setInviteCodes] = useState<CodeVisibility[]>([]);
   const { response: refreshResponse, post: refreshCode } = useRefreshCodeApi();
@@ -196,7 +194,7 @@ export const ConferenceDetails = ({ conference }: { conference: Conference }) =>
               )}
             </AnyRoleVisibility>
             {
-              (isParticipant || Auth.isAdmin()) &&
+              (conference.isParticipant || Auth.isAdmin()) &&
               <>
                 <TableRow>
                   <TableCell align="center" colSpan={12} variant="head">

@@ -4,6 +4,7 @@ import { JoinConferenceDialogProps, initialValues } from "./JoinConferenceDialog
 import { useJoinConferenceApi } from "./JoinConferenceDialog.hooks";
 import { useFormik } from "formik";
 import { validationSchema } from "./JoinConferenceDialog.validator";
+import { Auth } from "../../logic/Auth";
 
 export const JoinConferenceDialog = (props: JoinConferenceDialogProps) => {
   const { response, post } = useJoinConferenceApi();
@@ -17,6 +18,7 @@ export const JoinConferenceDialog = (props: JoinConferenceDialogProps) => {
   });
 
   if (response.status === "success") {
+    Auth.login(response.data);
     props.onSuccess();
   }
 

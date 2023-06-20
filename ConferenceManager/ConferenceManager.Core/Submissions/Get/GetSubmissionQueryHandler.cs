@@ -18,7 +18,10 @@ namespace ConferenceManager.Core.Submissions.Get
         {
             var submission = await Context.Submissions.FindAsync(request.Id, cancellationToken);
 
-            return Mapper.Map<Submission, SubmissionDto>(submission!);
+            var dto = Mapper.Map<Submission, SubmissionDto>(submission!);
+            dto.IsReviewer = CurrentUser.IsReviewerOf(submission!);
+
+            return dto;
         }
     }
 }

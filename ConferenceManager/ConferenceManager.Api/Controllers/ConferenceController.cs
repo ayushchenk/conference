@@ -2,6 +2,7 @@
 using ConferenceManager.Api.Filters;
 using ConferenceManager.Core.Account.Common;
 using ConferenceManager.Core.Common.Model.Responses;
+using ConferenceManager.Core.Common.Model.Token;
 using ConferenceManager.Core.Conferences.AddParticipant;
 using ConferenceManager.Core.Conferences.Common;
 using ConferenceManager.Core.Conferences.Create;
@@ -188,12 +189,12 @@ namespace ConferenceManager.Api.Controllers
         [HttpPost]
         [Route("join")]
         [Authorize]
-        [SwaggerResponse(StatusCodes.Status204NoContent)]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(TokenResponse))]
         public async Task<IActionResult> Join(JoinConferenceCommand command, CancellationToken cancellation)
         {
-            await Mediator.Send(command, cancellation);
+            var result = await Mediator.Send(command, cancellation);
 
-            return NoContent();
+            return Ok(result);
         }
 
         /// <summary>
@@ -204,7 +205,7 @@ namespace ConferenceManager.Api.Controllers
         [Authorize]
         [ConferenceAuthorization(ApplicationRole.Chair)]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(InviteCodeDto))]
-        public async Task<IActionResult> Join(RefreshInviteCodeCommand command, CancellationToken cancellation)
+        public async Task<IActionResult> RefreshCode(RefreshInviteCodeCommand command, CancellationToken cancellation)
         {
             var result = await Mediator.Send(command, cancellation);
 

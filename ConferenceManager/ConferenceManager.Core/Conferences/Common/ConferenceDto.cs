@@ -35,5 +35,7 @@ namespace ConferenceManager.Core.Conferences.Common
         public string? ContactPhoneNumber { get; set; }
 
         public required bool IsAnonymizedFileRequired { get; set; }
+
+        public bool IsParticipant { get; set; }
     }
 }

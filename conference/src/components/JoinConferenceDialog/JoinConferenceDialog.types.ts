@@ -1,7 +1,7 @@
-import { DialogProps } from "@mui/material";
-
-export interface JoinConferenceDialogProps extends DialogProps {
+export interface JoinConferenceDialogProps {
+  open: boolean;
   onSuccess: () => void;
+  onClose: () => void;
 }
 
 export type JoinConferenceRequest = {

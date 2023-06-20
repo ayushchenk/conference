@@ -48,7 +48,7 @@ namespace ConferenceManager.Api.Services
                 throw new IdentityException("Incorrect password");
             }
 
-            return GenerateJwtToken(user);
+            return GenerateToken(user);
         }
 
         public async Task CreateUser(ApplicationUser user, string password)
@@ -73,7 +73,7 @@ namespace ConferenceManager.Api.Services
             await _manager.DeleteAsync(user);
         }
 
-        private TokenResponse GenerateJwtToken(ApplicationUser user)
+        public TokenResponse GenerateToken(ApplicationUser user)
         {
             byte[] key = Encoding.ASCII.GetBytes(_settings.Key);
 

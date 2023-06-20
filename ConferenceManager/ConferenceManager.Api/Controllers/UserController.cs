@@ -208,35 +208,5 @@ namespace ConferenceManager.Api.Controllers
 
             return Ok(result);
         }
-
-        /// <summary>
-        /// Returns true if user is participant of conference
-        /// </summary>
-        [HttpGet]
-        [Route("{id}/is-participant/{conferenceId}")]
-        [Authorize]
-        [ConferenceAuthorization]
-        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(bool))]
-        public async Task<IActionResult> IsParticipant(int id, int conferenceid, CancellationToken cancellation)
-        {
-            var result = await Mediator.Send(new IsParticipantQuery(id, conferenceid), cancellation);
-
-            return Ok(result);
-        }
-
-        /// <summary>
-        /// Returns true if user is reviewer of submission
-        /// </summary>
-        [HttpGet]
-        [Route("{id}/is-reviewer/{submissionId}")]
-        [Authorize(Roles = ApplicationRole.Reviewer)]
-        [ConferenceAuthorization(ApplicationRole.Reviewer)]
-        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(bool))]
-        public async Task<IActionResult> IsReviewer(int id, int submissionId, CancellationToken cancellation)
-        {
-            var result = await Mediator.Send(new IsReviewerQuery(id, submissionId), cancellation);
-
-            return Ok(result);
-        }
     }
 }

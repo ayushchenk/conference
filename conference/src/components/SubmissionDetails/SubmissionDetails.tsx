@@ -18,15 +18,12 @@ import { FormHeader } from "../FormHeader";
 import { useConferenceId } from "../../hooks/UseConferenceId";
 import { FormErrorAlert } from "../FormErrorAlert";
 import { Auth } from "../../logic/Auth";
-import { useIsReviewerApi } from "../../hooks/UserHooks";
 
 export const SubmissionDetails = ({ submission }: { submission: Submission }) => {
   const conferenceId = useConferenceId();
   const [tabValue, setTabValue] = useState(0);
   const { post: returnSubmission, response: returnResponse } = usePostReturnSubmissionAPI(submission.id);
-
   const isAuthor = submission.authorId === Auth.getId();
-  const isReviewer = useIsReviewerApi(submission.id);
 
   const handleTabChange = useCallback((_: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
@@ -75,7 +72,7 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
                 </TableCell>
               </TableRow>
             }
-            {isReviewer &&
+            {submission.isReviewer &&
               <TableRow>
                 <TableCell align="center" colSpan={12} variant="head">
                   <Button color="inherit" onClick={() => returnSubmission({})} disabled={!submission.isValidForReturn}>
@@ -88,7 +85,7 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
         </Table>
       </TableContainer >
       {
-        (isReviewer || isAuthor || Auth.isChair(conferenceId)) &&
+        (submission.isReviewer || isAuthor || Auth.isChair(conferenceId)) &&
         <Box mt={5}>
           <Tabs variant="fullWidth" value={tabValue} onChange={handleTabChange}>
             <Tab label="Papers" />
