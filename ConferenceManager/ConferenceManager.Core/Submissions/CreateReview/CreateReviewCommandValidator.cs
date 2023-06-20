@@ -39,13 +39,13 @@ namespace ConferenceManager.Core.Submissions.CreateReview
 
                 if (!CurrentUser.IsReviewerOf(submission))
                 {
-                    context.AddException(new ForbiddenException("Not a reviewer of submission"));
+                    context.AddException(new ForbiddenException("User is not a reviewer of the submission"));
                     return;
                 }
 
                 if (submission.HasReviewFrom(CurrentUser.Id))
                 {
-                    context.AddException(new ForbiddenException("Already reviewed"));
+                    context.AddException(new ForbiddenException("Submission is already reviewed"));
                 }
             });
         }

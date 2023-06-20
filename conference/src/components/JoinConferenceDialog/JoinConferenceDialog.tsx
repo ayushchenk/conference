@@ -23,7 +23,7 @@ export const JoinConferenceDialog = (props: JoinConferenceDialogProps) => {
   }
 
   return (
-    <Dialog {...props}>
+    <Dialog open={props.open} onClose={props.onClose}>
       <DialogTitle>Join conference using code</DialogTitle>
       <DialogContent>
         <form onSubmit={formik.handleSubmit}>

@@ -24,6 +24,7 @@ namespace ConferenceManager.Core.Submissions.UpdateReview
             {
                 var review = await Context.Reviews
                     .AsNoTracking()
+                    .Include(x => x.Submission)
                     .FirstOrDefaultAsync(r => r.Id == command.Id, cancelToken);
 
                 if (review == null)
@@ -32,16 +33,14 @@ namespace ConferenceManager.Core.Submissions.UpdateReview
                     return;
                 }
 
-                if (review.CreatedById != CurrentUser.Id)
+                if (!CurrentUser.IsAuthorOf(review))
                 {
-                    context.AddException(new ForbiddenException("Not author of review"));
+                    context.AddException(new ForbiddenException("Not an author of the review"));
                     return;
                 }
 
-                var submission = await Context.Submissions.FindAsync(review.SubmissionId, cancelToken);
-
-                if (submission?.Status == SubmissionStatus.Accepted
-                    || submission?.Status == SubmissionStatus.Rejected)
+                if (review.Submission?.Status == SubmissionStatus.Accepted
+                    || review.Submission?.Status == SubmissionStatus.Rejected)
                 {
                     context.AddException(new NotFoundException("Submission is closed"));
                     return;

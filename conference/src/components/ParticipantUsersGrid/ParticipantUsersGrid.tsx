@@ -5,6 +5,8 @@ import { useGetUsersApi } from "../UsersGrid/UsersGrid.hooks";
 import { defaultPage } from "../../util/Constants";
 import { ParticipantUsersGridProps } from "./ParticipantUsersGrid.types";
 import { FormErrorAlert } from "../FormErrorAlert";
+import { NoResultsOverlay } from "../Util/NoResultsOverlay";
+import { NoRowsOverlay } from "../Util/NoRowsOverlay";
 
 export const ParticipantUsersGrid: React.FC<ParticipantUsersGridProps> = ({ handleAddParticipant }) => {
   const [currentPage, setCurrentPage] = useState<GridPaginationModel>(defaultPage);
@@ -14,6 +16,7 @@ export const ParticipantUsersGrid: React.FC<ParticipantUsersGridProps> = ({ hand
   return (
     <>
       <DataGrid
+        autoHeight
         rows={users.data?.items ?? []}
         columns={columns}
         initialState={{ pagination: { paginationModel: currentPage } }}
@@ -22,6 +25,10 @@ export const ParticipantUsersGrid: React.FC<ParticipantUsersGridProps> = ({ hand
         loading={users.status === "loading"}
         rowCount={users.data?.totalCount ?? 0}
         paginationMode="server"
+        slots={{ 
+          noRowsOverlay: NoRowsOverlay,
+          noResultsOverlay: NoResultsOverlay
+        }}
       />
       <FormErrorAlert response={users} />
     </>

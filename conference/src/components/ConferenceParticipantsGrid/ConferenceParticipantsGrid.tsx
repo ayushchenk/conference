@@ -12,6 +12,8 @@ import { User } from "../../types/User";
 import { useConferenceId } from "../../hooks/UseConferenceId";
 import { UserRoleManagementDialog } from "../UsersGrid";
 import { FormErrorAlert } from "../FormErrorAlert";
+import { NoRowsOverlay } from "../Util/NoRowsOverlay";
+import { NoResultsOverlay } from "../Util/NoResultsOverlay";
 
 export const ConferenceParticipantsGrid = () => {
   const conferenceId = useConferenceId();
@@ -84,12 +86,19 @@ export const ConferenceParticipantsGrid = () => {
     <>
       <Button onClick={() => setOpenAddParticipantDialog(true)}>Add Participant</Button>
       <DataGrid
+        autoHeight
         rows={rows}
         columns={columns}
         initialState={{ pagination: { paginationModel: currentPage } }}
         pageSizeOptions={[5, 10, 15, 25]}
         onPaginationModelChange={setCurrentPage}
         loading={participants.status === "loading"}
+        paginationMode="server"
+        rowCount={participants.data?.totalCount ?? 0}
+        slots={{
+          noRowsOverlay: () => <NoRowsOverlay>No participants</NoRowsOverlay>,
+          noResultsOverlay: NoResultsOverlay
+        }}
       />
       <Dialog maxWidth="xl" open={openAddParticipantDialog} onClose={() => setOpenAddParticipantDialog(false)}>
         <DialogTitle>Add new user to the conference</DialogTitle>
