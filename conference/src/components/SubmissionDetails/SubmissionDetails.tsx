@@ -20,6 +20,8 @@ import { FormErrorAlert } from "../FormErrorAlert";
 import { Auth } from "../../logic/Auth";
 import { IconButton } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { SubmissionReviewersGrid } from "../SubmissionReviewersGrid/SubmissionReviewersGrid";
+import { ChairVisibility } from "../ProtectedRoute/ChairVisibility";
 
 export const SubmissionDetails = ({ submission }: { submission: Submission }) => {
   const navigate = useNavigate();
@@ -97,14 +99,20 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
         <Box mt={5}>
           <Tabs variant="fullWidth" value={tabValue} onChange={handleTabChange}>
             <Tab label="Papers" />
+            <Tab label="Reviewers"/>
             <Tab label="Reviews" disabled />
             <Tab label="Comments" disabled />
           </Tabs>
           <TabPanel value={tabValue} index={0}>
             <SubmissionPapersTable />
           </TabPanel>
-          <TabPanel value={tabValue} index={1}></TabPanel>
+          <ChairVisibility>
+            <TabPanel value={tabValue} index={1}>
+              <SubmissionReviewersGrid submissionId={submission.id} />
+            </TabPanel>
+          </ChairVisibility>
           <TabPanel value={tabValue} index={2}></TabPanel>
+          <TabPanel value={tabValue} index={3}></TabPanel>
         </Box>
       }
       <FormErrorAlert response={returnResponse} />

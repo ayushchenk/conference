@@ -39,12 +39,12 @@ export const useParticipantUsersGridProps = (handleAddParticipant: Function): Gr
         field: "actions",
         type: "actions",
         width: 50,
-        getActions: (params) => {
-          const handleAddClick = () => {
-            handleAddParticipant(params.row);
-          };
-          return [<GridActionsCellItem icon={<AddIcon />} label="Add" onClick={handleAddClick} />];
-        },
+        getActions: (params) => [
+          <GridActionsCellItem
+            icon={<AddIcon />}
+            label="Add"
+            onClick={() => handleAddParticipant(params.row)} />
+        ]
       },
     ]
   }, [handleAddParticipant]);

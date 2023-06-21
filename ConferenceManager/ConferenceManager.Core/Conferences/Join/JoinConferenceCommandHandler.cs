@@ -26,8 +26,6 @@ namespace ConferenceManager.Core.Conferences.Join
 
         public override async Task<TokenResponse> Handle(JoinConferenceCommand request, CancellationToken cancellationToken)
         {
-            using var transaction = Context.Database.BeginTransaction();
-
             var code = await Context.InviteCodes
                 .FirstOrDefaultAsync(c => c.Code == request.Code, cancellationToken);
 
@@ -40,8 +38,6 @@ namespace ConferenceManager.Core.Conferences.Join
                 ConferenceId = code.ConferenceId,
                 Role = code.Role
             });
-
-            transaction.Commit();
 
             var user = await Context.Users.FindAsync(userId, cancellationToken);
 
