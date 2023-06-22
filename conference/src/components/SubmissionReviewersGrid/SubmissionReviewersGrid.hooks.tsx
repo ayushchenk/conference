@@ -1,16 +1,13 @@
 import { useMemo } from "react";
 import { useGetApi } from "../../hooks/UseGetApi"
-import { PageData } from "../../types/ApiResponse"
 import { User } from "../../types/User"
-import { GridActionsCellItem, GridColDef, GridPaginationModel } from "@mui/x-data-grid";
+import { GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDeleteApi } from "../../hooks/UseDeleteApi";
 import { usePostApi } from "../../hooks/UsePostApi";
-import { useMemoPaging } from "../../hooks/UseMemoPaging";
 
-export const useGetSubmissionReviewersApi = (submissionId: number, paging: GridPaginationModel) => {
-  const config = useMemoPaging(paging);
-  return useGetApi<PageData<User>>(`/submission/${submissionId}/reviewers`, config);
+export const useGetSubmissionReviewersApi = (submissionId: number) => {
+  return useGetApi<User[]>(`/submission/${submissionId}/reviewers`);
 }
 
 export const useRemoveSubmissionReviewerApi = (submissionId: number) => {
@@ -34,13 +31,21 @@ export const useSubmissionReviewersGridColumns = (
     {
       headerName: "Email",
       field: "email",
-      maxWidth: 200,
-      flex: 1
+      flex: 1,
     },
     {
       headerName: "Name",
       field: "fullName",
-      maxWidth: 200,
+      flex: 1
+    },
+    {
+      headerName: "Country",
+      field: "country",
+      flex: 1
+    },
+    {
+      headerName: "Affiliation",
+      field: "affiliation",
       flex: 1
     },
     {

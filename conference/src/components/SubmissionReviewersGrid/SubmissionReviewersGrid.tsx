@@ -5,27 +5,36 @@ import { NoRowsOverlay } from "../Util/NoRowsOverlay";
 import { useGetSubmissionReviewersApi, useRemoveSubmissionReviewerApi, useSubmissionReviewersGridColumns } from "./SubmissionReviewersGrid.hooks";
 import { SubmissionReviewersGridProps } from "./SubmissionReviewersGrid.types";
 import { useCallback, useEffect, useState } from "react";
-import { defaultPage } from "../../util/Constants";
 import { User } from "../../types/User";
+import { Button } from "@mui/material";
+import { AssignReviewerDialog } from "../AssignReviewerDialog";
 
 export const SubmissionReviewersGrid = ({ submissionId }: SubmissionReviewersGridProps) => {
-  const [currentPage, setCurrentPage] = useState(defaultPage);
   const [rows, setRows] = useState<User[]>([]);
   const [removingReviewer, setRemovingReviewer] = useState<User | null>(null);
+  const [openDialog, setOpenDialog] = useState(false);
 
-  const reviewers = useGetSubmissionReviewersApi(submissionId, currentPage);
+  const reviewers = useGetSubmissionReviewersApi(submissionId);
   const removeReviewerApi = useRemoveSubmissionReviewerApi(submissionId);
 
   const handleReviewerRemove = useCallback((user: User) => {
     setRemovingReviewer(user);
     removeReviewerApi.performDelete({}, user.id);
-  }, []);
+  }, [removeReviewerApi]);
 
-  const columns = useSubmissionReviewersGridColumns(handleReviewerRemove);
+  const handleReviewerAdd = useCallback((user: User) => {
+    setRows(prevRows => {
+      const newRows = [...prevRows];
+      if(!newRows.find(u => u.id === user.id)){
+        newRows.push(user);
+      }
+      return newRows;
+    });
+  }, []);
 
   useEffect(() => {
     if (reviewers.status === "success") {
-      setRows(reviewers.data.items);
+      setRows(reviewers.data);
     }
   }, [reviewers]);
 
@@ -33,24 +42,29 @@ export const SubmissionReviewersGrid = ({ submissionId }: SubmissionReviewersGri
     if (removeReviewerApi.response.status === "success" && removingReviewer) {
       setRows(prevRows => [...prevRows].filter(r => r.id !== removingReviewer.id));
     }
-  }, [removeReviewerApi.response]);
+  }, [removeReviewerApi.response, removingReviewer]);
+
+  const columns = useSubmissionReviewersGridColumns(handleReviewerRemove);
 
   return (
     <>
+      <Button onClick={() => setOpenDialog(true)}>Add Reviewer</Button>
       <DataGrid
         autoHeight
-        rows={reviewers.data?.items ?? []}
+        hideFooter
+        rows={rows}
         columns={columns}
-        initialState={{ pagination: { paginationModel: currentPage } }}
-        pageSizeOptions={[5, 10, 15, 25]}
-        onPaginationModelChange={setCurrentPage}
-        paginationMode="server"
         loading={reviewers.status === "loading"}
-        rowCount={reviewers.data?.totalCount ?? 0}
         slots={{
           noRowsOverlay: () => <NoRowsOverlay>No reviewers assigned yet</NoRowsOverlay>,
           noResultsOverlay: NoResultsOverlay
         }}
+      />
+      <AssignReviewerDialog
+        show={openDialog}
+        onDialogClose={() => setOpenDialog(false)}
+        submissionId={submissionId}
+        onReviewerAdd={handleReviewerAdd}
       />
       <FormErrorAlert response={reviewers} />
       <FormErrorAlert response={removeReviewerApi.response} />

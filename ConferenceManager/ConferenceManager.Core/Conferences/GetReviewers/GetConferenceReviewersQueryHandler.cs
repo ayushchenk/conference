@@ -1,13 +1,11 @@
 ﻿using ConferenceManager.Core.Account.Common;
 using ConferenceManager.Core.Common;
 using ConferenceManager.Core.Common.Interfaces;
-using ConferenceManager.Core.Common.Model;
-using ConferenceManager.Core.Common.Model.Responses;
 using ConferenceManager.Domain.Entities;
 
 namespace ConferenceManager.Core.Conferences.GetReviewers
 {
-    public class GetConferenceReviewersQueryHandler : DbContextRequestHandler<GetConferenceReviewersQuery, EntityPageResponse<UserDto>>
+    public class GetConferenceReviewersQueryHandler : DbContextRequestHandler<GetConferenceReviewersQuery, IEnumerable<UserDto>>
     {
         public GetConferenceReviewersQueryHandler(
             IApplicationDbContext context,
@@ -16,7 +14,7 @@ namespace ConferenceManager.Core.Conferences.GetReviewers
         {
         }
 
-        public override async Task<EntityPageResponse<UserDto>> Handle(GetConferenceReviewersQuery request, CancellationToken cancellationToken)
+        public override Task<IEnumerable<UserDto>> Handle(GetConferenceReviewersQuery request, CancellationToken cancellationToken)
         {
             var reviewersIds = Context.UserRoles
                 .Where(r => r.ConferenceId == request.ConferenceId && r.Role.Name == ApplicationRole.Reviewer)
@@ -24,16 +22,10 @@ namespace ConferenceManager.Core.Conferences.GetReviewers
 
             var reviewers = Context.Users
                 .Where(u => reviewersIds.Contains(u.Id))
-                .OrderBy(u => u.Id);
+                .OrderBy(u => u.Id)
+                .Select(Mapper.Map<ApplicationUser, UserDto>);
 
-            var page = await PaginatedList<ApplicationUser>.CreateAsync(reviewers, request.PageIndex, request.PageSize);
-
-            return new EntityPageResponse<UserDto>()
-            {
-                Items = page.Select(Mapper.Map<ApplicationUser, UserDto>),
-                TotalCount = page.TotalCount,
-                TotalPages = page.TotalPages,
-            };
+            return Task.FromResult(reviewers);
         }
     }
 }

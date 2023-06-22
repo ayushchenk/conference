@@ -14,25 +14,22 @@ export const useParticipantUsersGridProps = (handleAddParticipant: Function): Gr
       {
         headerName: "Email",
         field: "email",
-        minWidth: 200,
         flex: 1
       },
       {
         headerName: "Full Name",
         field: "fullName",
-        minWidth: 200,
         flex: 1
       },
       {
         headerName: "Country",
         field: "country",
-        minWidth: 150,
         flex: 1
       },
       {
         headerName: "Affiliation",
         field: "affiliation",
-        minWidth: 150,
+        maxWidth: 150,
         flex: 1
       },
       {
