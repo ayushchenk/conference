@@ -6,16 +6,21 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { useConferenceId } from "../../hooks/UseConferenceId";
 import { useSubmissionId } from "../../hooks/UseSubmissionId";
+import { Review } from "../../types/Conference";
 import { FormErrorAlert } from "../FormErrorAlert/FormErrorAlert";
-import { usePostCreateReviewApi } from "./CreateReviewForm.hooks";
-import { initialValues } from "./CreateReviewForm.types";
+import { usePostCreateReviewApi, useUpdateReviewApi } from "./CreateReviewForm.hooks";
+import { CreateReviewRequest, initialValues } from "./CreateReviewForm.types";
 import { validationSchema } from "./CreateReviewForm.validator";
 
-export const CreateReviewForm = () => {
+export const CreateReviewForm = ({ review }: { review?: Review }) => {
   const navigate = useNavigate();
   const conferenceId = useConferenceId();
   const submissionId = useSubmissionId();
-  const { response, post } = usePostCreateReviewApi(submissionId);
+  const { response: responseUpdate, put } = useUpdateReviewApi();
+  const { response: responseCreate, post } = usePostCreateReviewApi(submissionId);
+
+  const performRequest: Function = review ? put : post;
+  const response = review ? responseUpdate : responseCreate;
 
   useEffect(() => {
     if (response.status === "success") {
@@ -23,11 +28,13 @@ export const CreateReviewForm = () => {
     }
   }, [response, navigate, conferenceId, submissionId]);
 
+  const values: CreateReviewRequest = review ? { ...review } : { ...initialValues };
+
   const formik = useFormik({
-    initialValues: initialValues,
+    initialValues: values,
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      post(values);
+      performRequest(values);
     },
   });
 
