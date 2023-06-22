@@ -16,7 +16,7 @@ export const AssignReviewerDialog = ({
 }: AssignReviewerDialogProps) => {
   const [addingReviewer, setAddingReviewer] = useState<User | null>();
 
-  const reviewers = useGetConferenceReviewersApi();
+  const reviewers = useGetConferenceReviewersApi(submissionId);
   const addReviewerApi = useAddSubmissionReviewerApi(submissionId);
 
   const handleReviewerClick = useCallback((user: User) => {
@@ -42,7 +42,7 @@ export const AssignReviewerDialog = ({
           rows={reviewers.data ?? []}
           columns={columns}
           loading={reviewers.status === "loading"}
-          pageSizeOptions={[10]}
+          pageSizeOptions={[100]}
           slots={{
             noRowsOverlay: () => <NoRowsOverlay>No reviewers in the conference</NoRowsOverlay>,
             noResultsOverlay: NoResultsOverlay

@@ -5,10 +5,11 @@ import { User } from "../../types/User";
 import { GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
 import AddIcon from "@mui/icons-material/Add";
 import { usePostApi } from "../../hooks/UsePostApi";
+import { Typography } from "@mui/material";
 
-export const useGetConferenceReviewersApi = () => {
+export const useGetConferenceReviewersApi = (submissionId: number) => {
   const conferenceId = useConferenceId();
-  return useGetApi<User[]>(`/conference/${conferenceId}/reviewers`);
+  return useGetApi<User[]>(`/conference/${conferenceId}/reviewers/${submissionId}`);
 }
 
 export const useAddSubmissionReviewerApi = (submissionId: number) => {
@@ -51,9 +52,12 @@ export const useConferenceReviewersGridColumns = (
     },
     {
       headerName: "Preference",
-      field: "preference",
-      minWidth: 150,
-      flex: 1
+      field: "hasPreference",
+      width: 150,
+      renderCell: params => (params.row.hasPreference
+        ? <Typography variant="body2" color={"green"}>Wants to review</Typography>
+        : <Typography variant="body2">No preference</Typography>
+      )
     },
     {
       field: "actions",
@@ -66,5 +70,5 @@ export const useConferenceReviewersGridColumns = (
           onClick={() => onAddReviewer(params.row)} />
       ]
     },
-  ]), [onAddReviewer]);
+  ] as GridColDef[]), [onAddReviewer]);
 }

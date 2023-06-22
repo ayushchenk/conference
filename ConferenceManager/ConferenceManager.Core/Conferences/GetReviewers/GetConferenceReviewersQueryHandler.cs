@@ -14,7 +14,7 @@ namespace ConferenceManager.Core.Conferences.GetReviewers
         {
         }
 
-        public override Task<IEnumerable<UserDto>> Handle(GetConferenceReviewersQuery request, CancellationToken cancellationToken)
+        public override async Task<IEnumerable<UserDto>> Handle(GetConferenceReviewersQuery request, CancellationToken cancellationToken)
         {
             var reviewersIds = Context.UserRoles
                 .Where(r => r.ConferenceId == request.ConferenceId && r.Role.Name == ApplicationRole.Reviewer)
@@ -23,9 +23,17 @@ namespace ConferenceManager.Core.Conferences.GetReviewers
             var reviewers = Context.Users
                 .Where(u => reviewersIds.Contains(u.Id))
                 .OrderBy(u => u.Id)
-                .Select(Mapper.Map<ApplicationUser, UserDto>);
+                .Select(Mapper.Map<ApplicationUser, UserDto>)
+                .ToArray();
 
-            return Task.FromResult(reviewers);
+            foreach (var user in reviewers)
+            {
+                var preference = await Context.ReviewPreferences
+                    .FindAsync(new object[] { request.SubmissionId, user.Id }, cancellationToken);
+                user.HasPreference = preference != null;
+            }
+
+            return reviewers;
         }
     }
 }

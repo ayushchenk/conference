@@ -18,6 +18,8 @@ namespace ConferenceManager.Core.Account.Common
 
         public required bool IsAdmin { set; get; }
 
+        public bool HasPreference { set; get; }
+
         public required Dictionary<int, string[]> Roles { set; get; }
     }
 }

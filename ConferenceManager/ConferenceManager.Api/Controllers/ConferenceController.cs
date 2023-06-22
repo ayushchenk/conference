@@ -170,16 +170,16 @@ namespace ConferenceManager.Api.Controllers
         }
 
         /// <summary>
-        /// Returns all reviewers from conference
+        /// Returns all reviewers from conference in context of submission
         /// </summary>
         [HttpGet]
-        [Route("{id}/reviewers")]
+        [Route("{id}/reviewers/{submissionId}")]
         [Authorize(Roles = ApplicationRole.Chair)]
         [ConferenceAuthorization(ApplicationRole.Chair)]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<UserDto>))]
-        public async Task<IActionResult> GetReviewers(int id, CancellationToken cancellation)
+        public async Task<IActionResult> GetReviewers(int id, int submissionId, CancellationToken cancellation)
         {
-            var result = await Mediator.Send(new GetConferenceReviewersQuery(id), cancellation);
+            var result = await Mediator.Send(new GetConferenceReviewersQuery(id, submissionId), cancellation);
 
             return Ok(result);
         }
