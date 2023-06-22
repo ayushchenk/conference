@@ -18,19 +18,8 @@ namespace ConferenceManager.Core.Submissions.AddPreference
 
                 if (submission == null)
                 {
-                    context.AddException(new NotFoundException("User or submission not found"));
+                    context.AddException(new NotFoundException("Submission not found"));
                     return;
-                }
-
-                if (!CurrentUser.IsParticipantOf(submission.Conference))
-                {
-                    context.AddException(new ForbiddenException("User is not part of conference"));
-                    return;
-                }
-
-                if (!CurrentUser.IsReviewerIn(submission.Conference))
-                {
-                    context.AddException(new ForbiddenException("User is not a reviwer"));
                 }
             });
         }

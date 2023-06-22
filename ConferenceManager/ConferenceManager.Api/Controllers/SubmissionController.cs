@@ -14,6 +14,7 @@ using ConferenceManager.Core.Submissions.GetComments;
 using ConferenceManager.Core.Submissions.GetPreferences;
 using ConferenceManager.Core.Submissions.GetReviewers;
 using ConferenceManager.Core.Submissions.GetReviews;
+using ConferenceManager.Core.Submissions.HasPreference;
 using ConferenceManager.Core.Submissions.Papers;
 using ConferenceManager.Core.Submissions.RemovePreference;
 using ConferenceManager.Core.Submissions.RemoveReviewer;
@@ -352,6 +353,20 @@ namespace ConferenceManager.Api.Controllers
             await Mediator.Send(new RemoveReviewPreferenceCommand(id), cancellation);
 
             return NoContent();
+        }
+
+        /// <summary>
+        /// Checks if current user has preference
+        /// </summary>
+        [HttpGet]
+        [Route("{id}/has-preference")]
+        [Authorize]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(BoolResponse))]
+        public async Task<IActionResult> HasPreference(int id, CancellationToken cancellation)
+        {
+            var result = await Mediator.Send(new HasSubmissionPreferenceFromUserQuery(id), cancellation);
+
+            return Ok(result);
         }
     }
 }

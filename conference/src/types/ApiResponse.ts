@@ -44,3 +44,7 @@ export type ApiError = {
 export type CreateResponseData = {
     id: number;
 }
+
+export type BooleanResponse = {
+    result: boolean;
+}
