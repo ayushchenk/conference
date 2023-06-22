@@ -17,6 +17,7 @@ import { Auth } from "../../logic/Auth";
 import { Submission } from "../../types/Conference";
 import { FormErrorAlert } from "../FormErrorAlert";
 import { FormHeader } from "../FormHeader";
+import { ReviewsList } from "./ReviewsList";
 import { usePostReturnSubmissionAPI } from "./SubmissionDetails.hooks";
 import { SubmissionPapersTable } from "./SubmissionPapersTable";
 import { TabPanel } from "./TabPanel";
@@ -112,13 +113,15 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
         <Box mt={5}>
           <Tabs variant="fullWidth" value={tabValue} onChange={handleTabChange}>
             <Tab label="Papers" />
-            <Tab label="Reviews" disabled />
+            <Tab label="Reviews" />
             <Tab label="Comments" disabled />
           </Tabs>
           <TabPanel value={tabValue} index={0}>
             <SubmissionPapersTable />
           </TabPanel>
-          <TabPanel value={tabValue} index={1}></TabPanel>
+          <TabPanel value={tabValue} index={1}>
+            <ReviewsList />
+          </TabPanel>
           <TabPanel value={tabValue} index={2}></TabPanel>
         </Box>
       )}

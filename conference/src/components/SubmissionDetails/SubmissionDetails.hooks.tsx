@@ -1,6 +1,6 @@
 import { useGetApi } from "../../hooks/UseGetApi";
 import { usePostApi } from "../../hooks/UsePostApi";
-import { Submission, SubmissionPaper } from "../../types/Conference";
+import { Review, Submission, SubmissionPaper } from "../../types/Conference";
 import { GetSubmissionResponse } from "./SubmissionDetails.types";
 
 export const useGetSubmissionApi = (submissionId: number): GetSubmissionResponse => {
@@ -9,6 +9,10 @@ export const useGetSubmissionApi = (submissionId: number): GetSubmissionResponse
 
 export const useGetSubmissionPapersApi = (submissionId: number) => {
   return useGetApi<SubmissionPaper[]>(`/Submission/${submissionId}/papers`);
+};
+
+export const useGetReviewsApi = (submissionId: number) => {
+  return useGetApi<Review[]>(`/Submission/${submissionId}/reviews`);
 };
 
 export const usePostReturnSubmissionAPI = (submissionId: number) => {

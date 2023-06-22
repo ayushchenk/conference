@@ -32,8 +32,8 @@ export type Submission = {
   title: string;
   keywords: string;
   abstract: string;
-  isValidForReturn: boolean,
-  isValidForUpdate: boolean
+  isValidForReturn: boolean;
+  isValidForUpdate: boolean;
   isReviewer: boolean;
 };
 
@@ -46,7 +46,20 @@ export type SubmissionPaper = {
   typeLabel: string;
 };
 
+export type Review = {
+  id: number;
+  submissionId: number;
+  reviewerId: number;
+  reviewerEmail: string;
+  reviewerName: string;
+  score: number;
+  evaluation: string;
+  confidence: number;
+  confidenceLabel: string;
+  isAuthor: boolean;
+};
+
 export type InviteCode = {
-  code: string,
-  role: string
-}
+  code: string;
+  role: string;
+};
