@@ -1,5 +1,7 @@
 import { useCallback, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { IconButton } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
@@ -10,16 +12,14 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 import Tabs from "@mui/material/Tabs";
+import { useConferenceId } from "../../hooks/UseConferenceId";
+import { Auth } from "../../logic/Auth";
+import { Submission } from "../../types/Conference";
+import { FormErrorAlert } from "../FormErrorAlert";
+import { FormHeader } from "../FormHeader";
 import { usePostReturnSubmissionAPI } from "./SubmissionDetails.hooks";
 import { SubmissionPapersTable } from "./SubmissionPapersTable";
 import { TabPanel } from "./TabPanel";
-import { Submission } from "../../types/Conference";
-import { FormHeader } from "../FormHeader";
-import { useConferenceId } from "../../hooks/UseConferenceId";
-import { FormErrorAlert } from "../FormErrorAlert";
-import { Auth } from "../../logic/Auth";
-import { IconButton } from "@mui/material";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 export const SubmissionDetails = ({ submission }: { submission: Submission }) => {
   const navigate = useNavigate();
@@ -66,7 +66,7 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
               <TableCell variant="head">Keywords</TableCell>
               <TableCell>{submission.keywords}</TableCell>
             </TableRow>
-            {isAuthor &&
+            {isAuthor && (
               <TableRow>
                 <TableCell align="center" colSpan={12} variant="head">
                   <Button color="inherit" disabled={!submission.isValidForUpdate}>
@@ -79,21 +79,36 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
                   </Button>
                 </TableCell>
               </TableRow>
-            }
-            {submission.isReviewer &&
-              <TableRow>
-                <TableCell align="center" colSpan={12} variant="head">
-                  <Button color="inherit" onClick={() => returnSubmission({})} disabled={!submission.isValidForReturn}>
-                    Return
-                  </Button>
-                </TableCell>
-              </TableRow>
-            }
+            )}
+            {submission.isReviewer && (
+              <>
+                <TableRow>
+                  <TableCell align="center" colSpan={12} variant="head">
+                    <Link
+                      className="header__link"
+                      to={`/conferences/${conferenceId}/submissions/${submission.id}/review`}
+                    >
+                      REVIEW
+                    </Link>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell align="center" colSpan={12} variant="head">
+                    <Button
+                      color="inherit"
+                      onClick={() => returnSubmission({})}
+                      disabled={!submission.isValidForReturn}
+                    >
+                      Return
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              </>
+            )}
           </TableBody>
         </Table>
-      </TableContainer >
-      {
-        (submission.isReviewer || isAuthor || Auth.isChair(conferenceId)) &&
+      </TableContainer>
+      {(submission.isReviewer || isAuthor || Auth.isChair(conferenceId)) && (
         <Box mt={5}>
           <Tabs variant="fullWidth" value={tabValue} onChange={handleTabChange}>
             <Tab label="Papers" />
@@ -106,7 +121,7 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
           <TabPanel value={tabValue} index={1}></TabPanel>
           <TabPanel value={tabValue} index={2}></TabPanel>
         </Box>
-      }
+      )}
       <FormErrorAlert response={returnResponse} />
     </>
   );
