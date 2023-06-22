@@ -55,7 +55,7 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
     else {
       removePreferenceApi.performDelete({});
     }
-  }, []);
+  }, [addPreferenceApi, removePreferenceApi]);
 
   return (
     <>

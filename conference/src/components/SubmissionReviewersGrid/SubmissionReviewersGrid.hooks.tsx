@@ -5,9 +5,15 @@ import { GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDeleteApi } from "../../hooks/UseDeleteApi";
 import { usePostApi } from "../../hooks/UsePostApi";
+import { useConferenceId } from "../../hooks/UseConferenceId";
 
 export const useGetSubmissionReviewersApi = (submissionId: number) => {
   return useGetApi<User[]>(`/submission/${submissionId}/reviewers`);
+}
+
+export const useGetConferenceReviewersApi = (submissionId: number) => {
+  const conferenceId = useConferenceId();
+  return useGetApi<User[]>(`/conference/${conferenceId}/reviewers/${submissionId}`);
 }
 
 export const useRemoveSubmissionReviewerApi = (submissionId: number) => {

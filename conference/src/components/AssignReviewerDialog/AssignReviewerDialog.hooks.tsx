@@ -1,20 +1,8 @@
 import { useMemo } from "react";
-import { useConferenceId } from "../../hooks/UseConferenceId";
-import { useGetApi } from "../../hooks/UseGetApi";
 import { User } from "../../types/User";
 import { GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
 import AddIcon from "@mui/icons-material/Add";
-import { usePostApi } from "../../hooks/UsePostApi";
 import { Typography } from "@mui/material";
-
-export const useGetConferenceReviewersApi = (submissionId: number) => {
-  const conferenceId = useConferenceId();
-  return useGetApi<User[]>(`/conference/${conferenceId}/reviewers/${submissionId}`);
-}
-
-export const useAddSubmissionReviewerApi = (submissionId: number) => {
-  return usePostApi<{}, {}>(`/submission/${submissionId}/reviewers/{0}`);
-}
 
 export const useConferenceReviewersGridColumns = (
   onAddReviewer: (user: User) => void
