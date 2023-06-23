@@ -51,6 +51,8 @@ export const ReviewsList = () => {
             sx={{
               fontStyle: "italic",
               marginBottom: 1,
+              whiteSpace: "pre-line",
+              wordBreak: "break-word",
             }}
           >
             {review.evaluation}

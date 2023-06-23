@@ -28,7 +28,7 @@ export const CreateReviewForm = ({ review }: { review?: Review }) => {
     }
   }, [response, navigate, conferenceId, submissionId]);
 
-  const values: CreateReviewRequest = review ? { ...review } : { ...initialValues };
+  const values: CreateReviewRequest = review ? { ...review } : initialValues;
 
   const formik = useFormik({
     initialValues: values,
@@ -47,6 +47,7 @@ export const CreateReviewForm = ({ review }: { review?: Review }) => {
         id="evaluation"
         name="evaluation"
         label="Evaluation"
+        multiline
         value={formik.values.evaluation}
         onChange={formik.handleChange}
         error={formik.touched.evaluation && Boolean(formik.errors.evaluation)}

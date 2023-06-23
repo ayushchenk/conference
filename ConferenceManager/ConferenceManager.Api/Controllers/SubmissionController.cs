@@ -168,8 +168,8 @@ namespace ConferenceManager.Api.Controllers
         /// </remarks>
         [HttpGet]
         [Route("{id}/reviews")]
-        [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Chair},{ApplicationRole.Reviewer}")]
-        [ConferenceAuthorization(ApplicationRole.Reviewer)]
+        [Authorize(Roles = $"{ApplicationRole.Chair},{ApplicationRole.Reviewer}")]
+        [ConferenceAuthorization(ApplicationRole.Chair, ApplicationRole.Reviewer)]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<ReviewDto>))]
         public async Task<IActionResult> GetReviews(int id, CancellationToken cancellation)
         {
