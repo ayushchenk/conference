@@ -16,7 +16,6 @@ import { Button } from "@mui/material";
 import { AssignReviewerDialog } from "../AssignReviewerDialog";
 
 export const SubmissionReviewersGrid = ({ submissionId }: SubmissionReviewersGridProps) => {
-  const [allReviewers, setAllReviewers] = useState<User[]>([]);
   const [assignedReviewers, setAssignedReviewers] = useState<User[]>([]);
   const [unassignedReviewers, setUnassignedReviewers] = useState<User[]>([]);
   const [addingReviewer, setAddingReviewer] = useState<User | null>(null);
@@ -40,34 +39,17 @@ export const SubmissionReviewersGrid = ({ submissionId }: SubmissionReviewersGri
 
   useEffect(() => {
     if (submissionReviewers.status === "success" && conferenceReviewers.status === "success") {
-      const all = conferenceReviewers.data;
-      const assigned = submissionReviewers.data;
-      const unassigned = all.filter(allR => !assigned.find(assR => assR.id === allR.id));
-      setAllReviewers(all);
-      setAssignedReviewers(assigned);
-      setUnassignedReviewers(unassigned);
+      setAssignedReviewers(submissionReviewers.data);
+      setUnassignedReviewers(conferenceReviewers.data);
     }
   }, [submissionReviewers, conferenceReviewers]);
 
   useEffect(() => {
-    if (conferenceReviewers.status === "success") {
-      setAllReviewers(conferenceReviewers.data);
-    }
-  }, [conferenceReviewers]);
-
-  useEffect(() => {
     if (removeReviewerApi.response.status === "success" && removingReviewer) {
       setAssignedReviewers(prevRows => [...prevRows].filter(r => r.id !== removingReviewer.id));
-      setUnassignedReviewers(prevRows => {
-        const newRows = [...prevRows];
-        const removed = allReviewers.find(r => r.id === removingReviewer.id);
-        if (removed) {
-          newRows.push(removed);
-        }
-        return newRows;
-      });
+      setUnassignedReviewers(prevRows => [...prevRows, removingReviewer]);
     }
-  }, [removeReviewerApi.response, removingReviewer, allReviewers]);
+  }, [removeReviewerApi.response, removingReviewer]);
 
   useEffect(() => {
     if (addReviewerApi.response.status === "success" && addingReviewer) {
@@ -77,18 +59,6 @@ export const SubmissionReviewersGrid = ({ submissionId }: SubmissionReviewersGri
   }, [addReviewerApi.response, addingReviewer]);
 
   const columns = useSubmissionReviewersGridColumns(handleReviewerRemove);
-
-  console.log("all");
-  console.log(allReviewers);
-  console.log("---");
-
-  console.log("assigned");
-  console.log(assignedReviewers);
-  console.log("---");
-
-  console.log("unassigned");
-  console.log(unassignedReviewers);
-  console.log("---");
 
   return (
     <>
