@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -10,7 +10,7 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 import Tabs from "@mui/material/Tabs";
-import { useAddSubmissionPreferenceApi, useGetHasPreferenceApi, usePostReturnSubmissionAPI, useRemoveSubmissionPreferenceApi } from "./SubmissionDetails.hooks";
+import { usePostReturnSubmissionAPI } from "./SubmissionDetails.hooks";
 import { SubmissionPapersTable } from "./SubmissionPapersTable";
 import { TabPanel } from "./TabPanel";
 import { Submission } from "../../types/Conference";
@@ -18,21 +18,18 @@ import { FormHeader } from "../FormHeader";
 import { useConferenceId } from "../../hooks/UseConferenceId";
 import { FormErrorAlert } from "../FormErrorAlert";
 import { Auth } from "../../logic/Auth";
-import { Checkbox, FormControlLabel, IconButton } from "@mui/material";
+import { IconButton } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { SubmissionReviewersGrid } from "../SubmissionReviewersGrid/";
 import EditIcon from '@mui/icons-material/Edit';
+import { PreferenceCheckbox } from "./PreferenceCheckbox";
 
 export const SubmissionDetails = ({ submission }: { submission: Submission }) => {
   const navigate = useNavigate();
   const conferenceId = useConferenceId();
   const [tabValue, setTabValue] = useState(0);
-  const [preference, setPreference] = useState(false);
 
   const { post: returnSubmission, response: returnResponse } = usePostReturnSubmissionAPI(submission.id);
-  const addPreferenceApi = useAddSubmissionPreferenceApi(submission.id);
-  const removePreferenceApi = useRemoveSubmissionPreferenceApi(submission.id);
-  const hasPreference = useGetHasPreferenceApi(submission.id);
 
   const isAuthor = submission.authorId === Auth.getId();
   const isChair = Auth.isChair(conferenceId);
@@ -40,22 +37,6 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
   const handleTabChange = useCallback((_: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   }, []);
-
-  useEffect(() => {
-    if (hasPreference.status === "success") {
-      setPreference(hasPreference.data.result);
-    }
-  }, [hasPreference]);
-
-  const handlePreferenceChange = useCallback((checked: boolean) => {
-    setPreference(checked);
-    if (checked) {
-      addPreferenceApi.post({});
-    }
-    else {
-      removePreferenceApi.performDelete({});
-    }
-  }, [addPreferenceApi, removePreferenceApi]);
 
   return (
     <>
@@ -96,15 +77,10 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
               <TableCell variant="head">Keywords</TableCell>
               <TableCell>{submission.keywords}</TableCell>
             </TableRow>
-            {Auth.isReviewer(conferenceId) && !submission.isReviewer && hasPreference.status === "success" &&
+            {Auth.isReviewer(conferenceId) && !submission.isReviewer &&
               <TableRow>
                 <TableCell align="center" colSpan={12} variant="head">
-                  <FormControlLabel label={"I want to review this submission"} control={
-                    <Checkbox
-                      checked={preference}
-                      value={preference}
-                      onChange={(e) => handlePreferenceChange(e.target.checked)} />
-                  } />
+                  <PreferenceCheckbox submissionId={submission.id} />
                 </TableCell>
               </TableRow>
             }
@@ -142,9 +118,6 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
         </Box>
       }
       <FormErrorAlert response={returnResponse} />
-      <FormErrorAlert response={hasPreference} />
-      <FormErrorAlert response={addPreferenceApi.response} />
-      <FormErrorAlert response={removePreferenceApi.response} />
     </>
   );
 };
