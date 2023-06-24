@@ -17,6 +17,7 @@ namespace ConferenceManager.Core.Submissions.Update
                 Keywords = source.Keywords,
                 Title = source.Title,
                 Status = SubmissionStatus.Updated,
+                ResearchAreas = string.Join(Conference.ResearchAreasSeparator, source.ResearchAreas),
                 Papers = new List<Paper>()
             };
 

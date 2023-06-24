@@ -19,11 +19,16 @@ namespace ConferenceManager.Infrastructure.Persistence.Configurations
                 .IsRequired()
                 .HasMaxLength(1000);
 
+            builder.Property(x => x.ResearchAreas)
+                .IsRequired()
+                .HasMaxLength(500);
+
             builder.Property(x => x.Status)
                 .IsRequired();
 
             builder.Ignore(x => x.IsValidForReturn);
             builder.Ignore(x => x.IsValidForUpdate);
+            builder.Ignore(x => x.IsValidForReview);
         }
     }
 }

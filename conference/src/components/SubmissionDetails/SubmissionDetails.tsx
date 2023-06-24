@@ -20,6 +20,8 @@ import { FormErrorAlert } from "../FormErrorAlert";
 import { Auth } from "../../logic/Auth";
 import { IconButton } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import moment from "moment";
+import { AnyRoleVisibility } from "../ProtectedRoute/AnyRoleVisibility";
 
 export const SubmissionDetails = ({ submission }: { submission: Submission }) => {
   const navigate = useNavigate();
@@ -43,13 +45,23 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
       <TableContainer component={Paper}>
         <Table size="small">
           <TableBody>
+            <AnyRoleVisibility roles={["Chair", "Author"]}>
+              <TableRow>
+                <TableCell variant="head">Author</TableCell>
+                <TableCell>{submission.authorName}</TableCell>
+              </TableRow>
+            </AnyRoleVisibility>
             <TableRow>
-              <TableCell variant="head">Author</TableCell>
-              <TableCell>{submission.authorName}</TableCell>
+              <TableCell variant="head">Keywords</TableCell>
+              <TableCell>{submission.keywords}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell variant="head">Status</TableCell>
-              <TableCell>{submission.statusLabel}</TableCell>
+              <TableCell variant="head">Research Areas</TableCell>
+              <TableCell>
+                {submission.researchAreas.map((area, index) => (
+                  <div key={index}>{area}</div>
+                ))}
+              </TableCell>
             </TableRow>
             <TableRow>
               <TableCell variant="head">Abstract</TableCell>
@@ -63,8 +75,16 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell variant="head">Keywords</TableCell>
-              <TableCell>{submission.keywords}</TableCell>
+              <TableCell variant="head">Status</TableCell>
+              <TableCell>{submission.statusLabel}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell variant="head">Created On</TableCell>
+              <TableCell>{moment(new Date(submission.createdOn)).local().format("DD/MM/YYYY HH:mm:ss")}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell variant="head">Updated On</TableCell>
+              <TableCell>{moment(new Date(submission.modifiedOn)).local().format("DD/MM/YYYY HH:mm:ss")}</TableCell>
             </TableRow>
             {isAuthor &&
               <TableRow>
