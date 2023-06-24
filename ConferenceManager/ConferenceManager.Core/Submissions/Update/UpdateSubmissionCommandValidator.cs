@@ -54,7 +54,9 @@ namespace ConferenceManager.Core.Submissions.Create
                     return;
                 }
 
-                var conferenceAreas = submission.Conference.ResearchAreas.Split(Conference.ResearchAreasSeparator, StringSplitOptions.RemoveEmptyEntries);
+                var conference = await Context.Conferences.FindAsync(submission.ConferenceId, cancelToken);
+
+                var conferenceAreas = conference!.ResearchAreas.Split(Conference.ResearchAreasSeparator, StringSplitOptions.RemoveEmptyEntries);
 
                 bool areasInvalid = false;
 
@@ -68,7 +70,7 @@ namespace ConferenceManager.Core.Submissions.Create
 
                 if (areasInvalid)
                 {
-                    context.AddFailure("ResearchAreas", "Valid research areas are " + submission.Conference.ResearchAreas);
+                    context.AddFailure("ResearchAreas", "Valid research areas are " + conference.ResearchAreas);
                 }
             });
         }
