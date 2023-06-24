@@ -20,10 +20,12 @@ namespace ConferenceManager.Core.Submissions.Common
                 Keywords = source.Keywords,
                 Title = source.Title,
                 Abstract = source.Abstract,
+                ResearchAreas = source.ResearchAreas.Split(Conference.ResearchAreasSeparator, StringSplitOptions.RemoveEmptyEntries),
                 CreatedOn = source.CreatedOn,
                 ModifiedOn = source.ModifiedOn,
                 IsValidForReturn = source.IsValidForReturn,
-                IsValidForUpdate = source.IsValidForUpdate
+                IsValidForUpdate = source.IsValidForUpdate,
+                IsValidForReview = source.IsValidForReview
             };
         }
     }

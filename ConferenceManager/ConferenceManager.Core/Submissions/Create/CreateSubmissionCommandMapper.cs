@@ -17,6 +17,7 @@ namespace ConferenceManager.Core.Submissions.Create
                 Keywords = source.Keywords,
                 Title = source.Title,
                 Status = SubmissionStatus.Created,
+                ResearchAreas = string.Join(Conference.ResearchAreasSeparator, source.ResearchAreas),
                 Papers = new List<Paper>()
                 {
                     MapPaper(source.MainFile, PaperType.Main)

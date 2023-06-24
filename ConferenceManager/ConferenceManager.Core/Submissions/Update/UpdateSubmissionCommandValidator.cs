@@ -3,6 +3,7 @@ using ConferenceManager.Core.Common.Extensions;
 using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Core.Common.Validators;
 using ConferenceManager.Core.Submissions.Update;
+using ConferenceManager.Domain.Entities;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,6 +17,24 @@ namespace ConferenceManager.Core.Submissions.Create
             RuleForString(x => x.Title, 100, true);
             RuleForString(x => x.Keywords, 100, true);
             RuleForString(x => x.Abstract, 1000, true);
+
+            RuleFor(x => x.ResearchAreas)
+                .NotNull()
+                .NotEmpty()
+                .Custom((areas, context) =>
+                {
+                    if (areas.Length > 10)
+                    {
+                        context.AddFailure("ResearchAreas", "Maximum length of Research Areas array is 10");
+                    }
+
+                    string joined = string.Join(Conference.ResearchAreasSeparator, areas);
+
+                    if (joined.Length > 500)
+                    {
+                        context.AddFailure("ResearchAreas", "Total length of joined strings in the Research Areas array should be less than 500");
+                    }
+                });
 
             RuleFor(x => x).CustomAsync(async (command, context, cancelToken) =>
             {
@@ -32,6 +51,24 @@ namespace ConferenceManager.Core.Submissions.Create
                 if (!submission.IsValidForUpdate)
                 {
                     context.AddException(new ForbiddenException("Can only update returned submissions"));
+                    return;
+                }
+
+                var conferenceAreas = submission.Conference.ResearchAreas.Split(Conference.ResearchAreasSeparator, StringSplitOptions.RemoveEmptyEntries);
+
+                bool areasInvalid = false;
+
+                foreach (var commandArea in command.ResearchAreas)
+                {
+                    if (!conferenceAreas.Contains(commandArea))
+                    {
+                        areasInvalid = true;
+                    }
+                }
+
+                if (areasInvalid)
+                {
+                    context.AddFailure("ResearchAreas", "Valid research areas are " + submission.Conference.ResearchAreas);
                 }
             });
         }
