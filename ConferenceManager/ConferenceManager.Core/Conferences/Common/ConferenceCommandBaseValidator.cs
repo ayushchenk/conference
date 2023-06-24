@@ -38,6 +38,7 @@ namespace ConferenceManager.Core.Conferences.Common
                     }
 
                     string joined = string.Join(Conference.ResearchAreasSeparator, areas);
+
                     if (joined.Length > 500)
                     {
                         context.AddFailure("ResearchAreas", "Total length of joined strings in the Research Areas array should be less than 500");

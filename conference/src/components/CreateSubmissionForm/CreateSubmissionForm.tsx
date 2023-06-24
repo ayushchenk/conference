@@ -13,13 +13,15 @@ import { FormErrorAlert } from "../FormErrorAlert/FormErrorAlert";
 import { usePostCreateSubmissionApi, useUpdateSubmissionApi } from "./CreateSubmissionForm.hooks";
 import { CreateSubmissionRequest, initialValues } from "./CreateSubmissionForm.types";
 import { createValidationSchema, updateValidationSchema } from "./CreateSubmissionForm.validator";
-import { IconButton } from "@mui/material";
+import { Autocomplete, Chip, IconButton } from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
 import { useConferenceId } from "../../hooks/UseConferenceId";
+import { useGetConferenceApi } from "../ConferenceDetails/ConferenceDetails.hooks";
 
 export const CreateSubmissionForm = ({ submission }: { submission?: Submission }) => {
   const navigate = useNavigate();
   const conferenceId = useConferenceId();
+  const conference = useGetConferenceApi(conferenceId);
   const { response: responseUpdate, put } = useUpdateSubmissionApi();
   const { response: responseCreate, post } = usePostCreateSubmissionApi();
 
@@ -42,6 +44,7 @@ export const CreateSubmissionForm = ({ submission }: { submission?: Submission }
     initialValues: values,
     validationSchema: validationSchema,
     onSubmit: (values) => {
+      console.log(values);
       performRequest(buildFormData(values));
     },
   });
@@ -73,6 +76,29 @@ export const CreateSubmissionForm = ({ submission }: { submission?: Submission }
         error={formik.touched.keywords && Boolean(formik.errors.keywords)}
         helperText={formik.touched.keywords && formik.errors.keywords}
         inputProps={{ maxLength: 100 }}
+      />
+      <Autocomplete
+        multiple
+        options={conference.data?.researchAreas ?? []}
+        onChange={(_, value) => formik.setFieldValue("researchAreas", value)}
+        value={formik.values.researchAreas}
+        renderTags={(value: readonly string[], getTagProps) =>
+          value.map((option: string, index: number) => (
+            <Chip variant="outlined" label={option} {...getTagProps({ index })} />
+          ))
+        }
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            variant="outlined"
+            margin="normal"
+            onKeyDown={(e) => e.preventDefault()}
+            error={formik.touched.researchAreas && Boolean(formik.errors.researchAreas)}
+            helperText={formik.touched.researchAreas && formik.errors.researchAreas}
+            label="Research Areas *"
+            sx={{caretColor: "transparent"}}
+          />
+        )}
       />
       <TextField
         fullWidth
@@ -204,11 +230,12 @@ export const CreateSubmissionForm = ({ submission }: { submission?: Submission }
         {formik.touched.otherFiles && formik.errors.otherFiles && <FormHelperText>{formik.errors.otherFiles}</FormHelperText>}
       </FormControl>
       <FormErrorAlert response={response} />
-      <Button 
+      <FormErrorAlert response={conference} />
+      <Button
         disabled={response.status === "loading"}
-        color="primary" 
-        variant="contained" 
-        fullWidth 
+        color="primary"
+        variant="contained"
+        fullWidth
         type="submit">
         Submit
       </Button>
