@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
@@ -22,13 +22,19 @@ import { IconButton } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import moment from "moment";
 import { AnyRoleVisibility } from "../ProtectedRoute/AnyRoleVisibility";
+import { SubmissionReviewersGrid } from "../SubmissionReviewersGrid/";
+import EditIcon from '@mui/icons-material/Edit';
+import { PreferenceCheckbox } from "./PreferenceCheckbox";
 
 export const SubmissionDetails = ({ submission }: { submission: Submission }) => {
   const navigate = useNavigate();
   const conferenceId = useConferenceId();
   const [tabValue, setTabValue] = useState(0);
+
   const { post: returnSubmission, response: returnResponse } = usePostReturnSubmissionAPI(submission.id);
+
   const isAuthor = submission.authorId === Auth.getId();
+  const isChair = Auth.isChair(conferenceId);
 
   const handleTabChange = useCallback((_: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
@@ -41,6 +47,11 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
           <ArrowBackIcon />
         </IconButton>
         <FormHeader>{submission.title}</FormHeader>
+        {isAuthor &&
+          <IconButton onClick={() => navigate(`/conferences/${conferenceId}/submissions/${submission.id}/edit`)}>
+            <EditIcon />
+          </IconButton>
+        }
       </Box>
       <TableContainer component={Paper}>
         <Table size="small">
@@ -86,17 +97,10 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
               <TableCell variant="head">Updated On</TableCell>
               <TableCell>{moment(new Date(submission.modifiedOn)).local().format("DD/MM/YYYY HH:mm:ss")}</TableCell>
             </TableRow>
-            {isAuthor &&
+            {Auth.isReviewer(conferenceId) && !submission.isReviewer && !isAuthor &&
               <TableRow>
                 <TableCell align="center" colSpan={12} variant="head">
-                  <Button color="inherit" disabled={!submission.isValidForUpdate}>
-                    <Link
-                      className="header__link"
-                      to={`/conferences/${conferenceId}/submissions/${submission.id}/edit`}
-                    >
-                      Edit
-                    </Link>
-                  </Button>
+                  <PreferenceCheckbox submissionId={submission.id} />
                 </TableCell>
               </TableRow>
             }
@@ -113,18 +117,24 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
         </Table>
       </TableContainer >
       {
-        (submission.isReviewer || isAuthor || Auth.isChair(conferenceId)) &&
+        (submission.isReviewer || isAuthor || isChair) &&
         <Box mt={5}>
           <Tabs variant="fullWidth" value={tabValue} onChange={handleTabChange}>
             <Tab label="Papers" />
+            {
+              isChair && <Tab label="Reviewers" />
+            }
             <Tab label="Reviews" disabled />
             <Tab label="Comments" disabled />
           </Tabs>
           <TabPanel value={tabValue} index={0}>
             <SubmissionPapersTable />
           </TabPanel>
-          <TabPanel value={tabValue} index={1}></TabPanel>
+          <TabPanel value={tabValue} index={1}>
+            <SubmissionReviewersGrid submissionId={submission.id} />
+          </TabPanel>
           <TabPanel value={tabValue} index={2}></TabPanel>
+          <TabPanel value={tabValue} index={3}></TabPanel>
         </Box>
       }
       <FormErrorAlert response={returnResponse} />

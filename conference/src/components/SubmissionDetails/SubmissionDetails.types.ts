@@ -8,3 +8,11 @@ export interface TabPanelProps {
   index: number;
   value: number;
 }
+
+export type SubmissionDetailsHeaderProps = {
+  showEdit: boolean
+}
+
+export type PreferenceCheckboxProps = {
+  submissionId: number;
+}

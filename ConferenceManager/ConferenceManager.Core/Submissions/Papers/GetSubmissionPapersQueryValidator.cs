@@ -22,6 +22,11 @@ namespace ConferenceManager.Core.Submissions.Papers
                     return;
                 }
 
+                if (CurrentUser.IsChairIn(submission.Conference))
+                {
+                    return;
+                }
+
                 if (CurrentUser.IsAuthorIn(submission.Conference) && !CurrentUser.IsAuthorOf(submission))
                 {
                     context.AddException(new ForbiddenException("User is not an author of the submission"));

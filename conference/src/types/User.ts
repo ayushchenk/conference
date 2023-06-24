@@ -6,6 +6,7 @@ export type User = {
   affiliation: string;
   webpage: string;
   isAdmin: boolean;
+  hasPreference: boolean;
   roles: {
     [id: number]: string[];
   };

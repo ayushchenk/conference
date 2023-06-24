@@ -10,7 +10,7 @@ export const UpdateSubmissionPage = () => {
   const { submissionId } = useParams();
   const response = useGetSubmissionApi(Number(submissionId));
 
-  if (response.status === "loading") {
+  if (response.status === "loading" || response.status === "not-initiated") {
     return <LoadingSpinner />;
   }
 
@@ -21,7 +21,7 @@ export const UpdateSubmissionPage = () => {
   return (
     <Container>
       <FormHeader>Update submission</FormHeader>
-      <CreateSubmissionForm submission={response.data!} />
+      <CreateSubmissionForm submission={response.data} />
     </Container>
   );
 };

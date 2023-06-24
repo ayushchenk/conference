@@ -14,6 +14,7 @@ using ConferenceManager.Core.Submissions.GetComments;
 using ConferenceManager.Core.Submissions.GetPreferences;
 using ConferenceManager.Core.Submissions.GetReviewers;
 using ConferenceManager.Core.Submissions.GetReviews;
+using ConferenceManager.Core.Submissions.HasPreference;
 using ConferenceManager.Core.Submissions.Papers;
 using ConferenceManager.Core.Submissions.RemovePreference;
 using ConferenceManager.Core.Submissions.RemoveReviewer;
@@ -168,7 +169,7 @@ namespace ConferenceManager.Api.Controllers
         /// </remarks>
         [HttpGet]
         [Route("{id}/reviews")]
-        [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Chair},{ApplicationRole.Reviewer}")]
+        [Authorize(Roles = $"{ApplicationRole.Chair},{ApplicationRole.Reviewer}")]
         [ConferenceAuthorization(ApplicationRole.Reviewer)]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<ReviewDto>))]
         public async Task<IActionResult> GetReviews(int id, CancellationToken cancellation)
@@ -263,8 +264,8 @@ namespace ConferenceManager.Api.Controllers
         /// </remarks>
         [HttpGet]
         [Route("{id}/reviewers")]
-        [Authorize(Roles = $"{ApplicationRole.Chair},{ApplicationRole.Reviewer}")]
-        [ConferenceAuthorization(ApplicationRole.Chair, ApplicationRole.Reviewer)]
+        [Authorize(Roles = ApplicationRole.Chair)]
+        [ConferenceAuthorization(ApplicationRole.Chair)]
         [SwaggerResponse(StatusCodes.Status200OK, Type = (typeof(IEnumerable<UserDto>)))]
         public async Task<IActionResult> GetReviewers(int id, CancellationToken cancellation)
         {
@@ -352,6 +353,20 @@ namespace ConferenceManager.Api.Controllers
             await Mediator.Send(new RemoveReviewPreferenceCommand(id), cancellation);
 
             return NoContent();
+        }
+
+        /// <summary>
+        /// Checks if current user has preference
+        /// </summary>
+        [HttpGet]
+        [Route("{id}/has-preference")]
+        [Authorize]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(BoolResponse))]
+        public async Task<IActionResult> HasPreference(int id, CancellationToken cancellation)
+        {
+            var result = await Mediator.Send(new HasSubmissionPreferenceFromUserQuery(id), cancellation);
+
+            return Ok(result);
         }
     }
 }
