@@ -5,6 +5,8 @@ import { useMemoPaging } from "../../hooks/UseMemoPaging";
 import { GetSubmissionsData, GetSubmissionsResponse } from "./SubmissionsGrid.types";
 import moment from "moment";
 import { useMemo } from "react";
+import { Auth } from "../../logic/Auth";
+import { useConferenceId } from "../../hooks/UseConferenceId";
 
 export const useGetSubmissionsApi = (paging: GridPaginationModel, conferenceId: number): GetSubmissionsResponse => {
   const config = useMemoPaging(paging);
@@ -12,8 +14,10 @@ export const useGetSubmissionsApi = (paging: GridPaginationModel, conferenceId: 
 };
 
 export const useSubmissionsGridColumns = (): GridColDef[] => {
+  const conferenceId = useConferenceId();
+
   return useMemo(() => {
-    return [
+    const columns: GridColDef[] = [
       {
         headerName: "#",
         field: "id",
@@ -29,12 +33,6 @@ export const useSubmissionsGridColumns = (): GridColDef[] => {
         ),
       },
       {
-        headerName: "Author",
-        field: "authorName",
-        maxWidth: 150,
-        flex: 1
-      },
-      {
         headerName: "Status",
         field: "statusLabel",
         width: 120
@@ -46,5 +44,16 @@ export const useSubmissionsGridColumns = (): GridColDef[] => {
         valueFormatter: (params) => moment(params?.value).format("DD/MM/YYYY"),
       },
     ];
-  }, []);
+
+    if (Auth.isChair(conferenceId)) {
+      columns.splice(2, 0, {
+        headerName: "Author",
+        field: "authorName",
+        maxWidth: 150,
+        flex: 1
+      },);
+    }
+
+    return columns;
+  }, [conferenceId]);
 };

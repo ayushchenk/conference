@@ -21,6 +21,7 @@ import { Auth } from "../../logic/Auth";
 import { IconButton } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import moment from "moment";
+import { AnyRoleVisibility } from "../ProtectedRoute/AnyRoleVisibility";
 
 export const SubmissionDetails = ({ submission }: { submission: Submission }) => {
   const navigate = useNavigate();
@@ -44,10 +45,12 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
       <TableContainer component={Paper}>
         <Table size="small">
           <TableBody>
-            <TableRow>
-              <TableCell variant="head">Author</TableCell>
-              <TableCell>{submission.authorName}</TableCell>
-            </TableRow>
+            <AnyRoleVisibility roles={["Chair", "Author"]}>
+              <TableRow>
+                <TableCell variant="head">Author</TableCell>
+                <TableCell>{submission.authorName}</TableCell>
+              </TableRow>
+            </AnyRoleVisibility>
             <TableRow>
               <TableCell variant="head">Keywords</TableCell>
               <TableCell>{submission.keywords}</TableCell>
