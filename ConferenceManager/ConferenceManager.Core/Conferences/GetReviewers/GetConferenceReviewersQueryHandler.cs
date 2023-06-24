@@ -16,15 +16,21 @@ namespace ConferenceManager.Core.Conferences.GetReviewers
 
         public override async Task<IEnumerable<UserDto>> Handle(GetConferenceReviewersQuery request, CancellationToken cancellationToken)
         {
+            var submission = await Context.Submissions.FindAsync(request.SubmissionId, cancellationToken);
+
             var allReviewersIds = Context.UserRoles
                 .Where(r => r.ConferenceId == request.ConferenceId && r.Role.Name == ApplicationRole.Reviewer)
-                .Select(r => r.UserId);
+                .Select(r => r.UserId)
+                .ToArray();
 
             var assignedReviewersIds = Context.SubmissionReviewers
                 .Where(sr => sr.SubmissionId == request.SubmissionId)
-                .Select(sr => sr.ReviewerId);
+                .Select(sr => sr.ReviewerId)
+                .ToArray();
 
-            var unassignedReviewersIds = allReviewersIds.Except(assignedReviewersIds);
+            var unassignedReviewersIds = allReviewersIds
+                .Except(assignedReviewersIds)
+                .Except(new int[] { submission?.CreatedById ?? 0 });
 
             var reviewers = Context.Users
                 .Where(u => unassignedReviewersIds.Contains(u.Id))

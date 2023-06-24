@@ -97,7 +97,7 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
               <TableCell variant="head">Updated On</TableCell>
               <TableCell>{moment(new Date(submission.modifiedOn)).local().format("DD/MM/YYYY HH:mm:ss")}</TableCell>
             </TableRow>
-            {Auth.isReviewer(conferenceId) && !submission.isReviewer &&
+            {Auth.isReviewer(conferenceId) && !submission.isReviewer && !isAuthor &&
               <TableRow>
                 <TableCell align="center" colSpan={12} variant="head">
                   <PreferenceCheckbox submissionId={submission.id} />
