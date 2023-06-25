@@ -4,6 +4,7 @@ import { CommentSectionProps } from "./CommentSection.types";
 import { useGetSubmissionCommentsApi } from "./CommentSection.hooks";
 import { CommentsList } from "./CommentsList";
 import { Comment } from "../../types/Conference";
+import { FormErrorAlert } from "../FormErrorAlert";
 
 export const CommentSection = ({ submissionId }: CommentSectionProps) => {
   const [rows, setRows] = useState<Comment[]>([]);
@@ -24,6 +25,7 @@ export const CommentSection = ({ submissionId }: CommentSectionProps) => {
     <>
       <CreateCommentForm submissionId={submissionId} onCreate={handleCreate} />
       <CommentsList comments={rows} />
+      <FormErrorAlert response={comments} />
     </>
   );
 }

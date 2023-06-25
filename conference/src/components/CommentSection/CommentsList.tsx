@@ -15,7 +15,7 @@ export const CommentsList = ({ comments }: CommentsListProps) => {
             padding: 2,
           }}
         >
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Box sx={{ marginBottom: 2, display: "flex", justifyContent: "space-between" }}>
             <Typography variant="subtitle2">{comment.authorName}</Typography>
             {comment.isAuthor &&
               <IconButton>
@@ -34,10 +34,10 @@ export const CommentsList = ({ comments }: CommentsListProps) => {
             {comment.text}
           </Typography>
           <Typography variant="body2" color="textSecondary" sx={{ marginTop: 2 }}>
-            {moment(comment.createdOn).local().format("DD/MM/YYYY hh:mm:ss")}
+            {moment(comment.createdOn).local().format("DD/MM/YYYY HH:mm:ss")}
             {
               comment.isModified &&
-              <i style={{marginLeft: 10}}>Edited</i>
+              <i style={{ marginLeft: 10 }}>Edited</i>
             }
           </Typography>
         </Paper>

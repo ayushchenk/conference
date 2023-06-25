@@ -25,6 +25,7 @@ namespace ConferenceManager.Core.Submissions.CreateComment
             var queried = await Context.Comments
                 .AsNoTracking()
                 .Include(c => c.CreatedBy)
+                .Include(c => c.Submission)
                 .FirstAsync(c => c.Id == comment.Id);
 
             return Mapper.Map<Comment, CommentDto>(queried);
