@@ -44,7 +44,6 @@ export const CreateSubmissionForm = ({ submission }: { submission?: Submission }
     initialValues: values,
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      console.log(values);
       performRequest(buildFormData(values));
     },
   });

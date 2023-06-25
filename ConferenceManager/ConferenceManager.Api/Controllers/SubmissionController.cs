@@ -227,7 +227,7 @@ namespace ConferenceManager.Api.Controllers
         [Route("{id}/comments")]
         [Authorize]
         [ConferenceAuthorization]
-        [SwaggerResponse(StatusCodes.Status200OK, Type = (typeof(IEnumerable<CreateEntityResponse>)))]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = (typeof(CommentDto)))]
         public async Task<IActionResult> PostComment(int id, CreateCommentCommand command, CancellationToken cancellation)
         {
             command.SubmissionId = id;

@@ -25,6 +25,11 @@ namespace ConferenceManager.Core.Submissions.CreateComment
                     return;
                 }
 
+                if (CurrentUser.IsChairIn(submission.Conference))
+                {
+                    return;
+                }
+
                 if (CurrentUser.IsReviewerIn(submission.Conference) && !CurrentUser.IsReviewerOf(submission))
                 {
                     context.AddException(new ForbiddenException("Not a reviewer of the submission"));
