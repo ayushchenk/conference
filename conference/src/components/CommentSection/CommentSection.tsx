@@ -31,11 +31,15 @@ export const CommentSection = ({ submissionId }: CommentSectionProps) => {
     });
   }, []);
 
+  const handleDelete = useCallback((comment: Comment) => {
+    setRows(prevRows => [...prevRows].filter(c => c.id !== comment.id));
+  }, []);
+
   return (
     <>
       <Typography variant="body1">Leave a comment</Typography>
       <CreateCommentForm submissionId={submissionId} onCreate={handleCreate} />
-      <CommentsList comments={rows} onUpdate={handleUpdate} />
+      <CommentsList comments={rows} onUpdate={handleUpdate} onDelete={handleDelete}/>
       <FormErrorAlert response={comments} />
     </>
   );

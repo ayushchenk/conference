@@ -7,6 +7,7 @@ export type CommentSectionProps = {
 export type CommentsListProps = {
   comments: Comment[];
   onUpdate: (comment: Comment) => void;
+  onDelete: (comment: Comment) => void;
 }
 
 export type UpdateCommentDialogProps = {
