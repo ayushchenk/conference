@@ -5,6 +5,7 @@ import { useGetSubmissionCommentsApi } from "./CommentSection.hooks";
 import { CommentsList } from "./CommentsList";
 import { Comment } from "../../types/Conference";
 import { FormErrorAlert } from "../FormErrorAlert";
+import { Typography } from "@mui/material";
 
 export const CommentSection = ({ submissionId }: CommentSectionProps) => {
   const [rows, setRows] = useState<Comment[]>([]);
@@ -21,10 +22,20 @@ export const CommentSection = ({ submissionId }: CommentSectionProps) => {
     setRows(prevRows => [comment, ...prevRows]);
   }, []);
 
+  const handleUpdate = useCallback((comment: Comment) => {
+    setRows(prevRows => {
+      const newRows = [...prevRows];
+      const index = newRows.findIndex(c => c.id === comment.id);
+      newRows[index] = comment;
+      return newRows;
+    });
+  }, []);
+
   return (
     <>
+      <Typography variant="body1">Leave a comment</Typography>
       <CreateCommentForm submissionId={submissionId} onCreate={handleCreate} />
-      <CommentsList comments={rows} />
+      <CommentsList comments={rows} onUpdate={handleUpdate} />
       <FormErrorAlert response={comments} />
     </>
   );

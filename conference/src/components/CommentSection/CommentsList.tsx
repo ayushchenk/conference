@@ -2,8 +2,24 @@ import { Paper, Box, Typography, IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { CommentsListProps } from "./CommentSection.types";
 import moment from "moment";
+import { useCallback, useState } from "react";
+import { Comment } from "../../types/Conference";
+import { UpdateCommentDialog } from "./UpdateCommentDialog";
 
-export const CommentsList = ({ comments }: CommentsListProps) => {
+export const CommentsList = ({ comments, onUpdate }: CommentsListProps) => {
+  const [editingComment, setEditingComment] = useState<Comment | null>(null);
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const handleEditClick = useCallback((comment: Comment) => {
+    setEditingComment(comment);
+    setOpenDialog(true);
+  }, []);
+
+  const handleClose = useCallback(() => {
+    setEditingComment(null);
+    setOpenDialog(false);
+  }, []);
+
   return (
     <>
       {comments.map((comment) => (
@@ -18,7 +34,7 @@ export const CommentsList = ({ comments }: CommentsListProps) => {
           <Box sx={{ marginBottom: 2, display: "flex", justifyContent: "space-between" }}>
             <Typography variant="subtitle2">{comment.authorName}</Typography>
             {comment.isAuthor &&
-              <IconButton>
+              <IconButton onClick={() => handleEditClick(comment)}>
                 <EditIcon />
               </IconButton>
             }
@@ -42,6 +58,12 @@ export const CommentsList = ({ comments }: CommentsListProps) => {
           </Typography>
         </Paper>
       ))}
+      <UpdateCommentDialog
+        comment={editingComment}
+        open={openDialog}
+        onUpdate={onUpdate}
+        onClose={handleClose}
+      />
     </>
   );
 }

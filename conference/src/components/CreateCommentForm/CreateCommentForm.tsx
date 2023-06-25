@@ -1,6 +1,6 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
-import { usePostSubmissionCommentApi } from "./CreateCommentForm.hooks";
-import { NewCommentFormProps, initialValues } from "./CreateCommentForm.types";
+import { useCreateSubmissionCommentApi, useUpdateSubmissionCommentApi } from "./CreateCommentForm.hooks";
+import { CreateCommentFormProps, initialValues } from "./CreateCommentForm.types";
 import { validationSchema } from "./CreateCommentForm.validator";
 import { useFormik } from "formik";
 import { useEffect } from "react";
@@ -8,15 +8,19 @@ import { FormErrorAlert } from "../FormErrorAlert";
 
 export const CreateCommentForm = ({
   submissionId,
+  comment,
   onCreate
-}: NewCommentFormProps) => {
-  const { response, post } = usePostSubmissionCommentApi(submissionId);
+}: CreateCommentFormProps) => {
+  const { response : createResponse, post } = useCreateSubmissionCommentApi(submissionId);
+  const { response : updateResponse, put } = useUpdateSubmissionCommentApi();
+  const response = comment ? updateResponse : createResponse;
+  const operation: Function = comment ? put : post;
 
   const formik = useFormik({
-    initialValues: initialValues,
+    initialValues: comment ? {...comment} : initialValues,
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      post(values);
+      operation(values);
     },
   });
 
@@ -29,7 +33,6 @@ export const CreateCommentForm = ({
 
   return (
     <Box component="form" onSubmit={formik.handleSubmit}>
-      <Typography variant="body1">Leave a comment</Typography>
       <TextField
         fullWidth
         required

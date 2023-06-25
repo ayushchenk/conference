@@ -1,7 +1,12 @@
 import { usePostApi } from "../../hooks/UsePostApi";
+import { usePutApi } from "../../hooks/UsePutApi";
 import { Comment } from "../../types/Conference";
-import { CreateCommentRequest } from "./CreateCommentForm.types";
+import { CreateCommentRequest, UpdateCommentRequest } from "./CreateCommentForm.types";
 
-export const usePostSubmissionCommentApi = (submissionId: number) => {
+export const useCreateSubmissionCommentApi = (submissionId: number) => {
   return usePostApi<CreateCommentRequest, Comment>(`/submission/${submissionId}/comments`);
+}
+
+export const useUpdateSubmissionCommentApi = () => {
+  return usePutApi<UpdateCommentRequest, Comment>(`/submission/comments`);
 }
