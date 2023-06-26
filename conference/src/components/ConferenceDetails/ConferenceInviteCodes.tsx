@@ -55,25 +55,25 @@ export const ConferenceJoinCodes = ({ conferenceId }: ConferenceInviteCodesProps
       <TableCell>
         {codeVisible(inviteCode.role) && <>
           <label>{inviteCode.code}</label>
-          <Tooltip enterDelay={0} title="Copy to clipboard">
-            <IconButton sx={{ ml: 2 }} onClick={() => navigator.clipboard.writeText(inviteCode.code)}>
-              <ContentCopyIcon fontSize="small" />
-            </IconButton>
-          </Tooltip>
           <Tooltip enterDelay={0} title="Regenerate code">
-            <IconButton onClick={() => refreshCode(inviteCode)}>
+            <IconButton sx={{ ml: 2, padding: 0 }} onClick={() => refreshCode(inviteCode)}>
               <RefreshIcon />
             </IconButton>
           </Tooltip>
         </>}
-        <IconButton onClick={() => handleCodeClick(inviteCode.role)}>
+        <Tooltip enterDelay={0} title="Copy to clipboard">
+          <IconButton sx={{ ml: codeVisible(inviteCode.role) ? 2 : 0, padding: 0 }} onClick={() => navigator.clipboard.writeText(inviteCode.code)}>
+            <ContentCopyIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+        <IconButton onClick={() => handleCodeClick(inviteCode.role)} sx={{ ml: 2, padding: 0 }}>
           {codeVisible(inviteCode.role)
             ? <VisibilityOffIcon />
             : <VisibilityIcon />
           }
         </IconButton>
       </TableCell>
-    </TableRow>
+    </TableRow >
   );
 
   return (

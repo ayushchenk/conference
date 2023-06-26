@@ -25,6 +25,7 @@ import { AnyRoleVisibility } from "../ProtectedRoute/AnyRoleVisibility";
 import { SubmissionReviewersGrid } from "../SubmissionReviewersGrid/";
 import EditIcon from '@mui/icons-material/Edit';
 import { PreferenceCheckbox } from "./PreferenceCheckbox";
+import { CommentSection } from "../CommentSection";
 
 export const SubmissionDetails = ({ submission }: { submission: Submission }) => {
   const navigate = useNavigate();
@@ -121,20 +122,23 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
         <Box mt={5}>
           <Tabs variant="fullWidth" value={tabValue} onChange={handleTabChange}>
             <Tab label="Papers" />
-            {
-              isChair && <Tab label="Reviewers" />
-            }
             <Tab label="Reviews" disabled />
-            <Tab label="Comments" disabled />
+            <Tab label="Comments" />
+            {isChair &&
+              <Tab label="Reviewers" />
+            }
           </Tabs>
           <TabPanel value={tabValue} index={0}>
             <SubmissionPapersTable />
           </TabPanel>
           <TabPanel value={tabValue} index={1}>
+          </TabPanel>
+          <TabPanel value={tabValue} index={2}>
+            <CommentSection submissionId={submission.id}></CommentSection>
+          </TabPanel>
+          <TabPanel value={tabValue} index={3}>
             <SubmissionReviewersGrid submissionId={submission.id} />
           </TabPanel>
-          <TabPanel value={tabValue} index={2}></TabPanel>
-          <TabPanel value={tabValue} index={3}></TabPanel>
         </Box>
       }
       <FormErrorAlert response={returnResponse} />

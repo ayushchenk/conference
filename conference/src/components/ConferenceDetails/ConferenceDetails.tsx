@@ -110,9 +110,9 @@ export const ConferenceDetails = ({ conference }: { conference: Conference }) =>
                   arrow
                   enterDelay={0}
                   leaveDelay={100}
-                  title={<Typography variant="body1">Anonymized file should not contain any references to the authors of the submission, so fair and not biased review process can be guaranteed</Typography>}>
-                  <IconButton>
-                    <InfoOutlinedIcon />
+                  title={<Typography variant="body2">Anonymized file should not contain any references to the authors of the submission, so fair and not biased review process can be guaranteed</Typography>}>
+                  <IconButton sx={{ padding: 0, ml: 1 }} >
+                    <InfoOutlinedIcon fontSize="small"/>
                   </IconButton>
                 </Tooltip>
               </TableCell>

@@ -9,7 +9,8 @@ namespace ConferenceManager.Core.Submissions.GetComments
     {
         public GetCommentsQueryHandler(
             IApplicationDbContext context,
-            ICurrentUserService currentUser, IMappingHost mapper) : base(context, currentUser, mapper)
+            ICurrentUserService currentUser, 
+            IMappingHost mapper) : base(context, currentUser, mapper)
         {
         }
 

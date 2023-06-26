@@ -189,12 +189,12 @@ namespace ConferenceManager.Api.Controllers
         [Route("comments")]
         [Authorize]
         [ConferenceAuthorization]
-        [SwaggerResponse(StatusCodes.Status204NoContent)]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CommentDto))]
         public async Task<IActionResult> PutComment(UpdateCommentCommand command, CancellationToken cancellation)
         {
-            await Mediator.Send(command, cancellation);
+            var result = await Mediator.Send(command, cancellation);
 
-            return NoContent();
+            return Ok(result);
         }
 
 
@@ -227,7 +227,7 @@ namespace ConferenceManager.Api.Controllers
         [Route("{id}/comments")]
         [Authorize]
         [ConferenceAuthorization]
-        [SwaggerResponse(StatusCodes.Status200OK, Type = (typeof(IEnumerable<CreateEntityResponse>)))]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = (typeof(CommentDto)))]
         public async Task<IActionResult> PostComment(int id, CreateCommentCommand command, CancellationToken cancellation)
         {
             command.SubmissionId = id;
