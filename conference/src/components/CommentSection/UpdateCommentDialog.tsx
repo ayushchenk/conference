@@ -20,7 +20,7 @@ export const UpdateCommentDialog = ({
   }
 
   return (
-    <Dialog maxWidth="xl" open={open} onClose={onClose}>
+    <Dialog maxWidth="md" fullWidth open={open} onClose={onClose}>
       <DialogTitle>Update a comment</DialogTitle>
       <DialogContent>
         <CreateCommentForm comment={comment} submissionId={comment.submissionId} onCreate={handleSuccess} />

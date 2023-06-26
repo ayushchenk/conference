@@ -100,7 +100,7 @@ export const ConferenceParticipantsGrid = () => {
           noResultsOverlay: NoResultsOverlay
         }}
       />
-      <Dialog maxWidth="xl" open={openAddParticipantDialog} onClose={() => setOpenAddParticipantDialog(false)}>
+      <Dialog maxWidth="md" fullWidth open={openAddParticipantDialog} onClose={() => setOpenAddParticipantDialog(false)}>
         <DialogTitle>Add new user to the conference</DialogTitle>
         <DialogContent>
           <ParticipantUsersGrid handleAddParticipant={handleAddParticipant} />
