@@ -95,7 +95,7 @@ export const CreateSubmissionForm = ({ submission }: { submission?: Submission }
             error={formik.touched.researchAreas && Boolean(formik.errors.researchAreas)}
             helperText={formik.touched.researchAreas && formik.errors.researchAreas}
             label="Research Areas *"
-            sx={{caretColor: "transparent"}}
+            sx={{ caretColor: "transparent" }}
           />
         )}
       />
@@ -124,7 +124,7 @@ export const CreateSubmissionForm = ({ submission }: { submission?: Submission }
             </Box>
           }
           <Button fullWidth variant="outlined" component="label" startIcon={<UploadFile />}>
-            Upload {submission ? 'New' : ''} Main File
+            {submission ? 'Upload New Main File' : 'Upload Main File *'}
             <input
               id="mainFile"
               name="mainFile"

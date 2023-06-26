@@ -22,7 +22,7 @@ export const CommentsList = ({ comments, onUpdate, onDelete }: CommentsListProps
   const handleDeleteClick = useCallback((comment: Comment) => {
     setDeletingComment(comment);
     performDelete({}, comment.id);
-  }, []);
+  }, [performDelete]);
 
   const handleClose = useCallback(() => {
     setEditingComment(null);
@@ -34,7 +34,7 @@ export const CommentsList = ({ comments, onUpdate, onDelete }: CommentsListProps
       onDelete(deletingComment);
       setDeletingComment(null);
     }
-  }, [response, deletingComment]);
+  }, [response, deletingComment, onDelete]);
 
   return (
     <>
@@ -50,10 +50,10 @@ export const CommentsList = ({ comments, onUpdate, onDelete }: CommentsListProps
             <Typography variant="subtitle2">{comment.authorName}</Typography>
             {comment.isAuthor &&
               <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                <IconButton onClick={() => handleEditClick(comment)}>
+                <IconButton onClick={() => handleEditClick(comment)} sx={{padding: 0, paddingLeft: 1}}>
                   <EditIcon />
                 </IconButton>
-                <IconButton onClick={() => handleDeleteClick(comment)}>
+                <IconButton onClick={() => handleDeleteClick(comment)} sx={{padding: 0, paddingLeft: 1}}>
                   <DeleteIcon />
                 </IconButton>
               </Box>
