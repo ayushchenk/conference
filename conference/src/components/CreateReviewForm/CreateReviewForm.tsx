@@ -64,6 +64,8 @@ export const CreateReviewForm = ({
         id="evaluation"
         name="evaluation"
         label="Evaluation"
+        placeholder="Provide descriptive evaluation of the submission"
+        minRows={5}
         multiline
         value={formik.values.evaluation}
         onChange={formik.handleChange}
@@ -79,6 +81,7 @@ export const CreateReviewForm = ({
         name="score"
         label="Score"
         type="number"
+        placeholder="Enter score from -10 to 10"
         value={formik.values.score}
         onChange={formik.handleChange}
         error={formik.touched.score && Boolean(formik.errors.score)}
