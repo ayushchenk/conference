@@ -5,6 +5,7 @@ import { useSubmissionId } from "../../hooks/UseSubmissionId";
 import { Review } from "../../types/Conference";
 import { useGetReviewsApi } from "./SubmissionDetails.hooks";
 import { UpdateReviewDialog } from "./UpdateReviewDialog";
+import moment from "moment";
 
 export const ReviewsList = () => {
   const submissionId = useSubmissionId();
@@ -44,7 +45,6 @@ export const ReviewsList = () => {
         <Paper
           key={review.reviewerEmail}
           sx={{
-            width: "100%",
             marginTop: 1,
             padding: 2,
           }}
@@ -73,6 +73,9 @@ export const ReviewsList = () => {
           </Typography>
           <Typography variant="body2" color="textSecondary" sx={{ marginTop: 2 }}>
             Reviewer: {review.reviewerName}
+          </Typography>
+          <Typography variant="body2" color="textSecondary">
+            {moment(review.createdOn).local().format("DD/MM/YYYY HH:mm:ss")} <i>{review.isModified ? "Edited" : ""}</i>
           </Typography>
         </Paper>
       ))}

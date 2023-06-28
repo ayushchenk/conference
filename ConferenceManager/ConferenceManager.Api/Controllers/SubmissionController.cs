@@ -132,12 +132,12 @@ namespace ConferenceManager.Api.Controllers
         [Route("reviews")]
         [Authorize(Roles = ApplicationRole.Reviewer)]
         [ConferenceAuthorization(ApplicationRole.Reviewer)]
-        [SwaggerResponse(StatusCodes.Status204NoContent)]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(ReviewDto))]
         public async Task<IActionResult> PutReview(UpdateReviewCommand command, CancellationToken cancellation)
         {
-            await Mediator.Send(command, cancellation);
+            var result = await Mediator.Send(command, cancellation);
 
-            return NoContent();
+            return Ok(result);
         }
 
         /// <summary>

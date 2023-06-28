@@ -57,6 +57,9 @@ export type Review = {
   confidence: number;
   confidenceLabel: string;
   isAuthor: boolean;
+  createdOn: string;
+  modifiedOn: string;
+  isModified: boolean;
 };
 
 export type InviteCode = {

@@ -25,7 +25,7 @@ export const CreateReviewForm = ({
   const { response: updateResponse, put } = useUpdateReviewApi();
   const { response: createResponse, post } = usePostCreateReviewApi(submissionId);
 
-  let performRequest: Function = review ? put : post;
+  const performRequest: Function = review ? put : post;
   const response = review ? updateResponse : createResponse;
 
   useEffect(() => {
@@ -56,7 +56,7 @@ export const CreateReviewForm = ({
   }, [response, onSuccess]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <Box component="form" mb={5} onSubmit={formik.handleSubmit}>
+    <Box component="form" onSubmit={formik.handleSubmit}>
       <TextField
         fullWidth
         required
@@ -100,7 +100,7 @@ export const CreateReviewForm = ({
         helperText={formik.touched.confidence && formik.errors.confidence}
       />
       <FormErrorAlert response={response} />
-      <Button disabled={response.status === "loading"} color="primary" variant="contained" fullWidth type="submit">
+      <Button disabled={response.status === "loading"} sx={{ mt: 2 }} color="primary" variant="contained" fullWidth type="submit">
         Submit
       </Button>
     </Box>
