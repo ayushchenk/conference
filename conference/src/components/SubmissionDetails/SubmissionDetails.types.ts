@@ -1,5 +1,5 @@
 import { ApiResponse } from "../../types/ApiResponse";
-import { Submission } from "../../types/Conference";
+import { Review, Submission } from "../../types/Conference";
 
 export type GetSubmissionResponse = ApiResponse<Submission>;
 
@@ -8,3 +8,15 @@ export interface TabPanelProps {
   index: number;
   value: number;
 }
+
+export type CreateReviewDialogProps = {
+  open: boolean;
+  onClose: () => void;
+};
+
+export type UpdateReviewDialogProps = {
+  open: boolean;
+  review: Review | null;
+  onClose: () => void;
+  onUpdate: (review: Review) => void;
+};

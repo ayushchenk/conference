@@ -1,22 +1,25 @@
 import { useCallback, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { IconButton } from "@mui/material";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Paper from "@mui/material/Paper";
-import Tab from "@mui/material/Tab";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableRow from "@mui/material/TableRow";
-import Tabs from "@mui/material/Tabs";
+import {
+  Box,
+  Button,
+  IconButton,
+  Paper,
+  Tab,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  Tabs,
+} from "@mui/material";
 import { useConferenceId } from "../../hooks/UseConferenceId";
 import { Auth } from "../../logic/Auth";
 import { Submission } from "../../types/Conference";
 import { FormErrorAlert } from "../FormErrorAlert";
 import { FormHeader } from "../FormHeader";
+import { CreateReviewDialog } from "./CreateReviewDialog";
 import { ReviewsList } from "./ReviewsList";
 import { usePostReturnSubmissionAPI } from "./SubmissionDetails.hooks";
 import { SubmissionPapersTable } from "./SubmissionPapersTable";
@@ -28,6 +31,10 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
   const [tabValue, setTabValue] = useState(0);
   const { post: returnSubmission, response: returnResponse } = usePostReturnSubmissionAPI(submission.id);
   const isAuthor = submission.authorId === Auth.getId();
+
+  const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
+  const handleReviewDialogOpen = () => setReviewDialogOpen(true);
+  const handleReviewDialogClose = () => setReviewDialogOpen(false);
 
   const handleTabChange = useCallback((_: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
@@ -85,12 +92,7 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
               <>
                 <TableRow>
                   <TableCell align="center" colSpan={12} variant="head">
-                    <Link
-                      className="header__link"
-                      to={`/conferences/${conferenceId}/submissions/${submission.id}/review`}
-                    >
-                      REVIEW
-                    </Link>
+                    <Button onClick={handleReviewDialogOpen}>Write a Review</Button>
                   </TableCell>
                 </TableRow>
                 <TableRow>
@@ -125,6 +127,7 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
           <TabPanel value={tabValue} index={2}></TabPanel>
         </Box>
       )}
+      <CreateReviewDialog open={reviewDialogOpen} onClose={handleReviewDialogClose} />
       <FormErrorAlert response={returnResponse} />
     </>
   );

@@ -18,7 +18,6 @@ import { Protected } from "../ProtectedRoute/Protected";
 import { ProfilePage } from "../../pages/Users/UserDetails/ProfilePage";
 import { AuthorProtected } from "../ProtectedRoute/AuthorProtected";
 import { AnyRoleProtected } from "../ProtectedRoute/AnyRoleProtected";
-import { CreateReviewPage } from "../../pages/Conferences/CreateReviewPage";
 
 export const App = () => {
   return (
@@ -97,14 +96,6 @@ export const App = () => {
             <AuthorProtected>
               <UpdateSubmissionPage />
             </AuthorProtected>
-          }
-        />
-        <Route
-          path="/conferences/:conferenceId/submissions/:submissionId/review"
-          element={
-            <AnyRoleProtected roles={["Reviewer"]}>
-              <CreateReviewPage />
-            </AnyRoleProtected>
           }
         />
         <Route

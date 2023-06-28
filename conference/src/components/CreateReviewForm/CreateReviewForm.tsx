@@ -1,9 +1,7 @@
 import { useFormik } from "formik";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
+import { Box, Button, TextField } from "@mui/material";
 import { useConferenceId } from "../../hooks/UseConferenceId";
 import { useSubmissionId } from "../../hooks/UseSubmissionId";
 import { Review } from "../../types/Conference";
@@ -12,15 +10,23 @@ import { usePostCreateReviewApi, useUpdateReviewApi } from "./CreateReviewForm.h
 import { CreateReviewRequest, initialValues } from "./CreateReviewForm.types";
 import { validationSchema } from "./CreateReviewForm.validator";
 
-export const CreateReviewForm = ({ review }: { review?: Review }) => {
+export const CreateReviewForm = ({
+  review,
+  onSuccess,
+  onUpdate,
+}: {
+  review?: Review | null;
+  onSuccess: () => void;
+  onUpdate?: (review: Review) => void;
+}) => {
   const navigate = useNavigate();
   const conferenceId = useConferenceId();
   const submissionId = useSubmissionId();
-  const { response: responseUpdate, put } = useUpdateReviewApi();
-  const { response: responseCreate, post } = usePostCreateReviewApi(submissionId);
+  const { response: updateResponse, put } = useUpdateReviewApi();
+  const { response: createResponse, post } = usePostCreateReviewApi(submissionId);
 
-  const performRequest: Function = review ? put : post;
-  const response = review ? responseUpdate : responseCreate;
+  let performRequest: Function = review ? put : post;
+  const response = review ? updateResponse : createResponse;
 
   useEffect(() => {
     if (response.status === "success") {
@@ -37,6 +43,17 @@ export const CreateReviewForm = ({ review }: { review?: Review }) => {
       performRequest(values);
     },
   });
+
+  useEffect(() => {
+    if (response.status === "success") {
+      onSuccess();
+      if (review && onUpdate) {
+        const data = response.data as Review;
+        onUpdate(data);
+      }
+      formik.resetForm();
+    }
+  }, [response, onSuccess]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Box component="form" mb={5} onSubmit={formik.handleSubmit}>

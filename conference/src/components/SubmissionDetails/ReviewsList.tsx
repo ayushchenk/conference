@@ -1,30 +1,46 @@
-import { useNavigate } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
-import { IconButton, Typography } from "@mui/material";
-import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
-import { useConferenceId } from "../../hooks/UseConferenceId";
+import { Box, IconButton, Paper, Typography } from "@mui/material";
 import { useSubmissionId } from "../../hooks/UseSubmissionId";
-import { FormErrorAlert } from "../FormErrorAlert";
+import { Review } from "../../types/Conference";
 import { useGetReviewsApi } from "./SubmissionDetails.hooks";
+import { UpdateReviewDialog } from "./UpdateReviewDialog";
 
 export const ReviewsList = () => {
-  const navigate = useNavigate();
   const submissionId = useSubmissionId();
-  const conferenceId = useConferenceId();
   const reviews = useGetReviewsApi(Number(submissionId));
+  const [rows, setRows] = useState<Review[]>([]);
+  const [editingReview, setEditingReview] = useState<Review | null>(null);
+  const [openDialog, setOpenDialog] = useState(false);
 
-  if (reviews.status === "loading") {
-    return null;
-  }
+  const handleEditClick = useCallback((review: Review) => {
+    setEditingReview(review);
+    setOpenDialog(true);
+  }, []);
 
-  if (reviews.status === "error") {
-    return <FormErrorAlert response={reviews} />;
-  }
+  const handleClose = useCallback(() => {
+    setEditingReview(null);
+    setOpenDialog(false);
+  }, []);
+
+  useEffect(() => {
+    if (reviews.status === "success") {
+      setRows(reviews.data);
+    }
+  }, [reviews]);
+
+  const onUpdate = useCallback((review: Review) => {
+    setRows((prevRows) => {
+      const newRows = [...prevRows];
+      const index = newRows.findIndex((r) => r.id === review.id);
+      newRows[index] = review;
+      return newRows;
+    });
+  }, []);
 
   return (
     <>
-      {reviews?.data?.map((review) => (
+      {rows?.map((review) => (
         <Paper
           key={review.reviewerEmail}
           sx={{
@@ -39,9 +55,7 @@ export const ReviewsList = () => {
               <Typography variant="subtitle2">{review.confidenceLabel} confidence</Typography>
             </Box>
             {review.isAuthor && (
-              <IconButton
-                onClick={() => navigate(`/conferences/${conferenceId}/submissions/${submissionId}/edit-review`)}
-              >
+              <IconButton onClick={() => handleEditClick(review)}>
                 <EditIcon />
               </IconButton>
             )}
@@ -62,6 +76,7 @@ export const ReviewsList = () => {
           </Typography>
         </Paper>
       ))}
+      <UpdateReviewDialog review={editingReview} open={openDialog} onUpdate={onUpdate} onClose={handleClose} />
     </>
   );
 };
