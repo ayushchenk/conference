@@ -1,10 +1,11 @@
 import { useFormik } from "formik";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import { useConferenceId } from "../../hooks/UseConferenceId";
 import { useSubmissionId } from "../../hooks/UseSubmissionId";
 import { Review } from "../../types/Conference";
+import { submissionConfidenceOptions } from "../../util/Constants";
 import { FormErrorAlert } from "../FormErrorAlert/FormErrorAlert";
 import { usePostCreateReviewApi, useUpdateReviewApi } from "./CreateReviewForm.hooks";
 import { CreateReviewRequest, initialValues } from "./CreateReviewForm.types";
@@ -88,22 +89,33 @@ export const CreateReviewForm = ({
         helperText={formik.touched.score && formik.errors.score}
         inputProps={{ min: -10, max: 10 }}
       />
-      <TextField
-        fullWidth
-        required
-        margin="normal"
-        id="confidence"
-        name="confidence"
-        label="Confidence"
-        type="number"
-        inputProps={{ min: 1, max: 5 }}
-        value={formik.values.confidence}
-        onChange={formik.handleChange}
-        error={formik.touched.confidence && Boolean(formik.errors.confidence)}
-        helperText={formik.touched.confidence && formik.errors.confidence}
-      />
+      <FormControl fullWidth required margin="normal">
+        <InputLabel id="confidence">Confidence</InputLabel>
+        <Select
+          fullWidth
+          id="confidence"
+          name="confidence"
+          label="Confidence"
+          value={formik.values.confidence || ""}
+          onChange={formik.handleChange}
+          error={formik.touched.confidence && Boolean(formik.errors.confidence)}
+        >
+          {submissionConfidenceOptions.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
       <FormErrorAlert response={response} />
-      <Button disabled={response.status === "loading"} sx={{ mt: 2 }} color="primary" variant="contained" fullWidth type="submit">
+      <Button
+        disabled={response.status === "loading"}
+        sx={{ mt: 2 }}
+        color="primary"
+        variant="contained"
+        fullWidth
+        type="submit"
+      >
         Submit
       </Button>
     </Box>
