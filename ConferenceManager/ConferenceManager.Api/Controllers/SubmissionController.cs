@@ -4,6 +4,7 @@ using ConferenceManager.Core.Account.Common;
 using ConferenceManager.Core.Common.Model.Responses;
 using ConferenceManager.Core.Submissions.AddPreference;
 using ConferenceManager.Core.Submissions.AddReviewer;
+using ConferenceManager.Core.Submissions.CloseSubmission;
 using ConferenceManager.Core.Submissions.Common;
 using ConferenceManager.Core.Submissions.Create;
 using ConferenceManager.Core.Submissions.CreateComment;
@@ -23,6 +24,7 @@ using ConferenceManager.Core.Submissions.Update;
 using ConferenceManager.Core.Submissions.UpdateComment;
 using ConferenceManager.Core.Submissions.UpdateReview;
 using ConferenceManager.Domain.Entities;
+using ConferenceManager.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -118,6 +120,36 @@ namespace ConferenceManager.Api.Controllers
         public async Task<IActionResult> Return(int id, CancellationToken cancellation)
         {
             await Mediator.Send(new ReturnSubmissionCommand(id), cancellation);
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Marks submission as accepted
+        /// </summary>
+        [HttpPost]
+        [Route("{id}/accept")]
+        [Authorize(Roles = ApplicationRole.Chair)]
+        [ConferenceAuthorization(ApplicationRole.Chair)]
+        [SwaggerResponse(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> Accept(int id, CancellationToken cancellation)
+        {
+            await Mediator.Send(new CloseSubmissionCommand(id, SubmissionStatus.Accepted), cancellation);
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Marks submission as rejected
+        /// </summary>
+        [HttpPost]
+        [Route("{id}/reject")]
+        [Authorize(Roles = ApplicationRole.Chair)]
+        [ConferenceAuthorization(ApplicationRole.Chair)]
+        [SwaggerResponse(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> Reject(int id, CancellationToken cancellation)
+        {
+            await Mediator.Send(new CloseSubmissionCommand(id, SubmissionStatus.Rejected), cancellation);
 
             return NoContent();
         }

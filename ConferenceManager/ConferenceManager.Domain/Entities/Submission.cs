@@ -21,7 +21,7 @@ namespace ConferenceManager.Domain.Entities
 
         public bool IsValidForUpdate => Status == SubmissionStatus.Created || Status == SubmissionStatus.Returned;
 
-        public bool IsValidForReview => Status == SubmissionStatus.Created || Status == SubmissionStatus.Updated;
+        public bool IsValidForReview => Status == SubmissionStatus.Created || Status == SubmissionStatus.Updated || Status == SubmissionStatus.InReview;
 
         public virtual Conference Conference { set; get; } = null!;
 
