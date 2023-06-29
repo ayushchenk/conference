@@ -4,6 +4,7 @@ using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Core.Common.Validators;
 using ConferenceManager.Domain.Enums;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 
 namespace ConferenceManager.Core.Submissions.CloseSubmission
 {
@@ -20,7 +21,9 @@ namespace ConferenceManager.Core.Submissions.CloseSubmission
 
             RuleFor(x => x).CustomAsync(async (command, context, token) =>
             {
-                var submission = await Context.Submissions.FindAsync(command.SubmissionId, token);
+                var submission = await Context.Submissions
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(s => s.Id == command.SubmissionId, token);
 
                 if (submission == null)
                 {

@@ -48,7 +48,7 @@ export namespace Auth {
       return true;
     }
 
-    return isAuthed() && getRoles(conferenceId).find(role => roles.includes(role));
+    return isAuthed() && !!getRoles(conferenceId).find(role => roles.includes(role));
   }
 
   export function isAuthor(conferenceId: number) {

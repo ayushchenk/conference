@@ -39,6 +39,7 @@ export type Submission = {
   isValidForUpdate: boolean;
   isValidForReview: boolean;
   isReviewer: boolean;
+  isClosed: boolean;
 };
 
 export type SubmissionPaper = {

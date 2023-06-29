@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -10,7 +10,7 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 import Tabs from "@mui/material/Tabs";
-import { usePostReturnSubmissionAPI } from "./SubmissionDetails.hooks";
+import { useAcceptSubmissionApi, usePostReturnSubmissionApi, useRejectSubmissionApi } from "./SubmissionDetails.hooks";
 import { SubmissionPapersTable } from "./SubmissionPapersTable";
 import { TabPanel } from "./TabPanel";
 import { Submission } from "../../types/Conference";
@@ -26,13 +26,17 @@ import { SubmissionReviewersGrid } from "../SubmissionReviewersGrid/";
 import EditIcon from '@mui/icons-material/Edit';
 import { PreferenceCheckbox } from "./PreferenceCheckbox";
 import { CommentSection } from "../CommentSection";
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
 
 export const SubmissionDetails = ({ submission }: { submission: Submission }) => {
   const navigate = useNavigate();
   const conferenceId = useConferenceId();
   const [tabValue, setTabValue] = useState(0);
 
-  const { post: returnSubmission, response: returnResponse } = usePostReturnSubmissionAPI(submission.id);
+  const { post: returnSubmission, response: returnResponse } = usePostReturnSubmissionApi(submission.id);
+  const { post: acceptSubmission, response: acceptResponse } = useAcceptSubmissionApi(submission.id);
+  const { post: rejectSubmission, response: rejectResponse } = useRejectSubmissionApi(submission.id);
 
   const isAuthor = submission.authorId === Auth.getId();
   const isChair = Auth.isChair(conferenceId);
@@ -41,6 +45,18 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
     setTabValue(newValue);
   }, []);
 
+  useEffect(() => {
+    if (acceptResponse.status === "success") {
+      window.location.reload();
+    }
+  }, [acceptResponse]);
+
+  useEffect(() => {
+    if (rejectResponse.status === "success") {
+      window.location.reload();
+    }
+  }, [rejectResponse]);
+
   return (
     <>
       <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -48,7 +64,7 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
           <ArrowBackIcon />
         </IconButton>
         <FormHeader>{submission.title}</FormHeader>
-        {isAuthor &&
+        {isAuthor && submission.isValidForUpdate &&
           <IconButton onClick={() => navigate(`/conferences/${conferenceId}/submissions/${submission.id}/edit`)}>
             <EditIcon />
           </IconButton>
@@ -114,9 +130,26 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
                 </TableCell>
               </TableRow>
             }
+            {!submission.isClosed && isChair &&
+              <TableRow>
+                <TableCell align="center">
+                  <Button color="success" variant="outlined" onClick={() => acceptSubmission({})} startIcon={<CheckIcon />}>
+                    Accept
+                  </Button>
+                </TableCell>
+                <TableCell align="center">
+                  <Button color="error" variant="outlined" onClick={() => rejectSubmission({})} startIcon={<CloseIcon />}>
+                    Reject
+                  </Button>
+                </TableCell>
+              </TableRow>
+            }
           </TableBody>
         </Table>
       </TableContainer >
+      <FormErrorAlert response={returnResponse} />
+      <FormErrorAlert response={acceptResponse} />
+      <FormErrorAlert response={rejectResponse} />
       {
         (submission.isReviewer || isAuthor || isChair) &&
         <Box mt={5}>
@@ -141,7 +174,6 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
           </TabPanel>
         </Box>
       }
-      <FormErrorAlert response={returnResponse} />
     </>
   );
 };
