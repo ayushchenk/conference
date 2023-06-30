@@ -7,9 +7,9 @@ namespace ConferenceManager.Core.Conferences.GetNonParticipants
     {
         public int ConferenceId { get; }
 
-        public string Query { get; }
+        public string? Query { get; }
 
-        public GetNonParticipantsQuery(int conferenceId, string query, int pageIndex, int pageSize) : base(pageIndex, pageSize)
+        public GetNonParticipantsQuery(int conferenceId, string? query, int pageIndex, int pageSize) : base(pageIndex, pageSize)
         {
             ConferenceId = conferenceId;
             Query = query;

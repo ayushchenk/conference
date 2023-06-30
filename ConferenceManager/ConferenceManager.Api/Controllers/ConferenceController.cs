@@ -178,7 +178,7 @@ namespace ConferenceManager.Api.Controllers
         [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Chair}")]
         [ConferenceAuthorization(ApplicationRole.Chair)]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(EntityPageResponse<UserDto>))]
-        public async Task<IActionResult> GetNonParticipants(int id, string query, int pageIndex, int pageSize, CancellationToken cancellation)
+        public async Task<IActionResult> GetNonParticipants(int id, string? query, int pageIndex, int pageSize, CancellationToken cancellation)
         {
             var result = await Mediator.Send(new GetNonParticipantsQuery(id, query, pageIndex, pageSize), cancellation);
 
