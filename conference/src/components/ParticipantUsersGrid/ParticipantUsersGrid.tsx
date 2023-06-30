@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { DataGrid, GridPaginationModel } from "@mui/x-data-grid";
 import { useGetNonParticipantsApi, useParticipantUsersGridProps as useParticipantUsersGridColumns } from "./ParticipantUsersGrid.hooks";
 import { defaultPage } from "../../util/Constants";
@@ -7,9 +7,13 @@ import { FormErrorAlert } from "../FormErrorAlert";
 import { NoResultsOverlay } from "../Util/NoResultsOverlay";
 import { NoRowsOverlay } from "../Util/NoRowsOverlay";
 import { User } from "../../types/User";
+import { TextField } from "@mui/material";
 
 export const ParticipantUsersGrid: React.FC<ParticipantUsersGridProps> = ({ handleAddParticipant }) => {
+  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
   const [rows, setRows] = useState<User[]>([]);
+  const [query, setQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
 
   const handleAdd = useCallback((user: User) => {
     handleAddParticipant(user);
@@ -17,7 +21,7 @@ export const ParticipantUsersGrid: React.FC<ParticipantUsersGridProps> = ({ hand
   }, [handleAddParticipant]);
 
   const [currentPage, setCurrentPage] = useState<GridPaginationModel>(defaultPage);
-  const users = useGetNonParticipantsApi(currentPage, "");
+  const users = useGetNonParticipantsApi(currentPage, debouncedQuery);
   const columns = useParticipantUsersGridColumns(handleAdd);
 
   useEffect(() => {
@@ -26,8 +30,32 @@ export const ParticipantUsersGrid: React.FC<ParticipantUsersGridProps> = ({ hand
     }
   }, [users]);
 
+  const handleInput = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setQuery(e.target.value);
+
+    if (debounceTimeout.current) {
+      clearTimeout(debounceTimeout.current);
+    }
+
+    debounceTimeout.current = setTimeout(() => {
+      setDebouncedQuery(e.target.value);
+      debounceTimeout.current = null;
+    }, 500);
+  }, []);
+
   return (
     <>
+      <TextField
+        fullWidth
+        margin="normal"
+        id="query"
+        name="query"
+        label="Search query"
+        placeholder="Search by name or email"
+        type="text"
+        value={query}
+        onChange={handleInput}
+      />
       <DataGrid
         autoHeight
         rows={rows}

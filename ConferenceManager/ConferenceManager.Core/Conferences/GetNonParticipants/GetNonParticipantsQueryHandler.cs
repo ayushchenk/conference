@@ -23,17 +23,19 @@ namespace ConferenceManager.Core.Conferences.GetNonParticipants
                 .Select(p => p.UserId)
                 .ToArray();
 
-            var users = Context.Users.Where(u => !participants.Contains(u.Id));
+            var nonParticipants = Context.Users.Where(u => !participants.Contains(u.Id));
 
             if (!string.IsNullOrEmpty(request.Query))
             {
-                users = users.Where(u => u.Email!.Contains(request.Query, StringComparison.InvariantCultureIgnoreCase)
-                    || u.FullName.Contains(request.Query, StringComparison.InvariantCultureIgnoreCase));
+                nonParticipants = nonParticipants.Where(u => 
+                    u.Email!.Contains(request.Query)
+                    || u.FirstName.Contains(request.Query)
+                    || u.LastName.Contains(request.Query));
             }
 
-            var orderedUsers = users.OrderBy(u => u.Id);
+            var orderedNonParticipants = nonParticipants.OrderBy(u => u.Id);
 
-            var page = await PaginatedList<ApplicationUser>.CreateAsync(orderedUsers, request.PageIndex, request.PageSize);
+            var page = await PaginatedList<ApplicationUser>.CreateAsync(orderedNonParticipants, request.PageIndex, request.PageSize);
 
             return new EntityPageResponse<UserDto>()
             {
