@@ -17,7 +17,7 @@ namespace ConferenceManager.Core.Submissions.CloseSubmission
             RuleForId(x => x.SubmissionId);
             RuleFor(x => x.Status)
                 .Must(x => x == SubmissionStatus.Accepted || x == SubmissionStatus.Rejected)
-                .WithMessage("Status should be Accepted of Rejected");
+                .WithMessage("Status should be Accepted or Rejected");
 
             RuleFor(x => x).CustomAsync(async (command, context, token) =>
             {
