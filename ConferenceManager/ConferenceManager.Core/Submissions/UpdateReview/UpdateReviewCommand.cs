@@ -1,10 +1,11 @@
-﻿using ConferenceManager.Core.Common.Commands;
+﻿using ConferenceManager.Core.Submissions.Common;
 using ConferenceManager.Domain.Enums;
+using MediatR;
 using System.ComponentModel.DataAnnotations;
 
 namespace ConferenceManager.Core.Submissions.UpdateReview
 {
-    public class UpdateReviewCommand : IUpdateEntityCommand
+    public class UpdateReviewCommand : IRequest<ReviewDto>
     {
         public int Id { get; set; }
 

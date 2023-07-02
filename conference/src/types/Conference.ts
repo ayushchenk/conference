@@ -50,6 +50,22 @@ export type SubmissionPaper = {
   typeLabel: string;
 };
 
+export type Review = {
+  id: number;
+  submissionId: number;
+  reviewerId: number;
+  reviewerEmail: string;
+  reviewerName: string;
+  score: number;
+  evaluation: string;
+  confidence: number;
+  confidenceLabel: string;
+  isAuthor: boolean;
+  createdOn: string;
+  modifiedOn: string;
+  isModified: boolean;
+};
+
 export type Comment = {
   id: number;
   submissionId: number;
@@ -61,9 +77,9 @@ export type Comment = {
   modifiedOn: string;
   isModified: boolean;
   isAuthor: boolean;
-}
+};
 
 export type InviteCode = {
   code: string;
   role: string;
-}
+};

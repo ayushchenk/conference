@@ -24,5 +24,11 @@ namespace ConferenceManager.Core.Submissions.Common
         public required string ConfidenceLabel { set; get; } = null!;
 
         public required bool IsAuthor { set; get; }
+
+        public required DateTime CreatedOn { set; get; }
+
+        public required DateTime ModifiedOn { set; get; }
+
+        public required bool IsModified { set; get; }
     }
 }

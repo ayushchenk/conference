@@ -1,5 +1,9 @@
+import moment from "moment";
 import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import EditIcon from "@mui/icons-material/Edit";
+import { IconButton } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
@@ -10,22 +14,20 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 import Tabs from "@mui/material/Tabs";
+import { useConferenceId } from "../../hooks/UseConferenceId";
+import { Auth } from "../../logic/Auth";
+import { Submission } from "../../types/Conference";
+import { CommentSection } from "../CommentSection";
+import { FormErrorAlert } from "../FormErrorAlert";
+import { FormHeader } from "../FormHeader";
+import { AnyRoleVisibility } from "../ProtectedRoute/AnyRoleVisibility";
+import { SubmissionReviewersGrid } from "../SubmissionReviewersGrid/";
+import { CreateReviewDialog } from "./CreateReviewDialog";
+import { PreferenceCheckbox } from "./PreferenceCheckbox";
+import { ReviewsList } from "./ReviewsList";
 import { usePostReturnSubmissionAPI } from "./SubmissionDetails.hooks";
 import { SubmissionPapersTable } from "./SubmissionPapersTable";
 import { TabPanel } from "./TabPanel";
-import { Submission } from "../../types/Conference";
-import { FormHeader } from "../FormHeader";
-import { useConferenceId } from "../../hooks/UseConferenceId";
-import { FormErrorAlert } from "../FormErrorAlert";
-import { Auth } from "../../logic/Auth";
-import { IconButton } from "@mui/material";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import moment from "moment";
-import { AnyRoleVisibility } from "../ProtectedRoute/AnyRoleVisibility";
-import { SubmissionReviewersGrid } from "../SubmissionReviewersGrid/";
-import EditIcon from '@mui/icons-material/Edit';
-import { PreferenceCheckbox } from "./PreferenceCheckbox";
-import { CommentSection } from "../CommentSection";
 
 export const SubmissionDetails = ({ submission }: { submission: Submission }) => {
   const navigate = useNavigate();
@@ -36,6 +38,10 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
 
   const isAuthor = submission.authorId === Auth.getId();
   const isChair = Auth.isChair(conferenceId);
+
+  const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
+  const handleReviewDialogOpen = () => setReviewDialogOpen(true);
+  const handleReviewDialogClose = () => setReviewDialogOpen(false);
 
   const handleTabChange = useCallback((_: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
@@ -48,11 +54,11 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
           <ArrowBackIcon />
         </IconButton>
         <FormHeader>{submission.title}</FormHeader>
-        {isAuthor &&
+        {isAuthor && (
           <IconButton onClick={() => navigate(`/conferences/${conferenceId}/submissions/${submission.id}/edit`)}>
             <EditIcon />
           </IconButton>
-        }
+        )}
       </Box>
       <TableContainer component={Paper}>
         <Table size="small">
@@ -98,40 +104,49 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
               <TableCell variant="head">Updated On</TableCell>
               <TableCell>{moment(new Date(submission.modifiedOn)).local().format("DD/MM/YYYY HH:mm:ss")}</TableCell>
             </TableRow>
-            {Auth.isReviewer(conferenceId) && !submission.isReviewer && !isAuthor &&
+            {Auth.isReviewer(conferenceId) && !submission.isReviewer && !isAuthor && (
               <TableRow>
                 <TableCell align="center" colSpan={12} variant="head">
                   <PreferenceCheckbox submissionId={submission.id} />
                 </TableCell>
               </TableRow>
-            }
-            {submission.isReviewer &&
-              <TableRow>
-                <TableCell align="center" colSpan={12} variant="head">
-                  <Button color="inherit" onClick={() => returnSubmission({})} disabled={!submission.isValidForReturn}>
-                    Return
-                  </Button>
-                </TableCell>
-              </TableRow>
-            }
+            )}
+            {submission.isReviewer && (
+              <>
+                <TableRow>
+                  <TableCell align="center" colSpan={12} variant="head">
+                    <Button onClick={handleReviewDialogOpen}>Write a Review</Button>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell align="center" colSpan={12} variant="head">
+                    <Button
+                      color="inherit"
+                      onClick={() => returnSubmission({})}
+                      disabled={!submission.isValidForReturn}
+                    >
+                      Return
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              </>
+            )}
           </TableBody>
         </Table>
-      </TableContainer >
-      {
-        (submission.isReviewer || isAuthor || isChair) &&
+      </TableContainer>
+      {(submission.isReviewer || isAuthor || isChair) && (
         <Box mt={5}>
           <Tabs variant="fullWidth" value={tabValue} onChange={handleTabChange}>
             <Tab label="Papers" />
-            <Tab label="Reviews" disabled />
+            <Tab label="Reviews" />
             <Tab label="Comments" />
-            {isChair &&
-              <Tab label="Reviewers" />
-            }
+            {isChair && <Tab label="Reviewers" />}
           </Tabs>
           <TabPanel value={tabValue} index={0}>
             <SubmissionPapersTable />
           </TabPanel>
           <TabPanel value={tabValue} index={1}>
+            <ReviewsList />
           </TabPanel>
           <TabPanel value={tabValue} index={2}>
             <CommentSection submissionId={submission.id}></CommentSection>
@@ -140,7 +155,8 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
             <SubmissionReviewersGrid submissionId={submission.id} />
           </TabPanel>
         </Box>
-      }
+      )}
+      <CreateReviewDialog open={reviewDialogOpen} onClose={handleReviewDialogClose} />
       <FormErrorAlert response={returnResponse} />
     </>
   );

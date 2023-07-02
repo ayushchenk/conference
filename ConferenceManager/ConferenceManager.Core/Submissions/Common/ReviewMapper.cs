@@ -26,7 +26,10 @@ namespace ConferenceManager.Core.Submissions.Common
                 Evaluation = source.Evaluation,
                 Confidence = source.Confidence,
                 ConfidenceLabel = source.Confidence.Humanize(),
-                IsAuthor = _currentUser.IsAuthorOf(source)
+                IsAuthor = _currentUser.IsAuthorOf(source),
+                CreatedOn = source.CreatedOn,
+                ModifiedOn = source.ModifiedOn,
+                IsModified = source.CreatedOn != source.ModifiedOn
             };
         }
     }
