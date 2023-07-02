@@ -170,7 +170,7 @@ namespace ConferenceManager.Api.Controllers
         [HttpGet]
         [Route("{id}/reviews")]
         [Authorize(Roles = $"{ApplicationRole.Chair},{ApplicationRole.Reviewer}")]
-        [ConferenceAuthorization(ApplicationRole.Reviewer)]
+        [ConferenceAuthorization(ApplicationRole.Chair, ApplicationRole.Reviewer)]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<ReviewDto>))]
         public async Task<IActionResult> GetReviews(int id, CancellationToken cancellation)
         {
