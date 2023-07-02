@@ -18,10 +18,20 @@ namespace ConferenceManager.Core.Submissions.GetReviewers
         {
             var submission = await Context.Submissions.FindAsync(request.SubmissionId, cancellationToken);
 
-            return submission!
+            var reviewers = submission!
                 .ActualReviewers
                 .OrderBy(u => u.Id)
-                .Select(Mapper.Map<ApplicationUser, UserDto>);
+                .Select(Mapper.Map<ApplicationUser, UserDto>)
+                .ToArray();
+
+            foreach (var user in reviewers)
+            {
+                var preference = await Context.ReviewPreferences
+                    .FindAsync(new object[] { request.SubmissionId, user.Id }, cancellationToken);
+                user.HasPreference = preference != null;
+            }
+
+            return reviewers;
         }
     }
 }

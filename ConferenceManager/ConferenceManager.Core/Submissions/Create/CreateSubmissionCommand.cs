@@ -22,6 +22,10 @@ namespace ConferenceManager.Core.Submissions.Create
         public string Abstract { set; get; } = null!;
 
         [Required]
+        [MaxLength(10)]
+        public string[] ResearchAreas { set; get; } = null!;
+
+        [Required]
         public IFormFile MainFile { set; get; } = null!;
 
         public IFormFile? PresentationFile { set; get; }

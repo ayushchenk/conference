@@ -22,6 +22,7 @@ export function buildFormData(values: { [key: string]: any }): FormData {
       for (const val of values) {
         formData.append(field, val instanceof File ? val : String(val));
       }
+      continue;
     }
 
     formData.append(field, String(value));

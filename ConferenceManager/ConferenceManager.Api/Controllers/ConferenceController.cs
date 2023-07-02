@@ -10,6 +10,7 @@ using ConferenceManager.Core.Conferences.Delete;
 using ConferenceManager.Core.Conferences.Get;
 using ConferenceManager.Core.Conferences.GetInviteCodes;
 using ConferenceManager.Core.Conferences.GetParticipants;
+using ConferenceManager.Core.Conferences.GetReviewers;
 using ConferenceManager.Core.Conferences.GetSubmissions;
 using ConferenceManager.Core.Conferences.Join;
 using ConferenceManager.Core.Conferences.Page;
@@ -164,6 +165,21 @@ namespace ConferenceManager.Api.Controllers
         public async Task<IActionResult> GetParticipants(int id, int pageIndex, int pageSize, CancellationToken cancellation)
         {
             var result = await Mediator.Send(new GetConferenceParticipantsQuery(id, pageIndex, pageSize), cancellation);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Returns all reviewers from conference in context of submission
+        /// </summary>
+        [HttpGet]
+        [Route("{id}/reviewers/{submissionId}")]
+        [Authorize(Roles = ApplicationRole.Chair)]
+        [ConferenceAuthorization(ApplicationRole.Chair)]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<UserDto>))]
+        public async Task<IActionResult> GetReviewers(int id, int submissionId, CancellationToken cancellation)
+        {
+            var result = await Mediator.Send(new GetConferenceReviewersQuery(id, submissionId), cancellation);
 
             return Ok(result);
         }

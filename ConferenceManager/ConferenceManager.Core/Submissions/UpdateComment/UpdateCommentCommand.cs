@@ -1,9 +1,10 @@
-﻿using ConferenceManager.Core.Common.Commands;
+﻿using ConferenceManager.Core.Submissions.Common;
+using MediatR;
 using System.ComponentModel.DataAnnotations;
 
 namespace ConferenceManager.Core.Submissions.UpdateComment
 {
-    public class UpdateCommentCommand : IUpdateEntityCommand
+    public class UpdateCommentCommand : IRequest<CommentDto>
     {
         public int Id { set; get; }
 

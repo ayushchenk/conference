@@ -12,3 +12,7 @@ export type CodeVisibility = {
 export type RefreshInviteCodeRequest = {
   code: string;
 }
+
+export type ConferenceInviteCodesProps = {
+  conferenceId: number;
+}

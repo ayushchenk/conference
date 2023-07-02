@@ -17,6 +17,7 @@ const fileValidation = yup
 const validationSchema = yup.object({
   title: yup.string().trim().required("Title is required"),
   keywords: yup.string().trim().required("Keywords is required"),
+  researchAreas: yup.array().min(1, "Research areas are requried").max(10, "Maximum 10 research areas are supported"),
   abstract: yup.string().trim().required("Abstract is required"),
 });
 

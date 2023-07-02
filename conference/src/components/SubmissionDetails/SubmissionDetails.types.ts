@@ -20,3 +20,11 @@ export type UpdateReviewDialogProps = {
   onClose: () => void;
   onUpdate: (review: Review) => void;
 };
+
+export type SubmissionDetailsHeaderProps = {
+  showEdit: boolean;
+};
+
+export type PreferenceCheckboxProps = {
+  submissionId: number;
+};

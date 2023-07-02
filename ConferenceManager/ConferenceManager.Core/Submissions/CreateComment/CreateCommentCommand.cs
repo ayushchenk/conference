@@ -1,10 +1,11 @@
-﻿using ConferenceManager.Core.Common.Commands;
+﻿using ConferenceManager.Core.Submissions.Common;
+using MediatR;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace ConferenceManager.Core.Submissions.CreateComment
 {
-    public class CreateCommentCommand : ICreateEntityCommand
+    public class CreateCommentCommand : IRequest<CommentDto>
     {
         [JsonIgnore]
         public int SubmissionId { set; get; }

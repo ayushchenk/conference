@@ -13,13 +13,17 @@ namespace ConferenceManager.Domain.Entities
 
         public required string Abstract { set; get; }
 
-        public required SubmissionStatus Status { set; get; }
+        public required string ResearchAreas { set; get; }
 
-        public virtual Conference Conference { set; get; } = null!;
+        public required SubmissionStatus Status { set; get; }
 
         public bool IsValidForReturn => Status == SubmissionStatus.Created || Status == SubmissionStatus.Updated;
 
         public bool IsValidForUpdate => Status == SubmissionStatus.Created || Status == SubmissionStatus.Returned;
+
+        public bool IsValidForReview => Status == SubmissionStatus.Created || Status == SubmissionStatus.Updated;
+
+        public virtual Conference Conference { set; get; } = null!;
 
         public virtual IList<ApplicationUser> ActualReviewers { set; get; } = null!;
 

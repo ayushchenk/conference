@@ -480,6 +480,11 @@ namespace ConferenceManager.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("ModifiedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("ResearchAreas")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
                     b.Property<byte>("Status")
                         .HasColumnType("tinyint");
 

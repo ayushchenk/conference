@@ -19,8 +19,9 @@ namespace ConferenceManager.Core.Submissions.Common
                 Id = source.Id,
                 SubmissionId = source.SubmissionId,
                 AuthorId = source.CreatedById,
-                AuthorName = source.CreatedBy.FullName,
-                AuthorEmail = source.CreatedBy.Email!,
+                AuthorName = source.CreatedById == source.Submission.CreatedById 
+                    ? "Submission Author" 
+                    : source.CreatedBy.FullName,
                 Text = source.Text,
                 CreatedOn = source.CreatedOn,
                 ModifiedOn = source.ModifiedOn,

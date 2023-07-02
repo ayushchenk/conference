@@ -14,6 +14,7 @@ using ConferenceManager.Core.Submissions.GetComments;
 using ConferenceManager.Core.Submissions.GetPreferences;
 using ConferenceManager.Core.Submissions.GetReviewers;
 using ConferenceManager.Core.Submissions.GetReviews;
+using ConferenceManager.Core.Submissions.HasPreference;
 using ConferenceManager.Core.Submissions.Papers;
 using ConferenceManager.Core.Submissions.RemovePreference;
 using ConferenceManager.Core.Submissions.RemoveReviewer;
@@ -169,7 +170,7 @@ namespace ConferenceManager.Api.Controllers
         [HttpGet]
         [Route("{id}/reviews")]
         [Authorize(Roles = $"{ApplicationRole.Chair},{ApplicationRole.Reviewer}")]
-        [ConferenceAuthorization(ApplicationRole.Chair, ApplicationRole.Reviewer)]
+        [ConferenceAuthorization(ApplicationRole.Reviewer)]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<ReviewDto>))]
         public async Task<IActionResult> GetReviews(int id, CancellationToken cancellation)
         {
@@ -188,12 +189,12 @@ namespace ConferenceManager.Api.Controllers
         [Route("comments")]
         [Authorize]
         [ConferenceAuthorization]
-        [SwaggerResponse(StatusCodes.Status204NoContent)]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CommentDto))]
         public async Task<IActionResult> PutComment(UpdateCommentCommand command, CancellationToken cancellation)
         {
-            await Mediator.Send(command, cancellation);
+            var result = await Mediator.Send(command, cancellation);
 
-            return NoContent();
+            return Ok(result);
         }
 
 
@@ -226,7 +227,7 @@ namespace ConferenceManager.Api.Controllers
         [Route("{id}/comments")]
         [Authorize]
         [ConferenceAuthorization]
-        [SwaggerResponse(StatusCodes.Status200OK, Type = (typeof(IEnumerable<CreateEntityResponse>)))]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = (typeof(CommentDto)))]
         public async Task<IActionResult> PostComment(int id, CreateCommentCommand command, CancellationToken cancellation)
         {
             command.SubmissionId = id;
@@ -263,8 +264,8 @@ namespace ConferenceManager.Api.Controllers
         /// </remarks>
         [HttpGet]
         [Route("{id}/reviewers")]
-        [Authorize(Roles = $"{ApplicationRole.Chair},{ApplicationRole.Reviewer}")]
-        [ConferenceAuthorization(ApplicationRole.Chair, ApplicationRole.Reviewer)]
+        [Authorize(Roles = ApplicationRole.Chair)]
+        [ConferenceAuthorization(ApplicationRole.Chair)]
         [SwaggerResponse(StatusCodes.Status200OK, Type = (typeof(IEnumerable<UserDto>)))]
         public async Task<IActionResult> GetReviewers(int id, CancellationToken cancellation)
         {
@@ -352,6 +353,20 @@ namespace ConferenceManager.Api.Controllers
             await Mediator.Send(new RemoveReviewPreferenceCommand(id), cancellation);
 
             return NoContent();
+        }
+
+        /// <summary>
+        /// Checks if current user has preference
+        /// </summary>
+        [HttpGet]
+        [Route("{id}/has-preference")]
+        [Authorize]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(BoolResponse))]
+        public async Task<IActionResult> HasPreference(int id, CancellationToken cancellation)
+        {
+            var result = await Mediator.Send(new HasSubmissionPreferenceFromUserQuery(id), cancellation);
+
+            return Ok(result);
         }
     }
 }
