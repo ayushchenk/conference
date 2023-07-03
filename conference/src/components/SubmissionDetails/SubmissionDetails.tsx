@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import EditIcon from "@mui/icons-material/Edit";
-import { IconButton } from "@mui/material";
+import { Divider, IconButton } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
@@ -126,46 +126,41 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
                 </TableCell>
               </TableRow>
             )}
-            {submission.isReviewer && <>
-              {
-                submission.isValidForReview &&
-                <TableRow>
-                  <TableCell align="center" colSpan={12} variant="head">
-                    <Button onClick={() => setReviewDialogOpen(true)} startIcon={<RateReviewOutlinedIcon />}>Write a Review</Button>
-                  </TableCell>
-                </TableRow>
-              }
-              {submission.isValidForReturn &&
-                <TableRow>
-                  <TableCell align="center" colSpan={12} variant="head">
-                    <Button onClick={() => returnSubmission({})} startIcon={<UTurnLeftIcon />}>Return</Button>
-                  </TableCell>
-                </TableRow>
-              }
-            </>
-            }
-            {!submission.isClosed && isChair &&
-              <TableRow>
-                <TableCell align="center">
-                  <Button color="success" onClick={() => acceptSubmission({})} startIcon={<CheckIcon />}>
-                    Accept
-                  </Button>
-                </TableCell>
-                <TableCell align="center">
-                  <Button color="error" onClick={() => rejectSubmission({})} startIcon={<CloseIcon />}>
-                    Reject
-                  </Button>
-                </TableCell>
-              </TableRow>
-            }
           </TableBody>
         </Table>
       </TableContainer>
+      <Box mt={1} mb={1}>
+        {!submission.isClosed && isChair &&
+          <>
+            <Button sx={{ m: 1 }} color="success" onClick={() => acceptSubmission({})} startIcon={<CheckIcon />}>
+              Accept
+            </Button>
+            <Button sx={{ m: 1 }} color="error" onClick={() => rejectSubmission({})} startIcon={<CloseIcon />}>
+              Reject
+            </Button>
+          </>
+        }
+        {submission.isReviewer &&
+          <>
+            {submission.isValidForReview &&
+              <Button sx={{ m: 1 }} onClick={() => setReviewDialogOpen(true)} startIcon={<RateReviewOutlinedIcon />}>
+                Write a Review
+              </Button>
+            }
+            {submission.isValidForReturn &&
+              <Button sx={{ m: 1 }} onClick={() => returnSubmission({})} startIcon={<UTurnLeftIcon />}>
+                Return
+              </Button>
+            }
+          </>
+        }
+      </Box>
+      <Divider/>
       <FormErrorAlert response={returnResponse} />
       <FormErrorAlert response={acceptResponse} />
       <FormErrorAlert response={rejectResponse} />
       {(submission.isReviewer || isAuthor || isChair) &&
-        <Box mt={5}>
+        <Box mt={1}>
           <Tabs variant="fullWidth" value={tabValue} onChange={handleTabChange}>
             <Tab label="Papers" />
             <Tab label="Reviews" />

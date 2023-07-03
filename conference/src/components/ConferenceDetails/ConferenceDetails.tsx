@@ -129,15 +129,6 @@ export const ConferenceDetails = ({ conference }: { conference: Conference }) =>
             {
               (conference.isParticipant || Auth.isAdmin()) &&
               <>
-                <TableRow>
-                  <TableCell align="center" colSpan={12} variant="head">
-                    <Button startIcon={<ListIcon />}>
-                      <Link className="header__link" to={`/conferences/${conference.id}/submissions`}>
-                        Submissions
-                      </Link>
-                    </Button>
-                  </TableCell>
-                </TableRow>
                 {
                   (Auth.isAdmin() || Auth.isChair(conference.id)) &&
                   <TableRow>
@@ -150,6 +141,15 @@ export const ConferenceDetails = ({ conference }: { conference: Conference }) =>
                     </TableCell>
                   </TableRow>
                 }
+                <TableRow>
+                  <TableCell align="center" colSpan={12} variant="head">
+                    <Button startIcon={<ListIcon />}>
+                      <Link className="header__link" to={`/conferences/${conference.id}/submissions`}>
+                        Submissions
+                      </Link>
+                    </Button>
+                  </TableCell>
+                </TableRow>
                 <AuthorVisibility>
                   <TableRow>
                     <TableCell align="center" colSpan={12} variant="head">

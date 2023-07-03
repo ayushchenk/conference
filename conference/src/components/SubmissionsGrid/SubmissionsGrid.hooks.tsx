@@ -49,7 +49,7 @@ export const useSubmissionsGridColumns = (): GridColDef[] => {
       columns.splice(2, 0, {
         headerName: "Author",
         field: "authorName",
-        maxWidth: 150,
+        maxWidth: 200,
         flex: 1
       },);
     }

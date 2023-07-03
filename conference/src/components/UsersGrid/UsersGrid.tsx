@@ -9,12 +9,13 @@ import { NoResultsOverlay } from "../Util/NoResultsOverlay";
 
 export const UsersGrid = () => {
   const [currentPage, setCurrentPage] = useState<GridPaginationModel>(defaultPage);
+  const [rows, setRows] = useState<User[]>([]);
+  const [deletingUser, setDeletingUser] = useState<User | null>(null);
+  
   const users = useGetUsersApi(currentPage);
   const { response: deleteResponse, performDelete } = useDeleteUserApi();
   const { response: addRoleResponse, post: addRole } = useAddUserAdminRoleApi();
   const { response: removeRoleResponse, performDelete: removeRole } = useRemoveUserAdminRoleApi();
-  const [rows, setRows] = useState<User[]>([]);
-  const [deletingUser, setDeletingUser] = useState<User | null>(null);
 
   const handleDelete = useCallback((user: User) => {
     setDeletingUser(user);
@@ -69,7 +70,6 @@ export const UsersGrid = () => {
           noResultsOverlay: NoResultsOverlay
         }}
       />
-      <FormErrorAlert response={users} />
       <FormErrorAlert response={deleteResponse} />
       <FormErrorAlert response={addRoleResponse} />
       <FormErrorAlert response={removeRoleResponse} />

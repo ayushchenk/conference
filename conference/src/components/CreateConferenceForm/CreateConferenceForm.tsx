@@ -249,11 +249,12 @@ export const CreateConferenceForm = ({ conference }: { conference?: Conference |
         <FormHelperText id="my-helper-text">Anonymized file should not contain any references to the authors of the submission, so fair and not biased review process can be guaranteed</FormHelperText>
       </div>
       <FormErrorAlert response={response} />
-      <Button 
+      <Button
         disabled={response.status === "loading"}
-        color="primary" 
-        variant="contained" 
-        fullWidth 
+        color="primary"
+        variant="contained"
+        fullWidth
+        sx={{ mt: 2 }}
         type="submit">
         Submit
       </Button>

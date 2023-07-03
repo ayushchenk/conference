@@ -26,9 +26,15 @@ namespace ConferenceManager.Core.Submissions.GetReviews
                 {
                     return;
                 }
-                if (!CurrentUser.IsReviewerOf(submission))
+
+                if (CurrentUser.IsReviewerIn(submission.Conference) && !CurrentUser.IsReviewerOf(submission))
                 {
                     context.AddException(new ForbiddenException("User is not a reviewer of this submission"));
+                }
+
+                if (CurrentUser.IsAuthorIn(submission.Conference) && !CurrentUser.IsAuthorOf(submission))
+                {
+                    context.AddException(new ForbiddenException("User is not an author of this submission"));
                 }
             });
         }
