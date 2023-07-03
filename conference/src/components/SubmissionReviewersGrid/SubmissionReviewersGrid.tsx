@@ -14,6 +14,7 @@ import { useCallback, useEffect, useState } from "react";
 import { User } from "../../types/User";
 import { Button } from "@mui/material";
 import { AssignReviewerDialog } from "../AssignReviewerDialog";
+import AddIcon from '@mui/icons-material/Add';
 
 export const SubmissionReviewersGrid = ({ submissionId }: SubmissionReviewersGridProps) => {
   const [assignedReviewers, setAssignedReviewers] = useState<User[]>([]);
@@ -64,7 +65,8 @@ export const SubmissionReviewersGrid = ({ submissionId }: SubmissionReviewersGri
     <>
       <Button
         onClick={() => setOpenDialog(true)}
-        disabled={conferenceReviewers.status === "loading"}>
+        disabled={conferenceReviewers.status === "loading"}
+        startIcon={<AddIcon />}>
         Add Reviewer
       </Button>
       <DataGrid

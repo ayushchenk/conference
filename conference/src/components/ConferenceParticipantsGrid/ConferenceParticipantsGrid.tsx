@@ -14,6 +14,7 @@ import { UserRoleManagementDialog } from "../UsersGrid";
 import { FormErrorAlert } from "../FormErrorAlert";
 import { NoRowsOverlay } from "../Util/NoRowsOverlay";
 import { NoResultsOverlay } from "../Util/NoResultsOverlay";
+import AddIcon from '@mui/icons-material/Add';
 
 export const ConferenceParticipantsGrid = () => {
   const conferenceId = useConferenceId();
@@ -84,7 +85,7 @@ export const ConferenceParticipantsGrid = () => {
 
   return (
     <>
-      <Button onClick={() => setOpenAddParticipantDialog(true)}>Add Participant</Button>
+      <Button onClick={() => setOpenAddParticipantDialog(true)} startIcon={<AddIcon />}>Add Participant</Button>
       <DataGrid
         autoHeight
         rows={rows}
