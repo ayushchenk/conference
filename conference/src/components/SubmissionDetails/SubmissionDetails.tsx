@@ -129,7 +129,7 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
           </TableBody>
         </Table>
       </TableContainer>
-      <Box >
+      <Box>
         {!submission.isClosed && isChair &&
           <>
             <Button sx={{ m: 1 }} color="success" onClick={() => acceptSubmission({})} startIcon={<CheckIcon />}>

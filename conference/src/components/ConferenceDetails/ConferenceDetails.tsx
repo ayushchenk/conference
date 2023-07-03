@@ -9,7 +9,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 import { AuthorVisibility } from "../ProtectedRoute/AuthorVisibility";
 import { FormHeader } from "../FormHeader";
-import { Box, IconButton, Tooltip, Typography } from "@mui/material";
+import { Box, Divider, IconButton, Tooltip, Typography } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { Conference } from "../../types/Conference";
@@ -37,6 +37,19 @@ export const ConferenceDetails = ({ conference }: { conference: Conference }) =>
           </IconButton>
         </AnyRoleVisibility>
       </Box>
+      <Divider />
+      <Box>
+        <Button sx={{ m: 1 }} startIcon={<PeopleAltIcon />} onClick={() => navigate(`/conferences/${conference.id}/participants`)}>
+          Participants
+        </Button>
+        <Button sx={{ m: 1 }} startIcon={<PostAddIcon />} onClick={() => navigate(`/conferences/${conference.id}/submissions/new`)}>
+          Create Submission
+        </Button>
+        <Button sx={{ m: 1 }} startIcon={<ListIcon />} onClick={() => navigate(`/conferences/${conference.id}/submissions`)}>
+          Submissions
+        </Button>
+      </Box>
+      <Divider />
       <TableContainer component={Paper}>
         <Table size="small">
           <TableBody>
@@ -127,7 +140,7 @@ export const ConferenceDetails = ({ conference }: { conference: Conference }) =>
               <ConferenceJoinCodes conferenceId={conference.id} />
             </AnyRoleVisibility>
             {
-              (conference.isParticipant || Auth.isAdmin()) &&
+              (conference.isParticipant || Auth.isAdmin()) && false &&
               <>
                 {
                   (Auth.isAdmin() || Auth.isChair(conference.id)) &&
@@ -166,6 +179,7 @@ export const ConferenceDetails = ({ conference }: { conference: Conference }) =>
           </TableBody>
         </Table>
       </TableContainer>
+
     </>
   );
 };

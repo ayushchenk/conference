@@ -107,6 +107,7 @@ export const CreateSubmissionForm = ({ submission }: { submission?: Submission }
         id="abstract"
         name="abstract"
         label="Abstract"
+        minRows={3}
         value={formik.values.abstract}
         onChange={formik.handleChange}
         error={formik.touched.abstract && Boolean(formik.errors.abstract)}
