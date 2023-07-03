@@ -1,14 +1,14 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import { Box, IconButton, Paper, Typography } from "@mui/material";
-import { useSubmissionId } from "../../hooks/UseSubmissionId";
 import { Review } from "../../types/Conference";
 import { useGetReviewsApi } from "./SubmissionDetails.hooks";
 import { UpdateReviewDialog } from "./UpdateReviewDialog";
 import moment from "moment";
+import { SubmissionContext } from "../../contexts/SubmissionContext";
 
 export const ReviewsList = () => {
-  const submissionId = useSubmissionId();
+  const { submissionId, isClosed } = useContext(SubmissionContext);
   const reviews = useGetReviewsApi(submissionId);
   const [rows, setRows] = useState<Review[]>([]);
   const [editingReview, setEditingReview] = useState<Review | null>(null);
@@ -58,7 +58,7 @@ export const ReviewsList = () => {
               <Typography variant="subtitle2">Score: {review.score}</Typography>
               <Typography variant="subtitle2">{review.confidenceLabel} confidence</Typography>
             </Box>
-            {review.isAuthor && (
+            {review.isAuthor && !isClosed && (
               <IconButton onClick={() => handleEditClick(review)}>
                 <EditIcon />
               </IconButton>

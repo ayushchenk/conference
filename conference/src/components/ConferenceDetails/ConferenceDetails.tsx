@@ -1,5 +1,5 @@
 import moment from "moment";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
@@ -37,19 +37,27 @@ export const ConferenceDetails = ({ conference }: { conference: Conference }) =>
           </IconButton>
         </AnyRoleVisibility>
       </Box>
-      <Divider />
-      <Box>
-        <Button sx={{ m: 1 }} startIcon={<PeopleAltIcon />} onClick={() => navigate(`/conferences/${conference.id}/participants`)}>
-          Participants
-        </Button>
-        <Button sx={{ m: 1 }} startIcon={<PostAddIcon />} onClick={() => navigate(`/conferences/${conference.id}/submissions/new`)}>
-          Create Submission
-        </Button>
-        <Button sx={{ m: 1 }} startIcon={<ListIcon />} onClick={() => navigate(`/conferences/${conference.id}/submissions`)}>
-          Submissions
-        </Button>
-      </Box>
-      <Divider />
+      {(conference.isParticipant || Auth.isAdmin()) &&
+        <>
+          <Divider />
+          <Box>
+            <AnyRoleVisibility roles={["Admin", "Chair"]}>
+              <Button sx={{ mr: 3 }} startIcon={<PeopleAltIcon />} onClick={() => navigate(`/conferences/${conference.id}/participants`)}>
+                Participants
+              </Button>
+            </AnyRoleVisibility>
+            <Button sx={{ mr: 3 }} startIcon={<ListIcon />} onClick={() => navigate(`/conferences/${conference.id}/submissions`)}>
+              Submissions
+            </Button>
+            <AuthorVisibility>
+              <Button sx={{ mr: 3 }} startIcon={<PostAddIcon />} onClick={() => navigate(`/conferences/${conference.id}/submissions/new`)}>
+                Create Submission
+              </Button>
+            </AuthorVisibility>
+          </Box>
+          <Divider />
+        </>
+      }
       <TableContainer component={Paper}>
         <Table size="small">
           <TableBody>
@@ -139,47 +147,9 @@ export const ConferenceDetails = ({ conference }: { conference: Conference }) =>
             <AnyRoleVisibility roles={["Admin", "Chair"]}>
               <ConferenceJoinCodes conferenceId={conference.id} />
             </AnyRoleVisibility>
-            {
-              (conference.isParticipant || Auth.isAdmin()) && false &&
-              <>
-                {
-                  (Auth.isAdmin() || Auth.isChair(conference.id)) &&
-                  <TableRow>
-                    <TableCell align="center" colSpan={12} variant="head">
-                      <Button startIcon={<PeopleAltIcon />}>
-                        <Link className="header__link" to={`/conferences/${conference.id}/participants`}>
-                          Participants
-                        </Link>
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                }
-                <TableRow>
-                  <TableCell align="center" colSpan={12} variant="head">
-                    <Button startIcon={<ListIcon />}>
-                      <Link className="header__link" to={`/conferences/${conference.id}/submissions`}>
-                        Submissions
-                      </Link>
-                    </Button>
-                  </TableCell>
-                </TableRow>
-                <AuthorVisibility>
-                  <TableRow>
-                    <TableCell align="center" colSpan={12} variant="head">
-                      <Button startIcon={<PostAddIcon />}>
-                        <Link className="header__link" to={`/conferences/${conference.id}/submissions/new`}>
-                          Create Submission
-                        </Link>
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                </AuthorVisibility>
-              </>
-            }
           </TableBody>
         </Table>
       </TableContainer>
-
     </>
   );
 };

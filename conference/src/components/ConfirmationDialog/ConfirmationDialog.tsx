@@ -2,16 +2,17 @@ import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, B
 import { ConfirmationDialogProps } from "./ConfirmationDialog.types";
 
 export const ConfirmationDialog = ({
-  text,
+  title,
+  children,
   open,
   onConfirm,
   onCancel
 }: ConfirmationDialogProps) => {
   return (
     <Dialog open={open} onClose={onCancel}>
-      <DialogTitle>Confirmation required</DialogTitle>
+      <DialogTitle>{title ?? "Confirmation required"}</DialogTitle>
       <DialogContent>
-        <DialogContentText>{text}</DialogContentText>
+        <DialogContentText>{children}</DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={onConfirm}>Confirm</Button>

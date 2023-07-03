@@ -6,12 +6,14 @@ import { FormErrorAlert } from "../FormErrorAlert";
 import { User } from "../../types/User";
 import { NoRowsOverlay } from "../Util/NoRowsOverlay";
 import { NoResultsOverlay } from "../Util/NoResultsOverlay";
+import { ConfirmationDialog } from "../ConfirmationDialog";
 
 export const UsersGrid = () => {
   const [currentPage, setCurrentPage] = useState<GridPaginationModel>(defaultPage);
   const [rows, setRows] = useState<User[]>([]);
   const [deletingUser, setDeletingUser] = useState<User | null>(null);
-  
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+
   const users = useGetUsersApi(currentPage);
   const { response: deleteResponse, performDelete } = useDeleteUserApi();
   const { response: addRoleResponse, post: addRole } = useAddUserAdminRoleApi();
@@ -19,7 +21,7 @@ export const UsersGrid = () => {
 
   const handleDelete = useCallback((user: User) => {
     setDeletingUser(user);
-    performDelete({}, user.id);
+    setOpenDeleteDialog(true);
   }, [performDelete]);
 
   const handleRoleChange = useCallback((user: User, checked: boolean) => {
@@ -65,14 +67,22 @@ export const UsersGrid = () => {
         loading={users.status === "loading"}
         paginationMode="server"
         rowCount={users.data?.totalCount ?? 0}
-        slots={{ 
+        slots={{
           noRowsOverlay: NoRowsOverlay,
           noResultsOverlay: NoResultsOverlay
         }}
       />
-      <FormErrorAlert response={deleteResponse} />
+      <ConfirmationDialog
+        open={openDeleteDialog}
+        onCancel={() => setOpenDeleteDialog(false)}
+        onConfirm={() => performDelete({}, deletingUser?.id!)}
+      >
+        {`Are you sure you want to delete ${deletingUser?.fullName}'s account?`}<br />
+        This will also delete all associated data.
+        <FormErrorAlert response={deleteResponse} />
+      </ConfirmationDialog>
       <FormErrorAlert response={addRoleResponse} />
       <FormErrorAlert response={removeRoleResponse} />
     </>
   );
-};
+}; 

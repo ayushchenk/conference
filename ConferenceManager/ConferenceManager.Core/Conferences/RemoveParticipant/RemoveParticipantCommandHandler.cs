@@ -42,6 +42,14 @@ namespace ConferenceManager.Core.Conferences.RemoveParticipant
                 Context.SubmissionReviewers.RemoveRange(reviewAssignments);
             }
 
+            var reviewPreferences = Context.ReviewPreferences
+                .Where(r => r.ReviewerId == request.UserId && r.Submission.ConferenceId == request.ConferenceId);
+
+            if (reviewPreferences.Any())
+            {
+                Context.ReviewPreferences.RemoveRange(reviewPreferences);
+            }
+
             await Context.SaveChangesAsync(cancellationToken);
 
             transaction.Commit();

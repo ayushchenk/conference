@@ -8,6 +8,7 @@ import { useMemoPaging } from "../../hooks/UseMemoPaging";
 import { GetConferencesData, GetConferencesResponse } from "./ConferencesGrid.types";
 import { Auth } from "../../logic/Auth";
 import { useMemo } from "react";
+import { Conference } from "../../types/Conference";
 
 export const useGetConferencesApi = (paging: GridPaginationModel): GetConferencesResponse => {
   const config = useMemoPaging(paging);
@@ -18,7 +19,7 @@ export const useDeleteConferenceApi = () => {
   return useDeleteApi<{}, {}>(`/Conference/{0}`);
 };
 
-export const useConferencesGridColumns = (handleDelete: (id: number) => void): GridColDef[] => {
+export const useConferencesGridColumns = (handleDelete: (conference: Conference) => void): GridColDef[] => {
   return useMemo(() => {
     const columns: GridColDef[] = [
       {
@@ -61,7 +62,7 @@ export const useConferencesGridColumns = (handleDelete: (id: number) => void): G
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete Conference"
-            onClick={() => handleDelete(params.row.id)}
+            onClick={() => handleDelete(params.row)}
           />
         ],
       });

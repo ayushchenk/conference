@@ -32,12 +32,17 @@ import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import UTurnLeftIcon from '@mui/icons-material/UTurnLeft';
 import RateReviewOutlinedIcon from '@mui/icons-material/RateReviewOutlined';
+import { ConfirmationDialog } from "../ConfirmationDialog";
+import { SubmissionContext } from "../../contexts/SubmissionContext";
 
 export const SubmissionDetails = ({ submission }: { submission: Submission }) => {
   const navigate = useNavigate();
   const conferenceId = useConferenceId();
   const [tabValue, setTabValue] = useState(0);
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
+  const [acceptDialogOpen, setAcceptDialogOpen] = useState(false);
+  const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
+  const [returnDialogOpen, setReturnDialogOpen] = useState(false);
 
   const { post: returnSubmission, response: returnResponse } = usePostReturnSubmissionApi(submission.id);
   const { post: acceptSubmission, response: acceptResponse } = useAcceptSubmissionApi(submission.id);
@@ -63,7 +68,10 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
   }, [rejectResponse]);
 
   return (
-    <>
+    <SubmissionContext.Provider value={{
+      submissionId: submission.id,
+      isClosed: submission.isClosed
+    }}>
       <Box sx={{ display: "flex", alignItems: "center" }}>
         <IconButton onClick={() => navigate(`/conferences/${conferenceId}/submissions`)}>
           <ArrowBackIcon />
@@ -75,6 +83,36 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
           </IconButton>
         }
       </Box>
+      {!submission.isClosed &&
+        <Box>
+          <Divider />
+          {isChair &&
+            <>
+              <Button sx={{ mr: 3 }} color="success" onClick={() => setAcceptDialogOpen(true)} startIcon={<CheckIcon />}>
+                Accept
+              </Button>
+              <Button sx={{ mr: 3 }} color="error" onClick={() => setRejectDialogOpen(true)} startIcon={<CloseIcon />}>
+                Reject
+              </Button>
+            </>
+          }
+          {submission.isReviewer &&
+            <>
+              {submission.isValidForReturn &&
+                <Button sx={{ mr: 3 }} onClick={() => setReturnDialogOpen(true)} startIcon={<UTurnLeftIcon />}>
+                  Return
+                </Button>
+              }
+              {submission.isValidForReview &&
+                <Button sx={{ mr: 3 }} onClick={() => setReviewDialogOpen(true)} startIcon={<RateReviewOutlinedIcon />}>
+                  Write a Review
+                </Button>
+              }
+            </>
+          }
+          <Divider />
+        </Box>
+      }
       <TableContainer component={Paper}>
         <Table size="small">
           <TableBody>
@@ -129,36 +167,6 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
           </TableBody>
         </Table>
       </TableContainer>
-      <Box>
-        {!submission.isClosed && isChair &&
-          <>
-            <Button sx={{ m: 1 }} color="success" onClick={() => acceptSubmission({})} startIcon={<CheckIcon />}>
-              Accept
-            </Button>
-            <Button sx={{ m: 1 }} color="error" onClick={() => rejectSubmission({})} startIcon={<CloseIcon />}>
-              Reject
-            </Button>
-          </>
-        }
-        {submission.isReviewer &&
-          <>
-            {submission.isValidForReview &&
-              <Button sx={{ m: 1 }} onClick={() => setReviewDialogOpen(true)} startIcon={<RateReviewOutlinedIcon />}>
-                Write a Review
-              </Button>
-            }
-            {submission.isValidForReturn &&
-              <Button sx={{ m: 1 }} onClick={() => returnSubmission({})} startIcon={<UTurnLeftIcon />}>
-                Return
-              </Button>
-            }
-          </>
-        }
-      </Box>
-      <Divider/>
-      <FormErrorAlert response={returnResponse} />
-      <FormErrorAlert response={acceptResponse} />
-      <FormErrorAlert response={rejectResponse} />
       {(submission.isReviewer || isAuthor || isChair) &&
         <Box mt={1}>
           <Tabs variant="fullWidth" value={tabValue} onChange={handleTabChange}>
@@ -182,6 +190,28 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
         </Box>
       }
       <CreateReviewDialog open={reviewDialogOpen} onClose={() => setReviewDialogOpen(false)} />
-    </>
+      <ConfirmationDialog
+        open={acceptDialogOpen}
+        onConfirm={() => acceptSubmission({})}
+        onCancel={() => setAcceptDialogOpen(false)}>
+        Are you sure you want to accept the submission?
+        <FormErrorAlert response={acceptResponse} />
+      </ConfirmationDialog>
+      <ConfirmationDialog
+        open={rejectDialogOpen}
+        onConfirm={() => rejectSubmission({})}
+        onCancel={() => setRejectDialogOpen(false)}>
+        Are you sure you want to reject the submission?
+        <FormErrorAlert response={rejectResponse} />
+      </ConfirmationDialog>
+      <ConfirmationDialog
+        open={returnDialogOpen}
+        onConfirm={() => returnSubmission({})}
+        onCancel={() => setReturnDialogOpen(false)}>
+        Are you sure you want to return the submission? <br />
+        Author will have to update the submission before you can submit a review.
+        <FormErrorAlert response={returnResponse} />
+      </ConfirmationDialog>
+    </SubmissionContext.Provider>
   );
 };

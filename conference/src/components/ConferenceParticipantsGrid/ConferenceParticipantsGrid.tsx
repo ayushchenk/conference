@@ -15,20 +15,22 @@ import { FormErrorAlert } from "../FormErrorAlert";
 import { NoRowsOverlay } from "../Util/NoRowsOverlay";
 import { NoResultsOverlay } from "../Util/NoResultsOverlay";
 import AddIcon from '@mui/icons-material/Add';
+import { ConfirmationDialog } from "../ConfirmationDialog";
 
 export const ConferenceParticipantsGrid = () => {
   const conferenceId = useConferenceId();
+  const [rows, setRows] = useState<User[]>([]);
   const [currentPage, setCurrentPage] = useState<GridPaginationModel>(defaultPage);
-  const participants = useGetParticipantsApi(currentPage, conferenceId);
-
-  const { response: addResponse, post: addParticipant } = useAddParticipantApi(conferenceId);
-  const { response: deleteResponse, performDelete: deleteParticipant } = useDeleteParticipantApi(conferenceId);
-
   const [openAddParticipantDialog, setOpenAddParticipantDialog] = useState(false);
+  const [openDeleteParticipantDialog, setOpenDeleteParticipantDialog] = useState(false);
   const [openRoleDialog, setOpenRoleDialog] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [newParticipant, setNewParticipant] = useState<User | null>(null);
   const [deletingParticipant, setDeletingParticipant] = useState<User | null>(null);
+
+  const participants = useGetParticipantsApi(currentPage, conferenceId);
+  const { response: addResponse, post: addParticipant } = useAddParticipantApi(conferenceId);
+  const { response: deleteResponse, performDelete: deleteParticipant } = useDeleteParticipantApi(conferenceId);
 
   const handleOpenRoleDialog = useCallback((user: User) => {
     setSelectedUser(user);
@@ -37,11 +39,10 @@ export const ConferenceParticipantsGrid = () => {
 
   const handleDelete = useCallback((user: User) => {
     setDeletingParticipant(user);
-    deleteParticipant({}, user.id);
+    setOpenDeleteParticipantDialog(true);
   }, [deleteParticipant]);
 
   const columns = useConferenceParticipantsGridColumns(conferenceId, handleDelete, handleOpenRoleDialog);
-  const [rows, setRows] = useState<User[]>([]);
 
   const handleAddParticipant = useCallback((user: User) => {
     addParticipant({}, user.id);
@@ -61,8 +62,9 @@ export const ConferenceParticipantsGrid = () => {
 
   useEffect(() => {
     if (deleteResponse.status === "success" && deletingParticipant) {
-      setDeletingParticipant(null);
+      setOpenDeleteParticipantDialog(false);
       setRows(prevRows => prevRows.filter(row => row.id !== deletingParticipant.id));
+      setDeletingParticipant(null);
     }
   }, [deleteResponse.status, deletingParticipant]);
 
@@ -116,9 +118,17 @@ export const ConferenceParticipantsGrid = () => {
         onClose={() => setOpenRoleDialog(false)}
         onRoleChange={handleRoleChange}
       />
+      <ConfirmationDialog
+        open={openDeleteParticipantDialog}
+        onCancel={() => setOpenDeleteParticipantDialog(false)}
+        onConfirm={() => deleteParticipant({}, deletingParticipant?.id!)}
+      >
+        {`Are you sure you want to remove ${deletingParticipant?.fullName} from the conference?`}<br />
+        This action will also remove role assignments, review assignments and preferences.
+        <FormErrorAlert response={deleteResponse} />
+      </ConfirmationDialog>
       <FormErrorAlert response={participants} />
       <FormErrorAlert response={addResponse} />
-      <FormErrorAlert response={deleteResponse} />
     </>
   );
 };

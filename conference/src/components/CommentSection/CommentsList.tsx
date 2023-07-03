@@ -2,13 +2,15 @@ import { Paper, Box, Typography, IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { CommentsListProps } from "./CommentSection.types";
 import moment from "moment";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { Comment } from "../../types/Conference";
 import { UpdateCommentDialog } from "./UpdateCommentDialog";
 import { useDeleteSubmissionCommentApi } from "./CommentSection.hooks";
 import DeleteIcon from '@mui/icons-material/Delete';
+import { SubmissionContext } from "../../contexts/SubmissionContext";
 
 export const CommentsList = ({ comments, onUpdate, onDelete }: CommentsListProps) => {
+  const { isClosed } = useContext(SubmissionContext);
   const [editingComment, setEditingComment] = useState<Comment | null>(null);
   const [deletingComment, setDeletingComment] = useState<Comment | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
@@ -48,7 +50,7 @@ export const CommentsList = ({ comments, onUpdate, onDelete }: CommentsListProps
         >
           <Box sx={{ marginBottom: 2, display: "flex", justifyContent: "space-between" }}>
             <Typography variant="subtitle2">{comment.authorName}</Typography>
-            {comment.isAuthor &&
+            {comment.isAuthor && !isClosed &&
               <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                 <IconButton onClick={() => handleEditClick(comment)} sx={{padding: 0, paddingLeft: 1}}>
                   <EditIcon />
