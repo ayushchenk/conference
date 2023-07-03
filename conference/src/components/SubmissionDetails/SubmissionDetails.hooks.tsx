@@ -2,7 +2,7 @@ import { useDeleteApi } from "../../hooks/UseDeleteApi";
 import { useGetApi } from "../../hooks/UseGetApi";
 import { usePostApi } from "../../hooks/UsePostApi";
 import { BooleanResponse } from "../../types/ApiResponse";
-import { Submission, SubmissionPaper } from "../../types/Conference";
+import { Review, Submission, SubmissionPaper } from "../../types/Conference";
 import { GetSubmissionResponse } from "./SubmissionDetails.types";
 
 export const useGetSubmissionApi = (submissionId: number): GetSubmissionResponse => {
@@ -11,6 +11,10 @@ export const useGetSubmissionApi = (submissionId: number): GetSubmissionResponse
 
 export const useGetSubmissionPapersApi = (submissionId: number) => {
   return useGetApi<SubmissionPaper[]>(`/Submission/${submissionId}/papers`);
+};
+
+export const useGetReviewsApi = (submissionId: number) => {
+  return useGetApi<Review[]>(`/Submission/${submissionId}/reviews`);
 };
 
 export const usePostReturnSubmissionApi = (submissionId: number) => {
@@ -27,7 +31,7 @@ export const useRejectSubmissionApi = (submissionId: number) => {
 
 export const useGetHasPreferenceApi = (submissionId: number) => {
   return useGetApi<BooleanResponse>(`/submission/${submissionId}/has-preference`);
-}
+};
 
 export const useAddSubmissionPreferenceApi = (submissionId: number) => {
   return usePostApi<{}, {}>(`/submission/${submissionId}/preferences`);
