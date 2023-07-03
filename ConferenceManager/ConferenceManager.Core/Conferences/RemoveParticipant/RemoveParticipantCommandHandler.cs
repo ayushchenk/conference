@@ -25,7 +25,6 @@ namespace ConferenceManager.Core.Conferences.RemoveParticipant
             using var transaction = Context.Database.BeginTransaction();
 
             Context.ConferenceParticipants.Remove(participation);
-            await Context.SaveChangesAsync(cancellationToken);
 
             var conferenceRoles = Context.UserRoles
                 .Where(r => r.UserId == request.UserId && r.ConferenceId == request.ConferenceId);
@@ -33,8 +32,17 @@ namespace ConferenceManager.Core.Conferences.RemoveParticipant
             if (conferenceRoles.Any())
             {
                 Context.UserRoles.RemoveRange(conferenceRoles);
-                await Context.SaveChangesAsync(cancellationToken);
             }
+
+            var reviewAssignments = Context.SubmissionReviewers
+                .Where(r => r.ReviewerId == request.UserId && r.Submission.ConferenceId == request.ConferenceId);
+
+            if (reviewAssignments.Any())
+            {
+                Context.SubmissionReviewers.RemoveRange(reviewAssignments);
+            }
+
+            await Context.SaveChangesAsync(cancellationToken);
 
             transaction.Commit();
         }

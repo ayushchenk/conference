@@ -40,7 +40,7 @@ export const ParticipantUsersGrid: React.FC<ParticipantUsersGridProps> = ({ hand
     debounceTimeout.current = setTimeout(() => {
       setDebouncedQuery(e.target.value);
       debounceTimeout.current = null;
-    }, 500);
+    }, 350);
   }, []);
 
   return (
@@ -51,7 +51,7 @@ export const ParticipantUsersGrid: React.FC<ParticipantUsersGridProps> = ({ hand
         id="query"
         name="query"
         label="Search query"
-        placeholder="Search by name or email"
+        placeholder="Search by name, email, country or affiliation"
         type="text"
         value={query}
         onChange={handleInput}

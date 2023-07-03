@@ -42,9 +42,9 @@ export const JoinConferenceDialog = (props: JoinConferenceDialogProps) => {
           />
           <Button
             disabled={response.status === "loading"}
-            color="primary" 
-            variant="contained" 
-            fullWidth 
+            color="primary"
+            variant="contained"
+            fullWidth
             type="submit">
             Submit
           </Button>

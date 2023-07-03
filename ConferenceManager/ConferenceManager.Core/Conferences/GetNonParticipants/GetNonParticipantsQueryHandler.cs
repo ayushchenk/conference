@@ -30,7 +30,9 @@ namespace ConferenceManager.Core.Conferences.GetNonParticipants
                 nonParticipants = nonParticipants.Where(u => 
                     u.Email!.Contains(request.Query)
                     || u.FirstName.Contains(request.Query)
-                    || u.LastName.Contains(request.Query));
+                    || u.LastName.Contains(request.Query)
+                    || u.Affiliation.Contains(request.Query)
+                    || u.Country.Contains(request.Query));
             }
 
             var orderedNonParticipants = nonParticipants.OrderBy(u => u.Id);
