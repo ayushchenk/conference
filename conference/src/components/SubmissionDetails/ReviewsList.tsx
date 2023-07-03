@@ -9,7 +9,7 @@ import moment from "moment";
 
 export const ReviewsList = () => {
   const submissionId = useSubmissionId();
-  const reviews = useGetReviewsApi(Number(submissionId));
+  const reviews = useGetReviewsApi(submissionId);
   const [rows, setRows] = useState<Review[]>([]);
   const [editingReview, setEditingReview] = useState<Review | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
@@ -39,9 +39,13 @@ export const ReviewsList = () => {
     });
   }, []);
 
+  if (reviews.status === "success" && rows.length === 0) {
+    return <Box display="flex" justifyContent="center">No reviews uploaded yet</Box>;
+  }
+
   return (
     <>
-      {rows?.map((review) => (
+      {rows.map((review) => (
         <Paper
           key={review.reviewerEmail}
           sx={{
@@ -75,7 +79,7 @@ export const ReviewsList = () => {
             Reviewer: {review.reviewerName}
           </Typography>
           <Typography variant="body2" color="textSecondary">
-            {moment(review.createdOn).local().format("DD/MM/YYYY HH:mm:ss")} <i>{review.isModified ? "Edited" : ""}</i>
+            {moment(review.createdOn).local().format("DD/MM/YYYY HH:mm:ss")} {review.isModified && <i>Edited</i>}
           </Typography>
         </Paper>
       ))}

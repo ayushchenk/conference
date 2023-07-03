@@ -235,6 +235,7 @@ export const CreateSubmissionForm = ({ submission }: { submission?: Submission }
         color="primary"
         variant="contained"
         fullWidth
+        sx={{ mt: 3 }}
         type="submit">
         Submit
       </Button>

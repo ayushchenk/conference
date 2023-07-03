@@ -15,30 +15,29 @@ import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 import Tabs from "@mui/material/Tabs";
 import { useAcceptSubmissionApi, usePostReturnSubmissionApi, useRejectSubmissionApi } from "./SubmissionDetails.hooks";
-import { SubmissionPapersTable } from "./SubmissionPapersTable";
 import { TabPanel } from "./TabPanel";
-import { Submission } from "../../types/Conference";
 import { FormHeader } from "../FormHeader";
 import { useConferenceId } from "../../hooks/UseConferenceId";
 import { Auth } from "../../logic/Auth";
 import { Submission } from "../../types/Conference";
-import { CommentSection } from "../CommentSection";
 import { FormErrorAlert } from "../FormErrorAlert";
 import { AnyRoleVisibility } from "../ProtectedRoute/AnyRoleVisibility";
 import { SubmissionReviewersGrid } from "../SubmissionReviewersGrid/";
 import { CreateReviewDialog } from "./CreateReviewDialog";
 import { PreferenceCheckbox } from "./PreferenceCheckbox";
 import { ReviewsList } from "./ReviewsList";
-import { usePostReturnSubmissionAPI } from "./SubmissionDetails.hooks";
 import { SubmissionPapersTable } from "./SubmissionPapersTable";
 import { CommentSection } from "../CommentSection";
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
+import UTurnLeftIcon from '@mui/icons-material/UTurnLeft';
+import RateReviewOutlinedIcon from '@mui/icons-material/RateReviewOutlined';
 
 export const SubmissionDetails = ({ submission }: { submission: Submission }) => {
   const navigate = useNavigate();
   const conferenceId = useConferenceId();
   const [tabValue, setTabValue] = useState(0);
+  const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
 
   const { post: returnSubmission, response: returnResponse } = usePostReturnSubmissionApi(submission.id);
   const { post: acceptSubmission, response: acceptResponse } = useAcceptSubmissionApi(submission.id);
@@ -46,10 +45,6 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
 
   const isAuthor = submission.authorId === Auth.getId();
   const isChair = Auth.isChair(conferenceId);
-
-  const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
-  const handleReviewDialogOpen = () => setReviewDialogOpen(true);
-  const handleReviewDialogClose = () => setReviewDialogOpen(false);
 
   const handleTabChange = useCallback((_: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
@@ -78,7 +73,7 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
           <IconButton onClick={() => navigate(`/conferences/${conferenceId}/submissions/${submission.id}/edit`)}>
             <EditIcon />
           </IconButton>
-        )}
+        }
       </Box>
       <TableContainer component={Paper}>
         <Table size="small">
@@ -131,45 +126,33 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
                 </TableCell>
               </TableRow>
             )}
-            {submission.isReviewer && (
-              <>
+            {submission.isReviewer && <>
+              {
+                submission.isValidForReview &&
                 <TableRow>
                   <TableCell align="center" colSpan={12} variant="head">
-                    <Button onClick={handleReviewDialogOpen}>Write a Review</Button>
+                    <Button onClick={() => setReviewDialogOpen(true)} startIcon={<RateReviewOutlinedIcon />}>Write a Review</Button>
                   </TableCell>
                 </TableRow>
+              }
+              {submission.isValidForReturn &&
                 <TableRow>
                   <TableCell align="center" colSpan={12} variant="head">
-                    <Button
-                      color="inherit"
-                      onClick={() => returnSubmission({})}
-                      disabled={!submission.isValidForReturn}
-                    >
-                      Return
-                    </Button>
+                    <Button onClick={() => returnSubmission({})} startIcon={<UTurnLeftIcon />}>Return</Button>
                   </TableCell>
                 </TableRow>
-              </>
-            )}
-            }
-            {submission.isReviewer &&
-              <TableRow>
-                <TableCell align="center" colSpan={12} variant="head">
-                  <Button color="inherit" onClick={() => returnSubmission({})} disabled={!submission.isValidForReturn}>
-                    Return
-                  </Button>
-                </TableCell>
-              </TableRow>
+              }
+            </>
             }
             {!submission.isClosed && isChair &&
               <TableRow>
                 <TableCell align="center">
-                  <Button color="success" variant="outlined" onClick={() => acceptSubmission({})} startIcon={<CheckIcon />}>
+                  <Button color="success" onClick={() => acceptSubmission({})} startIcon={<CheckIcon />}>
                     Accept
                   </Button>
                 </TableCell>
                 <TableCell align="center">
-                  <Button color="error" variant="outlined" onClick={() => rejectSubmission({})} startIcon={<CloseIcon />}>
+                  <Button color="error" onClick={() => rejectSubmission({})} startIcon={<CloseIcon />}>
                     Reject
                   </Button>
                 </TableCell>
@@ -181,8 +164,7 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
       <FormErrorAlert response={returnResponse} />
       <FormErrorAlert response={acceptResponse} />
       <FormErrorAlert response={rejectResponse} />
-      {
-        (submission.isReviewer || isAuthor || isChair) &&
+      {(submission.isReviewer || isAuthor || isChair) &&
         <Box mt={5}>
           <Tabs variant="fullWidth" value={tabValue} onChange={handleTabChange}>
             <Tab label="Papers" />
@@ -197,14 +179,14 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
             <ReviewsList />
           </TabPanel>
           <TabPanel value={tabValue} index={2}>
-            <CommentSection submissionId={submission.id}></CommentSection>
+            <CommentSection submissionId={submission.id} />
           </TabPanel>
           <TabPanel value={tabValue} index={3}>
             <SubmissionReviewersGrid submissionId={submission.id} />
           </TabPanel>
         </Box>
-      )}
-      <CreateReviewDialog open={reviewDialogOpen} onClose={handleReviewDialogClose} />
+      }
+      <CreateReviewDialog open={reviewDialogOpen} onClose={() => setReviewDialogOpen(false)} />
     </>
   );
 };

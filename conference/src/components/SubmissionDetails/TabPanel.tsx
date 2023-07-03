@@ -6,7 +6,7 @@ export function TabPanel(props: TabPanelProps) {
 
   return (
     <div role="tabpanel" hidden={value !== index} id={`tabpanel-${index}`} {...other}>
-      {value === index && <Box>{children}</Box>}
+      {value === index && <Box mt={2}>{children}</Box>}
     </div>
   );
 }
