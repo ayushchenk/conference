@@ -15,14 +15,14 @@ export const UsersGrid = () => {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   const users = useGetUsersApi(currentPage);
-  const { response: deleteResponse, performDelete } = useDeleteUserApi();
+  const deleteUserApi = useDeleteUserApi();
   const { response: addRoleResponse, post: addRole } = useAddUserAdminRoleApi();
   const { response: removeRoleResponse, performDelete: removeRole } = useRemoveUserAdminRoleApi();
 
   const handleDelete = useCallback((user: User) => {
     setDeletingUser(user);
     setOpenDeleteDialog(true);
-  }, [performDelete]);
+  }, []);
 
   const handleRoleChange = useCallback((user: User, checked: boolean) => {
     checked ? addRole({}, user.id) : removeRole({}, user.id);
@@ -40,10 +40,13 @@ export const UsersGrid = () => {
   const columns = useUsersGridColumns(handleDelete, handleRoleChange);
 
   useEffect(() => {
-    if (deleteResponse.status === "success" && deletingUser) {
+    if (deleteUserApi.response.status === "success" && deletingUser) {
       setRows(prevRows => prevRows.filter((row) => row.id !== deletingUser.id));
+      setDeletingUser(null);
+      deleteUserApi.reset();
+      setOpenDeleteDialog(false);
     }
-  }, [deleteResponse.status, deletingUser]);
+  }, [deleteUserApi, deletingUser]);
 
   useEffect(() => {
     if (users.status === "success") {
@@ -75,12 +78,12 @@ export const UsersGrid = () => {
       <ConfirmationDialog
         open={openDeleteDialog}
         onCancel={() => setOpenDeleteDialog(false)}
-        onConfirm={() => performDelete({}, deletingUser?.id!)}
+        onConfirm={() => deleteUserApi.performDelete({}, deletingUser?.id!)}
       >
         {`Are you sure you want to delete ${deletingUser?.fullName}'s account?`}<br />
         This will also delete all associated data.
-        <FormErrorAlert response={deleteResponse} />
       </ConfirmationDialog>
+      <FormErrorAlert response={deleteUserApi.response} />
       <FormErrorAlert response={addRoleResponse} />
       <FormErrorAlert response={removeRoleResponse} />
     </>

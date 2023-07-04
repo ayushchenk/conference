@@ -14,12 +14,12 @@ export const ConferencesGrid = () => {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   const conferences = useGetConferencesApi(currentPage);
-  const { response: deleteResponse, performDelete: deleteConference } = useDeleteConferenceApi();
+  const deleteConferenceApi = useDeleteConferenceApi();
 
   const handleDelete = useCallback((conference: Conference) => {
     setDeletingConference(conference);
     setOpenDeleteDialog(true);
-  }, [deleteConference]);
+  }, []);
 
   const columns = useConferencesGridColumns(handleDelete);
 
@@ -30,12 +30,13 @@ export const ConferencesGrid = () => {
   }, [conferences]);
 
   useEffect(() => {
-    if (deleteResponse.status === "success" && deletingConference) {
-      setOpenDeleteDialog(false);
+    if (deleteConferenceApi.response.status === "success" && deletingConference) {
       setRows((prevRows) => prevRows.filter((row) => row.id !== deletingConference.id));
+      setOpenDeleteDialog(false);
       setDeletingConference(null);
+      deleteConferenceApi.reset();
     }
-  }, [deleteResponse.status, deletingConference]);
+  }, [deleteConferenceApi, deletingConference]);
 
   return (
     <>
@@ -60,12 +61,12 @@ export const ConferencesGrid = () => {
       <ConfirmationDialog
         open={openDeleteDialog}
         onCancel={() => setOpenDeleteDialog(false)}
-        onConfirm={() => deleteConference({}, deletingConference?.id!)}
+        onConfirm={() => deleteConferenceApi.performDelete({}, deletingConference?.id!)}
       >
         {`Are you sure you want to delete ${deletingConference?.acronym}?`}<br />
         This will also delete all submissions, reviews, comments, etc.
-        <FormErrorAlert response={deleteResponse} />
       </ConfirmationDialog>
+      <FormErrorAlert response={deleteConferenceApi.response} />
       <FormErrorAlert response={conferences} />
     </>
   );

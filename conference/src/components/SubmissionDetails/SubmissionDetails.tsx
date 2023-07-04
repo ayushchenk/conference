@@ -168,7 +168,7 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
         </Table>
       </TableContainer>
       {(submission.isReviewer || isAuthor || isChair) &&
-        <Box mt={1}>
+        <Box mt={5}>
           <Tabs variant="fullWidth" value={tabValue} onChange={handleTabChange}>
             <Tab label="Papers" />
             <Tab label="Reviews" />
@@ -182,10 +182,10 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
             <ReviewsList />
           </TabPanel>
           <TabPanel value={tabValue} index={2}>
-            <CommentSection submissionId={submission.id} />
+            <CommentSection />
           </TabPanel>
           <TabPanel value={tabValue} index={3}>
-            <SubmissionReviewersGrid submissionId={submission.id} />
+            <SubmissionReviewersGrid />
           </TabPanel>
         </Box>
       }

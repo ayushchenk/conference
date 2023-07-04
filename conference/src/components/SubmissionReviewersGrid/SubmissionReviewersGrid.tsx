@@ -9,19 +9,22 @@ import {
   useRemoveSubmissionReviewerApi,
   useSubmissionReviewersGridColumns
 } from "./SubmissionReviewersGrid.hooks";
-import { SubmissionReviewersGridProps } from "./SubmissionReviewersGrid.types";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useContext } from "react";
 import { User } from "../../types/User";
 import { Button } from "@mui/material";
 import { AssignReviewerDialog } from "../AssignReviewerDialog";
 import AddIcon from '@mui/icons-material/Add';
+import { SubmissionContext } from "../../contexts/SubmissionContext";
+import { ConfirmationDialog } from "../ConfirmationDialog";
 
-export const SubmissionReviewersGrid = ({ submissionId }: SubmissionReviewersGridProps) => {
+export const SubmissionReviewersGrid = () => {
+  const { submissionId, isClosed } = useContext(SubmissionContext);
   const [assignedReviewers, setAssignedReviewers] = useState<User[]>([]);
   const [unassignedReviewers, setUnassignedReviewers] = useState<User[]>([]);
   const [addingReviewer, setAddingReviewer] = useState<User | null>(null);
   const [removingReviewer, setRemovingReviewer] = useState<User | null>(null);
-  const [openDialog, setOpenDialog] = useState(false);
+  const [openAssignDialog, setOpenAssignDialog] = useState(false);
+  const [openRemoveDialog, setOpenRemoveDialog] = useState(false);
 
   const conferenceReviewers = useGetConferenceReviewersApi(submissionId);
   const submissionReviewers = useGetSubmissionReviewersApi(submissionId);
@@ -30,8 +33,8 @@ export const SubmissionReviewersGrid = ({ submissionId }: SubmissionReviewersGri
 
   const handleReviewerRemove = useCallback((user: User) => {
     setRemovingReviewer(user);
-    removeReviewerApi.performDelete({}, user.id);
-  }, [removeReviewerApi]);
+    setOpenRemoveDialog(true);
+  }, []);
 
   const handleReviewerAdd = useCallback((user: User) => {
     setAddingReviewer(user);
@@ -49,23 +52,28 @@ export const SubmissionReviewersGrid = ({ submissionId }: SubmissionReviewersGri
     if (removeReviewerApi.response.status === "success" && removingReviewer) {
       setAssignedReviewers(prevRows => [...prevRows].filter(r => r.id !== removingReviewer.id));
       setUnassignedReviewers(prevRows => [...prevRows, removingReviewer]);
+      setOpenRemoveDialog(false);
+      setRemovingReviewer(null);
+      removeReviewerApi.reset();
     }
-  }, [removeReviewerApi.response, removingReviewer]);
+  }, [removeReviewerApi, removingReviewer]);
 
   useEffect(() => {
     if (addReviewerApi.response.status === "success" && addingReviewer) {
       setAssignedReviewers(prevRows => [...prevRows, addingReviewer]);
       setUnassignedReviewers(prevRows => [...prevRows].filter(r => r.id !== addingReviewer.id));
+      setAddingReviewer(null);
+      addReviewerApi.reset();
     }
-  }, [addReviewerApi.response, addingReviewer]);
+  }, [addReviewerApi, addingReviewer]);
 
   const columns = useSubmissionReviewersGridColumns(handleReviewerRemove);
 
   return (
     <>
       <Button
-        onClick={() => setOpenDialog(true)}
-        disabled={conferenceReviewers.status === "loading"}
+        onClick={() => setOpenAssignDialog(true)}
+        disabled={conferenceReviewers.status === "loading" || isClosed}
         startIcon={<AddIcon />}>
         Add Reviewer
       </Button>
@@ -81,11 +89,18 @@ export const SubmissionReviewersGrid = ({ submissionId }: SubmissionReviewersGri
         }}
       />
       <AssignReviewerDialog
-        show={openDialog}
+        show={openAssignDialog}
         reviewers={unassignedReviewers}
-        onDialogClose={() => setOpenDialog(false)}
+        onDialogClose={() => setOpenAssignDialog(false)}
         onReviewerAdd={handleReviewerAdd}
       />
+      <ConfirmationDialog
+        open={openRemoveDialog}
+        onConfirm={() => removeReviewerApi.performDelete({}, removingReviewer?.id!)}
+        onCancel={() => setOpenRemoveDialog(false)}
+      >
+        {`Are you sure you want to remove ${removingReviewer?.fullName} from this submission?`}
+      </ConfirmationDialog>
       <FormErrorAlert response={submissionReviewers} />
       <FormErrorAlert response={conferenceReviewers} />
       <FormErrorAlert response={removeReviewerApi.response} />
