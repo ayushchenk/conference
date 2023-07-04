@@ -67,9 +67,9 @@ namespace ConferenceManager.Api.Controllers
         [HttpGet]
         [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Chair}")]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(EntityPageResponse<UserDto>))]
-        public async Task<IActionResult> GetPage(int pageIndex, int pageSize, CancellationToken cancellation)
+        public async Task<IActionResult> GetPage(int pageIndex, int pageSize, string? query, CancellationToken cancellation)
         {
-            var result = await Mediator.Send(new GetUserPageQuery(pageIndex, pageSize), cancellation);
+            var result = await Mediator.Send(new GetUserPageQuery(pageIndex, pageSize, query), cancellation);
 
             return Ok(result);
         }

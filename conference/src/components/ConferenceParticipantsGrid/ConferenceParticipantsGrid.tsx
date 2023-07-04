@@ -6,7 +6,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
-import { ParticipantUsersGrid } from "../ParticipantUsersGrid";
+import { NonParticipantUsersGrid } from "../NonParticipantUsersGrid";
 import { defaultPage } from "../../util/Constants";
 import { User } from "../../types/User";
 import { useConferenceId } from "../../hooks/UseConferenceId";
@@ -40,7 +40,7 @@ export const ConferenceParticipantsGrid = () => {
   const handleDelete = useCallback((user: User) => {
     setDeletingParticipant(user);
     setOpenDeleteParticipantDialog(true);
-  }, [deleteParticipant]);
+  }, []);
 
   const columns = useConferenceParticipantsGridColumns(conferenceId, handleDelete, handleOpenRoleDialog);
 
@@ -106,7 +106,7 @@ export const ConferenceParticipantsGrid = () => {
       <Dialog maxWidth="md" fullWidth open={openAddParticipantDialog} onClose={() => setOpenAddParticipantDialog(false)}>
         <DialogTitle>Add new user to the conference</DialogTitle>
         <DialogContent>
-          <ParticipantUsersGrid handleAddParticipant={handleAddParticipant} />
+          <NonParticipantUsersGrid handleAddParticipant={handleAddParticipant} />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenAddParticipantDialog(false)}>Cancel</Button>

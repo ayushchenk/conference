@@ -1,15 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { DataGrid, GridPaginationModel } from "@mui/x-data-grid";
-import { useGetNonParticipantsApi, useParticipantUsersGridProps as useParticipantUsersGridColumns } from "./ParticipantUsersGrid.hooks";
+import { useGetNonParticipantsApi, useParticipantUsersGridProps as useParticipantUsersGridColumns } from "./NonParticipantUsersGrid.hooks";
 import { defaultPage } from "../../util/Constants";
-import { ParticipantUsersGridProps } from "./ParticipantUsersGrid.types";
+import { ParticipantUsersGridProps } from "./NonParticipantUsersGrid.types";
 import { FormErrorAlert } from "../FormErrorAlert";
 import { NoResultsOverlay } from "../Util/NoResultsOverlay";
 import { NoRowsOverlay } from "../Util/NoRowsOverlay";
 import { User } from "../../types/User";
 import { TextField } from "@mui/material";
 
-export const ParticipantUsersGrid: React.FC<ParticipantUsersGridProps> = ({ handleAddParticipant }) => {
+export const NonParticipantUsersGrid: React.FC<ParticipantUsersGridProps> = ({ handleAddParticipant }) => {
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
   const [rows, setRows] = useState<User[]>([]);
   const [query, setQuery] = useState("");

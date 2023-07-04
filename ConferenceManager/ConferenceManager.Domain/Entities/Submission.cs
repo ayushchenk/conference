@@ -23,6 +23,8 @@ namespace ConferenceManager.Domain.Entities
 
         public bool IsValidForReview => Status == SubmissionStatus.Created || Status == SubmissionStatus.Updated || Status == SubmissionStatus.InReview;
 
+        public bool IsClosed => Status == SubmissionStatus.Accepted || Status == SubmissionStatus.Rejected;
+
         public virtual Conference Conference { set; get; } = null!;
 
         public virtual IList<ApplicationUser> ActualReviewers { set; get; } = null!;

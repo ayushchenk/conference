@@ -27,7 +27,7 @@ namespace ConferenceManager.Core.Submissions.Common
                 IsValidForReturn = source.IsValidForReturn,
                 IsValidForUpdate = source.IsValidForUpdate,
                 IsValidForReview = source.IsValidForReview,
-                IsClosed = source.Status == SubmissionStatus.Accepted || source.Status == SubmissionStatus.Rejected,
+                IsClosed = source.IsClosed,
             };
         }
     }
