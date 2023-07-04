@@ -19,6 +19,7 @@ export const useDebounceQuery = (placeholder = "Enter search query", delay = 350
 
   const debouncedInput = <TextField
     fullWidth
+    sx={{ mt: 0 }}
     margin="normal"
     id="query"
     name="query"
