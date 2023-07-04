@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { DataGrid, GridPaginationModel } from "@mui/x-data-grid";
 import { useGetNonParticipantsApi, useParticipantUsersGridProps as useParticipantUsersGridColumns } from "./NonParticipantUsersGrid.hooks";
 import { defaultPage } from "../../util/Constants";
@@ -7,20 +7,18 @@ import { FormErrorAlert } from "../FormErrorAlert";
 import { NoResultsOverlay } from "../Util/NoResultsOverlay";
 import { NoRowsOverlay } from "../Util/NoRowsOverlay";
 import { User } from "../../types/User";
-import { TextField } from "@mui/material";
+import { useDebounceQuery } from "../../hooks/UseDebouncedQuery";
 
 export const NonParticipantUsersGrid: React.FC<ParticipantUsersGridProps> = ({ handleAddParticipant }) => {
-  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
   const [rows, setRows] = useState<User[]>([]);
-  const [query, setQuery] = useState("");
-  const [debouncedQuery, setDebouncedQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState<GridPaginationModel>(defaultPage);
+  const { debouncedQuery, debouncedInput } = useDebounceQuery("Search by name, email, country or affiliation");
 
   const handleAdd = useCallback((user: User) => {
     handleAddParticipant(user);
     setRows(prevRows => [...prevRows].filter(u => u.id !== user.id));
   }, [handleAddParticipant]);
 
-  const [currentPage, setCurrentPage] = useState<GridPaginationModel>(defaultPage);
   const users = useGetNonParticipantsApi(currentPage, debouncedQuery);
   const columns = useParticipantUsersGridColumns(handleAdd);
 
@@ -30,32 +28,9 @@ export const NonParticipantUsersGrid: React.FC<ParticipantUsersGridProps> = ({ h
     }
   }, [users]);
 
-  const handleInput = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setQuery(e.target.value);
-
-    if (debounceTimeout.current) {
-      clearTimeout(debounceTimeout.current);
-    }
-
-    debounceTimeout.current = setTimeout(() => {
-      setDebouncedQuery(e.target.value);
-      debounceTimeout.current = null;
-    }, 350);
-  }, []);
-
   return (
     <>
-      <TextField
-        fullWidth
-        margin="normal"
-        id="query"
-        name="query"
-        label="Search query"
-        placeholder="Search by name, email, country or affiliation"
-        type="text"
-        value={query}
-        onChange={handleInput}
-      />
+      {debouncedInput}
       <DataGrid
         autoHeight
         rows={rows}

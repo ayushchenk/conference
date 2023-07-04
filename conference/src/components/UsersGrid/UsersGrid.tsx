@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { DataGrid, GridPaginationModel } from "@mui/x-data-grid";
 import { useAddUserAdminRoleApi, useDeleteUserApi, useGetUsersApi, useRemoveUserAdminRoleApi, useUsersGridColumns } from "./UsersGrid.hooks";
 import { defaultPage } from "../../util/Constants";
@@ -7,16 +7,14 @@ import { User } from "../../types/User";
 import { NoRowsOverlay } from "../Util/NoRowsOverlay";
 import { NoResultsOverlay } from "../Util/NoResultsOverlay";
 import { ConfirmationDialog } from "../ConfirmationDialog";
-import { TextField } from "@mui/material";
+import { useDebounceQuery } from "../../hooks/UseDebouncedQuery";
 
 export const UsersGrid = () => {
   const [currentPage, setCurrentPage] = useState<GridPaginationModel>(defaultPage);
   const [rows, setRows] = useState<User[]>([]);
   const [deletingUser, setDeletingUser] = useState<User | null>(null);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
-  const [query, setQuery] = useState("");
-  const [debouncedQuery, setDebouncedQuery] = useState("");
+  const { debouncedQuery, debouncedInput } = useDebounceQuery("Search by name, email, country or affiliation");
 
   const users = useGetUsersApi(currentPage, debouncedQuery);
   const deleteUserApi = useDeleteUserApi();
@@ -58,36 +56,13 @@ export const UsersGrid = () => {
     }
   }, [users]);
 
-  const handleInput = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setQuery(e.target.value);
-
-    if (debounceTimeout.current) {
-      clearTimeout(debounceTimeout.current);
-    }
-
-    debounceTimeout.current = setTimeout(() => {
-      setDebouncedQuery(e.target.value);
-      debounceTimeout.current = null;
-    }, 350);
-  }, []);
-
   if (users.status === "error") {
     return <FormErrorAlert response={users} />;
   }
 
   return (
     <>
-      <TextField
-        fullWidth
-        margin="normal"
-        id="query"
-        name="query"
-        label="Search query"
-        placeholder="Search by name, email, country or affiliation"
-        type="text"
-        value={query}
-        onChange={handleInput}
-      />
+      {debouncedInput}
       <DataGrid
         autoHeight
         rows={rows}

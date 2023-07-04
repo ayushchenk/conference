@@ -7,10 +7,13 @@ namespace ConferenceManager.Core.Conferences.GetSubmissions
     {
         public int ConferenceId { get; }
 
+        public string? Query { get; }
+
         public GetConferenceSubmissionsQuery(
-            int conferenceId, int pageIndex, int pageSize) : base(pageIndex, pageSize)
+            int conferenceId, string? query, int pageIndex, int pageSize) : base(pageIndex, pageSize)
         {
             ConferenceId = conferenceId;
+            Query = query;
         }
     }
 }

@@ -148,9 +148,9 @@ namespace ConferenceManager.Api.Controllers
         [Authorize]
         [ConferenceAuthorization]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(EntityPageResponse<SubmissionDto>))]
-        public async Task<IActionResult> GetSubmissions(int id, int pageIndex, int pageSize, CancellationToken cancellation)
+        public async Task<IActionResult> GetSubmissions(int id, string? query, int pageIndex, int pageSize, CancellationToken cancellation)
         {
-            var result = await Mediator.Send(new GetConferenceSubmissionsQuery(id, pageIndex, pageSize), cancellation);
+            var result = await Mediator.Send(new GetConferenceSubmissionsQuery(id, query, pageIndex, pageSize), cancellation);
 
             return Ok(result);
         }

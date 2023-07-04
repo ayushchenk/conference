@@ -8,9 +8,10 @@ import { useMemo } from "react";
 import { Auth } from "../../logic/Auth";
 import { useConferenceId } from "../../hooks/UseConferenceId";
 
-export const useGetSubmissionsApi = (paging: GridPaginationModel, conferenceId: number): GetSubmissionsResponse => {
+export const useGetSubmissionsApi = (paging: GridPaginationModel, query?: string): GetSubmissionsResponse => {
+  const conferenceId = useConferenceId();
   const config = useMemoPaging(paging);
-  return useGetApi<GetSubmissionsData>(`/Conference/${conferenceId}/submissions`, config);
+  return useGetApi<GetSubmissionsData>(`/Conference/${conferenceId}/submissions${query && `?query=${query}`}`, config);
 };
 
 export const useSubmissionsGridColumns = (): GridColDef[] => {
