@@ -5,18 +5,15 @@ import { Auth } from "../../logic/Auth";
 import "./Header.css";
 import { AdminVisibility } from "../ProtectedRoute/AdminVisibility";
 import AccountCircle from '@mui/icons-material/AccountCircle';
+import { useCallback } from "react";
 
 export const Header = () => {
   const navigate = useNavigate();
 
-  function handleLogout() {
+  const handleLogout = useCallback(() => {
     Auth.logout();
     navigate("/login");
-  }
-
-  const handleProfile = () => {
-    navigate("/profile");
-  };
+  }, [navigate]);
 
   return (
     <AppBar position="static">
@@ -45,7 +42,7 @@ export const Header = () => {
             <Button color="inherit" className="header__link" onClick={handleLogout}>
               Logout
             </Button>
-            <IconButton size="large" color="inherit" onClick={handleProfile}>
+            <IconButton size="large" color="inherit" onClick={() => navigate("/profile")}>
               <AccountCircle />
             </IconButton>
           </>

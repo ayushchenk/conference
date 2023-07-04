@@ -194,21 +194,21 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
         open={acceptDialogOpen}
         onConfirm={() => acceptSubmission({})}
         onCancel={() => setAcceptDialogOpen(false)}>
-        Are you sure you want to accept the submission?
+        Are you sure you want to accept this submission?
         <FormErrorAlert response={acceptResponse} />
       </ConfirmationDialog>
       <ConfirmationDialog
         open={rejectDialogOpen}
         onConfirm={() => rejectSubmission({})}
         onCancel={() => setRejectDialogOpen(false)}>
-        Are you sure you want to reject the submission?
+        Are you sure you want to reject this submission?
         <FormErrorAlert response={rejectResponse} />
       </ConfirmationDialog>
       <ConfirmationDialog
         open={returnDialogOpen}
         onConfirm={() => returnSubmission({})}
         onCancel={() => setReturnDialogOpen(false)}>
-        Are you sure you want to return the submission? <br />
+        Are you sure you want to return this submission? <br />
         Author will have to update the submission before you can submit a review.
         <FormErrorAlert response={returnResponse} />
       </ConfirmationDialog>
