@@ -1,6 +1,6 @@
 import { TableContainer, Paper, Table, TableBody, TableRow, TableCell, Container } from "@mui/material";
 import { UserDetailsProps } from "./UserDetails.types";
-import { FormHeader } from "../FormHeader";
+import { FormNavHeader } from "../FormHeader";
 
 export const UserDetails = ({ user }: UserDetailsProps) => {
   const tableRow = (label: string, value: string, link: boolean = false) => {
@@ -14,7 +14,7 @@ export const UserDetails = ({ user }: UserDetailsProps) => {
 
   return (
     <Container>
-      <FormHeader>{user.fullName}</FormHeader>
+     <FormNavHeader route="/users">{user.fullName}</FormNavHeader>
       <TableContainer component={Paper}>
         <Table size="small">
           <TableBody>
