@@ -1,11 +1,14 @@
 import { Container } from "@mui/material";
 import { CreateSubmissionForm } from "../../components/CreateSubmissionForm/CreateSubmissionForm";
-import { FormHeader } from "../../components/FormHeader";
+import { FormNavHeader } from "../../components/FormHeader";
+import { useConferenceId } from "../../hooks/UseConferenceId";
 
 export const CreateSubmissionPage = () => {
+  const conferenceId = useConferenceId();
+
   return (
     <Container>
-      <FormHeader>Create submission</FormHeader>
+      <FormNavHeader route={`/conferences/${conferenceId}`}>Create submission</FormNavHeader>
       <CreateSubmissionForm />
     </Container>
   );

@@ -4,7 +4,7 @@ using MediatR;
 
 namespace ConferenceManager.Core.Common.Queries
 {
-    public abstract class GetEntityPageQuery<TEntity> : IRequest<EntityPageResponse<TEntity>> where TEntity : IDto
+    public abstract class GetEntityPageQuery<TDto> : IRequest<EntityPageResponse<TDto>> where TDto : IDto
     {
         public int PageIndex { get; }
 

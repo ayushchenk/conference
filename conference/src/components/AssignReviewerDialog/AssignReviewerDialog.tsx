@@ -36,7 +36,7 @@ export const AssignReviewerDialog = ({
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={onDialogClose}>Cancel</Button>
+        <Button onClick={onDialogClose}>Close</Button>
       </DialogActions>
     </Dialog>
   );

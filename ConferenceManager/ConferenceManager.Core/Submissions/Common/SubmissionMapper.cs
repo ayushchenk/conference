@@ -1,5 +1,6 @@
 ﻿using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Domain.Entities;
+using ConferenceManager.Domain.Enums;
 using Humanizer;
 
 namespace ConferenceManager.Core.Submissions.Common
@@ -25,7 +26,8 @@ namespace ConferenceManager.Core.Submissions.Common
                 ModifiedOn = source.ModifiedOn,
                 IsValidForReturn = source.IsValidForReturn,
                 IsValidForUpdate = source.IsValidForUpdate,
-                IsValidForReview = source.IsValidForReview
+                IsValidForReview = source.IsValidForReview,
+                IsClosed = source.IsClosed,
             };
         }
     }

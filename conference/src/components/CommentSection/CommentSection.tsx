@@ -1,14 +1,15 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { CreateCommentForm } from "../CreateCommentForm";
-import { CommentSectionProps } from "./CommentSection.types";
 import { useGetSubmissionCommentsApi } from "./CommentSection.hooks";
 import { CommentsList } from "./CommentsList";
 import { Comment } from "../../types/Conference";
 import { FormErrorAlert } from "../FormErrorAlert";
 import { Typography } from "@mui/material";
+import { SubmissionContext } from "../../contexts/SubmissionContext";
 
-export const CommentSection = ({ submissionId }: CommentSectionProps) => {
+export const CommentSection = () => {
   const [rows, setRows] = useState<Comment[]>([]);
+  const { submissionId } = useContext(SubmissionContext);
 
   const comments = useGetSubmissionCommentsApi(submissionId);
 
@@ -39,7 +40,7 @@ export const CommentSection = ({ submissionId }: CommentSectionProps) => {
     <>
       <Typography variant="body1">Leave a comment</Typography>
       <CreateCommentForm submissionId={submissionId} onCreate={handleCreate} />
-      <CommentsList comments={rows} onUpdate={handleUpdate} onDelete={handleDelete}/>
+      <CommentsList comments={rows} onUpdate={handleUpdate} onDelete={handleDelete} />
       <FormErrorAlert response={comments} />
     </>
   );

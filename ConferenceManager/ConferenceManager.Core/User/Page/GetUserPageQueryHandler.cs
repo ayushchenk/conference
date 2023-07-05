@@ -18,7 +18,16 @@ namespace ConferenceManager.Core.User.Page
 
         public override async Task<EntityPageResponse<UserDto>> Handle(GetUserPageQuery request, CancellationToken cancellationToken)
         {
-            var source = Context.Users.OrderBy(x => x.Id);
+            var source = string.IsNullOrEmpty(request.Query)
+                ? Context.Users.OrderBy(x => x.Id)
+                : Context.Users
+                    .Where(u =>
+                        u.Email!.Contains(request.Query)
+                        || u.FirstName.Contains(request.Query)
+                        || u.LastName.Contains(request.Query)
+                        || u.Affiliation.Contains(request.Query)
+                        || u.Country.Contains(request.Query))
+                    .OrderBy(x => x.Id);
 
             var page = await PaginatedList<ApplicationUser>.CreateAsync(source, request.PageIndex, request.PageSize);
 

@@ -86,6 +86,7 @@ export const CreateConferenceForm = ({ conference }: { conference?: Conference |
         id="abstract"
         name="abstract"
         label="Abstract"
+        minRows={3}
         value={formik.values.abstract}
         onChange={formik.handleChange}
         error={formik.touched.abstract && Boolean(formik.errors.abstract)}
@@ -194,6 +195,7 @@ export const CreateConferenceForm = ({ conference }: { conference?: Conference |
         id="areaNotes"
         name="areaNotes"
         label="Area notes"
+        minRows={3}
         value={formik.values.areaNotes}
         onChange={formik.handleChange}
         error={formik.touched.areaNotes && Boolean(formik.errors.areaNotes)}
@@ -249,11 +251,12 @@ export const CreateConferenceForm = ({ conference }: { conference?: Conference |
         <FormHelperText id="my-helper-text">Anonymized file should not contain any references to the authors of the submission, so fair and not biased review process can be guaranteed</FormHelperText>
       </div>
       <FormErrorAlert response={response} />
-      <Button 
+      <Button
         disabled={response.status === "loading"}
-        color="primary" 
-        variant="contained" 
-        fullWidth 
+        color="primary"
+        variant="contained"
+        fullWidth
+        sx={{ mt: 2 }}
         type="submit">
         Submit
       </Button>

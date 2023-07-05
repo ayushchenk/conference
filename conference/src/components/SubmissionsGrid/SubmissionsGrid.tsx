@@ -2,19 +2,20 @@ import { useState } from "react";
 import { DataGrid, GridPaginationModel } from "@mui/x-data-grid";
 import { defaultPage } from "../../util/Constants";
 import { useGetSubmissionsApi, useSubmissionsGridColumns } from "./SubmissionsGrid.hooks";
-import { useConferenceId } from "../../hooks/UseConferenceId";
 import { FormErrorAlert } from "../FormErrorAlert";
 import { NoRowsOverlay } from "../Util/NoRowsOverlay";
 import { NoResultsOverlay } from "../Util/NoResultsOverlay";
+import { useDebounceQuery } from "../../hooks/UseDebouncedQuery";
 
 export const SubmissionsGrid = () => {
-  const conferenceId = useConferenceId();
   const [currentPage, setCurrentPage] = useState<GridPaginationModel>(defaultPage);
-  const submissions = useGetSubmissionsApi(currentPage, conferenceId);
   const columns = useSubmissionsGridColumns();
+  const { debouncedQuery, debouncedInput } = useDebounceQuery("Search by title, keywords and research areas");
+  const submissions = useGetSubmissionsApi(currentPage, debouncedQuery);
 
   return (
     <>
+      {debouncedInput}
       <DataGrid
         autoHeight
         rows={submissions.data?.items ?? []}

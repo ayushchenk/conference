@@ -24,5 +24,7 @@ export function useDeleteApi<TRequest, TData>(path: string, config?: AxiosReques
     [path, configWithHeaders]
   );
 
-  return { response, performDelete };
+  const reset = useCallback(() => setResponse(createNotInitiatedResponse()), []);
+
+  return { response, performDelete, reset };
 }

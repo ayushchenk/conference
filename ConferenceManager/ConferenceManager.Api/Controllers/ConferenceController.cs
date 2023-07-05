@@ -9,6 +9,7 @@ using ConferenceManager.Core.Conferences.Create;
 using ConferenceManager.Core.Conferences.Delete;
 using ConferenceManager.Core.Conferences.Get;
 using ConferenceManager.Core.Conferences.GetInviteCodes;
+using ConferenceManager.Core.Conferences.GetNonParticipants;
 using ConferenceManager.Core.Conferences.GetParticipants;
 using ConferenceManager.Core.Conferences.GetReviewers;
 using ConferenceManager.Core.Conferences.GetSubmissions;
@@ -147,9 +148,9 @@ namespace ConferenceManager.Api.Controllers
         [Authorize]
         [ConferenceAuthorization]
         [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(EntityPageResponse<SubmissionDto>))]
-        public async Task<IActionResult> GetSubmissions(int id, int pageIndex, int pageSize, CancellationToken cancellation)
+        public async Task<IActionResult> GetSubmissions(int id, string? query, int pageIndex, int pageSize, CancellationToken cancellation)
         {
-            var result = await Mediator.Send(new GetConferenceSubmissionsQuery(id, pageIndex, pageSize), cancellation);
+            var result = await Mediator.Send(new GetConferenceSubmissionsQuery(id, query, pageIndex, pageSize), cancellation);
 
             return Ok(result);
         }
@@ -165,6 +166,21 @@ namespace ConferenceManager.Api.Controllers
         public async Task<IActionResult> GetParticipants(int id, int pageIndex, int pageSize, CancellationToken cancellation)
         {
             var result = await Mediator.Send(new GetConferenceParticipantsQuery(id, pageIndex, pageSize), cancellation);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Returns page with non-participants
+        /// </summary>
+        [HttpGet]
+        [Route("{id}/non-participants")]
+        [Authorize(Roles = $"{ApplicationRole.Admin},{ApplicationRole.Chair}")]
+        [ConferenceAuthorization(ApplicationRole.Chair)]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(EntityPageResponse<UserDto>))]
+        public async Task<IActionResult> GetNonParticipants(int id, string? query, int pageIndex, int pageSize, CancellationToken cancellation)
+        {
+            var result = await Mediator.Send(new GetNonParticipantsQuery(id, query, pageIndex, pageSize), cancellation);
 
             return Ok(result);
         }

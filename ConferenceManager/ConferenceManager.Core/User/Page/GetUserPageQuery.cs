@@ -5,8 +5,11 @@ namespace ConferenceManager.Core.User.Page
 {
     public class GetUserPageQuery : GetEntityPageQuery<UserDto>
     {
-        public GetUserPageQuery(int pageIndex, int pageSize) : base(pageIndex, pageSize)
+        public string? Query { get; }
+
+        public GetUserPageQuery(int pageIndex, int pageSize, string? query = null) : base(pageIndex, pageSize)
         {
+            Query = query;
         }
     }
 }

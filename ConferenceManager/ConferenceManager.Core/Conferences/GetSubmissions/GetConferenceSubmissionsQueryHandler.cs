@@ -20,6 +20,14 @@ namespace ConferenceManager.Core.Conferences.GetSubmissions
         {
             var source = await GetSourceQuery(request.ConferenceId);
 
+            if (!string.IsNullOrEmpty(request.Query))
+            {
+                source = source.Where(s =>
+                    s.Title.Contains(request.Query)
+                    || s.Keywords.Contains(request.Query)
+                    || s.ResearchAreas.Contains(request.Query));
+            }
+
             var page = await PaginatedList<Submission>.CreateAsync(source, request.PageIndex, request.PageSize);
 
             return new EntityPageResponse<SubmissionDto>()

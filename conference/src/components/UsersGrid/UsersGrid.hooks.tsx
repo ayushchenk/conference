@@ -30,9 +30,9 @@ export const useRemoveUserAdminRoleApi = () => {
   return useDeleteApi<{}, {}>('/User/{0}/role/admin');
 };
 
-export const useGetUsersApi = (paging: GridPaginationModel): GetUsersResponse => {
+export const useGetUsersApi = (paging: GridPaginationModel, query: string): GetUsersResponse => {
   const config = useMemoPaging(paging);
-  return useGetApi<GetUsersData>(`/User`, config);
+  return useGetApi<GetUsersData>(`/User${query && `/?query=${query}`}`, config);
 };
 
 export const useDeleteUserApi = () => {
@@ -79,7 +79,7 @@ export const useUsersGridColumns = (
       {
         headerName: "Is Admin",
         field: "isAdmin",
-        width: 100,        
+        width: 100,
         renderCell: (params) =>
           <Checkbox
             checked={params.row.isAdmin}

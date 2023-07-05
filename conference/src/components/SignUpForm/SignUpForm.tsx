@@ -160,6 +160,7 @@ export const SignUpForm: React.FC<{}> = () => {
         color="primary"
         variant="contained"
         fullWidth
+        sx={{ mt: 2 }}
         type="submit">
         Submit
       </Button>

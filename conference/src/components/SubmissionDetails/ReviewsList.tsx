@@ -1,15 +1,15 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import { Box, IconButton, Paper, Typography } from "@mui/material";
-import { useSubmissionId } from "../../hooks/UseSubmissionId";
 import { Review } from "../../types/Conference";
 import { useGetReviewsApi } from "./SubmissionDetails.hooks";
 import { UpdateReviewDialog } from "./UpdateReviewDialog";
 import moment from "moment";
+import { SubmissionContext } from "../../contexts/SubmissionContext";
 
 export const ReviewsList = () => {
-  const submissionId = useSubmissionId();
-  const reviews = useGetReviewsApi(Number(submissionId));
+  const { submissionId, isClosed } = useContext(SubmissionContext);
+  const reviews = useGetReviewsApi(submissionId);
   const [rows, setRows] = useState<Review[]>([]);
   const [editingReview, setEditingReview] = useState<Review | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
@@ -39,9 +39,13 @@ export const ReviewsList = () => {
     });
   }, []);
 
+  if (reviews.status === "success" && rows.length === 0) {
+    return <Box display="flex" justifyContent="center">No reviews uploaded yet</Box>;
+  }
+
   return (
     <>
-      {rows?.map((review) => (
+      {rows.map((review) => (
         <Paper
           key={review.reviewerEmail}
           sx={{
@@ -54,7 +58,7 @@ export const ReviewsList = () => {
               <Typography variant="subtitle2">Score: {review.score}</Typography>
               <Typography variant="subtitle2">{review.confidenceLabel} confidence</Typography>
             </Box>
-            {review.isAuthor && (
+            {review.isAuthor && !isClosed && (
               <IconButton onClick={() => handleEditClick(review)}>
                 <EditIcon />
               </IconButton>
@@ -75,7 +79,7 @@ export const ReviewsList = () => {
             Reviewer: {review.reviewerName}
           </Typography>
           <Typography variant="body2" color="textSecondary">
-            {moment(review.createdOn).local().format("DD/MM/YYYY HH:mm:ss")} <i>{review.isModified ? "Edited" : ""}</i>
+            {moment(review.createdOn).local().format("DD/MM/YYYY HH:mm:ss")} {review.isModified && <i>Edited</i>}
           </Typography>
         </Paper>
       ))}

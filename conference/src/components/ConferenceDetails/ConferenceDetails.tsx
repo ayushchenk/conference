@@ -1,5 +1,5 @@
 import moment from "moment";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
@@ -9,7 +9,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 import { AuthorVisibility } from "../ProtectedRoute/AuthorVisibility";
 import { FormHeader } from "../FormHeader";
-import { Box, IconButton, Tooltip, Typography } from "@mui/material";
+import { Box, Divider, IconButton, Tooltip, Typography } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { Conference } from "../../types/Conference";
@@ -17,6 +17,9 @@ import { Auth } from "../../logic/Auth";
 import { AnyRoleVisibility } from "../ProtectedRoute/AnyRoleVisibility";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { ConferenceJoinCodes } from "./ConferenceInviteCodes";
+import PostAddIcon from '@mui/icons-material/PostAdd';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import ListIcon from '@mui/icons-material/List';
 
 export const ConferenceDetails = ({ conference }: { conference: Conference }) => {
   const navigate = useNavigate();
@@ -34,6 +37,27 @@ export const ConferenceDetails = ({ conference }: { conference: Conference }) =>
           </IconButton>
         </AnyRoleVisibility>
       </Box>
+      {(conference.isParticipant || Auth.isAdmin()) &&
+        <>
+          <Divider />
+          <Box>
+            <AnyRoleVisibility roles={["Admin", "Chair"]}>
+              <Button sx={{ mr: 3 }} startIcon={<PeopleAltIcon />} onClick={() => navigate(`/conferences/${conference.id}/participants`)}>
+                Participants
+              </Button>
+            </AnyRoleVisibility>
+            <Button sx={{ mr: 3 }} startIcon={<ListIcon />} onClick={() => navigate(`/conferences/${conference.id}/submissions`)}>
+              Submissions
+            </Button>
+            <AuthorVisibility>
+              <Button sx={{ mr: 3 }} startIcon={<PostAddIcon />} onClick={() => navigate(`/conferences/${conference.id}/submissions/new`)}>
+                Create Submission
+              </Button>
+            </AuthorVisibility>
+          </Box>
+          <Divider />
+        </>
+      }
       <TableContainer component={Paper}>
         <Table size="small">
           <TableBody>
@@ -112,7 +136,7 @@ export const ConferenceDetails = ({ conference }: { conference: Conference }) =>
                   leaveDelay={100}
                   title={<Typography variant="body2">Anonymized file should not contain any references to the authors of the submission, so fair and not biased review process can be guaranteed</Typography>}>
                   <IconButton sx={{ padding: 0, ml: 1 }} >
-                    <InfoOutlinedIcon fontSize="small"/>
+                    <InfoOutlinedIcon fontSize="small" />
                   </IconButton>
                 </Tooltip>
               </TableCell>
@@ -123,43 +147,6 @@ export const ConferenceDetails = ({ conference }: { conference: Conference }) =>
             <AnyRoleVisibility roles={["Admin", "Chair"]}>
               <ConferenceJoinCodes conferenceId={conference.id} />
             </AnyRoleVisibility>
-            {
-              (conference.isParticipant || Auth.isAdmin()) &&
-              <>
-                <TableRow>
-                  <TableCell align="center" colSpan={12} variant="head">
-                    <Button color="inherit">
-                      <Link className="header__link" to={`/conferences/${conference.id}/submissions`}>
-                        Submissions
-                      </Link>
-                    </Button>
-                  </TableCell>
-                </TableRow>
-                {
-                  (Auth.isAdmin() || Auth.isChair(conference.id)) &&
-                  <TableRow>
-                    <TableCell align="center" colSpan={12} variant="head">
-                      <Button color="inherit">
-                        <Link className="header__link" to={`/conferences/${conference.id}/participants`}>
-                          Participants
-                        </Link>
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                }
-                <AuthorVisibility>
-                  <TableRow>
-                    <TableCell align="center" colSpan={12} variant="head">
-                      <Button color="inherit">
-                        <Link className="header__link" to={`/conferences/${conference.id}/submissions/new`}>
-                          Create Submission
-                        </Link>
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                </AuthorVisibility>
-              </>
-            }
           </TableBody>
         </Table>
       </TableContainer>

@@ -5,18 +5,21 @@ import { defaultPage } from "../../util/Constants";
 import { Conference } from "../../types/Conference";
 import { FormErrorAlert } from "../FormErrorAlert";
 import { NoRowsOverlay } from "../Util/NoRowsOverlay";
+import { ConfirmationDialog } from "../ConfirmationDialog";
 
 export const ConferencesGrid = () => {
-  const [currentPage, setCurrentPage] = useState<GridPaginationModel>(defaultPage);
-  const conferences = useGetConferencesApi(currentPage);
-  const { response: deleteResponse, performDelete: deleteConference } = useDeleteConferenceApi();
   const [rows, setRows] = useState<Conference[]>([]);
-  const [deletedConferenceId, setDeletedConferenceId] = useState<number | null>(null);
+  const [currentPage, setCurrentPage] = useState<GridPaginationModel>(defaultPage);
+  const [deletingConference, setDeletingConference] = useState<Conference | null>(null);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
-  const handleDelete = useCallback((conferenceId: number) => {
-    setDeletedConferenceId(conferenceId);
-    deleteConference({}, conferenceId);
-  }, [deleteConference]);
+  const conferences = useGetConferencesApi(currentPage);
+  const deleteConferenceApi = useDeleteConferenceApi();
+
+  const handleDelete = useCallback((conference: Conference) => {
+    setDeletingConference(conference);
+    setOpenDeleteDialog(true);
+  }, []);
 
   const columns = useConferencesGridColumns(handleDelete);
 
@@ -27,11 +30,13 @@ export const ConferencesGrid = () => {
   }, [conferences]);
 
   useEffect(() => {
-    if (deleteResponse.status === "success" && deletedConferenceId) {
-      setRows((prevRows) => prevRows.filter((row) => row.id !== deletedConferenceId));
-      setDeletedConferenceId(null);
+    if (deleteConferenceApi.response.status === "success" && deletingConference) {
+      setRows((prevRows) => prevRows.filter((row) => row.id !== deletingConference.id));
+      setOpenDeleteDialog(false);
+      setDeletingConference(null);
+      deleteConferenceApi.reset();
     }
-  }, [deleteResponse.status, deletedConferenceId]);
+  }, [deleteConferenceApi, deletingConference]);
 
   return (
     <>
@@ -53,8 +58,16 @@ export const ConferencesGrid = () => {
           noResultsOverlay: () => <NoRowsOverlay>No results found</NoRowsOverlay>
         }}
       />
+      <ConfirmationDialog
+        open={openDeleteDialog}
+        onCancel={() => setOpenDeleteDialog(false)}
+        onConfirm={() => deleteConferenceApi.performDelete({}, deletingConference?.id!)}
+      >
+        {`Are you sure you want to delete ${deletingConference?.acronym}?`}<br />
+        This will also delete all submissions, reviews, comments, etc.
+      </ConfirmationDialog>
+      <FormErrorAlert response={deleteConferenceApi.response} />
       <FormErrorAlert response={conferences} />
-      <FormErrorAlert response={deleteResponse} />
     </>
   );
 };

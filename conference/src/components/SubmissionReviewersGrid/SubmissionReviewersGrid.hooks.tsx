@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useContext } from "react";
 import { useGetApi } from "../../hooks/UseGetApi"
 import { User } from "../../types/User"
 import { GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
@@ -6,6 +6,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useDeleteApi } from "../../hooks/UseDeleteApi";
 import { usePostApi } from "../../hooks/UsePostApi";
 import { useConferenceId } from "../../hooks/UseConferenceId";
+import { SubmissionContext } from "../../contexts/SubmissionContext";
 
 export const useGetSubmissionReviewersApi = (submissionId: number) => {
   return useGetApi<User[]>(`/submission/${submissionId}/reviewers`);
@@ -27,6 +28,8 @@ export const useAddSubmissionReviewerApi = (submissionId: number) => {
 export const useSubmissionReviewersGridColumns = (
   onReviewerDelete: (user: User) => void
 ): GridColDef[] => {
+  const { isClosed } = useContext(SubmissionContext);
+
   return useMemo(() => ([
     {
       headerName: "#",
@@ -62,8 +65,9 @@ export const useSubmissionReviewersGridColumns = (
         [<GridActionsCellItem
           icon={< DeleteIcon />}
           label="Remove"
+          disabled={isClosed}
           onClick={() => onReviewerDelete(params.row)} />]
       )
     }
-  ]), [onReviewerDelete]);
+  ]), [onReviewerDelete, isClosed]);
 }

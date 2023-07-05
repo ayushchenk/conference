@@ -1,6 +1,18 @@
 import AddIcon from "@mui/icons-material/Add";
-import { GridColDef, GridActionsCellItem } from "@mui/x-data-grid";
+import { GridColDef, GridActionsCellItem, GridPaginationModel } from "@mui/x-data-grid";
 import { useMemo } from "react";
+import { useConferenceId } from "../../hooks/UseConferenceId";
+import { useGetApi } from "../../hooks/UseGetApi";
+import { PageData } from "../../types/ApiResponse";
+import { User } from "../../types/User";
+import { useMemoPaging } from "../../hooks/UseMemoPaging";
+
+export const useGetNonParticipantsApi = (page: GridPaginationModel, query?: string) => {
+  const conferenceId = useConferenceId();
+  const path = `/conference/${conferenceId}/non-participants${query && `/?query=${query}`}`;
+  const config = useMemoPaging(page);
+  return useGetApi<PageData<User>>(path, config);
+}
 
 export const useParticipantUsersGridProps = (handleAddParticipant: Function): GridColDef[] => {
   return useMemo(() => {

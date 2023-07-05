@@ -6,20 +6,25 @@ import { FormErrorAlert } from "../FormErrorAlert";
 import { User } from "../../types/User";
 import { NoRowsOverlay } from "../Util/NoRowsOverlay";
 import { NoResultsOverlay } from "../Util/NoResultsOverlay";
+import { ConfirmationDialog } from "../ConfirmationDialog";
+import { useDebounceQuery } from "../../hooks/UseDebouncedQuery";
 
 export const UsersGrid = () => {
   const [currentPage, setCurrentPage] = useState<GridPaginationModel>(defaultPage);
-  const users = useGetUsersApi(currentPage);
-  const { response: deleteResponse, performDelete } = useDeleteUserApi();
-  const { response: addRoleResponse, post: addRole } = useAddUserAdminRoleApi();
-  const { response: removeRoleResponse, performDelete: removeRole } = useRemoveUserAdminRoleApi();
   const [rows, setRows] = useState<User[]>([]);
   const [deletingUser, setDeletingUser] = useState<User | null>(null);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const { debouncedQuery, debouncedInput } = useDebounceQuery("Search by name, email, country or affiliation");
+
+  const users = useGetUsersApi(currentPage, debouncedQuery);
+  const deleteUserApi = useDeleteUserApi();
+  const { response: addRoleResponse, post: addRole } = useAddUserAdminRoleApi();
+  const { response: removeRoleResponse, performDelete: removeRole } = useRemoveUserAdminRoleApi();
 
   const handleDelete = useCallback((user: User) => {
     setDeletingUser(user);
-    performDelete({}, user.id);
-  }, [performDelete]);
+    setOpenDeleteDialog(true);
+  }, []);
 
   const handleRoleChange = useCallback((user: User, checked: boolean) => {
     checked ? addRole({}, user.id) : removeRole({}, user.id);
@@ -37,10 +42,13 @@ export const UsersGrid = () => {
   const columns = useUsersGridColumns(handleDelete, handleRoleChange);
 
   useEffect(() => {
-    if (deleteResponse.status === "success" && deletingUser) {
+    if (deleteUserApi.response.status === "success" && deletingUser) {
       setRows(prevRows => prevRows.filter((row) => row.id !== deletingUser.id));
+      setDeletingUser(null);
+      deleteUserApi.reset();
+      setOpenDeleteDialog(false);
     }
-  }, [deleteResponse.status, deletingUser]);
+  }, [deleteUserApi, deletingUser]);
 
   useEffect(() => {
     if (users.status === "success") {
@@ -54,6 +62,7 @@ export const UsersGrid = () => {
 
   return (
     <>
+      {debouncedInput}
       <DataGrid
         autoHeight
         rows={rows}
@@ -64,15 +73,22 @@ export const UsersGrid = () => {
         loading={users.status === "loading"}
         paginationMode="server"
         rowCount={users.data?.totalCount ?? 0}
-        slots={{ 
+        slots={{
           noRowsOverlay: NoRowsOverlay,
           noResultsOverlay: NoResultsOverlay
         }}
       />
-      <FormErrorAlert response={users} />
-      <FormErrorAlert response={deleteResponse} />
+      <ConfirmationDialog
+        open={openDeleteDialog}
+        onCancel={() => setOpenDeleteDialog(false)}
+        onConfirm={() => deleteUserApi.performDelete({}, deletingUser?.id!)}
+      >
+        {`Are you sure you want to delete ${deletingUser?.fullName}'s account?`}<br />
+        This will also delete all associated data.
+      </ConfirmationDialog>
+      <FormErrorAlert response={deleteUserApi.response} />
       <FormErrorAlert response={addRoleResponse} />
       <FormErrorAlert response={removeRoleResponse} />
     </>
   );
-};
+}; 

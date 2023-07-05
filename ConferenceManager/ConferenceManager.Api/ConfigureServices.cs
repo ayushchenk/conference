@@ -26,7 +26,6 @@ namespace ConferenceManager.Api
                     .AllowAnyHeader();
             }));
 
-            services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddLogging(loggin =>
             {
                 loggin.AddSimpleConsole(options =>

@@ -1,4 +1,4 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, TextField } from "@mui/material";
 import { useCreateSubmissionCommentApi, useUpdateSubmissionCommentApi } from "./CreateCommentForm.hooks";
 import { CreateCommentFormProps, initialValues } from "./CreateCommentForm.types";
 import { validationSchema } from "./CreateCommentForm.validator";

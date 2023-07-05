@@ -24,5 +24,7 @@ export function usePostApi<TRequest, TData>(path: string, config?: AxiosRequestC
     [path, configWithHeaders]
   );
 
-  return { response, post: post };
+  const reset = useCallback(() => setResponse(createNotInitiatedResponse()), []);
+
+  return { response, post: post, reset };
 }

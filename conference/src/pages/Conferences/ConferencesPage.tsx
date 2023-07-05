@@ -10,7 +10,7 @@ export const ConferencesPage = () => {
   return (
     <Container>
       <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <FormHeader >
+        <FormHeader>
           Your conferences
         </FormHeader>
         <Link

@@ -20,6 +20,7 @@ namespace ConferenceManager.Core.Submissions.Get
 
             var dto = Mapper.Map<Submission, SubmissionDto>(submission!);
             dto.IsReviewer = CurrentUser.IsReviewerOf(submission!);
+            dto.IsValidForReview = dto.IsValidForReview && !submission!.Reviews.Any(r => r.CreatedById == CurrentUser.Id);
 
             return dto;
         }

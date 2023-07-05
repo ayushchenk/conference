@@ -17,8 +17,16 @@ export const useGetReviewsApi = (submissionId: number) => {
   return useGetApi<Review[]>(`/Submission/${submissionId}/reviews`);
 };
 
-export const usePostReturnSubmissionAPI = (submissionId: number) => {
+export const usePostReturnSubmissionApi = (submissionId: number) => {
   return usePostApi<{}, {}>(`/Submission/${submissionId}/return`);
+};
+
+export const useAcceptSubmissionApi = (submissionId: number) => {
+  return usePostApi<{}, {}>(`/Submission/${submissionId}/accept`);
+};
+
+export const useRejectSubmissionApi = (submissionId: number) => {
+  return usePostApi<{}, {}>(`/Submission/${submissionId}/reject`);
 };
 
 export const useGetHasPreferenceApi = (submissionId: number) => {

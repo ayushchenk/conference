@@ -37,6 +37,12 @@ namespace ConferenceManager.Core.Submissions.CreateReview
                     return;
                 }
 
+                if (!submission.IsValidForReview)
+                {
+                    context.AddException(new NotFoundException("Submission is closed"));
+                    return;
+                }
+
                 if (!CurrentUser.IsReviewerOf(submission))
                 {
                     context.AddException(new ForbiddenException("User is not a reviewer of the submission"));

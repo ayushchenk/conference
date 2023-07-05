@@ -37,6 +37,8 @@ namespace ConferenceManager.Core.Submissions.Common
 
         public required bool IsValidForReview { set; get; }
 
+        public required bool IsClosed { set; get; }
+
         public bool IsReviewer { set; get; }
     }
 }
