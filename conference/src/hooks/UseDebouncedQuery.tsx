@@ -3,7 +3,7 @@ import { useCallback, useRef, useState } from "react";
 
 export const useDebounceQuery = (placeholder = "Enter search query", delay = 350) => {
   const [debouncedQuery, setDebouncedQuery] = useState("");
-  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
+  const debounceTimeout = useRef<number | null>(null);
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (debounceTimeout.current) {

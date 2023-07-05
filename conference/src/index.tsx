@@ -10,7 +10,7 @@ import axios from 'axios';
 import { Auth } from './logic/Auth';
 import { CssBaseline } from '@mui/material';
 
-axios.defaults.baseURL = process.env.REACT_APP_API_URL;
+axios.defaults.baseURL = import.meta.env.VITE_API_URL;
 axios.interceptors.request.use(function (config) {
   const token = Auth.getToken();
   if (token) {
