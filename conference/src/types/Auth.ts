@@ -1,14 +1,15 @@
-export type Token = {
-    accessToken: string,
-    expiry: string,
-    issued: string,
+export type JwtToken = {
+    aud: string,
+    exp: number,
+    iat: number,
+    iss: string,
+    nameid: string,
+    role: string | string[],
+    unique_name: string
 }
 
 export type AuthData = {
-    email: string,
-    token: Token,
-    userId: number,
-    isAdmin: boolean,
+    accessToken: string,
     roles: {
         [conferenceId: number]: string[]
     };

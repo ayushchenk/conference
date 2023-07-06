@@ -1,4 +1,5 @@
-import { AuthData } from "../types/Auth";
+import { AuthData, JwtToken } from "../types/Auth";
+import jwt_decode from "jwt-decode";
 
 export namespace Auth {
   const AUTH_DATA = "authData";
@@ -18,19 +19,26 @@ export namespace Auth {
       return false;
     }
 
-    return new Date(authData.token.expiry) > new Date();
+    //exp is seconds, getTime is milliseconds
+    return authData.parsedToken.exp * 1000 > new Date().getTime();
   }
 
   export function getToken() {
     const authData = getData();
 
-    return authData?.token.accessToken && isAuthed() ? authData.token.accessToken : null;
+    if (!authData || !isAuthed()) {
+      return null;
+    }
+
+    return authData.accessToken;
   }
 
   export function getId() {
     const authData = getData();
 
-    return authData?.userId && isAuthed() ? authData.userId : null;
+    return authData?.parsedToken.nameid && isAuthed()
+      ? Number(authData?.parsedToken.nameid)
+      : null;
   }
 
   export function isAdmin() {
@@ -40,7 +48,7 @@ export namespace Auth {
       return false;
     }
 
-    return isAuthed() && authData.isAdmin;
+    return isAuthed() && (authData.parsedToken.role === "Admin" || authData.parsedToken.role.includes("Admin"));
   }
 
   export function hasAnyRole(conferenceId: number, roles: string[]) {
@@ -70,7 +78,12 @@ export namespace Auth {
       return null;
     }
 
-    return JSON.parse(authDataString) as AuthData;
+    const data = JSON.parse(authDataString) as AuthData;
+
+    return {
+      ...data,
+      parsedToken: jwt_decode<JwtToken>(data.accessToken)
+    };
   }
 
   function getRoles(conferenceId: number) {
