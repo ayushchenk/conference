@@ -13,7 +13,7 @@ import { Box, Divider, IconButton, Tooltip, Typography } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { Conference } from "../../types/Conference";
-import { Auth } from "../../logic/Auth";
+import { Auth } from "../../util/Auth";
 import { AnyRoleVisibility } from "../ProtectedRoute/AnyRoleVisibility";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { ConferenceJoinCodes } from "./ConferenceInviteCodes";

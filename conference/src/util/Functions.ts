@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { ErrorApiResponse, LoadingApiResponse, NotInitiatedResponse, SuccessApiResponse } from "../types/ApiResponse";
 import { User } from "../types/User";
-import { Auth } from "../logic/Auth";
+import { Auth } from "./Auth";
 
 //string of type "{0} text {1} ..."
 export function format(str: string, ...params: any[]) {

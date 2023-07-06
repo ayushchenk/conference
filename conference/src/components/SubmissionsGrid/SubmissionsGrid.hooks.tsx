@@ -5,7 +5,7 @@ import { useMemoPaging } from "../../hooks/UseMemoPaging";
 import { GetSubmissionsData, GetSubmissionsResponse } from "./SubmissionsGrid.types";
 import moment from "moment";
 import { useMemo } from "react";
-import { Auth } from "../../logic/Auth";
+import { Auth } from "../../util/Auth";
 import { useConferenceId } from "../../hooks/UseConferenceId";
 
 export const useGetSubmissionsApi = (paging: GridPaginationModel, query?: string): GetSubmissionsResponse => {

@@ -1,5 +1,5 @@
 import { useConferenceId } from "../../hooks/UseConferenceId";
-import { Auth } from "../../logic/Auth";
+import { Auth } from "../../util/Auth";
 import { AnyRoleProtectedProps } from "./AnyRoleProtected";
 
 export const AnyRoleVisibility = (props: AnyRoleProtectedProps) => {

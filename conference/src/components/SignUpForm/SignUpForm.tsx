@@ -2,7 +2,7 @@ import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import { Auth } from "../../logic/Auth";
+import { Auth } from "../../util/Auth";
 import { FormErrorAlert } from "../FormErrorAlert/FormErrorAlert";
 import { usePostSignUpApi } from "./SignUpForm.hooks";
 import { initialValues } from "./SignUpForm.types";

@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { AppBar, Box, Button, IconButton, Toolbar } from "@mui/material";
 import { Link } from "react-router-dom";
-import { Auth } from "../../logic/Auth";
+import { Auth } from "../../util/Auth";
 import "./Header.css";
 import { AdminVisibility } from "../ProtectedRoute/AdminVisibility";
 import AccountCircle from '@mui/icons-material/AccountCircle';
