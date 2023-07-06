@@ -1,5 +1,5 @@
 import { useConferenceId } from "../../hooks/UseConferenceId";
-import { Auth } from "../../logic/Auth";
+import { Auth } from "../../util/Auth";
 import { ProtectedProps } from "./Protected";
 
 export const ReviewerVisibility = (props: ProtectedProps) => {

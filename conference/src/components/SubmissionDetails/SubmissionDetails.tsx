@@ -18,7 +18,7 @@ import { useAcceptSubmissionApi, usePostReturnSubmissionApi, useRejectSubmission
 import { TabPanel } from "./TabPanel";
 import { FormHeader } from "../FormHeader";
 import { useConferenceId } from "../../hooks/UseConferenceId";
-import { Auth } from "../../logic/Auth";
+import { Auth } from "../../util/Auth";
 import { Submission } from "../../types/Conference";
 import { FormErrorAlert } from "../FormErrorAlert";
 import { AnyRoleVisibility } from "../ProtectedRoute/AnyRoleVisibility";

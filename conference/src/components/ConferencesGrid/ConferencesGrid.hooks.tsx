@@ -6,7 +6,7 @@ import { useDeleteApi } from "../../hooks/UseDeleteApi";
 import { useGetApi } from "../../hooks/UseGetApi";
 import { useMemoPaging } from "../../hooks/UseMemoPaging";
 import { GetConferencesData, GetConferencesResponse } from "./ConferencesGrid.types";
-import { Auth } from "../../logic/Auth";
+import { Auth } from "../../util/Auth";
 import { useMemo } from "react";
 import { Conference } from "../../types/Conference";
 

@@ -115,16 +115,8 @@ namespace ConferenceManager.Api.Services
 
             return new TokenResponse()
             {
-                UserId = user.Id,
-                Email = user.Email!,
                 Roles = roles,
-                IsAdmin = user.IsAdmin,
-                Token = new Token()
-                {
-                    AccessToken = tokenValue,
-                    Issued = _dateTime.Now,
-                    Expiry = descriptor.Expires.Value
-                }
+                AccessToken = tokenValue
             };
         }
     }

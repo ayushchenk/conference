@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import { Auth } from "../../logic/Auth";
+import { Auth } from "../../util/Auth";
 import { FormErrorAlert } from "../FormErrorAlert/FormErrorAlert";
 import { usePostLoginApi } from "./LoginForm.hooks";
 import { validationSchema } from "./LoginForm.validator";

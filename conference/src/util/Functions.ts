@@ -1,6 +1,7 @@
-import { AxiosResponse } from "axios";
+import axios, { AxiosResponse } from "axios";
 import { ErrorApiResponse, LoadingApiResponse, NotInitiatedResponse, SuccessApiResponse } from "../types/ApiResponse";
 import { User } from "../types/User";
+import { Auth } from "./Auth";
 
 //string of type "{0} text {1} ..."
 export function format(str: string, ...params: any[]) {
@@ -64,4 +65,15 @@ export function createErrorResponse(error: any): ErrorApiResponse {
     data: null,
     error: error?.response?.data
   }
+}
+
+export function setupAxios() {
+  axios.defaults.baseURL = import.meta.env.VITE_API_URL;
+  axios.interceptors.request.use(function (config) {
+    const token = Auth.getToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  });
 }

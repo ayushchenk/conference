@@ -1,4 +1,4 @@
-import { Auth } from "../../logic/Auth";
+import { Auth } from "../../util/Auth";
 import { ProtectedProps } from "../ProtectedRoute/Protected";
 
 export const AdminVisibility = (props: ProtectedProps) => {

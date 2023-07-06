@@ -7,7 +7,7 @@ import { useMemoPaging } from "../../hooks/UseMemoPaging";
 import { usePostApi } from "../../hooks/UsePostApi";
 import { User } from "../../types/User";
 import { GetParticipantsData, GetParticipantsResponse } from "./ConferenceParticipantsGrid.types";
-import { Auth } from "../../logic/Auth";
+import { Auth } from "../../util/Auth";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 
 export const useGetParticipantsApi = (paging: GridPaginationModel, conferenceId: number): GetParticipantsResponse => {

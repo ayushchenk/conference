@@ -1,4 +1,4 @@
-import { Auth } from "../../../logic/Auth"
+import { Auth } from "../../../util/Auth"
 import { UserDetailsPage } from "./UserDetailsPage";
 
 export const ProfilePage = () => {

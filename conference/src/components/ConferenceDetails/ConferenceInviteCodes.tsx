@@ -68,8 +68,14 @@ export const ConferenceJoinCodes = ({ conferenceId }: ConferenceInviteCodesProps
         </Tooltip>
         <IconButton onClick={() => handleCodeClick(inviteCode.role)} sx={{ ml: 2, padding: 0 }}>
           {codeVisible(inviteCode.role)
-            ? <VisibilityOffIcon />
-            : <VisibilityIcon />
+            ?
+            <Tooltip enterDelay={0} title="Hide code">
+              <VisibilityOffIcon />
+            </Tooltip>
+            :
+            <Tooltip enterDelay={0} title="Show code">
+              <VisibilityIcon />
+            </Tooltip>
           }
         </IconButton>
       </TableCell>
