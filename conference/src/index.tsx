@@ -6,18 +6,10 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import axios from 'axios';
-import { Auth } from './logic/Auth';
 import { CssBaseline } from '@mui/material';
+import { setupAxios } from './util/Functions';
 
-axios.defaults.baseURL = import.meta.env.VITE_API_URL;
-axios.interceptors.request.use(function (config) {
-  const token = Auth.getToken();
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
+setupAxios();
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
