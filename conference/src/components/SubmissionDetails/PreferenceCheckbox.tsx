@@ -2,7 +2,7 @@ import { FormControlLabel, Checkbox } from "@mui/material";
 import { useState, useEffect, useCallback } from "react";
 import { useAddSubmissionPreferenceApi, useGetHasPreferenceApi, useRemoveSubmissionPreferenceApi } from "./SubmissionDetails.hooks";
 import { PreferenceCheckboxProps } from "./SubmissionDetails.types";
-import { FormErrorAlert } from "../FormErrorAlert";
+import { FormErrorAlert, FormErrorAlert2 } from "../FormErrorAlert";
 
 export const PreferenceCheckbox = ({ submissionId }: PreferenceCheckboxProps) => {
   const [preference, setPreference] = useState(false);
@@ -12,7 +12,7 @@ export const PreferenceCheckbox = ({ submissionId }: PreferenceCheckboxProps) =>
   const removePreferenceApi = useRemoveSubmissionPreferenceApi(submissionId);
 
   useEffect(() => {
-    if (hasPreference.status === "success") {
+    if (hasPreference.data) {
       setPreference(hasPreference.data.result);
     }
   }, [hasPreference]);
@@ -23,7 +23,7 @@ export const PreferenceCheckbox = ({ submissionId }: PreferenceCheckboxProps) =>
     action({});
   }, [addPreferenceApi, removePreferenceApi]);
 
-  if (hasPreference.status !== "success") {
+  if (hasPreference.error) {
     return null;
   }
 
@@ -35,7 +35,7 @@ export const PreferenceCheckbox = ({ submissionId }: PreferenceCheckboxProps) =>
           value={preference}
           onChange={(e) => handlePreferenceChange(e.target.checked)} />
       } />
-      <FormErrorAlert response={hasPreference} />
+      <FormErrorAlert2 error={hasPreference.error} />
       <FormErrorAlert response={addPreferenceApi.response} />
       <FormErrorAlert response={removePreferenceApi.response} />
     </>

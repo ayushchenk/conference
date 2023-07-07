@@ -1,25 +1,25 @@
 import { Container } from "@mui/material";
 import { SubmissionDetails } from "../../components/SubmissionDetails";
 import { useGetSubmissionApi } from "../../components/SubmissionDetails/SubmissionDetails.hooks";
-import { useParams } from "react-router-dom";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
-import { FormErrorAlert } from "../../components/FormErrorAlert";
+import { FormErrorAlert2 } from "../../components/FormErrorAlert";
+import { useSubmissionId } from "../../hooks/UseSubmissionId";
 
 export const SubmissionDetailsPage = () => {
-  const { submissionId } = useParams();
-  const response = useGetSubmissionApi(Number(submissionId));
+  const submissionId = useSubmissionId();
+  const submission = useGetSubmissionApi(submissionId);
 
-  if (response.status === "loading" || response.status === "not-initiated") {
+  if (submission.isLoading) {
     return <LoadingSpinner />;
   }
 
-  if (response.status === "error") {
-    return <FormErrorAlert response={response} />;
+  if (submission.error) {
+    return <FormErrorAlert2 error={submission.error} />;
   }
 
   return (
     <Container>
-      <SubmissionDetails submission={response.data} />
+      <SubmissionDetails submission={submission.data!} />
     </Container>
   );
 };

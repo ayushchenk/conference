@@ -3,25 +3,25 @@ import { useGetConferenceApi } from "../../components/ConferenceDetails/Conferen
 import { CreateConferenceForm } from "../../components/CreateConferenceForm";
 import { FormNavHeader } from "../../components/FormHeader";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
-import { FormErrorAlert } from "../../components/FormErrorAlert";
+import { FormErrorAlert2 } from "../../components/FormErrorAlert";
 import { useConferenceId } from "../../hooks/UseConferenceId";
 
 export const UpdateConferencePage = () => {
   const conferenceId = useConferenceId();
-  const response = useGetConferenceApi(conferenceId);
+  const conference = useGetConferenceApi(conferenceId);
 
-  if (response.status === "loading") {
+  if (conference.isLoading) {
     return <LoadingSpinner />;
   }
 
-  if (response.status === "error") {
-    return <FormErrorAlert response={response} />;
+  if (conference.error) {
+    return <FormErrorAlert2 error={conference.error} />;
   }
 
   return (
     <Container>
       <FormNavHeader route={`/conferences/${conferenceId}`}>Update conference</FormNavHeader>
-      <CreateConferenceForm conference={response.data} />
+      <CreateConferenceForm conference={conference.data} />
     </Container>
   );
 };

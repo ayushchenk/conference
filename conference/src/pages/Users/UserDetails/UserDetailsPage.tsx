@@ -3,19 +3,19 @@ import { UserDetails } from "../../../components/UserDetails/UserDetails";
 import { useGetUserApi } from "./UserDetailsPage.hooks";
 import { UserDetailsPageProps } from "./UserDetailsPage.types";
 import { LoadingSpinner } from "../../../components/LoadingSpinner";
-import { FormErrorAlert } from "../../../components/FormErrorAlert";
+import { FormErrorAlert2 } from "../../../components/FormErrorAlert";
 
 export const UserDetailsPage = ({ id }: UserDetailsPageProps) => {
   const { userId } = useParams();
-  const response = useGetUserApi(id ?? Number(userId));
+  const user = useGetUserApi(id ?? Number(userId));
 
-  if (response.status === "loading" || response.status === "not-initiated") {
+  if (user.isLoading) {
     return <LoadingSpinner />;
   }
 
-  if (response.status === "error") {
-    return <FormErrorAlert response={response} />;
+  if (user.error) {
+    return <FormErrorAlert2 error={user.error} />;
   }
 
-  return <UserDetails user={response.data} />;
+  return <UserDetails user={user.data!} />;
 }

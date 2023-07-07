@@ -3,7 +3,7 @@ import { DataGrid, GridPaginationModel } from "@mui/x-data-grid";
 import { useGetNonParticipantsApi, useParticipantUsersGridProps as useParticipantUsersGridColumns } from "./NonParticipantUsersGrid.hooks";
 import { defaultPage } from "../../util/Constants";
 import { ParticipantUsersGridProps } from "./NonParticipantUsersGrid.types";
-import { FormErrorAlert } from "../FormErrorAlert";
+import { FormErrorAlert2 } from "../FormErrorAlert";
 import { NoResultsOverlay } from "../Util/NoResultsOverlay";
 import { NoRowsOverlay } from "../Util/NoRowsOverlay";
 import { User } from "../../types/User";
@@ -23,7 +23,7 @@ export const NonParticipantUsersGrid: React.FC<ParticipantUsersGridProps> = ({ h
   const columns = useParticipantUsersGridColumns(handleAdd);
 
   useEffect(() => {
-    if (users.status === "success") {
+    if (users.data) {
       setRows(users.data.items);
     }
   }, [users]);
@@ -38,7 +38,7 @@ export const NonParticipantUsersGrid: React.FC<ParticipantUsersGridProps> = ({ h
         initialState={{ pagination: { paginationModel: currentPage } }}
         pageSizeOptions={[5, 10, 15, 25]}
         onPaginationModelChange={setCurrentPage}
-        loading={users.status === "loading"}
+        loading={users.isLoading}
         rowCount={users.data?.totalCount ?? 0}
         paginationMode="server"
         slots={{
@@ -46,7 +46,7 @@ export const NonParticipantUsersGrid: React.FC<ParticipantUsersGridProps> = ({ h
           noResultsOverlay: NoResultsOverlay
         }}
       />
-      <FormErrorAlert response={users} />
+      <FormErrorAlert2 error={users.error} />
     </>
   );
 };

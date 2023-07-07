@@ -9,7 +9,7 @@ import { useDeleteApi } from "../../hooks/UseDeleteApi";
 import { useGetApi } from "../../hooks/UseGetApi";
 import { useMemoPaging } from "../../hooks/UseMemoPaging";
 import { usePostApi } from "../../hooks/UsePostApi";
-import { AdjustUserRoleRequest, GetUsersData, GetUsersResponse } from "./UsersGrid.types";
+import { AdjustUserRoleRequest, GetUsersData } from "./UsersGrid.types";
 import { Link } from "react-router-dom";
 import { User } from "../../types/User";
 import { Checkbox } from "@mui/material";
@@ -30,9 +30,9 @@ export const useRemoveUserAdminRoleApi = () => {
   return useDeleteApi<{}, {}>('/User/{0}/role/admin');
 };
 
-export const useGetUsersApi = (paging: GridPaginationModel, query: string): GetUsersResponse => {
-  const config = useMemoPaging(paging);
-  return useGetApi<GetUsersData>(`/User${query && `/?query=${query}`}`, config);
+export const useGetUsersApi = (paging: GridPaginationModel, query: string) => {
+  const config = useMemoPaging(paging, query);
+  return useGetApi<GetUsersData>('/User', config);
 };
 
 export const useDeleteUserApi = () => {

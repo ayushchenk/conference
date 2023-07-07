@@ -8,11 +8,12 @@ import moment from "moment";
 import { SubmissionContext } from "../../contexts/SubmissionContext";
 
 export const ReviewsList = () => {
-  const { submissionId, isClosed } = useContext(SubmissionContext);
-  const reviews = useGetReviewsApi(submissionId);
   const [rows, setRows] = useState<Review[]>([]);
   const [editingReview, setEditingReview] = useState<Review | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
+
+  const { submissionId, isClosed } = useContext(SubmissionContext);
+  const reviews = useGetReviewsApi(submissionId);
 
   const handleEditClick = useCallback((review: Review) => {
     setEditingReview(review);
@@ -25,7 +26,7 @@ export const ReviewsList = () => {
   }, []);
 
   useEffect(() => {
-    if (reviews.status === "success") {
+    if (reviews.data) {
       setRows(reviews.data);
     }
   }, [reviews]);
@@ -39,7 +40,7 @@ export const ReviewsList = () => {
     });
   }, []);
 
-  if (reviews.status === "success" && rows.length === 0) {
+  if (reviews.data && rows.length === 0) {
     return <Box display="flex" justifyContent="center">No reviews uploaded yet</Box>;
   }
 

@@ -17,10 +17,12 @@ import { Autocomplete, Chip, IconButton } from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
 import { useConferenceId } from "../../hooks/UseConferenceId";
 import { useGetConferenceApi } from "../ConferenceDetails/ConferenceDetails.hooks";
+import { FormErrorAlert2 } from "../FormErrorAlert";
 
 export const CreateSubmissionForm = ({ submission }: { submission?: Submission }) => {
   const navigate = useNavigate();
   const conferenceId = useConferenceId();
+
   const conference = useGetConferenceApi(conferenceId);
   const { response: responseUpdate, put } = useUpdateSubmissionApi();
   const { response: responseCreate, post } = usePostCreateSubmissionApi();
@@ -47,6 +49,10 @@ export const CreateSubmissionForm = ({ submission }: { submission?: Submission }
       performRequest(buildFormData(values));
     },
   });
+
+  if (conference.error) {
+    return <FormErrorAlert2 error={conference.error} />
+  }
 
   return (
     <Box component="form" mb={5} onSubmit={formik.handleSubmit}>
@@ -230,7 +236,6 @@ export const CreateSubmissionForm = ({ submission }: { submission?: Submission }
         {formik.touched.otherFiles && formik.errors.otherFiles && <FormHelperText>{formik.errors.otherFiles}</FormHelperText>}
       </FormControl>
       <FormErrorAlert response={response} />
-      <FormErrorAlert response={conference} />
       <Button
         disabled={response.status === "loading"}
         color="primary"

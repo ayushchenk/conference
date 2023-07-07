@@ -3,16 +3,16 @@ import { Link } from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { GridActionsCellItem, GridColDef, GridPaginationModel } from "@mui/x-data-grid";
 import { useDeleteApi } from "../../hooks/UseDeleteApi";
-import { useGetApi } from "../../hooks/UseGetApi";
-import { useMemoPaging } from "../../hooks/UseMemoPaging";
-import { GetConferencesData, GetConferencesResponse } from "./ConferencesGrid.types";
 import { Auth } from "../../util/Auth";
 import { useMemo } from "react";
 import { Conference } from "../../types/Conference";
+import { useGetApi } from "../../hooks/UseGetApi";
+import { useMemoPaging } from "../../hooks/UseMemoPaging";
+import { GetConferencesData } from "./ConferencesGrid.types";
 
-export const useGetConferencesApi = (paging: GridPaginationModel): GetConferencesResponse => {
+export const useGetConferencesApi = (paging: GridPaginationModel) => {
   const config = useMemoPaging(paging);
-  return useGetApi<GetConferencesData>(`/Conference`, config);
+  return useGetApi<GetConferencesData>('/conference', config);
 };
 
 export const useDeleteConferenceApi = () => {

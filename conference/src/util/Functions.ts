@@ -1,7 +1,8 @@
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { ErrorApiResponse, LoadingApiResponse, NotInitiatedResponse, SuccessApiResponse } from "../types/ApiResponse";
 import { User } from "../types/User";
 import { Auth } from "./Auth";
+import { GridPaginationModel } from "@mui/x-data-grid";
 
 //string of type "{0} text {1} ..."
 export function format(str: string, ...params: any[]) {
@@ -76,4 +77,27 @@ export function setupAxios() {
     }
     return config;
   });
+}
+
+export const axiosFetcher = (params: any[]) => {
+  const [path, config] = params;
+
+  return axios
+    .get(path, config)
+    .then(r => r.data);
+}
+
+export function createConfigFromPage(paging: GridPaginationModel, query?: string) {
+  var config: AxiosRequestConfig = {
+    params: {
+      pageIndex: paging.page,
+      pageSize: paging.pageSize
+    }
+  }
+
+  if (query) {
+    config.params.query = query;
+  }
+
+  return config;
 }

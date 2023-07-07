@@ -1,27 +1,29 @@
-import { useParams } from "react-router-dom";
 import { Container } from "@mui/material";
 import { CreateSubmissionForm } from "../../components/CreateSubmissionForm";
 import { FormNavHeader } from "../../components/FormHeader";
 import { useGetSubmissionApi } from "../../components/SubmissionDetails/SubmissionDetails.hooks";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
-import { FormErrorAlert } from "../../components/FormErrorAlert";
+import { FormErrorAlert2 } from "../../components/FormErrorAlert";
+import { useConferenceId } from "../../hooks/UseConferenceId";
+import { useSubmissionId } from "../../hooks/UseSubmissionId";
 
 export const UpdateSubmissionPage = () => {
-  const { conferenceId, submissionId } = useParams();
-  const response = useGetSubmissionApi(Number(submissionId));
+  const conferenceId = useConferenceId();
+  const submissionId = useSubmissionId();
+  const submission = useGetSubmissionApi(submissionId);
 
-  if (response.status === "loading" || response.status === "not-initiated") {
+  if (submission.isLoading) {
     return <LoadingSpinner />;
   }
 
-  if (response.status === "error") {
-    return <FormErrorAlert response={response} />;
+  if (submission.error) {
+    return <FormErrorAlert2 error={submission.error} />;
   }
 
   return (
     <Container>
       <FormNavHeader route={`/conferences/${conferenceId}/submissions/${submissionId}`}>Update submission</FormNavHeader>
-      <CreateSubmissionForm submission={response.data} />
+      <CreateSubmissionForm submission={submission.data} />
     </Container>
   );
 };

@@ -9,18 +9,18 @@ import { useGetInviteCodesApi, useRefreshCodeApi } from "./ConferenceDetails.hoo
 import { FormErrorAlert } from "../FormErrorAlert";
 
 export const ConferenceJoinCodes = ({ conferenceId }: ConferenceInviteCodesProps) => {
-  const inviteCodesResponse = useGetInviteCodesApi(conferenceId);
+  const inviteCode = useGetInviteCodesApi(conferenceId);
   const [inviteCodes, setInviteCodes] = useState<CodeVisibility[]>([]);
   const { response: refreshResponse, post: refreshCode } = useRefreshCodeApi();
 
   useEffect(() => {
-    if (inviteCodesResponse.status === "success") {
-      setInviteCodes(inviteCodesResponse.data.map(code => ({
+    if (inviteCode.data) {
+      setInviteCodes(inviteCode.data.map(code => ({
         ...code,
         visible: false
       })));
     }
-  }, [inviteCodesResponse]);
+  }, [inviteCode]);
 
   useEffect(() => {
     if (refreshResponse.status === "success") {

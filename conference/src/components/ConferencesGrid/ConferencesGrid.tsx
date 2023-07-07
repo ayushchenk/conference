@@ -3,7 +3,7 @@ import { useConferencesGridColumns, useDeleteConferenceApi, useGetConferencesApi
 import { useCallback, useEffect, useState } from "react";
 import { defaultPage } from "../../util/Constants";
 import { Conference } from "../../types/Conference";
-import { FormErrorAlert } from "../FormErrorAlert";
+import { FormErrorAlert, FormErrorAlert2 } from "../FormErrorAlert";
 import { NoRowsOverlay } from "../Util/NoRowsOverlay";
 import { ConfirmationDialog } from "../ConfirmationDialog";
 
@@ -24,7 +24,7 @@ export const ConferencesGrid = () => {
   const columns = useConferencesGridColumns(handleDelete);
 
   useEffect(() => {
-    if (conferences.status === "success") {
+    if (conferences.data) {
       setRows(conferences.data.items);
     }
   }, [conferences]);
@@ -47,7 +47,7 @@ export const ConferencesGrid = () => {
         paginationModel={currentPage}
         pageSizeOptions={[5, 10, 15, 25]}
         onPaginationModelChange={setCurrentPage}
-        loading={conferences.status === "loading"}
+        loading={conferences.isLoading}
         paginationMode="server"
         rowCount={conferences.data?.totalCount ?? 0}
         slots={{
@@ -67,7 +67,7 @@ export const ConferencesGrid = () => {
         This will also delete all submissions, reviews, comments, etc.
       </ConfirmationDialog>
       <FormErrorAlert response={deleteConferenceApi.response} />
-      <FormErrorAlert response={conferences} />
+      <FormErrorAlert2 error={conferences.error} />
     </>
   );
 };

@@ -13,18 +13,18 @@ import Typography from "@mui/material/Typography";
 import { useGetSubmissionPapersApi } from "./SubmissionDetails.hooks";
 import moment from "moment";
 import _ from "lodash";
-import { FormErrorAlert } from "../FormErrorAlert";
+import { FormErrorAlert2 } from "../FormErrorAlert";
 
 export const SubmissionPapersTable = () => {
   const { submissionId } = useParams();
   const papers = useGetSubmissionPapersApi(Number(submissionId));
 
-  if (papers.status === "loading") {
+  if (!papers.data) {
     return null;
   }
 
-  if (papers.status === "error") {
-    return <FormErrorAlert response={papers} />;
+  if (papers.error) {
+    return <FormErrorAlert2 error={papers.error} />;
   }
 
   const groupByType = _.groupBy(papers.data, "typeLabel");
@@ -46,7 +46,7 @@ export const SubmissionPapersTable = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {papers?.data?.map((paper, index) => (
+          {papers.data.map((paper, index) => (
             <TableRow key={paper.id}>
               <TableCell component="th" scope="row">
                 {index + 1}

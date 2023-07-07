@@ -11,7 +11,7 @@ import { defaultPage } from "../../util/Constants";
 import { User } from "../../types/User";
 import { useConferenceId } from "../../hooks/UseConferenceId";
 import { UserRoleManagementDialog } from "../UsersGrid";
-import { FormErrorAlert } from "../FormErrorAlert";
+import { FormErrorAlert, FormErrorAlert2 } from "../FormErrorAlert";
 import { NoRowsOverlay } from "../Util/NoRowsOverlay";
 import { NoResultsOverlay } from "../Util/NoResultsOverlay";
 import AddIcon from '@mui/icons-material/Add';
@@ -69,7 +69,7 @@ export const ConferenceParticipantsGrid = () => {
   }, [deleteResponse.status, deletingParticipant]);
 
   useEffect(() => {
-    if (participants.status === "success") {
+    if (participants.data) {
       setRows(participants.data.items);
     }
   }, [participants]);
@@ -95,7 +95,7 @@ export const ConferenceParticipantsGrid = () => {
         initialState={{ pagination: { paginationModel: currentPage } }}
         pageSizeOptions={[5, 10, 15, 25]}
         onPaginationModelChange={setCurrentPage}
-        loading={participants.status === "loading"}
+        loading={participants.isLoading}
         paginationMode="server"
         rowCount={participants.data?.totalCount ?? 0}
         slots={{
@@ -127,7 +127,7 @@ export const ConferenceParticipantsGrid = () => {
         This action will also remove role assignments, review assignments and preferences.
         <FormErrorAlert response={deleteResponse} />
       </ConfirmationDialog>
-      <FormErrorAlert response={participants} />
+      <FormErrorAlert2 error={participants.error} />
       <FormErrorAlert response={addResponse} />
     </>
   );

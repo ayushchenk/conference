@@ -3,9 +3,8 @@ import { useGetApi } from "../../hooks/UseGetApi";
 import { usePostApi } from "../../hooks/UsePostApi";
 import { BooleanResponse } from "../../types/ApiResponse";
 import { Review, Submission, SubmissionPaper } from "../../types/Conference";
-import { GetSubmissionResponse } from "./SubmissionDetails.types";
 
-export const useGetSubmissionApi = (submissionId: number): GetSubmissionResponse => {
+export const useGetSubmissionApi = (submissionId: number) => {
   return useGetApi<Submission>(`/Submission/${submissionId}`);
 };
 

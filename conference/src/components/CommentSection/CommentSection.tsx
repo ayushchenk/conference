@@ -3,7 +3,7 @@ import { CreateCommentForm } from "../CreateCommentForm";
 import { useGetSubmissionCommentsApi } from "./CommentSection.hooks";
 import { CommentsList } from "./CommentsList";
 import { Comment } from "../../types/Conference";
-import { FormErrorAlert } from "../FormErrorAlert";
+import { FormErrorAlert2 } from "../FormErrorAlert";
 import { Typography } from "@mui/material";
 import { SubmissionContext } from "../../contexts/SubmissionContext";
 
@@ -14,7 +14,7 @@ export const CommentSection = () => {
   const comments = useGetSubmissionCommentsApi(submissionId);
 
   useEffect(() => {
-    if (comments.status === "success") {
+    if (comments.data) {
       setRows(comments.data);
     }
   }, [comments]);
@@ -41,7 +41,7 @@ export const CommentSection = () => {
       <Typography variant="body1">Leave a comment</Typography>
       <CreateCommentForm submissionId={submissionId} onCreate={handleCreate} />
       <CommentsList comments={rows} onUpdate={handleUpdate} onDelete={handleDelete} />
-      <FormErrorAlert response={comments} />
+      <FormErrorAlert2 error={comments.error} />
     </>
   );
 }

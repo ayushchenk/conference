@@ -2,13 +2,13 @@ import { Link } from "react-router-dom";
 import { GridColDef, GridPaginationModel } from "@mui/x-data-grid";
 import { useGetApi } from "../../hooks/UseGetApi";
 import { useMemoPaging } from "../../hooks/UseMemoPaging";
-import { GetSubmissionsData, GetSubmissionsResponse } from "./SubmissionsGrid.types";
+import { GetSubmissionsData } from "./SubmissionsGrid.types";
 import moment from "moment";
 import { useMemo } from "react";
 import { Auth } from "../../util/Auth";
 import { useConferenceId } from "../../hooks/UseConferenceId";
 
-export const useGetSubmissionsApi = (paging: GridPaginationModel, query?: string): GetSubmissionsResponse => {
+export const useGetSubmissionsApi = (paging: GridPaginationModel, query?: string) => {
   const conferenceId = useConferenceId();
   const config = useMemoPaging(paging);
   return useGetApi<GetSubmissionsData>(`/Conference/${conferenceId}/submissions${query && `?query=${query}`}`, config);

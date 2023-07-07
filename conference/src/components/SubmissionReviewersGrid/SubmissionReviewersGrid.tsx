@@ -1,5 +1,5 @@
 import { DataGrid } from "@mui/x-data-grid";
-import { FormErrorAlert } from "../FormErrorAlert";
+import { FormErrorAlert, FormErrorAlert2 } from "../FormErrorAlert";
 import { NoResultsOverlay } from "../Util/NoResultsOverlay";
 import { NoRowsOverlay } from "../Util/NoRowsOverlay";
 import {
@@ -42,7 +42,7 @@ export const SubmissionReviewersGrid = () => {
   }, [addReviewerApi]);
 
   useEffect(() => {
-    if (submissionReviewers.status === "success" && conferenceReviewers.status === "success") {
+    if (submissionReviewers.data && conferenceReviewers.data) {
       setAssignedReviewers(submissionReviewers.data);
       setUnassignedReviewers(conferenceReviewers.data);
     }
@@ -73,7 +73,7 @@ export const SubmissionReviewersGrid = () => {
     <>
       <Button
         onClick={() => setOpenAssignDialog(true)}
-        disabled={conferenceReviewers.status === "loading" || isClosed}
+        disabled={conferenceReviewers.isLoading || isClosed}
         startIcon={<AddIcon />}>
         Add Reviewer
       </Button>
@@ -82,7 +82,7 @@ export const SubmissionReviewersGrid = () => {
         hideFooter
         rows={assignedReviewers}
         columns={columns}
-        loading={submissionReviewers.status === "loading"}
+        loading={submissionReviewers.isLoading}
         slots={{
           noRowsOverlay: () => <NoRowsOverlay>No reviewers assigned yet</NoRowsOverlay>,
           noResultsOverlay: NoResultsOverlay
@@ -101,8 +101,8 @@ export const SubmissionReviewersGrid = () => {
       >
         {`Are you sure you want to remove ${removingReviewer?.fullName} from this submission?`}
       </ConfirmationDialog>
-      <FormErrorAlert response={submissionReviewers} />
-      <FormErrorAlert response={conferenceReviewers} />
+      <FormErrorAlert2 error={submissionReviewers.error} />
+      <FormErrorAlert2 error={conferenceReviewers.error} />
       <FormErrorAlert response={removeReviewerApi.response} />
       <FormErrorAlert response={addReviewerApi.response} />
     </>

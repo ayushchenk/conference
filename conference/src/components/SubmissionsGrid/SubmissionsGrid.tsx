@@ -2,7 +2,7 @@ import { useState } from "react";
 import { DataGrid, GridPaginationModel } from "@mui/x-data-grid";
 import { defaultPage } from "../../util/Constants";
 import { useGetSubmissionsApi, useSubmissionsGridColumns } from "./SubmissionsGrid.hooks";
-import { FormErrorAlert } from "../FormErrorAlert";
+import { FormErrorAlert2 } from "../FormErrorAlert";
 import { NoRowsOverlay } from "../Util/NoRowsOverlay";
 import { NoResultsOverlay } from "../Util/NoResultsOverlay";
 import { useDebounceQuery } from "../../hooks/UseDebouncedQuery";
@@ -24,14 +24,14 @@ export const SubmissionsGrid = () => {
         pageSizeOptions={[5, 10, 15, 25]}
         onPaginationModelChange={setCurrentPage}
         paginationMode="server"
-        loading={submissions.status === "loading"}
+        loading={submissions.isLoading}
         rowCount={submissions.data?.totalCount ?? 0}
         slots={{
           noRowsOverlay: () => <NoRowsOverlay>No submissions uploaded yet</NoRowsOverlay>,
           noResultsOverlay: NoResultsOverlay
         }}
       />
-      <FormErrorAlert response={submissions} />
+      <FormErrorAlert2 error={submissions.error} />
     </>
   );
 };

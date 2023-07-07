@@ -1,11 +1,11 @@
-import { GetConferenceResponse, RefreshInviteCodeRequest } from "./ConferenceDetails.types";
+import { RefreshInviteCodeRequest } from "./ConferenceDetails.types";
 import { useGetApi } from "../../hooks/UseGetApi";
 import { Conference, InviteCode } from "../../types/Conference";
 import { usePutApi } from "../../hooks/UsePutApi";
 import { UpdateConferenceRequest } from "../CreateConferenceForm/CreateConferenceForm.types";
 import { usePostApi } from "../../hooks/UsePostApi";
 
-export const useGetConferenceApi = (conferenceId: number): GetConferenceResponse => {
+export const useGetConferenceApi = (conferenceId: number) => {
   return useGetApi<Conference>(`/Conference/${conferenceId}`);
 };
 
