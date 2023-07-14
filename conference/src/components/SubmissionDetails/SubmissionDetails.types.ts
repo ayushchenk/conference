@@ -5,8 +5,7 @@ export type GetSubmissionResponse = ApiResponse<Submission>;
 
 export interface TabPanelProps {
   children?: React.ReactNode;
-  index: number;
-  value: number;
+  value: string;
 }
 
 export type CreateReviewDialogProps = {

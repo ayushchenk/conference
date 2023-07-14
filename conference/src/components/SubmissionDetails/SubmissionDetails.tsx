@@ -15,7 +15,6 @@ import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 import Tabs from "@mui/material/Tabs";
 import { useAcceptSubmissionApi, usePostReturnSubmissionApi, useRejectSubmissionApi } from "./SubmissionDetails.hooks";
-import { TabPanel } from "./TabPanel";
 import { FormHeader } from "../FormHeader";
 import { useConferenceId } from "../../hooks/UseConferenceId";
 import { Auth } from "../../util/Auth";
@@ -34,11 +33,13 @@ import UTurnLeftIcon from '@mui/icons-material/UTurnLeft';
 import RateReviewOutlinedIcon from '@mui/icons-material/RateReviewOutlined';
 import { ConfirmationDialog } from "../ConfirmationDialog";
 import { SubmissionContext } from "../../contexts/SubmissionContext";
+import TabContext from "@mui/lab/TabContext";
+import { TabPanel } from "./TabPanel";
 
 export const SubmissionDetails = ({ submission }: { submission: Submission }) => {
   const navigate = useNavigate();
   const conferenceId = useConferenceId();
-  const [tabValue, setTabValue] = useState(0);
+  const [tabValue, setTabValue] = useState("0");
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
   const [acceptDialogOpen, setAcceptDialogOpen] = useState(false);
   const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
@@ -51,7 +52,7 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
   const isAuthor = submission.authorId === Auth.getId();
   const isChair = Auth.isChair(conferenceId);
 
-  const handleTabChange = useCallback((_: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = useCallback((_: React.SyntheticEvent, newValue: string) => {
     setTabValue(newValue);
   }, []);
 
@@ -169,24 +170,26 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
       </TableContainer>
       {(submission.isReviewer || isAuthor || isChair) &&
         <Box mt={5}>
-          <Tabs variant="fullWidth" value={tabValue} onChange={handleTabChange}>
-            <Tab label="Papers" />
-            <Tab label="Reviews" />
-            <Tab label="Comments" />
-            {isChair && <Tab label="Reviewers" />}
-          </Tabs>
-          <TabPanel value={tabValue} index={0}>
-            <SubmissionPapersTable />
-          </TabPanel>
-          <TabPanel value={tabValue} index={1}>
-            <ReviewsList />
-          </TabPanel>
-          <TabPanel value={tabValue} index={2}>
-            <CommentSection />
-          </TabPanel>
-          <TabPanel value={tabValue} index={3}>
-            <SubmissionReviewersGrid />
-          </TabPanel>
+          <TabContext value={tabValue.toString()}>
+            <Tabs variant="fullWidth" value={tabValue} onChange={handleTabChange}>
+              <Tab label="Papers" value="0"/>
+              <Tab label="Reviews" value="1"/>
+              <Tab label="Comments" value="2"/>
+              {isChair && <Tab label="Reviewers" value="3"/>}
+            </Tabs>
+            <TabPanel value="0">
+              <SubmissionPapersTable />
+            </TabPanel>
+            <TabPanel value="1">
+              <ReviewsList />
+            </TabPanel>
+            <TabPanel value="2">
+              <CommentSection />
+            </TabPanel>
+            <TabPanel value="3">
+              <SubmissionReviewersGrid />
+            </TabPanel>
+          </TabContext>
         </Box>
       }
       <CreateReviewDialog open={reviewDialogOpen} onClose={() => setReviewDialogOpen(false)} />
