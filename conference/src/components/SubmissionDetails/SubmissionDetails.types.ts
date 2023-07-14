@@ -1,12 +1,11 @@
+import { PropsWithChildren } from "react";
 import { ApiResponse } from "../../types/ApiResponse";
 import { Review, Submission } from "../../types/Conference";
 
 export type GetSubmissionResponse = ApiResponse<Submission>;
 
-export interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
+export interface TabPanelProps extends PropsWithChildren {
+  value: string;
 }
 
 export type CreateReviewDialogProps = {
