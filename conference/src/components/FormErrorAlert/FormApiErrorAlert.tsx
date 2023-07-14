@@ -1,10 +1,10 @@
 import Alert from "@mui/material/Alert";
-import { FormErrorAlertProps } from "./FormErrorAlert.types";
 import Collapse from "@mui/material/Collapse";
 import { useEffect, useState } from "react";
 import { errorAlertTimeout } from "../../util/Constants";
+import { FormApiErrorAlertProps } from "./FormErrorAlert.types";
 
-export const FormErrorAlert = ({ response }: FormErrorAlertProps) => {
+export const FormApiErrorAlert = ({ response }: FormApiErrorAlertProps) => {
   const [visible, setVisible] = useState(response.status === "error");
 
   useEffect(() => {

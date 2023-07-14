@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { DataGrid, GridPaginationModel } from "@mui/x-data-grid";
 import { useAddUserAdminRoleApi, useDeleteUserApi, useGetUsersApi, useRemoveUserAdminRoleApi, useUsersGridColumns } from "./UsersGrid.hooks";
 import { defaultPage } from "../../util/Constants";
-import { FormErrorAlert, FormErrorAlert2 } from "../FormErrorAlert";
+import { FormApiErrorAlert, FormSwrErrorAlert } from "../FormErrorAlert";
 import { User } from "../../types/User";
 import { NoRowsOverlay } from "../Util/NoRowsOverlay";
 import { NoResultsOverlay } from "../Util/NoResultsOverlay";
@@ -82,10 +82,10 @@ export const UsersGrid = () => {
         {`Are you sure you want to delete ${deletingUser?.fullName}'s account?`}<br />
         This will also delete all associated data.
       </ConfirmationDialog>
-      <FormErrorAlert2 error={users.error} />;
-      <FormErrorAlert response={deleteUserApi.response} />
-      <FormErrorAlert response={addRoleResponse} />
-      <FormErrorAlert response={removeRoleResponse} />
+      <FormSwrErrorAlert response={users} />
+      <FormApiErrorAlert response={deleteUserApi.response} />
+      <FormApiErrorAlert response={addRoleResponse} />
+      <FormApiErrorAlert response={removeRoleResponse} />
     </>
   );
 }; 

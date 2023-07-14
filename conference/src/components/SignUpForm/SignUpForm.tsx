@@ -3,11 +3,11 @@ import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { Auth } from "../../util/Auth";
-import { FormErrorAlert } from "../FormErrorAlert/FormErrorAlert";
 import { usePostSignUpApi } from "./SignUpForm.hooks";
 import { initialValues } from "./SignUpForm.types";
 import { validationSchema } from "./SignUpForm.validator";
 import { useEffect } from "react";
+import { FormApiErrorAlert } from "../FormErrorAlert";
 
 export const SignUpForm: React.FC<{}> = () => {
   const { response, post } = usePostSignUpApi();
@@ -154,7 +154,7 @@ export const SignUpForm: React.FC<{}> = () => {
         helperText={formik.touched.inviteCode && formik.errors.inviteCode}
         inputProps={{ maxLength: 20 }}
       />
-      <FormErrorAlert response={response} />
+      <FormApiErrorAlert response={response} />
       <Button
         disabled={response.status === "loading"}
         color="primary"

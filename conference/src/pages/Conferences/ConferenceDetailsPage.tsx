@@ -2,7 +2,7 @@ import { Container } from "@mui/material";
 import { ConferenceDetails } from "../../components/ConferenceDetails";
 import { useGetConferenceApi } from "../../components/ConferenceDetails/ConferenceDetails.hooks";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
-import { FormErrorAlert2 } from "../../components/FormErrorAlert";
+import { FormSwrErrorAlert } from "../../components/FormErrorAlert";
 import { useConferenceId } from "../../hooks/UseConferenceId";
 
 export const ConferenceDetailsPage = () => {
@@ -14,7 +14,7 @@ export const ConferenceDetailsPage = () => {
   }
 
   if (conference.error) {
-    return <FormErrorAlert2 error={conference.error} />;
+    return <FormSwrErrorAlert response={conference} />;
   }
 
   return (

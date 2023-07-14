@@ -3,7 +3,7 @@ import { UserDetails } from "../../../components/UserDetails/UserDetails";
 import { useGetUserApi } from "./UserDetailsPage.hooks";
 import { UserDetailsPageProps } from "./UserDetailsPage.types";
 import { LoadingSpinner } from "../../../components/LoadingSpinner";
-import { FormErrorAlert2 } from "../../../components/FormErrorAlert";
+import { FormSwrErrorAlert } from "../../../components/FormErrorAlert";
 
 export const UserDetailsPage = ({ id }: UserDetailsPageProps) => {
   const { userId } = useParams();
@@ -14,7 +14,7 @@ export const UserDetailsPage = ({ id }: UserDetailsPageProps) => {
   }
 
   if (user.error) {
-    return <FormErrorAlert2 error={user.error} />;
+    return <FormSwrErrorAlert response={user} />;
   }
 
   return <UserDetails user={user.data!} />;

@@ -2,10 +2,11 @@ import Alert from "@mui/material/Alert";
 import Collapse from "@mui/material/Collapse";
 import { useEffect, useState } from "react";
 import { errorAlertTimeout } from "../../util/Constants";
-import { AxiosError } from "axios";
-import { ApiError } from "../../types/ApiResponse";
+import { FormSwrErrorAlertProps } from "./FormErrorAlert.types";
 
-export const FormErrorAlert2 = ({ error }: { error: AxiosError<ApiError> | undefined }) => {
+export const FormSwrErrorAlert = ({ response }: FormSwrErrorAlertProps) => {
+  const error = response.error?.response?.data;
+
   const [visible, setVisible] = useState(!!error);
 
   useEffect(() => {
@@ -18,18 +19,8 @@ export const FormErrorAlert2 = ({ error }: { error: AxiosError<ApiError> | undef
     return null;
   }
 
-  const apiError = error.response?.data;
-
-  if (!apiError) {
-    return (
-      <Collapse in={true} sx={{ my: "10px" }}>
-        <Alert severity="error">{"Something went wrong while processing the request"}</Alert>
-      </Collapse>
-    );
-  }
-
-  if (apiError.errors) {
-    const errorMessages = Object.values(apiError.errors).flat();
+  if (error.errors) {
+    const errorMessages = Object.values(error.errors).flat();
     if (errorMessages.length > 0) {
       return (
         <Collapse in={true} sx={{ my: "10px" }}>
@@ -45,7 +36,7 @@ export const FormErrorAlert2 = ({ error }: { error: AxiosError<ApiError> | undef
 
   return (
     <Collapse in={true} sx={{ my: "10px" }}>
-      <Alert severity="error">{apiError?.detail ?? "Something went wrong while processing the request"}</Alert>
+      <Alert severity="error">{error?.detail ?? "Something went wrong while processing the request"}</Alert>
     </Collapse>
   );
 };

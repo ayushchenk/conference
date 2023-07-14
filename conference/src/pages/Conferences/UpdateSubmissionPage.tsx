@@ -3,7 +3,7 @@ import { CreateSubmissionForm } from "../../components/CreateSubmissionForm";
 import { FormNavHeader } from "../../components/FormHeader";
 import { useGetSubmissionApi } from "../../components/SubmissionDetails/SubmissionDetails.hooks";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
-import { FormErrorAlert2 } from "../../components/FormErrorAlert";
+import { FormSwrErrorAlert } from "../../components/FormErrorAlert";
 import { useConferenceId } from "../../hooks/UseConferenceId";
 import { useSubmissionId } from "../../hooks/UseSubmissionId";
 
@@ -17,7 +17,7 @@ export const UpdateSubmissionPage = () => {
   }
 
   if (submission.error) {
-    return <FormErrorAlert2 error={submission.error} />;
+    return <FormSwrErrorAlert response={submission} />;
   }
 
   return (

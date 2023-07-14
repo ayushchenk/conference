@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { Auth } from "../../util/Auth";
-import { FormErrorAlert } from "../FormErrorAlert/FormErrorAlert";
+import { FormApiErrorAlert } from "../FormErrorAlert/FormApiErrorAlert";
 import { usePostLoginApi } from "./LoginForm.hooks";
 import { validationSchema } from "./LoginForm.validator";
 
@@ -63,7 +63,7 @@ export const LoginForm: React.FC<{}> = () => {
         error={formik.touched.password && Boolean(formik.errors.password)}
         helperText={formik.touched.password && formik.errors.password}
       />
-      <FormErrorAlert response={response} />
+      <FormApiErrorAlert response={response} />
       <Button
         disabled={response.status === "loading"}
         color="primary"

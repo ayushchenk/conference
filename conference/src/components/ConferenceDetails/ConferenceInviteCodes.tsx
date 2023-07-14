@@ -6,7 +6,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import { CodeVisibility, ConferenceInviteCodesProps } from "./ConferenceDetails.types";
 import { useState, useEffect, useCallback } from "react";
 import { useGetInviteCodesApi, useRefreshCodeApi } from "./ConferenceDetails.hooks";
-import { FormErrorAlert } from "../FormErrorAlert";
+import { FormApiErrorAlert } from "../FormErrorAlert";
 
 export const ConferenceJoinCodes = ({ conferenceId }: ConferenceInviteCodesProps) => {
   const inviteCode = useGetInviteCodesApi(conferenceId);
@@ -85,7 +85,7 @@ export const ConferenceJoinCodes = ({ conferenceId }: ConferenceInviteCodesProps
   return (
     <>
       {codeRows}
-      <FormErrorAlert response={refreshResponse} />
+      <FormApiErrorAlert response={refreshResponse} />
     </>
   );
 }

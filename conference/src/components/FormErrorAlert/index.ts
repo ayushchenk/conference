@@ -1,2 +1,2 @@
-export { FormErrorAlert } from "./FormErrorAlert";
-export { FormErrorAlert2 } from "./FormErrorAlert2";
+export { FormApiErrorAlert } from "./FormApiErrorAlert";
+export { FormSwrErrorAlert } from "./FormSwrErrorAlert";

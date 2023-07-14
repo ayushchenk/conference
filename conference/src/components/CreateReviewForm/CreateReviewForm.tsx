@@ -6,7 +6,7 @@ import { useConferenceId } from "../../hooks/UseConferenceId";
 import { useSubmissionId } from "../../hooks/UseSubmissionId";
 import { Review } from "../../types/Conference";
 import { submissionConfidenceOptions } from "../../util/Constants";
-import { FormErrorAlert } from "../FormErrorAlert/FormErrorAlert";
+import { FormApiErrorAlert } from "../FormErrorAlert/FormApiErrorAlert";
 import { usePostCreateReviewApi, useUpdateReviewApi } from "./CreateReviewForm.hooks";
 import { CreateReviewRequest, initialValues } from "./CreateReviewForm.types";
 import { validationSchema } from "./CreateReviewForm.validator";
@@ -107,7 +107,7 @@ export const CreateReviewForm = ({
           ))}
         </Select>
       </FormControl>
-      <FormErrorAlert response={response} />
+      <FormApiErrorAlert response={response} />
       <Button
         disabled={response.status === "loading"}
         sx={{ mt: 2 }}

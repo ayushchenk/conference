@@ -11,11 +11,11 @@ import { defaultPage } from "../../util/Constants";
 import { User } from "../../types/User";
 import { useConferenceId } from "../../hooks/UseConferenceId";
 import { UserRoleManagementDialog } from "../UsersGrid";
-import { FormErrorAlert, FormErrorAlert2 } from "../FormErrorAlert";
 import { NoRowsOverlay } from "../Util/NoRowsOverlay";
 import { NoResultsOverlay } from "../Util/NoResultsOverlay";
 import AddIcon from '@mui/icons-material/Add';
 import { ConfirmationDialog } from "../ConfirmationDialog";
+import { FormApiErrorAlert, FormSwrErrorAlert } from "../FormErrorAlert";
 
 export const ConferenceParticipantsGrid = () => {
   const conferenceId = useConferenceId();
@@ -125,10 +125,10 @@ export const ConferenceParticipantsGrid = () => {
       >
         {`Are you sure you want to remove ${deletingParticipant?.fullName} from the conference?`}<br />
         This action will also remove role assignments, review assignments and preferences.
-        <FormErrorAlert response={deleteResponse} />
+        <FormApiErrorAlert response={deleteResponse} />
       </ConfirmationDialog>
-      <FormErrorAlert2 error={participants.error} />
-      <FormErrorAlert response={addResponse} />
+      <FormSwrErrorAlert response={participants} />
+      <FormApiErrorAlert response={addResponse} />
     </>
   );
 };

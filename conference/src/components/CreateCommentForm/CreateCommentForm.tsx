@@ -4,7 +4,7 @@ import { CreateCommentFormProps, initialValues } from "./CreateCommentForm.types
 import { validationSchema } from "./CreateCommentForm.validator";
 import { useFormik } from "formik";
 import { useEffect } from "react";
-import { FormErrorAlert } from "../FormErrorAlert";
+import { FormApiErrorAlert } from "../FormErrorAlert";
 
 export const CreateCommentForm = ({
   submissionId,
@@ -48,7 +48,7 @@ export const CreateCommentForm = ({
         helperText={formik.touched.text && formik.errors.text}
         inputProps={{ maxLength: 1000 }}
       />
-      <FormErrorAlert response={response} />
+      <FormApiErrorAlert response={response} />
       <Button
         disabled={response.status === "loading"}
         color="primary"

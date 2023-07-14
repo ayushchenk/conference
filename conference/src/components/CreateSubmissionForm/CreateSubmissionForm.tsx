@@ -9,7 +9,6 @@ import FormHelperText from "@mui/material/FormHelperText";
 import TextField from "@mui/material/TextField";
 import { Submission } from "../../types/Conference";
 import { buildFormData } from "../../util/Functions";
-import { FormErrorAlert } from "../FormErrorAlert/FormErrorAlert";
 import { usePostCreateSubmissionApi, useUpdateSubmissionApi } from "./CreateSubmissionForm.hooks";
 import { CreateSubmissionRequest, initialValues } from "./CreateSubmissionForm.types";
 import { createValidationSchema, updateValidationSchema } from "./CreateSubmissionForm.validator";
@@ -17,7 +16,7 @@ import { Autocomplete, Chip, IconButton } from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
 import { useConferenceId } from "../../hooks/UseConferenceId";
 import { useGetConferenceApi } from "../ConferenceDetails/ConferenceDetails.hooks";
-import { FormErrorAlert2 } from "../FormErrorAlert";
+import { FormApiErrorAlert, FormSwrErrorAlert } from "../FormErrorAlert";
 
 export const CreateSubmissionForm = ({ submission }: { submission?: Submission }) => {
   const navigate = useNavigate();
@@ -51,7 +50,7 @@ export const CreateSubmissionForm = ({ submission }: { submission?: Submission }
   });
 
   if (conference.error) {
-    return <FormErrorAlert2 error={conference.error} />
+    return <FormSwrErrorAlert response={conference} />
   }
 
   return (
@@ -235,7 +234,7 @@ export const CreateSubmissionForm = ({ submission }: { submission?: Submission }
         </Box>
         {formik.touched.otherFiles && formik.errors.otherFiles && <FormHelperText>{formik.errors.otherFiles}</FormHelperText>}
       </FormControl>
-      <FormErrorAlert response={response} />
+      <FormApiErrorAlert response={response} />
       <Button
         disabled={response.status === "loading"}
         color="primary"

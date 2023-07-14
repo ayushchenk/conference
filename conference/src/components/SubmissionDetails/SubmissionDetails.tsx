@@ -20,7 +20,6 @@ import { FormHeader } from "../FormHeader";
 import { useConferenceId } from "../../hooks/UseConferenceId";
 import { Auth } from "../../util/Auth";
 import { Submission } from "../../types/Conference";
-import { FormErrorAlert } from "../FormErrorAlert";
 import { AnyRoleVisibility } from "../ProtectedRoute/AnyRoleVisibility";
 import { SubmissionReviewersGrid } from "../SubmissionReviewersGrid/";
 import { CreateReviewDialog } from "./CreateReviewDialog";
@@ -34,6 +33,7 @@ import UTurnLeftIcon from '@mui/icons-material/UTurnLeft';
 import RateReviewOutlinedIcon from '@mui/icons-material/RateReviewOutlined';
 import { ConfirmationDialog } from "../ConfirmationDialog";
 import { SubmissionContext } from "../../contexts/SubmissionContext";
+import { FormApiErrorAlert } from "../FormErrorAlert";
 
 export const SubmissionDetails = ({ submission }: { submission: Submission }) => {
   const navigate = useNavigate();
@@ -195,14 +195,14 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
         onConfirm={() => acceptSubmission({})}
         onCancel={() => setAcceptDialogOpen(false)}>
         Are you sure you want to accept this submission?
-        <FormErrorAlert response={acceptResponse} />
+        <FormApiErrorAlert response={acceptResponse} />
       </ConfirmationDialog>
       <ConfirmationDialog
         open={rejectDialogOpen}
         onConfirm={() => rejectSubmission({})}
         onCancel={() => setRejectDialogOpen(false)}>
         Are you sure you want to reject this submission?
-        <FormErrorAlert response={rejectResponse} />
+        <FormApiErrorAlert response={rejectResponse} />
       </ConfirmationDialog>
       <ConfirmationDialog
         open={returnDialogOpen}
@@ -210,7 +210,7 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
         onCancel={() => setReturnDialogOpen(false)}>
         Are you sure you want to return this submission? <br />
         Author will have to update the submission before you can submit a review.
-        <FormErrorAlert response={returnResponse} />
+        <FormApiErrorAlert response={returnResponse} />
       </ConfirmationDialog>
     </SubmissionContext.Provider>
   );

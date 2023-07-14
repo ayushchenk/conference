@@ -1,5 +1,5 @@
 import { DataGrid } from "@mui/x-data-grid";
-import { FormErrorAlert, FormErrorAlert2 } from "../FormErrorAlert";
+import { FormApiErrorAlert, FormSwrErrorAlert } from "../FormErrorAlert";
 import { NoResultsOverlay } from "../Util/NoResultsOverlay";
 import { NoRowsOverlay } from "../Util/NoRowsOverlay";
 import {
@@ -101,10 +101,10 @@ export const SubmissionReviewersGrid = () => {
       >
         {`Are you sure you want to remove ${removingReviewer?.fullName} from this submission?`}
       </ConfirmationDialog>
-      <FormErrorAlert2 error={submissionReviewers.error} />
-      <FormErrorAlert2 error={conferenceReviewers.error} />
-      <FormErrorAlert response={removeReviewerApi.response} />
-      <FormErrorAlert response={addReviewerApi.response} />
+      <FormSwrErrorAlert response={submissionReviewers} />
+      <FormSwrErrorAlert response={conferenceReviewers} />
+      <FormApiErrorAlert response={removeReviewerApi.response} />
+      <FormApiErrorAlert response={addReviewerApi.response} />
     </>
   );
 }

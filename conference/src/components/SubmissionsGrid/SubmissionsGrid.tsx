@@ -2,7 +2,7 @@ import { useState } from "react";
 import { DataGrid, GridPaginationModel } from "@mui/x-data-grid";
 import { defaultPage } from "../../util/Constants";
 import { useGetSubmissionsApi, useSubmissionsGridColumns } from "./SubmissionsGrid.hooks";
-import { FormErrorAlert2 } from "../FormErrorAlert";
+import { FormSwrErrorAlert } from "../FormErrorAlert";
 import { NoRowsOverlay } from "../Util/NoRowsOverlay";
 import { NoResultsOverlay } from "../Util/NoResultsOverlay";
 import { useDebounceQuery } from "../../hooks/UseDebouncedQuery";
@@ -31,7 +31,7 @@ export const SubmissionsGrid = () => {
           noResultsOverlay: NoResultsOverlay
         }}
       />
-      <FormErrorAlert2 error={submissions.error} />
+      <FormSwrErrorAlert response={submissions} />
     </>
   );
 };

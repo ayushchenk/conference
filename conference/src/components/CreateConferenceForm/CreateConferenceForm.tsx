@@ -10,11 +10,11 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { Conference } from "../../types/Conference";
 import { useUpdateConferenceApi } from "../ConferenceDetails/ConferenceDetails.hooks";
-import { FormErrorAlert } from "../FormErrorAlert";
 import { usePostCreateConferenceApi } from "./CreateConferenceForm.hooks";
 import { initialValues } from "./CreateConferenceForm.types";
 import { validationSchema } from "./CreateConferenceForm.validator";
 import { FormHelperText, Checkbox, FormControlLabel, Autocomplete, Chip } from "@mui/material";
+import { FormApiErrorAlert } from "../FormErrorAlert";
 
 export const CreateConferenceForm = ({ conference }: { conference?: Conference | null }) => {
   const navigate = useNavigate();
@@ -250,7 +250,7 @@ export const CreateConferenceForm = ({ conference }: { conference?: Conference |
         } />
         <FormHelperText id="my-helper-text">Anonymized file should not contain any references to the authors of the submission, so fair and not biased review process can be guaranteed</FormHelperText>
       </div>
-      <FormErrorAlert response={response} />
+      <FormApiErrorAlert response={response} />
       <Button
         disabled={response.status === "loading"}
         color="primary"

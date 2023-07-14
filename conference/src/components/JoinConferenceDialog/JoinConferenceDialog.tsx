@@ -1,5 +1,5 @@
 import { Dialog, DialogTitle, DialogContent, Button, TextField, Collapse, Alert } from "@mui/material";
-import { FormErrorAlert } from "../FormErrorAlert";
+import { FormApiErrorAlert } from "../FormErrorAlert";
 import { JoinConferenceDialogProps, initialValues } from "./JoinConferenceDialog.types";
 import { useJoinConferenceApi } from "./JoinConferenceDialog.hooks";
 import { useFormik } from "formik";
@@ -49,7 +49,7 @@ export const JoinConferenceDialog = (props: JoinConferenceDialogProps) => {
             Submit
           </Button>
         </form>
-        <FormErrorAlert response={response} />
+        <FormApiErrorAlert response={response} />
         <Collapse in={response.status === "success"} sx={{ my: "10px" }}>
           <Alert severity="success">Success</Alert>
         </Collapse>

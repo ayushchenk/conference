@@ -3,7 +3,7 @@ import { useGetConferenceApi } from "../../components/ConferenceDetails/Conferen
 import { CreateConferenceForm } from "../../components/CreateConferenceForm";
 import { FormNavHeader } from "../../components/FormHeader";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
-import { FormErrorAlert2 } from "../../components/FormErrorAlert";
+import { FormSwrErrorAlert } from "../../components/FormErrorAlert";
 import { useConferenceId } from "../../hooks/UseConferenceId";
 
 export const UpdateConferencePage = () => {
@@ -15,7 +15,7 @@ export const UpdateConferencePage = () => {
   }
 
   if (conference.error) {
-    return <FormErrorAlert2 error={conference.error} />;
+    return <FormSwrErrorAlert response={conference} />;
   }
 
   return (

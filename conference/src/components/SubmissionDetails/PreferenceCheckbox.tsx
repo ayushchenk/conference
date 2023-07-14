@@ -2,7 +2,7 @@ import { FormControlLabel, Checkbox } from "@mui/material";
 import { useState, useEffect, useCallback } from "react";
 import { useAddSubmissionPreferenceApi, useGetHasPreferenceApi, useRemoveSubmissionPreferenceApi } from "./SubmissionDetails.hooks";
 import { PreferenceCheckboxProps } from "./SubmissionDetails.types";
-import { FormErrorAlert, FormErrorAlert2 } from "../FormErrorAlert";
+import { FormApiErrorAlert, FormSwrErrorAlert } from "../FormErrorAlert";
 
 export const PreferenceCheckbox = ({ submissionId }: PreferenceCheckboxProps) => {
   const [preference, setPreference] = useState(false);
@@ -35,9 +35,9 @@ export const PreferenceCheckbox = ({ submissionId }: PreferenceCheckboxProps) =>
           value={preference}
           onChange={(e) => handlePreferenceChange(e.target.checked)} />
       } />
-      <FormErrorAlert2 error={hasPreference.error} />
-      <FormErrorAlert response={addPreferenceApi.response} />
-      <FormErrorAlert response={removePreferenceApi.response} />
+      <FormSwrErrorAlert response={hasPreference} />
+      <FormApiErrorAlert response={addPreferenceApi.response} />
+      <FormApiErrorAlert response={removePreferenceApi.response} />
     </>
   );
 }

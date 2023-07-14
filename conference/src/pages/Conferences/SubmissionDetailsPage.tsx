@@ -2,7 +2,7 @@ import { Container } from "@mui/material";
 import { SubmissionDetails } from "../../components/SubmissionDetails";
 import { useGetSubmissionApi } from "../../components/SubmissionDetails/SubmissionDetails.hooks";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
-import { FormErrorAlert2 } from "../../components/FormErrorAlert";
+import { FormSwrErrorAlert } from "../../components/FormErrorAlert";
 import { useSubmissionId } from "../../hooks/UseSubmissionId";
 
 export const SubmissionDetailsPage = () => {
@@ -14,7 +14,7 @@ export const SubmissionDetailsPage = () => {
   }
 
   if (submission.error) {
-    return <FormErrorAlert2 error={submission.error} />;
+    return <FormSwrErrorAlert response={submission} />;
   }
 
   return (

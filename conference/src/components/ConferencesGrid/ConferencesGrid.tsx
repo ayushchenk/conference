@@ -3,9 +3,9 @@ import { useConferencesGridColumns, useDeleteConferenceApi, useGetConferencesApi
 import { useCallback, useEffect, useState } from "react";
 import { defaultPage } from "../../util/Constants";
 import { Conference } from "../../types/Conference";
-import { FormErrorAlert, FormErrorAlert2 } from "../FormErrorAlert";
 import { NoRowsOverlay } from "../Util/NoRowsOverlay";
 import { ConfirmationDialog } from "../ConfirmationDialog";
+import { FormApiErrorAlert, FormSwrErrorAlert } from "../FormErrorAlert";
 
 export const ConferencesGrid = () => {
   const [rows, setRows] = useState<Conference[]>([]);
@@ -66,8 +66,8 @@ export const ConferencesGrid = () => {
         {`Are you sure you want to delete ${deletingConference?.acronym}?`}<br />
         This will also delete all submissions, reviews, comments, etc.
       </ConfirmationDialog>
-      <FormErrorAlert response={deleteConferenceApi.response} />
-      <FormErrorAlert2 error={conferences.error} />
+      <FormApiErrorAlert response={deleteConferenceApi.response} />
+      <FormSwrErrorAlert response={conferences} />
     </>
   );
 };

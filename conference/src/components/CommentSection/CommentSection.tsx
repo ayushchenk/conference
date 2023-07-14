@@ -3,9 +3,9 @@ import { CreateCommentForm } from "../CreateCommentForm";
 import { useGetSubmissionCommentsApi } from "./CommentSection.hooks";
 import { CommentsList } from "./CommentsList";
 import { Comment } from "../../types/Conference";
-import { FormErrorAlert2 } from "../FormErrorAlert";
 import { Typography } from "@mui/material";
 import { SubmissionContext } from "../../contexts/SubmissionContext";
+import { FormSwrErrorAlert } from "../FormErrorAlert";
 
 export const CommentSection = () => {
   const [rows, setRows] = useState<Comment[]>([]);
@@ -41,7 +41,7 @@ export const CommentSection = () => {
       <Typography variant="body1">Leave a comment</Typography>
       <CreateCommentForm submissionId={submissionId} onCreate={handleCreate} />
       <CommentsList comments={rows} onUpdate={handleUpdate} onDelete={handleDelete} />
-      <FormErrorAlert2 error={comments.error} />
+      <FormSwrErrorAlert response={comments} />
     </>
   );
 }

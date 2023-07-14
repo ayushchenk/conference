@@ -3,7 +3,7 @@ import { DataGrid, GridPaginationModel } from "@mui/x-data-grid";
 import { useGetNonParticipantsApi, useParticipantUsersGridProps as useParticipantUsersGridColumns } from "./NonParticipantUsersGrid.hooks";
 import { defaultPage } from "../../util/Constants";
 import { ParticipantUsersGridProps } from "./NonParticipantUsersGrid.types";
-import { FormErrorAlert2 } from "../FormErrorAlert";
+import { FormSwrErrorAlert } from "../FormErrorAlert";
 import { NoResultsOverlay } from "../Util/NoResultsOverlay";
 import { NoRowsOverlay } from "../Util/NoRowsOverlay";
 import { User } from "../../types/User";
@@ -46,7 +46,7 @@ export const NonParticipantUsersGrid: React.FC<ParticipantUsersGridProps> = ({ h
           noResultsOverlay: NoResultsOverlay
         }}
       />
-      <FormErrorAlert2 error={users.error} />
+      <FormSwrErrorAlert response={users} />
     </>
   );
 };

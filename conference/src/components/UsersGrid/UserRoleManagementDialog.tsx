@@ -4,8 +4,8 @@ import { UserRoleManagementDialogProps } from "./UsersGrid.types";
 import { userRoles } from "../../util/Constants";
 import { getConferenceRoles } from "../../util/Functions";
 import { useConferenceId } from "../../hooks/UseConferenceId";
-import { FormErrorAlert } from "../FormErrorAlert";
 import { useAddUserRoleApi, useRemoveUserRoleApi } from "./UsersGrid.hooks";
+import { FormApiErrorAlert } from "../FormErrorAlert";
 
 export const UserRoleManagementDialog: React.FC<UserRoleManagementDialogProps> = ({
   open,
@@ -65,8 +65,8 @@ export const UserRoleManagementDialog: React.FC<UserRoleManagementDialogProps> =
             )}
           />
         </Box>
-        <FormErrorAlert response={postResponse} />
-        <FormErrorAlert response={deleteResponse} />
+        <FormApiErrorAlert response={postResponse} />
+        <FormApiErrorAlert response={deleteResponse} />
       </DialogContent>
     </Dialog>
   );
