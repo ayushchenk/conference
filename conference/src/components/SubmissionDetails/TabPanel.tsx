@@ -1,6 +1,7 @@
 import { TabPanelProps } from "./SubmissionDetails.types";
 import { useEffect, useState } from "react";
 import { useTabContext } from "@mui/lab/TabContext";
+import { Box } from "@mui/system";
 
 export function TabPanel(props: TabPanelProps) {
   const { children, value } = props;
@@ -19,14 +20,17 @@ export function TabPanel(props: TabPanelProps) {
     }
   }, [context.value, value]);
 
+  const visible = context.value === value;
+
   return (
-    <div
+    <Box
       style={{
-        height: context.value === value ? "auto" : 0,
-        visibility: context.value === value ? "visible" : "hidden",
+        marginTop: visible ? 15 : 0,
+        height: visible ? "auto" : 0,
+        display: visible ? "block" : "none"
       }}
     >
       {visited && children}
-    </div>
+    </Box>
   )
 }
