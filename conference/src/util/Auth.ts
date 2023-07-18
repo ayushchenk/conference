@@ -48,7 +48,7 @@ export namespace Auth {
       return false;
     }
 
-    return isAuthed() && (authData.parsedToken.role === "Admin" || authData.parsedToken.role.includes("Admin"));
+    return isAuthed() && (authData.parsedToken.role === "Admin" || authData.parsedToken.role?.includes("Admin"));
   }
 
   export function hasAnyRole(conferenceId: number, roles: string[]) {
