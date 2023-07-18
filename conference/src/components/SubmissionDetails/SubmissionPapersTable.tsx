@@ -14,13 +14,14 @@ import { useGetSubmissionPapersApi } from "./SubmissionDetails.hooks";
 import moment from "moment";
 import _ from "lodash";
 import { FormErrorAlert } from "../FormErrorAlert";
+import { CircularProgress } from "@mui/material";
 
 export const SubmissionPapersTable = () => {
   const { submissionId } = useParams();
   const papers = useGetSubmissionPapersApi(Number(submissionId));
 
   if (papers.status === "loading") {
-    return null;
+    return <CircularProgress/>;
   }
 
   if (papers.status === "error") {
