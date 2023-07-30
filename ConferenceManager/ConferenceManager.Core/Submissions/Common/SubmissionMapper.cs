@@ -1,6 +1,5 @@
 ﻿using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Domain.Entities;
-using ConferenceManager.Domain.Enums;
 using Humanizer;
 
 namespace ConferenceManager.Core.Submissions.Common
@@ -28,6 +27,7 @@ namespace ConferenceManager.Core.Submissions.Common
                 IsValidForUpdate = source.IsValidForUpdate,
                 IsValidForReview = source.IsValidForReview,
                 IsClosed = source.IsClosed,
+                Reviewers = source.ActualReviewers.Select(r => r.FullName).ToArray()
             };
         }
     }

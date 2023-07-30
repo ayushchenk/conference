@@ -40,6 +40,7 @@ export type Submission = {
   isValidForReview: boolean;
   isReviewer: boolean;
   isClosed: boolean;
+  reviewers: string[];
 };
 
 export type SubmissionPaper = {

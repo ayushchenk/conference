@@ -40,5 +40,7 @@ namespace ConferenceManager.Core.Submissions.Common
         public required bool IsClosed { set; get; }
 
         public bool IsReviewer { set; get; }
+
+        public required string[] Reviewers { set; get; }
     }
 }

@@ -18,6 +18,7 @@ export const SubmissionsGrid = () => {
       {debouncedInput}
       <DataGrid
         autoHeight
+        getRowHeight={() => "auto"}
         rows={submissions.data?.items ?? []}
         columns={columns}
         initialState={{ pagination: { paginationModel: currentPage } }}
