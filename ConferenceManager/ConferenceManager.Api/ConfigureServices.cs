@@ -1,6 +1,7 @@
 ﻿using ConferenceManager.Api.Filters;
 using ConferenceManager.Api.Middleware;
 using ConferenceManager.Api.Services;
+using ConferenceManager.Api.Util;
 using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Core.Common.Model.Settings;
 using ConferenceManager.Domain.Entities;
@@ -23,7 +24,8 @@ namespace ConferenceManager.Api
             {
                 builder.WithOrigins("http://127.0.0.1:3000")
                     .AllowAnyMethod()
-                    .AllowAnyHeader();
+                    .AllowAnyHeader()
+                    .WithExposedHeaders(Headers.FileName);
             }));
 
             services.AddLogging(loggin =>

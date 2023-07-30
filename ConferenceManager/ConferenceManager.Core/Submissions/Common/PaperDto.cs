@@ -15,8 +15,6 @@ namespace ConferenceManager.Core.Submissions.Common
 
         public required string FileName { set; get; }
 
-        public required string Base64Content { set; get; }
-
         public required DateTime CreatedOn { set; get; }
     }
 }

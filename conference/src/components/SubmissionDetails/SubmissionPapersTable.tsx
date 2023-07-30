@@ -1,4 +1,3 @@
-import { useParams } from "react-router-dom";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
@@ -10,18 +9,30 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
-import { useGetSubmissionPapersApi } from "./SubmissionDetails.hooks";
+import { useDownloadPaperApi, useGetSubmissionPapersApi } from "./SubmissionDetails.hooks";
 import moment from "moment";
 import _ from "lodash";
 import { FormErrorAlert } from "../FormErrorAlert";
 import { CircularProgress } from "@mui/material";
+import { SubmissionContext } from "../../contexts/SubmissionContext";
+import { useContext, useEffect } from "react";
+import { saveAs } from 'file-saver';
+import { headers } from "../../util/Constants";
 
 export const SubmissionPapersTable = () => {
-  const { submissionId } = useParams();
-  const papers = useGetSubmissionPapersApi(Number(submissionId));
+  const context = useContext(SubmissionContext);
+  const papers = useGetSubmissionPapersApi(context.submissionId);
+  const downloadApi = useDownloadPaperApi();
+
+  useEffect(() => {
+    if (downloadApi.response.status === "success") {
+      saveAs(downloadApi.response.data, downloadApi.response.headers[headers.filename]);
+      downloadApi.reset();
+    }
+  }, [downloadApi.response]);
 
   if (papers.status === "loading") {
-    return <CircularProgress/>;
+    return <CircularProgress />;
   }
 
   if (papers.status === "error") {
@@ -57,9 +68,9 @@ export const SubmissionPapersTable = () => {
               </TableCell>
               <TableCell>
                 <Link
-                  href={`data:application/pdf;base64,${paper.base64Content}`}
                   download={paper.fileName}
                   underline="none"
+                  onClick={() => downloadApi.post({}, paper.id)}
                 >
                   <Stack direction="row" alignItems="center">
                     <Typography>{paper.fileName}</Typography>

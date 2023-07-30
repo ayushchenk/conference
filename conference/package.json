@@ -13,6 +13,7 @@
     "@mui/x-date-pickers": "^6.5.0",
     "axios": "^1.4.0",
     "dayjs": "^1.11.7",
+    "file-saver": "^2.0.5",
     "formik": "^2.2.9",
     "jwt-decode": "^3.1.2",
     "lodash": "^4.17.21",
@@ -47,6 +48,7 @@
     ]
   },
   "devDependencies": {
+    "@types/file-saver": "^2.0.5",
     "@types/lodash": "^4.14.195",
     "@types/node": "^20.3.3",
     "@types/react": "^18.2.14",
