@@ -24,7 +24,9 @@ namespace ConferenceManager.Core.Submissions.DownloadPaper
                     return;
                 }
 
-                if (CurrentUser.IsChairIn(paper.Submission.Conference) || CurrentUser.IsAuthorOf(paper))
+                if (CurrentUser.IsChairIn(paper.Submission.Conference) 
+                    || CurrentUser.IsAuthorOf(paper)
+                    || CurrentUser.IsReviewerOf(paper.Submission))
                 {
                     return;
                 }

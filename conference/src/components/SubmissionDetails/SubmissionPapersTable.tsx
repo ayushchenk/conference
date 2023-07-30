@@ -47,44 +47,47 @@ export const SubmissionPapersTable = () => {
   }
 
   return (
-    <TableContainer component={Paper}>
-      <Table size="small">
-        <TableHead>
-          <TableRow>
-            <TableCell>#</TableCell>
-            <TableCell>Type</TableCell>
-            <TableCell>File</TableCell>
-            <TableCell>Upload Date</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {papers?.data?.map((paper, index) => (
-            <TableRow key={paper.id}>
-              <TableCell component="th" scope="row">
-                {index + 1}
-              </TableCell>
-              <TableCell component="th" scope="row">
-                {`${paper.typeLabel} ${latestDates.get(paper.typeLabel) === paper.createdOn ? '(latest)' : ''}`}
-              </TableCell>
-              <TableCell>
-                <Link
-                  download={paper.fileName}
-                  underline="none"
-                  onClick={() => downloadApi.post({}, paper.id)}
-                >
-                  <Stack direction="row" alignItems="center">
-                    <Typography>{paper.fileName}</Typography>
-                    <FileDownloadIcon fontSize="medium" />
-                  </Stack>
-                </Link>
-              </TableCell>
-              <TableCell>
-                {moment(new Date(paper.createdOn)).local().format("DD/MM/YYYY HH:mm:ss")}
-              </TableCell>
+    <>
+      <FormErrorAlert response={downloadApi.response}/>
+      <TableContainer component={Paper}>
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell>#</TableCell>
+              <TableCell>Type</TableCell>
+              <TableCell>File</TableCell>
+              <TableCell>Upload Date</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {papers?.data?.map((paper, index) => (
+              <TableRow key={paper.id}>
+                <TableCell component="th" scope="row">
+                  {index + 1}
+                </TableCell>
+                <TableCell component="th" scope="row">
+                  {`${paper.typeLabel} ${latestDates.get(paper.typeLabel) === paper.createdOn ? '(latest)' : ''}`}
+                </TableCell>
+                <TableCell>
+                  <Link
+                    download={paper.fileName}
+                    underline="none"
+                    onClick={() => downloadApi.post({}, paper.id)}
+                  >
+                    <Stack direction="row" alignItems="center">
+                      <Typography>{paper.fileName}</Typography>
+                      <FileDownloadIcon fontSize="medium" />
+                    </Stack>
+                  </Link>
+                </TableCell>
+                <TableCell>
+                  {moment(new Date(paper.createdOn)).local().format("DD/MM/YYYY HH:mm:ss")}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
   );
 };
