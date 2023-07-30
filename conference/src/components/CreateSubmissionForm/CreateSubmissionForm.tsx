@@ -17,6 +17,8 @@ import { Autocomplete, Chip, IconButton } from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
 import { useConferenceId } from "../../hooks/UseConferenceId";
 import { useGetConferenceApi } from "../ConferenceDetails/ConferenceDetails.hooks";
+import { UploadFileControl } from "../Util/UploadFileControl";
+import { UploadFilesControl } from "../Util/UploadFilesControl";
 
 export const CreateSubmissionForm = ({ submission }: { submission?: Submission }) => {
   const navigate = useNavigate();
@@ -114,121 +116,29 @@ export const CreateSubmissionForm = ({ submission }: { submission?: Submission }
         helperText={formik.touched.abstract && formik.errors.abstract}
         inputProps={{ maxLength: 1000 }}
       />
-      <FormControl fullWidth error={formik.touched.mainFile && Boolean(formik.errors.mainFile)}>
-        <Box sx={{ display: "flex", mt: 2 }}>
-          {formik.values.mainFile &&
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <FormHelperText>{formik.values.mainFile?.name}</FormHelperText>
-              <IconButton onClick={() => { formik.setFieldValue("mainFile", undefined) }}>
-                <ClearIcon />
-              </IconButton>
-            </Box>
-          }
-          <Button fullWidth variant="outlined" component="label" startIcon={<UploadFile />}>
-            {submission ? 'Upload New Main File' : 'Upload Main File *'}
-            <input
-              id="mainFile"
-              name="mainFile"
-              accept="application/pdf"
-              type="file"
-              hidden
-              onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                if (event.target.files) {
-                  formik.setFieldValue("mainFile", event.target.files[0]);
-                }
-              }}
-            />
-          </Button>
-        </Box>
-        {formik.touched.mainFile && formik.errors.mainFile && <FormHelperText>{formik.errors.mainFile}</FormHelperText>}
-      </FormControl>
-      <FormControl margin="dense" fullWidth error={formik.touched.anonymizedFile && Boolean(formik.errors.anonymizedFile)}>
-        <Box sx={{ display: "flex", mt: 2 }}>
-          {formik.values.anonymizedFile &&
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <FormHelperText>{formik.values.anonymizedFile?.name}</FormHelperText>
-              <IconButton onClick={() => { formik.setFieldValue("anonymizedFile", undefined) }}>
-                <ClearIcon />
-              </IconButton>
-            </Box>
-          }
-          <Button fullWidth variant="outlined" component="label" startIcon={<UploadFile />}>
-            Upload {submission ? 'New' : ''} Anonymized File
-            <input
-              id="anonymizedFile"
-              name="anonymizedFile"
-              accept="application/pdf"
-              type="file"
-              hidden
-              onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                if (event.target.files) {
-                  formik.setFieldValue("anonymizedFile", event.target.files[0]);
-                }
-              }}
-            />
-          </Button>
-        </Box>
-        {formik.touched.anonymizedFile && formik.errors.anonymizedFile && <FormHelperText>{formik.errors.anonymizedFile}</FormHelperText>}
-      </FormControl>
-      <FormControl margin="dense" fullWidth error={formik.touched.presentationFile && Boolean(formik.errors.presentationFile)}>
-        <Box sx={{ display: "flex", mt: 2 }}>
-          {formik.values.presentationFile &&
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <FormHelperText>{formik.values.presentationFile?.name}</FormHelperText>
-              <IconButton onClick={() => { formik.setFieldValue("presentationFile", undefined) }}>
-                <ClearIcon />
-              </IconButton>
-            </Box>
-          }
-          <Button fullWidth variant="outlined" component="label" startIcon={<UploadFile />}>
-            Upload {submission ? 'New' : ''} Presentation File
-            <input
-              id="presentationFile"
-              name="presentationFile"
-              type="file"
-              hidden
-              onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                if (event.target.files) {
-                  formik.setFieldValue("presentationFile", event.target.files[0]);
-                }
-              }}
-            />
-          </Button>
-        </Box>
-        {formik.touched.presentationFile && formik.errors.presentationFile && <FormHelperText>{formik.errors.presentationFile}</FormHelperText>}
-      </FormControl>
-      <FormControl margin="dense" fullWidth error={formik.touched.otherFiles && Boolean(formik.errors.otherFiles)}>
-        <Box sx={{ display: "flex", mt: 2 }}>
-          {formik.values.otherFiles &&
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Box>
-                {formik.values.otherFiles.map((file, index) => (
-                  <FormHelperText key={index}>{file.name}</FormHelperText>
-                ))}
-              </Box>
-              <IconButton onClick={() => { formik.setFieldValue("otherFiles", undefined) }}>
-                <ClearIcon />
-              </IconButton>
-            </Box>
-          }
-          <Button fullWidth variant="outlined" component="label" startIcon={<UploadFile />}>
-            Upload {submission ? 'New' : ''} Other Files
-            <input
-              id="otherFiles"
-              name="otherFiles"
-              multiple
-              type="file"
-              hidden
-              onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                if (event.target.files) {
-                  formik.setFieldValue("otherFiles", Array.from(event.target.files));
-                }
-              }}
-            />
-          </Button>
-        </Box>
-        {formik.touched.otherFiles && formik.errors.otherFiles && <FormHelperText>{formik.errors.otherFiles}</FormHelperText>}
-      </FormControl>
+      <UploadFileControl
+        formik={formik}
+        field="mainFile"
+        label={submission ? 'Upload New Main File' : 'Upload Main File *'}
+        mimeType="application/pdf"
+      />
+      <UploadFileControl
+        formik={formik}
+        field="anonymizedFile"
+        label={`Upload ${submission ? 'New' : ''} Anonymized File`}
+        mimeType="application/pdf"
+      />
+      <UploadFileControl
+        formik={formik}
+        field="presentationFile"
+        label={`Upload ${submission ? 'New' : ''} Presentation File`}
+        mimeType="application/vnd.openxmlformats-officedocument.presentationml.presentation"
+      />
+      <UploadFilesControl
+        formik={formik}
+        field="otherFiles"
+        label={`Upload ${submission ? 'New' : ''} Other Files`}
+      />
       <FormErrorAlert response={response} />
       <FormErrorAlert response={conference} />
       <Button

@@ -131,6 +131,7 @@ export const CreateConferenceForm = ({ conference }: { conference?: Conference |
       />
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker
+          format="DD/MM/YYYY"
           label="Start date"
           value={dayjs(formik.values.startDate)}
           onChange={(value) => formik.setFieldValue("startDate", value, true)}
@@ -149,6 +150,7 @@ export const CreateConferenceForm = ({ conference }: { conference?: Conference |
       </LocalizationProvider>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker
+        format="DD/MM/YYYY"
           label="End date"
           value={dayjs(formik.values.endDate)}
           onChange={(value) => formik.setFieldValue("endDate", value, true)}
