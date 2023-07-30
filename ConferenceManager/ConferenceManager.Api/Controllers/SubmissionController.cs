@@ -1,5 +1,6 @@
 ﻿using ConferenceManager.Api.Abstract;
 using ConferenceManager.Api.Filters;
+using ConferenceManager.Api.Util;
 using ConferenceManager.Core.Account.Common;
 using ConferenceManager.Core.Common.Model.Responses;
 using ConferenceManager.Core.Submissions.AddPreference;
@@ -10,6 +11,7 @@ using ConferenceManager.Core.Submissions.Create;
 using ConferenceManager.Core.Submissions.CreateComment;
 using ConferenceManager.Core.Submissions.CreateReview;
 using ConferenceManager.Core.Submissions.DeleteComment;
+using ConferenceManager.Core.Submissions.DownloadPaper;
 using ConferenceManager.Core.Submissions.Get;
 using ConferenceManager.Core.Submissions.GetComments;
 using ConferenceManager.Core.Submissions.GetPreferences;
@@ -23,6 +25,7 @@ using ConferenceManager.Core.Submissions.Return;
 using ConferenceManager.Core.Submissions.Update;
 using ConferenceManager.Core.Submissions.UpdateComment;
 using ConferenceManager.Core.Submissions.UpdateReview;
+using ConferenceManager.Core.Submissions.UploadPresentation;
 using ConferenceManager.Domain.Entities;
 using ConferenceManager.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
@@ -103,6 +106,41 @@ namespace ConferenceManager.Api.Controllers
             var result = await Mediator.Send(new GetSubmissionPapersQuery(id), cancellation);
 
             return Ok(result);
+        }
+
+        /// <summary>
+        /// Downloads a paper
+        /// </summary>
+        /// <remarks>
+        /// Paper can be downloaded by author, reviewer of the paper and chair
+        /// </remarks>
+        [HttpPost]
+        [Route("papers/{id}/download")]
+        [Authorize]
+        [ConferenceAuthorization]
+        [SwaggerResponse(StatusCodes.Status200OK)]
+        public async Task<IActionResult> DownloadPaper(int id, CancellationToken cancellation)
+        {
+            var result = await Mediator.Send(new DownloadPaperCommand(id), cancellation);
+
+            HttpContext.Response.Headers.Add(Headers.FileName, result.FileName);
+            return File(result.Bytes, "application/octet-stream", result.FileName);
+        }
+
+        /// <summary>
+        /// Uploads new presentation file
+        /// </summary>
+        [HttpPost]
+        [Route("{id}/papers/presentation")]
+        [Authorize(Roles = ApplicationRole.Author)]
+        [ConferenceAuthorization(ApplicationRole.Author)]
+        [SwaggerResponse(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> UploadPresentation(int id, [FromForm] UploadPresentationCommand command , CancellationToken cancellation)
+        {
+            command.SubmissionId = id;
+            await Mediator.Send(command, cancellation);
+
+            return NoContent();
         }
 
         /// <summary>

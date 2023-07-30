@@ -15,7 +15,6 @@ namespace ConferenceManager.Core.Submissions.Common
                 Type = source.Type,
                 TypeLabel = source.Type.Humanize(),
                 FileName = source.FileName,
-                Base64Content = Convert.ToBase64String(source.File),
                 CreatedOn = source.CreatedOn
             };
         }

@@ -7,6 +7,7 @@ import moment from "moment";
 import { useMemo } from "react";
 import { Auth } from "../../util/Auth";
 import { useConferenceId } from "../../hooks/UseConferenceId";
+import { Submission } from "../../types/Conference";
 
 export const useGetSubmissionsApi = (paging: GridPaginationModel, query?: string): GetSubmissionsResponse => {
   const conferenceId = useConferenceId();
@@ -18,12 +19,16 @@ export const useSubmissionsGridColumns = (): GridColDef[] => {
   const conferenceId = useConferenceId();
 
   return useMemo(() => {
-    const columns: GridColDef[] = [
+    const columns: GridColDef<Submission>[] = [
       {
         headerName: "#",
         field: "id",
         width: 60,
-        type: "number"
+        type: "number",
+        renderCell: (params) =>
+          <div style={{ minHeight: "52px", alignItems: "center", display: "flex" }}>
+            <label>{params.id}</label>
+          </div>
       },
       {
         headerName: "Title",
@@ -52,6 +57,19 @@ export const useSubmissionsGridColumns = (): GridColDef[] => {
         field: "authorName",
         maxWidth: 200,
         flex: 1
+      },);
+
+      columns.splice(3, 0, {
+        headerName: "Reviewers",
+        field: "reviewers",
+        maxWidth: 200,
+        flex: 1,
+        renderCell: (params) => {
+          const reviewers = params.row.reviewers
+            .map((reviewer, index) => <div key={index}>{reviewer}</div>);
+
+          return <div style={{ padding: "5px" }}>{reviewers}</div>;
+        }
       },);
     }
 

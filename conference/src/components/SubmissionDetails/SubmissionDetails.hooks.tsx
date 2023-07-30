@@ -40,3 +40,9 @@ export const useAddSubmissionPreferenceApi = (submissionId: number) => {
 export const useRemoveSubmissionPreferenceApi = (submissionId: number) => {
   return useDeleteApi<{}, {}>(`/submission/${submissionId}/preferences`);
 };
+
+export const useDownloadPaperApi = () => {
+  return usePostApi<{}, Blob>(`/submission/papers/{0}/download`, {
+    responseType: "blob"
+  });
+};

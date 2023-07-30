@@ -35,11 +35,14 @@ import { ConfirmationDialog } from "../ConfirmationDialog";
 import { SubmissionContext } from "../../contexts/SubmissionContext";
 import TabContext from "@mui/lab/TabContext";
 import { TabPanel } from "./TabPanel";
+import UploadFileIcon from '@mui/icons-material/UploadFile';
+import { UploadPresentationDialog } from "../UploadPresentationDialog/UploadPresentationDialog";
 
 export const SubmissionDetails = ({ submission }: { submission: Submission }) => {
   const navigate = useNavigate();
   const conferenceId = useConferenceId();
   const [tabValue, setTabValue] = useState("0");
+  const [presentationDialogOpen, setPresentationDialogOpen] = useState(false);
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
   const [acceptDialogOpen, setAcceptDialogOpen] = useState(false);
   const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
@@ -87,6 +90,15 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
       {!submission.isClosed &&
         <Box>
           <Divider />
+          {isAuthor &&
+            <>
+              {submission.status != 6 && //rejected
+                <Button sx={{ mr: 3 }} onClick={() => setPresentationDialogOpen(true)} startIcon={<UploadFileIcon />}>
+                  Upload presentation
+                </Button>
+              }
+            </>
+          }
           {isChair &&
             <>
               <Button sx={{ mr: 3 }} color="success" onClick={() => setAcceptDialogOpen(true)} startIcon={<CheckIcon />}>
@@ -172,10 +184,10 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
         <Box mt={5}>
           <TabContext value={tabValue.toString()}>
             <Tabs variant="fullWidth" value={tabValue} onChange={handleTabChange}>
-              <Tab label="Papers" value="0"/>
-              <Tab label="Reviews" value="1"/>
-              <Tab label="Comments" value="2"/>
-              {isChair && <Tab label="Reviewers" value="3"/>}
+              <Tab label="Papers" value="0" />
+              <Tab label="Reviews" value="1" />
+              <Tab label="Comments" value="2" />
+              {isChair && <Tab label="Reviewers" value="3" />}
             </Tabs>
             <TabPanel value="0">
               <SubmissionPapersTable />
@@ -193,6 +205,7 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
         </Box>
       }
       <CreateReviewDialog open={reviewDialogOpen} onClose={() => setReviewDialogOpen(false)} />
+      <UploadPresentationDialog open={presentationDialogOpen} onClose={() => setPresentationDialogOpen(false)} />
       <ConfirmationDialog
         open={acceptDialogOpen}
         onConfirm={() => acceptSubmission({})}
