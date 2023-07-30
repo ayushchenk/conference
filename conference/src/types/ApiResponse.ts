@@ -1,3 +1,5 @@
+import { AxiosHeaders, AxiosResponseHeaders, RawAxiosResponseHeaders } from "axios";
+
 export type ApiResponse<T> = NotInitiatedResponse | LoadingApiResponse | ErrorApiResponse | SuccessApiResponse<T>;
 
 export type NotInitiatedResponse = {
@@ -21,7 +23,8 @@ export type ErrorApiResponse = {
 export type SuccessApiResponse<T> = {
   status: "success",
   data: T,
-  error: null
+  error: null,
+  headers: RawAxiosResponseHeaders | AxiosResponseHeaders
 }
 
 export type PageData<T> = {

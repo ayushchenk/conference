@@ -55,7 +55,8 @@ export function createSuccessResponse<T>(response: AxiosResponse<T>): SuccessApi
   return {
     status: "success",
     data: response.data,
-    error: null
+    error: null,
+    headers: response.headers
   }
 }
 

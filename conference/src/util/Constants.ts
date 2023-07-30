@@ -13,6 +13,7 @@ export const maxOtherFilesInSubmission: number = 3;
 
 export const headers = {
   conference: "x-conference-id",
+  filename: "filename"
 };
 
 export const errorAlertTimeout = 5000;
