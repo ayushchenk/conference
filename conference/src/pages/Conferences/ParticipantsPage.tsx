@@ -7,7 +7,7 @@ export const ParticipantsPage = () => {
   const conferenceId = useConferenceId();
 
   return (
-    <Container>
+    <Container maxWidth="xl">
       <FormNavHeader route={`/conferences/${conferenceId}`}>Participants</FormNavHeader>
       <ConferenceParticipantsGrid />
     </Container>
