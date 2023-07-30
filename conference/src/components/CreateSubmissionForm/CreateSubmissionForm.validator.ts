@@ -1,18 +1,5 @@
 import * as yup from "yup";
-import { maxOtherFilesInSubmission, maxSubmissionFileSizeMB } from "../../util/Constants";
-
-const fileValidation = yup
-  .mixed<File>()
-  .test(
-    "fileSize",
-    `The file size exceeds the maximum limit of ${maxSubmissionFileSizeMB} MB. Please choose a smaller file.`,
-    function (value: File | undefined) {
-      if (value === undefined) {
-        return true;
-      }
-      return value.size <= maxSubmissionFileSizeMB * 1024 * 1024;
-    }
-  );
+import { fileValidation, maxOtherFilesInSubmission } from "../../util/Constants";
 
 const validationSchema = yup.object({
   title: yup.string().trim().required("Title is required"),

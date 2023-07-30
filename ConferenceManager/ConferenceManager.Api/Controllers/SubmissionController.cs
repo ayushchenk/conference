@@ -23,6 +23,7 @@ using ConferenceManager.Core.Submissions.Return;
 using ConferenceManager.Core.Submissions.Update;
 using ConferenceManager.Core.Submissions.UpdateComment;
 using ConferenceManager.Core.Submissions.UpdateReview;
+using ConferenceManager.Core.Submissions.UploadPresentation;
 using ConferenceManager.Domain.Entities;
 using ConferenceManager.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
@@ -103,6 +104,22 @@ namespace ConferenceManager.Api.Controllers
             var result = await Mediator.Send(new GetSubmissionPapersQuery(id), cancellation);
 
             return Ok(result);
+        }
+
+        /// <summary>
+        /// Uploads new presentation file
+        /// </summary>
+        [HttpPost]
+        [Route("{id}/papers/presentation")]
+        [Authorize(Roles = ApplicationRole.Author)]
+        [ConferenceAuthorization(ApplicationRole.Author)]
+        [SwaggerResponse(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> UploadPresentation(int id, [FromForm] UploadPresentationCommand command , CancellationToken cancellation)
+        {
+            command.SubmissionId = id;
+            await Mediator.Send(command, cancellation);
+
+            return NoContent();
         }
 
         /// <summary>
