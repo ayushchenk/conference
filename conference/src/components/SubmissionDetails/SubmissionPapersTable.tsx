@@ -29,7 +29,7 @@ export const SubmissionPapersTable = () => {
       saveAs(downloadApi.response.data, downloadApi.response.headers[headers.filename]);
       downloadApi.reset();
     }
-  }, [downloadApi.response]);
+  }, [downloadApi]);
 
   if (papers.status === "loading") {
     return <CircularProgress />;

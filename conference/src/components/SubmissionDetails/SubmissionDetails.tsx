@@ -14,7 +14,12 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 import Tabs from "@mui/material/Tabs";
-import { useAcceptSubmissionApi, usePostReturnSubmissionApi, useRejectSubmissionApi } from "./SubmissionDetails.hooks";
+import {
+  useAcceptSubmissionApi,
+  useAcceptSuggestionsSubmissionApi,
+  usePostReturnSubmissionApi,
+  useRejectSubmissionApi
+} from "./SubmissionDetails.hooks";
 import { FormHeader } from "../FormHeader";
 import { useConferenceId } from "../../hooks/UseConferenceId";
 import { Auth } from "../../util/Auth";
@@ -37,6 +42,8 @@ import TabContext from "@mui/lab/TabContext";
 import { TabPanel } from "./TabPanel";
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import { UploadPresentationDialog } from "../UploadPresentationDialog/UploadPresentationDialog";
+import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
+import { submissionStatusColor } from "../../util/Functions";
 
 export const SubmissionDetails = ({ submission }: { submission: Submission }) => {
   const navigate = useNavigate();
@@ -45,12 +52,14 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
   const [presentationDialogOpen, setPresentationDialogOpen] = useState(false);
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
   const [acceptDialogOpen, setAcceptDialogOpen] = useState(false);
+  const [acceptSuggestionsDialogOpen, setAcceptSuggestionsDialogOpen] = useState(false);
   const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
   const [returnDialogOpen, setReturnDialogOpen] = useState(false);
 
   const { post: returnSubmission, response: returnResponse } = usePostReturnSubmissionApi(submission.id);
   const { post: acceptSubmission, response: acceptResponse } = useAcceptSubmissionApi(submission.id);
   const { post: rejectSubmission, response: rejectResponse } = useRejectSubmissionApi(submission.id);
+  const { post: acceptSuggestionsSubmission, response: acceptSuggestionsResponse } = useAcceptSuggestionsSubmissionApi(submission.id);
 
   const isAuthor = submission.authorId === Auth.getId();
   const isChair = Auth.isChair(conferenceId);
@@ -60,10 +69,22 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
   }, []);
 
   useEffect(() => {
+    if (returnResponse.status === "success") {
+      window.location.reload();
+    }
+  }, [returnResponse]);
+
+  useEffect(() => {
     if (acceptResponse.status === "success") {
       window.location.reload();
     }
   }, [acceptResponse]);
+
+  useEffect(() => {
+    if (acceptSuggestionsResponse.status === "success") {
+      window.location.reload();
+    }
+  }, [acceptSuggestionsResponse]);
 
   useEffect(() => {
     if (rejectResponse.status === "success") {
@@ -92,7 +113,7 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
           <Divider />
           {isAuthor &&
             <>
-              {submission.status != 6 && //rejected
+              {submission.status !== 6 && //rejected
                 <Button sx={{ mr: 3 }} onClick={() => setPresentationDialogOpen(true)} startIcon={<UploadFileIcon />}>
                   Upload presentation
                 </Button>
@@ -104,6 +125,11 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
               <Button sx={{ mr: 3 }} color="success" onClick={() => setAcceptDialogOpen(true)} startIcon={<CheckIcon />}>
                 Accept
               </Button>
+              {submission.status !== 4 && //accepted with suggestions
+                <Button sx={{ mr: 3, color: "#edba11" }} onClick={() => setAcceptSuggestionsDialogOpen(true)} startIcon={<QuestionMarkIcon />}>
+                  Accept with suggestions
+                </Button>
+              }
               <Button sx={{ mr: 3 }} color="error" onClick={() => setRejectDialogOpen(true)} startIcon={<CloseIcon />}>
                 Reject
               </Button>
@@ -160,7 +186,7 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
             </TableRow>
             <TableRow>
               <TableCell variant="head">Status</TableCell>
-              <TableCell>{submission.statusLabel}</TableCell>
+              <TableCell variant="head" sx={{ color: submissionStatusColor(submission.status) }}>{submission.statusLabel}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell variant="head">Created On</TableCell>
@@ -204,7 +230,11 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
           </TabContext>
         </Box>
       }
-      <CreateReviewDialog open={reviewDialogOpen} onClose={() => setReviewDialogOpen(false)} />
+      <CreateReviewDialog
+        open={reviewDialogOpen}
+        onClose={() => setReviewDialogOpen(false)}
+        onSuccess={() => window.location.reload()}
+      />
       <UploadPresentationDialog open={presentationDialogOpen} onClose={() => setPresentationDialogOpen(false)} />
       <ConfirmationDialog
         open={acceptDialogOpen}
@@ -212,6 +242,14 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
         onCancel={() => setAcceptDialogOpen(false)}>
         Are you sure you want to accept this submission?
         <FormErrorAlert response={acceptResponse} />
+      </ConfirmationDialog>
+      <ConfirmationDialog
+        open={acceptSuggestionsDialogOpen}
+        onConfirm={() => acceptSuggestionsSubmission({})}
+        onCancel={() => setAcceptSuggestionsDialogOpen(false)}>
+        Are you sure you want to accept the submission with suggested changes?
+        Author will have to make changes and reviewers will review the submission again.
+        <FormErrorAlert response={acceptSuggestionsResponse} />
       </ConfirmationDialog>
       <ConfirmationDialog
         open={rejectDialogOpen}

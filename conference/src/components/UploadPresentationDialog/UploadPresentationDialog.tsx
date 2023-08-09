@@ -30,7 +30,7 @@ export const UploadPresentationDialog = (props: UploadPresentationDialogProps) =
 
       return () => clearTimeout(timeout);
     }
-  }, [response.status, formik]);
+  }, [response.status, formik, props, reset]);
 
   return (
     <Dialog open={props.open} onClose={props.onClose}>
