@@ -11,6 +11,7 @@ export interface TabPanelProps extends PropsWithChildren {
 export type CreateReviewDialogProps = {
   open: boolean;
   onClose: () => void;
+  onSuccess: () => void;
 };
 
 export type UpdateReviewDialogProps = {

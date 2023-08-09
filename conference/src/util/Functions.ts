@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from "axios";
 import { ErrorApiResponse, LoadingApiResponse, NotInitiatedResponse, SuccessApiResponse } from "../types/ApiResponse";
 import { User } from "../types/User";
 import { Auth } from "./Auth";
+import { submissionStatus } from "./Constants";
 
 //string of type "{0} text {1} ..."
 export function format(str: string, ...params: any[]) {
@@ -77,4 +78,13 @@ export function setupAxios() {
     }
     return config;
   });
+}
+
+export function submissionStatusColor(status: number) {
+  switch (status) {
+    case submissionStatus.accepted: return "green";
+    case submissionStatus.acceptedWithSuggestions: return "#cc9e06";
+    case submissionStatus.rejected: return "red";
+    default: return "inherit";
+  }
 }

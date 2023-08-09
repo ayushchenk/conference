@@ -38,3 +38,12 @@ export const fileValidation = yup
       return value.size <= maxSubmissionFileSizeMB * 1024 * 1024;
     }
   );
+
+export const submissionStatus = {
+  created: 1,
+  returned: 2,
+  updated: 3,
+  acceptedWithSuggestions: 4,
+  accepted: 5,
+  rejected: 6
+}

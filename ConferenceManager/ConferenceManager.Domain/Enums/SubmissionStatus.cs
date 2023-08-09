@@ -5,7 +5,7 @@
         Created = 1,
         Returned = 2,
         Updated = 3,
-        InReview = 4,
+        AcceptedWithSuggestions = 4,
         Accepted = 5,
         Rejected = 6
     }

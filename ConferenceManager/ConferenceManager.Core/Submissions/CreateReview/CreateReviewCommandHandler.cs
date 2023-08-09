@@ -19,10 +19,9 @@ namespace ConferenceManager.Core.Submissions.CreateReview
             var review = Mapper.Map<CreateReviewCommand, Review>(request);
 
             var submission = await Context.Submissions.FindAsync(request.SubmissionId, cancellationToken);
-            submission!.Status = Domain.Enums.SubmissionStatus.InReview;
 
             Context.Reviews.Add(review);
-            Context.Submissions.Update(submission);
+            Context.Submissions.Update(submission!);
             await Context.SaveChangesAsync(cancellationToken);
 
             return new CreateEntityResponse(review.Id);

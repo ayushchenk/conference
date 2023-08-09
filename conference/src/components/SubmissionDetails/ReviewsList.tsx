@@ -1,6 +1,6 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
-import { Box, IconButton, Paper, Typography } from "@mui/material";
+import { Box, CircularProgress, IconButton, Paper, Typography } from "@mui/material";
 import { Review } from "../../types/Conference";
 import { useGetReviewsApi } from "./SubmissionDetails.hooks";
 import { UpdateReviewDialog } from "./UpdateReviewDialog";
@@ -38,6 +38,10 @@ export const ReviewsList = () => {
       return newRows;
     });
   }, []);
+
+  if (reviews.status === "loading") {
+    return <CircularProgress />;
+  }
 
   if (reviews.status === "success" && rows.length === 0) {
     return <Box display="flex" justifyContent="center">No reviews uploaded yet</Box>;

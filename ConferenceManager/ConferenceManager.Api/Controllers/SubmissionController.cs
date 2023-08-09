@@ -178,6 +178,21 @@ namespace ConferenceManager.Api.Controllers
         }
 
         /// <summary>
+        /// Marks submission as accepted with suggestions
+        /// </summary>
+        [HttpPost]
+        [Route("{id}/accept-with-suggestions")]
+        [Authorize(Roles = ApplicationRole.Chair)]
+        [ConferenceAuthorization(ApplicationRole.Chair)]
+        [SwaggerResponse(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> AcceptWuthSuggestions(int id, CancellationToken cancellation)
+        {
+            await Mediator.Send(new CloseSubmissionCommand(id, SubmissionStatus.AcceptedWithSuggestions), cancellation);
+
+            return NoContent();
+        }
+
+        /// <summary>
         /// Marks submission as rejected
         /// </summary>
         [HttpPost]

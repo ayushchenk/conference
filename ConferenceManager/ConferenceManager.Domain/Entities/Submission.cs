@@ -19,9 +19,13 @@ namespace ConferenceManager.Domain.Entities
 
         public bool IsValidForReturn => Status == SubmissionStatus.Created || Status == SubmissionStatus.Updated;
 
-        public bool IsValidForUpdate => Status == SubmissionStatus.Created || Status == SubmissionStatus.Returned;
+        public bool IsValidForUpdate => Status == SubmissionStatus.Created 
+            || Status == SubmissionStatus.Returned
+            || Status == SubmissionStatus.AcceptedWithSuggestions;
 
-        public bool IsValidForReview => Status == SubmissionStatus.Created || Status == SubmissionStatus.Updated || Status == SubmissionStatus.InReview;
+        public bool IsValidForReview => Status == SubmissionStatus.Created 
+            || Status == SubmissionStatus.Updated 
+            || Status == SubmissionStatus.AcceptedWithSuggestions;
 
         public bool IsClosed => Status == SubmissionStatus.Accepted || Status == SubmissionStatus.Rejected;
 
