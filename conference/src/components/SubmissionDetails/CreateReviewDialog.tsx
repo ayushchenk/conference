@@ -3,9 +3,9 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/
 import { CreateReviewForm } from "../CreateReviewForm";
 import { CreateReviewDialogProps } from "./SubmissionDetails.types";
 
-export const CreateReviewDialog = ({ open, onClose }: CreateReviewDialogProps) => {
+export const CreateReviewDialog = ({ open, onClose, onSuccess }: CreateReviewDialogProps) => {
   const handleSuccess = useCallback(() => {
-    onClose();
+    onSuccess();
   }, [onClose]);
 
   return (

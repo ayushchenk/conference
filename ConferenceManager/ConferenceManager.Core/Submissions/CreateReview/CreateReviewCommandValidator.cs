@@ -49,7 +49,16 @@ namespace ConferenceManager.Core.Submissions.CreateReview
                     return;
                 }
 
-                if (submission.HasReviewFrom(CurrentUser.Id))
+                if (submission.HasReviewFrom(CurrentUser.Id) && submission.Status != SubmissionStatus.AcceptedWithSuggestions)
+                {
+                    context.AddException(new ForbiddenException("Submission is already reviewed"));
+                    return;
+                }
+
+                var reviews = submission.Reviews.Select(r => r.CreatedById).ToArray();
+
+                if (submission.Status == SubmissionStatus.AcceptedWithSuggestions &&
+                    reviews.Count(r => r == CurrentUser.Id) > 2)
                 {
                     context.AddException(new ForbiddenException("Submission is already reviewed"));
                 }

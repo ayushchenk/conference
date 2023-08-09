@@ -25,6 +25,10 @@ export const useAcceptSubmissionApi = (submissionId: number) => {
   return usePostApi<{}, {}>(`/Submission/${submissionId}/accept`);
 };
 
+export const useAcceptSuggestionsSubmissionApi = (submissionId: number) => {
+  return usePostApi<{}, {}>(`/Submission/${submissionId}/accept-with-suggestions`);
+};
+
 export const useRejectSubmissionApi = (submissionId: number) => {
   return usePostApi<{}, {}>(`/Submission/${submissionId}/reject`);
 };

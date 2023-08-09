@@ -2,6 +2,7 @@
 using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Core.Submissions.Common;
 using ConferenceManager.Domain.Entities;
+using ConferenceManager.Domain.Enums;
 
 namespace ConferenceManager.Core.Submissions.Get
 {
@@ -20,9 +21,21 @@ namespace ConferenceManager.Core.Submissions.Get
 
             var dto = Mapper.Map<Submission, SubmissionDto>(submission!);
             dto.IsReviewer = CurrentUser.IsReviewerOf(submission!);
-            dto.IsValidForReview = dto.IsValidForReview && !submission!.Reviews.Any(r => r.CreatedById == CurrentUser.Id);
+            dto.IsValidForReview = dto.IsValidForReview && CanReview(submission!);
 
             return dto;
+        }
+
+        private bool CanReview(Submission submission)
+        {
+            if (submission.Status != SubmissionStatus.AcceptedWithSuggestions)
+            {
+                return !submission.Reviews.Any(r => r.CreatedById == CurrentUser.Id);
+            }
+
+            return submission.Reviews
+                .Select(r => r.CreatedById)
+                .Count(id => id == CurrentUser.Id) < 2;
         }
     }
 }
