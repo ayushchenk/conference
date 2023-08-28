@@ -6,7 +6,7 @@ import { CreateReviewDialogProps } from "./SubmissionDetails.types";
 export const CreateReviewDialog = ({ open, onClose, onSuccess }: CreateReviewDialogProps) => {
   const handleSuccess = useCallback(() => {
     onSuccess();
-  }, [onClose]);
+  }, [onSuccess]);
 
   return (
     <Dialog maxWidth="md" fullWidth open={open} onClose={onClose}>

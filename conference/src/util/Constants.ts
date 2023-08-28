@@ -16,7 +16,7 @@ export const headers = {
   filename: "filename"
 };
 
-export const errorAlertTimeout = 5000;
+export const errorAlertTimeout = 10000;
 
 export const submissionConfidenceOptions = [
   { value: 1, label: "Very Low" },
