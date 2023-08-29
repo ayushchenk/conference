@@ -6,10 +6,20 @@ import { Auth } from "../../util/Auth";
 import { FormErrorAlert } from "../FormErrorAlert/FormErrorAlert";
 import { usePostSignUpApi } from "./SignUpForm.hooks";
 import { initialValues } from "./SignUpForm.types";
-import { validationSchema } from "./SignUpForm.validator";
-import { useEffect } from "react";
+import { digitRegex, lowerCaseRegex, nonAlphaCharRegex, requiredPasswordLength, upperCaseRegex, validationSchema } from "./SignUpForm.validator";
+import { useCallback, useEffect, useState } from "react";
+import { VisibilityOff, Visibility } from "@mui/icons-material";
+import { InputAdornment, IconButton, FormHelperText, FormControl, InputLabel, OutlinedInput } from "@mui/material";
 
 export const SignUpForm: React.FC<{}> = () => {
+  const [passwordLengthValid, setPasswordLengthValid] = useState(false);
+  const [passwordDigitValid, setPasswordDigitValid] = useState(false);
+  const [passwordLowerCaseValid, setPasswordLowerCaseValid] = useState(false);
+  const [passwordUpperCaseValid, setPasswordUppserCaseValid] = useState(false);
+  const [passwordNonAlphaValid, setPasswordNonAlphaValid] = useState(false);
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showRepeatPassword, setShowRepeatPassword] = useState(false);
   const { response, post } = usePostSignUpApi();
   const navigate = useNavigate();
 
@@ -18,7 +28,7 @@ export const SignUpForm: React.FC<{}> = () => {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       post(values);
-    },
+    }
   });
 
   useEffect(() => {
@@ -27,6 +37,18 @@ export const SignUpForm: React.FC<{}> = () => {
       navigate("/");
     }
   }, [response, navigate]);
+
+  const handlePasswordChange = useCallback((password: string) => {
+    setPasswordLengthValid(password.length >= requiredPasswordLength);
+    setPasswordDigitValid(digitRegex.test(password));
+    setPasswordLowerCaseValid(lowerCaseRegex.test(password));
+    setPasswordUppserCaseValid(upperCaseRegex.test(password));
+    setPasswordNonAlphaValid(nonAlphaCharRegex.test(password));
+  }, []);
+
+  const handleMouseDownPassword = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+  }, []);
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -112,20 +134,39 @@ export const SignUpForm: React.FC<{}> = () => {
         helperText={formik.touched.webpage && formik.errors.webpage}
         inputProps={{ maxLength: 100 }}
       />
-      <TextField
-        fullWidth
-        required
-        margin="normal"
-        id="password"
-        name="password"
-        label="Password"
-        type="password"
-        value={formik.values.password}
-        onChange={formik.handleChange}
-        error={formik.touched.password && Boolean(formik.errors.password)}
-        helperText={formik.touched.password && formik.errors.password}
-        inputProps={{ maxLength: 100 }}
-      />
+      <FormControl variant="outlined" margin="normal" fullWidth>
+        <InputLabel>Password</InputLabel>
+        <OutlinedInput
+          required
+          label="Password"
+          id="password"
+          name="password"
+          value={formik.values.password}
+          onBlur={formik.handleBlur}
+          onChange={(event) => {
+            formik.handleChange(event);
+            handlePasswordChange(event.target.value);
+          }}
+          type={showPassword ? 'text' : 'password'}
+          endAdornment={
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={() => setShowPassword((show) => !show)}
+                onMouseDown={handleMouseDownPassword}
+                edge="end"
+              >
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          }
+        />
+        <FormHelperText sx={{ color: formik.touched.password ? (passwordLengthValid ? "green" : "red") : "grey" }}>Password must be of minimum 8 characters length</FormHelperText>
+        <FormHelperText sx={{ color: formik.touched.password ? (passwordDigitValid ? "green" : "red") : "grey" }}>Password must have at least one digit</FormHelperText>
+        <FormHelperText sx={{ color: formik.touched.password ? (passwordLowerCaseValid ? "green" : "red") : "grey" }}>Password must have at least one lower-case letter (a-z)</FormHelperText>
+        <FormHelperText sx={{ color: formik.touched.password ? (passwordUpperCaseValid ? "green" : "red") : "grey" }}>Password must have at least one upper-case letter (A-Z)</FormHelperText>
+        <FormHelperText sx={{ color: formik.touched.password ? (passwordNonAlphaValid ? "green" : "red") : "grey" }}>Password must have at least one non-alphabetical character (!, @, #, etc.)</FormHelperText>
+      </FormControl>
       <TextField
         fullWidth
         required
@@ -135,10 +176,25 @@ export const SignUpForm: React.FC<{}> = () => {
         label="Repeat password"
         type="password"
         value={formik.values.passwordRepeat}
+        onBlur={formik.handleBlur}
         onChange={formik.handleChange}
         error={formik.touched.passwordRepeat && Boolean(formik.errors.passwordRepeat)}
         helperText={formik.touched.passwordRepeat && formik.errors.passwordRepeat}
         inputProps={{ maxLength: 100 }}
+        InputProps={{
+          type: showRepeatPassword ? 'text' : 'password',
+          endAdornment:
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={() => setShowRepeatPassword((show) => !show)}
+                onMouseDown={handleMouseDownPassword}
+                edge="end"
+              >
+                {showRepeatPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+        }}
       />
       <TextField
         fullWidth
