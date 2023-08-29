@@ -10,11 +10,12 @@ import { FormErrorAlert } from "../FormErrorAlert/FormErrorAlert";
 import { usePostCreateSubmissionApi, useUpdateSubmissionApi } from "./CreateSubmissionForm.hooks";
 import { CreateSubmissionRequest, initialValues } from "./CreateSubmissionForm.types";
 import { createValidationSchema, updateValidationSchema } from "./CreateSubmissionForm.validator";
-import { Autocomplete, Chip } from "@mui/material";
+import { Alert, Autocomplete, Chip } from "@mui/material";
 import { useConferenceId } from "../../hooks/UseConferenceId";
 import { useGetConferenceApi } from "../ConferenceDetails/ConferenceDetails.hooks";
 import { UploadFileControl } from "../Util/UploadFileControl";
 import { UploadFilesControl } from "../Util/UploadFilesControl";
+import { maxSubmissionFileSizeMB } from "../../util/Constants";
 
 export const CreateSubmissionForm = ({ submission }: { submission?: Submission }) => {
   const navigate = useNavigate();
@@ -112,17 +113,18 @@ export const CreateSubmissionForm = ({ submission }: { submission?: Submission }
         helperText={formik.touched.abstract && formik.errors.abstract}
         inputProps={{ maxLength: 1000 }}
       />
+      <Alert sx={{ mt: 1 }} severity="info">Maximum file size if {maxSubmissionFileSizeMB} MB</Alert>
       <UploadFileControl
         formik={formik}
         field="mainFile"
         label={submission ? 'Upload New Main File' : 'Upload Main File *'}
-        mimeType="application/pdf"
+        mimeType="application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
       />
       <UploadFileControl
         formik={formik}
         field="anonymizedFile"
         label={`Upload ${submission ? 'New' : ''} Anonymized File`}
-        mimeType="application/pdf"
+        mimeType="application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
       />
       <UploadFileControl
         formik={formik}

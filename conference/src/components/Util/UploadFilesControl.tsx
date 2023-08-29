@@ -6,7 +6,7 @@ import { UploadFileControlProps } from "./UploadFileControl";
 
 export const UploadFilesControl = <T,>({ formik, field, label }: UploadFileControlProps<T>) => {
   return (
-    <FormControl margin="dense" fullWidth error={formik.touched[field] && Boolean(formik.errors[field])}>
+    <FormControl fullWidth error={formik.touched[field] && Boolean(formik.errors[field])}>
       <Box sx={{ display: "flex", mt: 2 }}>
         {formik.values[field] &&
           <Box sx={{ display: "flex", alignItems: "center" }}>
