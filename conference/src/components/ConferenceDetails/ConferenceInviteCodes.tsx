@@ -51,33 +51,29 @@ export const ConferenceJoinCodes = ({ conferenceId }: ConferenceInviteCodesProps
 
   const codeRows = inviteCodes.map(inviteCode =>
     <TableRow key={inviteCode.role}>
-      <TableCell variant="head"> {inviteCode.role} Invite Code </TableCell>
+      <TableCell variant="head"> {inviteCode.role + " Invite Code"}</TableCell>
       <TableCell>
-        {codeVisible(inviteCode.role) && <>
-          <label>{inviteCode.code}</label>
-          <Tooltip enterDelay={0} title="Regenerate code">
-            <IconButton sx={{ ml: 2, padding: 0 }} onClick={() => refreshCode(inviteCode)}>
-              <RefreshIcon />
+        <div style={{ minWidth: 250 }}>
+          {codeVisible(inviteCode.role) && <>
+            <label>{inviteCode.code}</label>
+            <Tooltip enterDelay={100} leaveDelay={100} title="Regenerate code">
+              <IconButton sx={{ ml: 2, padding: 0 }} onClick={() => refreshCode(inviteCode)}>
+                <RefreshIcon />
+              </IconButton>
+            </Tooltip>
+          </>}
+          <Tooltip enterDelay={100} leaveDelay={100} title="Copy to clipboard">
+            <IconButton sx={{ ml: codeVisible(inviteCode.role) ? 2 : 0, padding: 0 }} onClick={() => navigator.clipboard.writeText(inviteCode.code)}>
+              <ContentCopyIcon fontSize="small" />
             </IconButton>
           </Tooltip>
-        </>}
-        <Tooltip enterDelay={0} title="Copy to clipboard">
-          <IconButton sx={{ ml: codeVisible(inviteCode.role) ? 2 : 0, padding: 0 }} onClick={() => navigator.clipboard.writeText(inviteCode.code)}>
-            <ContentCopyIcon fontSize="small" />
+          <IconButton onClick={() => handleCodeClick(inviteCode.role)} sx={{ ml: 2, padding: 0 }}>
+            {codeVisible(inviteCode.role)
+              ? <VisibilityOffIcon />
+              : <VisibilityIcon />
+            }
           </IconButton>
-        </Tooltip>
-        <IconButton onClick={() => handleCodeClick(inviteCode.role)} sx={{ ml: 2, padding: 0 }}>
-          {codeVisible(inviteCode.role)
-            ?
-            <Tooltip enterDelay={0} title="Hide code">
-              <VisibilityOffIcon />
-            </Tooltip>
-            :
-            <Tooltip enterDelay={0} title="Show code">
-              <VisibilityIcon />
-            </Tooltip>
-          }
-        </IconButton>
+        </div>
       </TableCell>
     </TableRow >
   );
