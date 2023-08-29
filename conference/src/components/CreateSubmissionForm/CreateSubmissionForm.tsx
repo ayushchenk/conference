@@ -118,24 +118,19 @@ export const CreateSubmissionForm = ({ submission }: { submission?: Submission }
         formik={formik}
         field="mainFile"
         label={submission ? 'Upload New Main File' : 'Upload Main File *'}
-        mimeType="application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        mimeType="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
       />
       <UploadFileControl
         formik={formik}
         field="anonymizedFile"
         label={`Upload ${submission ? 'New' : ''} Anonymized File`}
-        mimeType="application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-      />
-      <UploadFileControl
-        formik={formik}
-        field="presentationFile"
-        label={`Upload ${submission ? 'New' : ''} Presentation File`}
-        mimeType="application/vnd.openxmlformats-officedocument.presentationml.presentation"
+        mimeType="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
       />
       <UploadFilesControl
         formik={formik}
         field="otherFiles"
         label={`Upload ${submission ? 'New' : ''} Other Files`}
+        mimeType="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
       />
       <FormErrorAlert response={response} />
       <FormErrorAlert response={conference} />

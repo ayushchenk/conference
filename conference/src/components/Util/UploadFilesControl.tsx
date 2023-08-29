@@ -4,7 +4,7 @@ import { ChangeEvent } from "react";
 import ClearIcon from '@mui/icons-material/Clear';
 import { UploadFileControlProps } from "./UploadFileControl";
 
-export const UploadFilesControl = <T,>({ formik, field, label }: UploadFileControlProps<T>) => {
+export const UploadFilesControl = <T,>({ formik, field, label, mimeType }: UploadFileControlProps<T>) => {
   return (
     <FormControl fullWidth error={formik.touched[field] && Boolean(formik.errors[field])}>
       <Box sx={{ display: "flex", mt: 2 }}>
@@ -27,6 +27,7 @@ export const UploadFilesControl = <T,>({ formik, field, label }: UploadFileContr
             name={field.toString()}
             multiple
             type="file"
+            accept={mimeType}
             hidden
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
               if (event.target.files) {
