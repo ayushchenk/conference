@@ -3,7 +3,7 @@ import * as yup from "yup";
 export const digitRegex = /\d+/;
 export const lowerCaseRegex = /[a-z]+/;
 export const upperCaseRegex = /[A-Z]+/;
-export const nonAlpaCharRegex = /\W+/;
+export const nonAlphaCharRegex = /\W+/;
 export const requiredPasswordLength = 8;
 
 export const validationSchema = yup.object({
@@ -20,7 +20,7 @@ export const validationSchema = yup.object({
     .matches(digitRegex, "Password must have at least one digit")
     .matches(lowerCaseRegex, "Password must have at least one lower-case letter (a-z)")
     .matches(upperCaseRegex, "Password must have at least one upper-case letter (A-Z)")
-    .matches(nonAlpaCharRegex, "Password must have at least one non-alphabetical character (!, @, #, etc.)")
+    .matches(nonAlphaCharRegex, "Password must have at least one non-alphabetical character (!, @, #, etc.)")
     .required("Password is required"),
   passwordRepeat: yup
     .string()
