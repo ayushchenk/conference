@@ -6,7 +6,7 @@ import { Auth } from "../../util/Auth";
 import { FormErrorAlert } from "../FormErrorAlert/FormErrorAlert";
 import { usePostSignUpApi } from "./SignUpForm.hooks";
 import { initialValues } from "./SignUpForm.types";
-import { digitRegex, lowerCaseRegex, nonAlpaCharRegex, requiredPasswordLength, upperCaseRegex, validationSchema } from "./SignUpForm.validator";
+import { digitRegex, lowerCaseRegex, nonAlphaCharRegex, requiredPasswordLength, upperCaseRegex, validationSchema } from "./SignUpForm.validator";
 import { useCallback, useEffect, useState } from "react";
 import { VisibilityOff, Visibility } from "@mui/icons-material";
 import { InputAdornment, IconButton, FormHelperText, FormControl, InputLabel, OutlinedInput } from "@mui/material";
@@ -16,7 +16,7 @@ export const SignUpForm: React.FC<{}> = () => {
   const [passwordDigitValid, setPasswordDigitValid] = useState(false);
   const [passwordLowerCaseValid, setPasswordLowerCaseValid] = useState(false);
   const [passwordUpperCaseValid, setPasswordUppserCaseValid] = useState(false);
-  const [passwordNonAlpaValid, setPasswordNonAlpaValid] = useState(false);
+  const [passwordNonAlphaValid, setPasswordNonAlphaValid] = useState(false);
 
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
@@ -43,7 +43,7 @@ export const SignUpForm: React.FC<{}> = () => {
     setPasswordDigitValid(digitRegex.test(password));
     setPasswordLowerCaseValid(lowerCaseRegex.test(password));
     setPasswordUppserCaseValid(upperCaseRegex.test(password));
-    setPasswordNonAlpaValid(nonAlpaCharRegex.test(password));
+    setPasswordNonAlphaValid(nonAlphaCharRegex.test(password));
   }, []);
 
   const handleMouseDownPassword = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
@@ -165,7 +165,7 @@ export const SignUpForm: React.FC<{}> = () => {
         <FormHelperText sx={{ color: formik.touched.password ? (passwordDigitValid ? "green" : "red") : "grey" }}>Password must have at least one digit</FormHelperText>
         <FormHelperText sx={{ color: formik.touched.password ? (passwordLowerCaseValid ? "green" : "red") : "grey" }}>Password must have at least one lower-case letter (a-z)</FormHelperText>
         <FormHelperText sx={{ color: formik.touched.password ? (passwordUpperCaseValid ? "green" : "red") : "grey" }}>Password must have at least one upper-case letter (A-Z)</FormHelperText>
-        <FormHelperText sx={{ color: formik.touched.password ? (passwordNonAlpaValid ? "green" : "red") : "grey" }}>Password must have at least one non-alphabetical character (!, @, #, etc.)</FormHelperText>
+        <FormHelperText sx={{ color: formik.touched.password ? (passwordNonAlphaValid ? "green" : "red") : "grey" }}>Password must have at least one non-alphabetical character (!, @, #, etc.)</FormHelperText>
       </FormControl>
       <TextField
         fullWidth
