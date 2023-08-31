@@ -8,16 +8,16 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Typography from "@mui/material/Typography";
 import { useDownloadPaperApi, useGetSubmissionPapersApi } from "./SubmissionDetails.hooks";
 import moment from "moment";
 import _ from "lodash";
 import { FormErrorAlert } from "../FormErrorAlert";
-import { CircularProgress } from "@mui/material";
 import { SubmissionContext } from "../../contexts/SubmissionContext";
 import { useContext, useEffect } from "react";
 import { saveAs } from 'file-saver';
 import { headers } from "../../util/Constants";
+import { decode } from 'js-base64';
+import { LinearProgress } from "@mui/material";
 
 export const SubmissionPapersTable = () => {
   const context = useContext(SubmissionContext);
@@ -26,13 +26,14 @@ export const SubmissionPapersTable = () => {
 
   useEffect(() => {
     if (downloadApi.response.status === "success") {
-      saveAs(downloadApi.response.data, downloadApi.response.headers[headers.filename]);
+      const fileNameHeader = downloadApi.response.headers[headers.filename];
+      saveAs(downloadApi.response.data, decode(fileNameHeader));
       downloadApi.reset();
     }
   }, [downloadApi]);
 
   if (papers.status === "loading") {
-    return <CircularProgress />;
+    return <LinearProgress />;
   }
 
   if (papers.status === "error") {
@@ -48,7 +49,7 @@ export const SubmissionPapersTable = () => {
 
   return (
     <>
-      <FormErrorAlert response={downloadApi.response}/>
+      <FormErrorAlert response={downloadApi.response} />
       <TableContainer component={Paper}>
         <Table size="small">
           <TableHead>
@@ -75,7 +76,7 @@ export const SubmissionPapersTable = () => {
                     onClick={() => downloadApi.post({}, paper.id)}
                   >
                     <Stack direction="row" alignItems="center">
-                      <Typography>{paper.fileName}</Typography>
+                      <Link component="p" variant="body2">{paper.fileName}</Link>
                       <FileDownloadIcon fontSize="medium" />
                     </Stack>
                   </Link>

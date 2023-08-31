@@ -31,6 +31,7 @@ using ConferenceManager.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Text;
 
 namespace ConferenceManager.Api.Controllers
 {
@@ -123,7 +124,7 @@ namespace ConferenceManager.Api.Controllers
         {
             var result = await Mediator.Send(new DownloadPaperCommand(id), cancellation);
 
-            HttpContext.Response.Headers.Add(Headers.FileName, result.FileName);
+            HttpContext.Response.Headers.Add(Headers.FileName, result.FileNameBase64);
             return File(result.Bytes, "application/octet-stream", result.FileName);
         }
 
