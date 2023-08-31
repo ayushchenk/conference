@@ -13,9 +13,9 @@ import { createValidationSchema, updateValidationSchema } from "./CreateSubmissi
 import { Alert, Autocomplete, Chip } from "@mui/material";
 import { useConferenceId } from "../../hooks/UseConferenceId";
 import { useGetConferenceApi } from "../ConferenceDetails/ConferenceDetails.hooks";
-import { UploadFileControl } from "../Util/UploadFileControl";
 import { UploadFilesControl } from "../Util/UploadFilesControl";
 import { maxSubmissionFileSizeMB } from "../../util/Constants";
+import { UploadFileControl } from "../Util/UploadFileControl";
 
 export const CreateSubmissionForm = ({ submission }: { submission?: Submission }) => {
   const navigate = useNavigate();

@@ -1,5 +1,6 @@
 ﻿using ConferenceManager.Core.Common;
 using ConferenceManager.Core.Common.Interfaces;
+using System.Text;
 
 namespace ConferenceManager.Core.Submissions.DownloadPaper
 {
@@ -16,10 +17,14 @@ namespace ConferenceManager.Core.Submissions.DownloadPaper
         {
             var paper = await Context.Papers.FindAsync(request.PaperId, cancellationToken);
 
+            var bytes = Encoding.UTF8.GetBytes(paper!.FileName);
+            var encodedHeader = Convert.ToBase64String(bytes);
+
             return new DownloadPaperResponse()
             {
                 Bytes = paper!.File,
-                FileName = paper!.FileName
+                FileName = paper!.FileName,
+                FileNameBase64 = encodedHeader
             };
         }
     }

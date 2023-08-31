@@ -4,10 +4,10 @@ import { useFormik } from "formik";
 import { validationSchema } from "./UploadPresentationDialog.validator";
 import { useContext, useEffect } from "react";
 import { SubmissionContext } from "../../contexts/SubmissionContext";
-import { UploadFileControl } from "../Util/UploadFileControl";
 import { useUploadPresentationApi } from "./UploadPresentationDialog.hooks";
 import { buildFormData } from "../../util/Functions";
 import { FormErrorAlert } from "../FormErrorAlert";
+import { UploadFileControl } from "../Util/UploadFileControl";
 
 export const UploadPresentationDialog = (props: UploadPresentationDialogProps) => {
   const context = useContext(SubmissionContext);
