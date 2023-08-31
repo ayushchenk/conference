@@ -12,12 +12,12 @@ import { useDownloadPaperApi, useGetSubmissionPapersApi } from "./SubmissionDeta
 import moment from "moment";
 import _ from "lodash";
 import { FormErrorAlert } from "../FormErrorAlert";
-import { CircularProgress } from "@mui/material";
 import { SubmissionContext } from "../../contexts/SubmissionContext";
 import { useContext, useEffect } from "react";
 import { saveAs } from 'file-saver';
 import { headers } from "../../util/Constants";
 import { decode } from 'js-base64';
+import { LinearProgress } from "@mui/material";
 
 export const SubmissionPapersTable = () => {
   const context = useContext(SubmissionContext);
@@ -33,7 +33,7 @@ export const SubmissionPapersTable = () => {
   }, [downloadApi]);
 
   if (papers.status === "loading") {
-    return <CircularProgress />;
+    return <LinearProgress />;
   }
 
   if (papers.status === "error") {
