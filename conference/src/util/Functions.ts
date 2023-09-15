@@ -88,3 +88,5 @@ export function submissionStatusColor(status: number) {
     default: return "inherit";
   }
 }
+
+export const sleep = async (timeout: number) => await new Promise(r => setTimeout(r, timeout));

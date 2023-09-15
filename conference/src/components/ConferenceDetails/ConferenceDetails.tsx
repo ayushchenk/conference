@@ -20,9 +20,19 @@ import { ConferenceJoinCodes } from "./ConferenceInviteCodes";
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import ListIcon from '@mui/icons-material/List';
+import { CSSProperties } from "react";
 
 export const ConferenceDetails = ({ conference }: { conference: Conference }) => {
   const navigate = useNavigate();
+
+  const basicField = (title: string, value: string, style?: CSSProperties) => (
+    value ?
+      <TableRow>
+        <TableCell variant="head">{title}</TableCell>
+        <TableCell style={style}>{value}</TableCell>
+      </TableRow>
+      : null
+  );
 
   return (
     <>
@@ -61,37 +71,15 @@ export const ConferenceDetails = ({ conference }: { conference: Conference }) =>
       <TableContainer component={Paper}>
         <Table size="small">
           <TableBody>
-            <TableRow>
-              <TableCell variant="head">Acronym</TableCell>
-              <TableCell>{conference.acronym}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell variant="head">Keywords</TableCell>
-              <TableCell>{conference.keywords}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell variant="head">Abstract</TableCell>
-              <TableCell
-                style={{
-                  whiteSpace: "pre-line",
-                  wordBreak: "break-word",
-                }}
-              >
-                {conference.abstract}
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell variant="head">Webpage</TableCell>
-              <TableCell>{conference.webpage}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell variant="head">Venue</TableCell>
-              <TableCell>{conference.venue}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell variant="head">City</TableCell>
-              <TableCell>{conference.city}</TableCell>
-            </TableRow>
+            {basicField("Acronym", conference.acronym)}
+            {basicField("Keywords", conference.keywords)}
+            {basicField("Abstract", conference.abstract, {
+              whiteSpace: "pre-line",
+              wordBreak: "break-word",
+            })}
+            {basicField("Webpage", conference.webpage)}
+            {basicField("Venue", conference.venue)}
+            {basicField("City", conference.city)}
             <TableRow>
               <TableCell variant="head">Start Date</TableCell>
               <TableCell>{moment(conference.startDate).format("DD/MM/YYYY")}</TableCell>
@@ -108,25 +96,13 @@ export const ConferenceDetails = ({ conference }: { conference: Conference }) =>
                 ))}
               </TableCell>
             </TableRow>
-            <TableRow>
-              <TableCell variant="head">Research Area Notes</TableCell>
-              <TableCell
-                style={{
-                  whiteSpace: "pre-line",
-                  wordBreak: "break-word",
-                }}
-              >
-                {conference.areaNotes}
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell variant="head">Organizer</TableCell>
-              <TableCell>{conference.organizer}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell variant="head">Organizer Webpage</TableCell>
-              <TableCell>{conference.organizerWebpage}</TableCell>
-            </TableRow>
+            {basicField("Research Area Notes", conference.areaNotes, {
+              whiteSpace: "pre-line",
+              wordBreak: "break-word",
+            })}
+            {basicField("Organizer", conference.organizer)}
+            {basicField("Organizer Webpage", conference.organizerWebpage)}
+            {basicField("Contact Phone Number", conference.contactPhoneNumber)}
             <TableRow>
               <TableCell variant="head">
                 Anonymized File Requried

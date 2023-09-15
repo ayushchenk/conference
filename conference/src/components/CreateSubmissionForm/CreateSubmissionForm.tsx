@@ -10,11 +10,12 @@ import { FormErrorAlert } from "../FormErrorAlert/FormErrorAlert";
 import { usePostCreateSubmissionApi, useUpdateSubmissionApi } from "./CreateSubmissionForm.hooks";
 import { CreateSubmissionRequest, initialValues } from "./CreateSubmissionForm.types";
 import { createValidationSchema, updateValidationSchema } from "./CreateSubmissionForm.validator";
-import { Autocomplete, Chip } from "@mui/material";
+import { Alert, Autocomplete, Chip } from "@mui/material";
 import { useConferenceId } from "../../hooks/UseConferenceId";
 import { useGetConferenceApi } from "../ConferenceDetails/ConferenceDetails.hooks";
-import { UploadFileControl } from "../Util/UploadFileControl";
 import { UploadFilesControl } from "../Util/UploadFilesControl";
+import { maxSubmissionFileSizeMB } from "../../util/Constants";
+import { UploadFileControl } from "../Util/UploadFileControl";
 
 export const CreateSubmissionForm = ({ submission }: { submission?: Submission }) => {
   const navigate = useNavigate();
@@ -112,28 +113,24 @@ export const CreateSubmissionForm = ({ submission }: { submission?: Submission }
         helperText={formik.touched.abstract && formik.errors.abstract}
         inputProps={{ maxLength: 1000 }}
       />
+      <Alert sx={{ mt: 1 }} severity="info">Maximum file size if {maxSubmissionFileSizeMB} MB</Alert>
       <UploadFileControl
         formik={formik}
         field="mainFile"
         label={submission ? 'Upload New Main File' : 'Upload Main File *'}
-        mimeType="application/pdf"
+        mimeType="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
       />
       <UploadFileControl
         formik={formik}
         field="anonymizedFile"
         label={`Upload ${submission ? 'New' : ''} Anonymized File`}
-        mimeType="application/pdf"
-      />
-      <UploadFileControl
-        formik={formik}
-        field="presentationFile"
-        label={`Upload ${submission ? 'New' : ''} Presentation File`}
-        mimeType="application/vnd.openxmlformats-officedocument.presentationml.presentation"
+        mimeType="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
       />
       <UploadFilesControl
         formik={formik}
         field="otherFiles"
         label={`Upload ${submission ? 'New' : ''} Other Files`}
+        mimeType="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
       />
       <FormErrorAlert response={response} />
       <FormErrorAlert response={conference} />
