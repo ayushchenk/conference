@@ -142,11 +142,6 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
                   Return
                 </Button>
               }
-              {submission.isValidForReview &&
-                <Button sx={{ mr: 3 }} onClick={() => setReviewDialogOpen(true)} startIcon={<RateReviewOutlinedIcon />}>
-                  Write a Review
-                </Button>
-              }
             </>
           }
           <Divider />
@@ -219,6 +214,17 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
               <SubmissionPapersTable />
             </TabPanel>
             <TabPanel value="1">
+              {!submission.isClosed && submission.isReviewer && submission.isValidForReview && (
+                <Box sx={{ display: "flex", justifyContent: "center" }} my={1}>
+                  <Button
+                    sx={{ mr: 3 }}
+                    onClick={() => setReviewDialogOpen(true)}
+                    startIcon={<RateReviewOutlinedIcon />}
+                  >
+                    Write a Review
+                  </Button>
+                </Box>
+              )}
               <ReviewsList />
             </TabPanel>
             <TabPanel value="2">
