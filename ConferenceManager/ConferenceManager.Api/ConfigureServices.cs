@@ -19,10 +19,11 @@ namespace ConferenceManager.Api
         public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration)
         {
             var tokenSettings = configuration.GetSection("TokenSettings").Get<TokenSettings>()!;
+            var corsSettings = configuration.GetSection("CorsSettings").Get<CorsSettings>()!;
 
-            services.AddCors(o => o.AddPolicy("local", builder =>
+            services.AddCors(o => o.AddPolicy(CorsPolicies.Front, builder =>
             {
-                builder.WithOrigins("http://127.0.0.1:3000")
+                builder.WithOrigins(corsSettings.FrontUrl)
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .WithExposedHeaders(Headers.FileName);

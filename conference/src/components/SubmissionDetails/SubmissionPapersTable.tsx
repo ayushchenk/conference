@@ -13,16 +13,21 @@ import moment from "moment";
 import _ from "lodash";
 import { FormErrorAlert } from "../FormErrorAlert";
 import { SubmissionContext } from "../../contexts/SubmissionContext";
-import { useContext, useEffect } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { saveAs } from 'file-saver';
 import { headers } from "../../util/Constants";
 import { decode } from 'js-base64';
-import { LinearProgress } from "@mui/material";
+import { Alert, LinearProgress, Snackbar } from "@mui/material";
 
 export const SubmissionPapersTable = () => {
   const context = useContext(SubmissionContext);
   const papers = useGetSubmissionPapersApi(context.submissionId);
   const downloadApi = useDownloadPaperApi();
+  const [showSnackbar, setShowSnackbar] = useState(false);
+
+  const handleSnackClose = useCallback(() => {
+    setShowSnackbar(false);
+  }, [setShowSnackbar]);
 
   useEffect(() => {
     if (downloadApi.response.status === "success") {
@@ -73,7 +78,11 @@ export const SubmissionPapersTable = () => {
                   <Link
                     download={paper.fileName}
                     underline="none"
-                    onClick={() => downloadApi.post({}, paper.id)}
+                    sx={{cursor: "pointer"}}
+                    onClick={() => {
+                      setShowSnackbar(true);
+                      downloadApi.post({}, paper.id)
+                    }}
                   >
                     <Stack direction="row" alignItems="center">
                       <Link component="p" variant="body2">{paper.fileName}</Link>
@@ -89,6 +98,11 @@ export const SubmissionPapersTable = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <Snackbar open={showSnackbar} autoHideDuration={6000} onClose={handleSnackClose}>
+        <Alert onClose={handleSnackClose} severity="success" sx={{ width: '100%' }}>
+          Download will start soon
+        </Alert>
+      </Snackbar>
     </>
   );
 };
