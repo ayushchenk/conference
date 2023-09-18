@@ -1,5 +1,6 @@
 using ConferenceManager.Api;
 using ConferenceManager.Api.Middleware;
+using ConferenceManager.Api.Util;
 using ConferenceManager.Core;
 using ConferenceManager.Core.Common.Model.Settings;
 using ConferenceManager.Infrastructure;
@@ -39,7 +40,7 @@ app.UseMiddleware<LoggingMiddleware>();
 
 app.UseAuthentication();
 
-app.UseCors("local");
+app.UseCors(CorsPolicies.Front);
 
 app.UseAuthorization();
 
