@@ -30,6 +30,9 @@ Prerequisites:
   "SeedSettings": {
     "AdminPassword":  "C00!P@ssword",
     "AdminEmail": "cool@email.com" //any valid email
+  },
+  "CorsSettings": {
+    "FrontUrl": "http://127.0.0.1:3000"
   }
 }
 ```

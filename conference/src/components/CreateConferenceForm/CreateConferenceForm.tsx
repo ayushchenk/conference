@@ -14,7 +14,7 @@ import { FormErrorAlert } from "../FormErrorAlert";
 import { usePostCreateConferenceApi } from "./CreateConferenceForm.hooks";
 import { initialValues } from "./CreateConferenceForm.types";
 import { validationSchema } from "./CreateConferenceForm.validator";
-import { FormHelperText, Checkbox, FormControlLabel, Autocomplete, Chip } from "@mui/material";
+import { FormHelperText, Checkbox, FormControlLabel, Autocomplete, Chip, FormControl } from "@mui/material";
 
 export const CreateConferenceForm = ({ conference }: { conference?: Conference | null }) => {
   const navigate = useNavigate();
@@ -150,7 +150,7 @@ export const CreateConferenceForm = ({ conference }: { conference?: Conference |
       </LocalizationProvider>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker
-        format="DD/MM/YYYY"
+          format="DD/MM/YYYY"
           label="End date"
           value={dayjs(formik.values.endDate)}
           onChange={(value) => formik.setFieldValue("endDate", value, true)}
@@ -179,15 +179,19 @@ export const CreateConferenceForm = ({ conference }: { conference?: Conference |
           ))
         }
         renderInput={(params) => (
-          <TextField
-            {...params}
-            variant="outlined"
-            margin="normal"
-            error={formik.touched.researchAreas && Boolean(formik.errors.researchAreas)}
-            helperText={formik.touched.researchAreas && formik.errors.researchAreas}
-            label="Research Areas *"
-            placeholder="Enter the area and press Enter"
-          />
+          <FormControl fullWidth>
+            <TextField
+              {...params}
+              fullWidth
+              variant="outlined"
+              margin="normal"
+              error={formik.touched.researchAreas && Boolean(formik.errors.researchAreas)}
+              helperText={formik.touched.researchAreas && formik.errors.researchAreas}
+              label="Research Areas *"
+              placeholder="Enter the area and press Enter"
+            />
+            <FormHelperText>Enter the area and press Enter</FormHelperText>
+          </FormControl>
         )}
       />
       <TextField
