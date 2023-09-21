@@ -48,10 +48,16 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 
 ## Docker
 
-```
-docker build -t conference-front .
-```
+### Front
 
 ```
-docker run -p 80:80 conference-front
+docker build -t alexyushchenk/conference-front .
+docker run -d -p 80:80 --name front alexyushchenk/conference-front
+```
+
+### DB
+```
+docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=StrongPassword!23" --name sqlserver -v sqlvolume:/var/opt/mssql -p 1433:1433 -d mcr.microsoft.com/mssql/server:2022-latest
+docker exec -it sqlserver "bash"
+./opt/mssql-tools/bin/sqlcmd -S localhost -U SA
 ```
