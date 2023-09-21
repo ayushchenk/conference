@@ -56,8 +56,8 @@ dotnet run --project ./ConferenceManager.Api --launch-profile https
 1. In ConferenceManager folder:
 
 ```shell
-docker build -t <image>
-docker run p 8000:80 -p 8001:443 <image>
+docker build -t <image> .
+docker run -d --name back -p 8000:80 -p 8001:443 <image>
 ```
 
 2. In container, update appsettings.json, use following connection string, restart container:
