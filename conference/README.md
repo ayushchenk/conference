@@ -53,7 +53,7 @@ docker network create conference-net
 
 ### Front
 ```
-docker build -t alexyushchenk/conference-front .
+docker build -t alexyushchenk/conference-front:latest .
 docker run -d -p 80:80 --name front alexyushchenk/conference-front
 docker stop front
 docker network connect conference-net front
@@ -73,8 +73,11 @@ docker exec -it sqlserver "bash"
 
 ### Back
 ```
-docker build -t alexyushchenk/conference-back .
-docker run -d --name back -p 8001:8001 alexyushchenk/conference-back
+docker build -t alexyushchenk/conference-back:latest .
+docker run -d --name back -p 8000:8000 alexyushchenk/conference-back
+
+fix appsettings
+
 docker network connect conference-net back
 docker start back
 ```

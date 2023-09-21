@@ -1,6 +1,7 @@
 FROM node:alpine as build
 WORKDIR /usr/app/front
 COPY . .
+COPY .env.docker .env
 RUN npm install
 RUN npm run build
 
