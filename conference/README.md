@@ -74,9 +74,9 @@ docker exec -it sqlserver "bash"
 ### Back
 ```
 docker build -t alexyushchenk/conference-back:latest .
-docker run -d --name back -p 8000:8000 alexyushchenk/conference-back
+docker run -d --name back -p 8000:8000 -v back-vol:/app alexyushchenk/conference-back
 
-fix appsettings
+fix /var/lib/docker/volumes/back-vol/_data/appsettings.json
 
 docker network connect conference-net back
 docker start back
