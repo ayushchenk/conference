@@ -2,7 +2,7 @@ version: "3.8"
 services:
   front:
     container_name: front
-    image: alexyushchenk/conference-front:latest
+    image: alexyushchenk/conference-front:${FRONT_TAG}
     depends_on: 
       - back
     ports:

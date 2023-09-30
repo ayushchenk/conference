@@ -47,6 +47,13 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 
 
 ## Docker
+
+.env file for compose example:
+```
+MSSQL_SA_PASSWORD=StrongPassword!23
+FRONT_TAG=latest
+```
+
 ```
 docker context create remote --docker "host=ssh://USER_NAME@ADDRESS:PORT"
 docker-compose --context remote up -d
@@ -64,7 +71,8 @@ docker network create conference-net
 
 ### Front
 ```
-docker build -t alexyushchenk/conference-front:latest .
+docker build -t alexyushchenk/conference-front:latest --build-arg VITE_API_URL=https://localhost:8001/api .
+(--progress=plain --no-cache)
 docker run -d -p 80:80 --name front alexyushchenk/conference-front
 docker stop front
 docker network connect conference-net front

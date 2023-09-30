@@ -1,7 +1,10 @@
 FROM node:alpine as build
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
 WORKDIR /usr/app/front
 COPY . .
-COPY .env.docker .env
+RUN rm .env
+RUN echo "VITE_API_URL=${VITE_API_URL}" >> .env
 RUN npm install
 RUN npm run build
 
