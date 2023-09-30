@@ -47,9 +47,20 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 
 
 ## Docker
+```
+docker context create remote --docker "host=ssh://USER_NAME@ADDRESS:PORT"
+docker-compose --context remote up -d
+```
+
+log size per container
+```
+for cont_id in $(docker ps -aq); do cont_name=$(docker ps | grep $cont_id | awk '{ print $NF }') && cont_size=$(docker inspect --format='{{.LogPath}}' $cont_id | xargs sudo ls -hl | awk '{ print $5 }') && echo "$cont_name ($cont_id): $cont_size"; done
+```
 
 ### Pre
+```
 docker network create conference-net
+```
 
 ### Front
 ```

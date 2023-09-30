@@ -1,11 +1,43 @@
-version: "2"
+version: "3.8"
 services:
   front:
     container_name: front
-    build:
-      context: ./conference
-      dockerfile: Dockerfile
+    image: alexyushchenk/conference-front:latest
+    depends_on: 
+      - back
     ports:
       - 80:80
+    networks:
+      - conference-net
     environment:
-      NODE_ENV: production
+      - NODE_ENV=production
+  back:
+    container_name: back
+    image: alexyushchenk/conference-back:latest
+    depends_on: 
+      - db
+    ports:
+      - 8000:8000
+    networks:
+      - conference-net
+    volumes:
+      - back-settings-vol:/app
+  db: 
+    container_name: db
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports:
+      - 1433:1433
+    networks:
+      - conference-net
+    volumes:
+      - db-data-vol:/var/opt/mssql
+    environment:
+      - ACCEPT_EULA=Y      
+      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
+ 
+volumes:
+  db-data-vol:
+  back-settings-vol:
+
+networks:
+  conference-net:
