@@ -2,7 +2,11 @@ version: "3.8"
 services:
   front:
     container_name: front
-    image: alexyushchenk/conference-front:${FRONT_TAG}
+    # image: alexyushchenk/conference-front:${FRONT_TAG}
+    build:
+      context: ./conference
+      args:
+        VITE_API_URL: ${VITE_API_URL}
     depends_on: 
       - back
     ports:
@@ -13,7 +17,9 @@ services:
       - NODE_ENV=production
   back:
     container_name: back
-    image: alexyushchenk/conference-back:latest
+    # image: alexyushchenk/conference-back:latest
+    build:
+      context: ./ConferenceManager
     depends_on: 
       - db
     ports:
@@ -22,6 +28,7 @@ services:
       - conference-net
     volumes:
       - back-settings-vol:/app
+    restart: on-failure:2
   db: 
     container_name: db
     image: mcr.microsoft.com/mssql/server:2022-latest

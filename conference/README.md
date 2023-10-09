@@ -51,7 +51,7 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 .env file for compose example:
 ```
 MSSQL_SA_PASSWORD=StrongPassword!23
-FRONT_TAG=latest
+VITE_API_URL=http://localhost:8000/api
 ```
 
 ```
