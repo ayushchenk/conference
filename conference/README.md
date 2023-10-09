@@ -52,11 +52,18 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 ```
 MSSQL_SA_PASSWORD=StrongPassword!23
 VITE_API_URL=http://localhost:8000/api
+DB_SERVER=db,1433
+DB_USER=SA
+TOKEN_AUDIENCE=http://localhost
+TOKEN_ISSUER=http://localhost:8000
+TOKEN_KEY=LongAndStrongPassword!23
+ADMIN_EMAIL=admin@user.com
+ADMIN_PASSWORD=StrongPassword!23
 ```
 
 ```
 docker context create remote --docker "host=ssh://USER_NAME@ADDRESS:PORT"
-docker-compose --context remote up -d
+docker-compose --context remote --env-file .env.remote -f .\docker-compose-remote.yml up -d
 ```
 
 log size per container

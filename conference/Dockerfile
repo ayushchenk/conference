@@ -1,6 +1,5 @@
 FROM node:alpine as build
 ARG VITE_API_URL
-ENV VITE_API_URL=$VITE_API_URL
 WORKDIR /usr/app/front
 COPY . .
 RUN rm .env

@@ -2,10 +2,7 @@ version: "3.8"
 services:
   front:
     container_name: front
-    build:
-      context: ./conference
-      args:
-        VITE_API_URL: ${VITE_API_URL}
+    image: alexyushchenk/conference-front:remote
     depends_on: 
       - back
     ports:
@@ -17,18 +14,7 @@ services:
     restart: on-failure:2
   back:
     container_name: back
-    build:
-      context: ./ConferenceManager
-      args:
-        DB_SERVER: ${DB_SERVER}
-        DB_USER: ${DB_USER}
-        DB_PASSWORD: ${MSSQL_SA_PASSWORD}
-        TOKEN_ISSUER: ${TOKEN_ISSUER}
-        TOKEN_AUDIENCE: ${TOKEN_AUDIENCE}
-        TOKEN_KEY: ${TOKEN_KEY}
-        ADMIN_EMAIL: ${ADMIN_EMAIL}
-        ADMIN_PASSWORD: ${ADMIN_PASSWORD}
-        FRONT_URL: ${TOKEN_AUDIENCE}
+    image: alexyushchenk/conference-back:remote
     depends_on: 
       - db
     ports:

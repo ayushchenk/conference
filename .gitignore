@@ -423,3 +423,4 @@ yarn-error.log*
 /docs/.$physical.drawio.bkp
 ConferenceManager/ConferenceManager.Api/Properties/ServiceDependencies/ConferenceManagerApi - Web Deploy/profile.arm.json
 .env
+.env.remote
