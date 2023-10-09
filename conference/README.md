@@ -44,3 +44,59 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+
+## Docker
+
+.env file for compose example:
+```
+MSSQL_SA_PASSWORD=StrongPassword!23
+VITE_API_URL=http://localhost:8000/api
+```
+
+```
+docker context create remote --docker "host=ssh://USER_NAME@ADDRESS:PORT"
+docker-compose --context remote up -d
+```
+
+log size per container
+```
+for cont_id in $(docker ps -aq); do cont_name=$(docker ps | grep $cont_id | awk '{ print $NF }') && cont_size=$(docker inspect --format='{{.LogPath}}' $cont_id | xargs sudo ls -hl | awk '{ print $5 }') && echo "$cont_name ($cont_id): $cont_size"; done
+```
+
+### Pre
+```
+docker network create conference-net
+```
+
+### Front
+```
+docker build -t alexyushchenk/conference-front:latest --build-arg VITE_API_URL=https://localhost:8001/api .
+(--progress=plain --no-cache)
+docker run -d -p 80:80 --name front alexyushchenk/conference-front
+docker stop front
+docker network connect conference-net front
+docker start front
+```
+
+### DB
+```
+docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=StrongPassword!23" --name sqlserver -v sqlvolume:/var/opt/mssql -p 1433:1433 -d mcr.microsoft.com/mssql/server:2022-latest
+docker stop sqlserver
+docker network connect conference-net sqlserver
+docker start sqlserver
+
+docker exec -it sqlserver "bash"
+./opt/mssql-tools/bin/sqlcmd -S localhost -U SA
+```
+
+### Back
+```
+docker build -t alexyushchenk/conference-back:latest .
+docker run -d --name back -p 8000:8000 -v back-vol:/app alexyushchenk/conference-back
+
+fix /var/lib/docker/volumes/back-vol/_data/appsettings.json
+
+docker network connect conference-net back
+docker start back
+```
