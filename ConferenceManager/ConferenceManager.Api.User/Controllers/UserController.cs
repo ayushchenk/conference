@@ -11,8 +11,6 @@ using ConferenceManager.Core.User.Delete;
 using ConferenceManager.Core.User.Get;
 using ConferenceManager.Core.User.GetParticipations;
 using ConferenceManager.Core.User.GetSubmissions;
-using ConferenceManager.Core.User.IsParticipant;
-using ConferenceManager.Core.User.IsReviewer;
 using ConferenceManager.Core.User.Login;
 using ConferenceManager.Core.User.Page;
 using ConferenceManager.Core.User.Register;

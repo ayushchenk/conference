@@ -9,20 +9,20 @@ import { useConferenceId } from "../../hooks/UseConferenceId";
 import { SubmissionContext } from "../../contexts/SubmissionContext";
 
 export const useGetSubmissionReviewersApi = (submissionId: number) => {
-  return useGetApi<User[]>(`/submission/${submissionId}/reviewers`);
+  return useGetApi<User[]>(import.meta.env.VITE_SUBMISSION_API_URL + `/submission/${submissionId}/reviewers`);
 }
 
 export const useGetConferenceReviewersApi = (submissionId: number) => {
   const conferenceId = useConferenceId();
-  return useGetApi<User[]>(`/conference/${conferenceId}/reviewers/${submissionId}`);
+  return useGetApi<User[]>(import.meta.env.VITE_CONFERENCE_API_URL + `/conference/${conferenceId}/reviewers/${submissionId}`);
 }
 
 export const useRemoveSubmissionReviewerApi = (submissionId: number) => {
-  return useDeleteApi<{}, {}>(`/submission/${submissionId}/reviewers/{0}`);
+  return useDeleteApi<{}, {}>(import.meta.env.VITE_SUBMISSION_API_URL + `/submission/${submissionId}/reviewers/{0}`);
 }
 
 export const useAddSubmissionReviewerApi = (submissionId: number) => {
-  return usePostApi<{}, {}>(`/submission/${submissionId}/reviewers/{0}`);
+  return usePostApi<{}, {}>(import.meta.env.VITE_SUBMISSION_API_URL + `/submission/${submissionId}/reviewers/{0}`);
 }
 
 export const useSubmissionReviewersGridColumns = (

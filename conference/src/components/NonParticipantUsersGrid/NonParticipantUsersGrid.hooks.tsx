@@ -9,7 +9,7 @@ import { useMemoPaging } from "../../hooks/UseMemoPaging";
 
 export const useGetNonParticipantsApi = (page: GridPaginationModel, query?: string) => {
   const conferenceId = useConferenceId();
-  const path = `/conference/${conferenceId}/non-participants${query && `/?query=${query}`}`;
+  const path = import.meta.env.VITE_CONFERENCE_API_URL + `/conference/${conferenceId}/non-participants${query && `/?query=${query}`}`;
   const config = useMemoPaging(page);
   return useGetApi<PageData<User>>(path, config);
 }

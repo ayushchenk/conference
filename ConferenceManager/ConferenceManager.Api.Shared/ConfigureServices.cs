@@ -2,11 +2,20 @@
 using ConferenceManager.Api.Middleware;
 using ConferenceManager.Api.Services;
 using ConferenceManager.Api.Util;
+using ConferenceManager.Core;
 using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Core.Common.Model.Settings;
 using ConferenceManager.Domain.Entities;
+using ConferenceManager.Infrastructure;
+using ConferenceManager.Infrastructure.Persistence;
+using ConferenceManager.Infrastructure.Util;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
@@ -91,8 +100,8 @@ namespace ConferenceManager.Api
                     }
                 });
 
-                var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+                //var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                //options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 
                 options.OperationFilter<SwaggerRolesFilter>();
                 options.OperationFilter<SwaggerConferenceHeaderFilter>();
@@ -129,6 +138,50 @@ namespace ConferenceManager.Api
             services.AddSingleton<IMappingHost, MappingHost>();
 
             return services;
+        }
+
+        public static async Task PrepareAndRunApp(string[] args)
+        {
+            var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.Configure<TokenSettings>(builder.Configuration.GetSection("TokenSettings"));
+            builder.Services.Configure<SeedSettings>(builder.Configuration.GetSection("SeedSettings"));
+
+            builder.Services.AddInfrastructureServices(builder.Configuration);
+            builder.Services.AddCoreServices(builder.Configuration);
+            builder.Services.AddApiServices(builder.Configuration);
+            builder.Services.AddControllers();
+            builder.Services.AddEndpointsApiExplorer();
+
+            var app = builder.Build();
+
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var initialiser = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitializer>();
+                await initialiser.InitialiseAsync();
+                await initialiser.SeedAsync();
+            }
+
+            app.UseHttpsRedirection();
+
+            app.UseMiddleware<ExceptionMiddleware>();
+            app.UseMiddleware<LoggingMiddleware>();
+
+            app.UseAuthentication();
+
+            app.UseCors(CorsPolicies.Front);
+
+            app.UseAuthorization();
+
+            app.MapControllers();
+
+            app.Run();
         }
     }
 }

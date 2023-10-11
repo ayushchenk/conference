@@ -1,13 +1,15 @@
 version: "3.8"
 services:
-  front:
-    container_name: front
+  ms-front:
+    container_name: ms-front
     build:
       context: ./conference
       args:
-        VITE_API_URL: ${VITE_API_URL}
+        VITE_USER_API_URL: ${VITE_USER_API_URL}
+        VITE_CONFERENCE_API_URL: ${VITE_CONFERENCE_API_URL}
+        VITE_SUBMISSION_API_URL: ${VITE_SUBMISSION_API_URL}
     depends_on: 
-      - back
+      - user-service
     ports:
       - 80:80
     networks:
@@ -15,10 +17,11 @@ services:
     environment:
       - NODE_ENV=production
     restart: on-failure:2
-  back:
-    container_name: back
+  user-service:
+    container_name: user-service
     build:
-      context: ./ConferenceManager
+      context: ./ConferenceManager/
+      dockerfile: Dockerfile.user
       args:
         DB_SERVER: ${DB_SERVER}
         DB_USER: ${DB_USER}
@@ -32,7 +35,52 @@ services:
     depends_on: 
       - db
     ports:
-      - 8000:8000
+      - 8001:8001
+    networks:
+      - conference-net
+    restart: on-failure:2
+  conference-service:
+    container_name: conference-service
+    build:
+      context: ./ConferenceManager/
+      dockerfile: Dockerfile.conference
+      args:
+        DB_SERVER: ${DB_SERVER}
+        DB_USER: ${DB_USER}
+        DB_PASSWORD: ${MSSQL_SA_PASSWORD}
+        TOKEN_ISSUER: ${TOKEN_ISSUER}
+        TOKEN_AUDIENCE: ${TOKEN_AUDIENCE}
+        TOKEN_KEY: ${TOKEN_KEY}
+        ADMIN_EMAIL: ${ADMIN_EMAIL}
+        ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+        FRONT_URL: ${TOKEN_AUDIENCE}
+    depends_on: 
+      - user-service
+    ports:
+      - 8002:8002
+    networks:
+      - conference-net
+    restart: on-failure:2
+  submission-service:
+    container_name: submission-service
+    build:
+      context: ./ConferenceManager/
+      dockerfile: Dockerfile.submission
+      args:
+        DB_SERVER: ${DB_SERVER}
+        DB_USER: ${DB_USER}
+        DB_PASSWORD: ${MSSQL_SA_PASSWORD}
+        TOKEN_ISSUER: ${TOKEN_ISSUER}
+        TOKEN_AUDIENCE: ${TOKEN_AUDIENCE}
+        TOKEN_KEY: ${TOKEN_KEY}
+        ADMIN_EMAIL: ${ADMIN_EMAIL}
+        ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+        FRONT_URL: ${TOKEN_AUDIENCE}
+    depends_on: 
+      - conference-service
+      - db
+    ports:
+      - 8003:8003
     networks:
       - conference-net
     restart: on-failure:2

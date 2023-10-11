@@ -1,4 +1,7 @@
-﻿namespace ConferenceManager.Api.Middleware
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
+
+namespace ConferenceManager.Api.Middleware
 {
     public class LoggingMiddleware : IMiddleware
     {

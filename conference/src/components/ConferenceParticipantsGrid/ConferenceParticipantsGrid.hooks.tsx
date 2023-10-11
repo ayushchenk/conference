@@ -12,15 +12,15 @@ import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 
 export const useGetParticipantsApi = (paging: GridPaginationModel, conferenceId: number): GetParticipantsResponse => {
   const config = useMemoPaging(paging);
-  return useGetApi<GetParticipantsData>(`/Conference/${conferenceId}/participants`, config);
+  return useGetApi<GetParticipantsData>(import.meta.env.VITE_CONFERENCE_API_URL + `/Conference/${conferenceId}/participants`, config);
 };
 
 export const useAddParticipantApi = (conferenceId: number) => {
-  return usePostApi<{}, {}>(`/Conference/${conferenceId}/participants/{0}`);
+  return usePostApi<{}, {}>(import.meta.env.VITE_CONFERENCE_API_URL + `/Conference/${conferenceId}/participants/{0}`);
 };
 
 export const useDeleteParticipantApi = (conferenceId: number) => {
-  return useDeleteApi<{}, {}>(`/Conference/${conferenceId}/participants/{0}`);
+  return useDeleteApi<{}, {}>(import.meta.env.VITE_CONFERENCE_API_URL + `/Conference/${conferenceId}/participants/{0}`);
 };
 
 export const useConferenceParticipantsGridColumns = (

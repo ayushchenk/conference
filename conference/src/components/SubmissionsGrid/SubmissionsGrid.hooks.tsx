@@ -12,7 +12,7 @@ import { Submission } from "../../types/Conference";
 export const useGetSubmissionsApi = (paging: GridPaginationModel, query?: string): GetSubmissionsResponse => {
   const conferenceId = useConferenceId();
   const config = useMemoPaging(paging);
-  return useGetApi<GetSubmissionsData>(`/Conference/${conferenceId}/submissions${query && `?query=${query}`}`, config);
+  return useGetApi<GetSubmissionsData>(import.meta.env.VITE_CONFERENCE_API_URL + `/Conference/${conferenceId}/submissions${query && `?query=${query}`}`, config);
 };
 
 export const useSubmissionsGridColumns = (): GridColDef[] => {

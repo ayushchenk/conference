@@ -9,7 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConferenceManager.Domain", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConferenceManager.Core", "ConferenceManager.Core\ConferenceManager.Core.csproj", "{8536B1D5-5146-4868-90DD-EBE865AC6CE6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConferenceManager.Api", "ConferenceManager.Api\ConferenceManager.Api.csproj", "{B19921EB-8114-49BD-B68A-34E5926D6541}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConferenceManager.Api.Shared", "ConferenceManager.Api.Shared\ConferenceManager.Api.Shared.csproj", "{26D43784-DB03-45CF-BE2A-336646A2D75C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConferenceManager.Api.User", "ConferenceManager.Api.User\ConferenceManager.Api.User.csproj", "{3F593DB7-CEED-418D-82CB-BBFD48BDB2D6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConferenceManager.Api.Conference", "ConferenceManager.Api.Conference\ConferenceManager.Api.Conference.csproj", "{2B6E6B68-8115-4590-85BB-B9239AEA6EBE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConferenceManager.Api.Submission", "ConferenceManager.Api.Submission\ConferenceManager.Api.Submission.csproj", "{0F4FA1F3-7C96-4F04-BA37-290598E01769}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +35,22 @@ Global
 		{8536B1D5-5146-4868-90DD-EBE865AC6CE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8536B1D5-5146-4868-90DD-EBE865AC6CE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8536B1D5-5146-4868-90DD-EBE865AC6CE6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B19921EB-8114-49BD-B68A-34E5926D6541}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B19921EB-8114-49BD-B68A-34E5926D6541}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B19921EB-8114-49BD-B68A-34E5926D6541}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B19921EB-8114-49BD-B68A-34E5926D6541}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26D43784-DB03-45CF-BE2A-336646A2D75C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26D43784-DB03-45CF-BE2A-336646A2D75C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26D43784-DB03-45CF-BE2A-336646A2D75C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26D43784-DB03-45CF-BE2A-336646A2D75C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F593DB7-CEED-418D-82CB-BBFD48BDB2D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F593DB7-CEED-418D-82CB-BBFD48BDB2D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F593DB7-CEED-418D-82CB-BBFD48BDB2D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F593DB7-CEED-418D-82CB-BBFD48BDB2D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B6E6B68-8115-4590-85BB-B9239AEA6EBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B6E6B68-8115-4590-85BB-B9239AEA6EBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B6E6B68-8115-4590-85BB-B9239AEA6EBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B6E6B68-8115-4590-85BB-B9239AEA6EBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F4FA1F3-7C96-4F04-BA37-290598E01769}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F4FA1F3-7C96-4F04-BA37-290598E01769}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F4FA1F3-7C96-4F04-BA37-290598E01769}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F4FA1F3-7C96-4F04-BA37-290598E01769}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,6 +1,7 @@
 ﻿using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Domain.Common;
 using ConferenceManager.Domain.Entities;
+using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
 namespace ConferenceManager.Api.Services

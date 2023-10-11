@@ -12,11 +12,11 @@ import { Conference } from "../../types/Conference";
 
 export const useGetConferencesApi = (paging: GridPaginationModel): GetConferencesResponse => {
   const config = useMemoPaging(paging);
-  return useGetApi<GetConferencesData>(`/Conference`, config);
+  return useGetApi<GetConferencesData>(import.meta.env.VITE_CONFERENCE_API_URL + `/Conference`, config);
 };
 
 export const useDeleteConferenceApi = () => {
-  return useDeleteApi<{}, {}>(`/Conference/{0}`);
+  return useDeleteApi<{}, {}>(import.meta.env.VITE_CONFERENCE_API_URL + `/Conference/{0}`);
 };
 
 export const useConferencesGridColumns = (handleDelete: (conference: Conference) => void): GridColDef[] => {

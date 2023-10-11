@@ -6,17 +6,17 @@ import { UpdateConferenceRequest } from "../CreateConferenceForm/CreateConferenc
 import { usePostApi } from "../../hooks/UsePostApi";
 
 export const useGetConferenceApi = (conferenceId: number): GetConferenceResponse => {
-  return useGetApi<Conference>(`/Conference/${conferenceId}`);
+  return useGetApi<Conference>(import.meta.env.VITE_CONFERENCE_API_URL + `/Conference/${conferenceId}`);
 };
 
 export const useUpdateConferenceApi = () => {
-  return usePutApi<UpdateConferenceRequest, Conference>(`/Conference`);
+  return usePutApi<UpdateConferenceRequest, Conference>(import.meta.env.VITE_CONFERENCE_API_URL + `/Conference`);
 };
 
 export const useGetInviteCodesApi = (conferenceId: number) => {
-  return useGetApi<InviteCode[]>(`/conference/${conferenceId}/invite-codes`);
+  return useGetApi<InviteCode[]>(import.meta.env.VITE_CONFERENCE_API_URL + `/conference/${conferenceId}/invite-codes`);
 }
 
 export const useRefreshCodeApi = () => {
-  return usePostApi<RefreshInviteCodeRequest, InviteCode>("/conference/refresh-code");
+  return usePostApi<RefreshInviteCodeRequest, InviteCode>(import.meta.env.VITE_CONFERENCE_API_URL + "/conference/refresh-code");
 }

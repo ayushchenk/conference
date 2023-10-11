@@ -70,7 +70,6 @@ export function createErrorResponse(error: any): ErrorApiResponse {
 }
 
 export function setupAxios() {
-  axios.defaults.baseURL = import.meta.env.VITE_API_URL;
   axios.interceptors.request.use(function (config) {
     const token = Auth.getToken();
     if (token) {

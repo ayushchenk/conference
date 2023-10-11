@@ -3,9 +3,9 @@ import { useGetApi } from "../../hooks/UseGetApi"
 import { Comment } from "../../types/Conference";
 
 export const useGetSubmissionCommentsApi = (submissionId: number) => {
-  return useGetApi<Comment[]>(`/submission/${submissionId}/comments`);
+  return useGetApi<Comment[]>(import.meta.env.VITE_SUBMISSION_API_URL + `/submission/${submissionId}/comments`);
 }
 
 export const useDeleteSubmissionCommentApi = () => {
-  return useDeleteApi<{},{}>('/submission/comments/{0}');
+  return useDeleteApi<{}, {}>(import.meta.env.VITE_SUBMISSION_API_URL + '/submission/comments/{0}');
 }

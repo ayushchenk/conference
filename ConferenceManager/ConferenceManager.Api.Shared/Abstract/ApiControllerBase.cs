@@ -1,6 +1,8 @@
 ﻿using CleanArchitecture.WebUI.Filters;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace ConferenceManager.Api.Abstract

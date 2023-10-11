@@ -15,28 +15,28 @@ import { User } from "../../types/User";
 import { Checkbox } from "@mui/material";
 
 export const useAddUserRoleApi = () => {
-  return usePostApi<AdjustUserRoleRequest, {}>("/User/{0}/role");
+  return usePostApi<AdjustUserRoleRequest, {}>(import.meta.env.VITE_USER_API_URL + "/User/{0}/role");
 };
 
 export const useRemoveUserRoleApi = () => {
-  return useDeleteApi<AdjustUserRoleRequest, {}>("/User/{0}/role");
+  return useDeleteApi<AdjustUserRoleRequest, {}>(import.meta.env.VITE_USER_API_URL + "/User/{0}/role");
 };
 
 export const useAddUserAdminRoleApi = () => {
-  return usePostApi<{}, {}>('/User/{0}/role/admin');
+  return usePostApi<{}, {}>(import.meta.env.VITE_USER_API_URL + '/User/{0}/role/admin');
 };
 
 export const useRemoveUserAdminRoleApi = () => {
-  return useDeleteApi<{}, {}>('/User/{0}/role/admin');
+  return useDeleteApi<{}, {}>(import.meta.env.VITE_USER_API_URL + '/User/{0}/role/admin');
 };
 
 export const useGetUsersApi = (paging: GridPaginationModel, query: string): GetUsersResponse => {
   const config = useMemoPaging(paging);
-  return useGetApi<GetUsersData>(`/User${query && `/?query=${query}`}`, config);
+  return useGetApi<GetUsersData>(import.meta.env.VITE_USER_API_URL + `/User${query && `/?query=${query}`}`, config);
 };
 
 export const useDeleteUserApi = () => {
-  return useDeleteApi<{}, {}>(`/User/{0}`);
+  return useDeleteApi<{}, {}>(import.meta.env.VITE_USER_API_URL + `/User/{0}`);
 };
 
 export const useUsersGridColumns = (

@@ -1,3 +1,5 @@
 **/bin
 **/obj
-**/ConferenceManager.Api.csproj.user
+**/ConferenceManager.Api.User.csproj.user
+**/ConferenceManager.Api.Conference.csproj.user
+**/ConferenceManager.Api.Submission.csproj.user
