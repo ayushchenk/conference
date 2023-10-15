@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace ConferenceManager.Core.User.Register
 {
-    public class RegisterUserCommandValidator : Validator<RegisterUserCommand>
+    public class RegisterUserCommandValidator : BaseValidator<RegisterUserCommand>
     {
         public RegisterUserCommandValidator()
         {

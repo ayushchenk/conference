@@ -16,6 +16,7 @@ namespace ConferenceManager.Infrastructure
         {
             services.AddScoped<AuditableEntitySaveChangesInterceptor>();
             services.AddScoped<ForeignKeysSaveChangesInterceptor>();
+            services.AddScoped<DomainEventsSaveChangesInterceptor>();
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseLazyLoadingProxies().UseSqlServer(configuration.GetConnectionString("DefaultConnection"),

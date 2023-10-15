@@ -1,8 +1,7 @@
 ﻿using ConferenceManager.Core.Common.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ConferenceManager.Api.Services
+namespace ConferenceManager.Core.Common.Util
 {
     public class MapperDescription
     {
@@ -16,12 +15,12 @@ namespace ConferenceManager.Api.Services
     {
         private static readonly object _locker = new object();
         private readonly IReadOnlyList<MapperDescription> _mappings;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IServiceProvider _serviceProvider;
 
-        public MappingHost(List<MapperDescription> mappings, IHttpContextAccessor httpContextAccessor)
+        public MappingHost(List<MapperDescription> mappings, IServiceProvider serviceProvider)
         {
             _mappings = mappings;
-            _httpContextAccessor = httpContextAccessor;
+            _serviceProvider = serviceProvider;
         }
 
         public TDestination Map<TSource, TDestination>(TSource source)
@@ -40,7 +39,7 @@ namespace ConferenceManager.Api.Services
                 throw new InvalidOperationException($"Mapper for source {sourceType} and destination {destinationType} not found");
             }
 
-            var mapper = _httpContextAccessor.HttpContext?.RequestServices.GetRequiredService(mapperDescription.Service) as IMapper<TSource, TDestination>;
+            var mapper = _serviceProvider.GetRequiredService(mapperDescription.Service) as IMapper<TSource, TDestination>;
 
             if (mapper == null)
             {

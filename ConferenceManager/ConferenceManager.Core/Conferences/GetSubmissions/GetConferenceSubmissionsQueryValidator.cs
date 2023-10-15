@@ -3,7 +3,7 @@ using ConferenceManager.Core.Submissions.Common;
 
 namespace ConferenceManager.Core.Conferences.GetSubmissions
 {
-    public class GetConferenceSubmissionsQueryValidator : Validator<GetConferenceSubmissionsQuery>
+    public class GetConferenceSubmissionsQueryValidator : BaseValidator<GetConferenceSubmissionsQuery>
     {
         public GetConferenceSubmissionsQueryValidator()
         {

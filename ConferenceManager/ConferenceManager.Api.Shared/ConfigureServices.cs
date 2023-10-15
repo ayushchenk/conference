@@ -111,31 +111,7 @@ namespace ConferenceManager.Api
             {
                 // enables immediate logout, after updating the user's stat.
                 options.ValidationInterval = TimeSpan.Zero;
-            });
-
-            var mappers = typeof(IMapper<,>).Assembly.GetTypes()
-                .Where(type => type.GetInterface("IMapper`2") != null)
-                .Select(type =>
-                {
-                    var service = type.GetInterface("IMapper`2")!;
-                    var source = service.GenericTypeArguments.First();
-                    var destination = service.GenericTypeArguments.Last();
-                    return new MapperDescription()
-                    {
-                        Service = service,
-                        Implementation = type,
-                        Source = source,
-                        Destination = destination
-                    };
-                }).ToList();
-
-            foreach (var mapper in mappers)
-            {
-                services.Add(new ServiceDescriptor(mapper.Service, mapper.Implementation, ServiceLifetime.Scoped));
-            }
-
-            services.AddSingleton<List<MapperDescription>>(mappers);
-            services.AddSingleton<IMappingHost, MappingHost>();
+            });            
 
             return services;
         }

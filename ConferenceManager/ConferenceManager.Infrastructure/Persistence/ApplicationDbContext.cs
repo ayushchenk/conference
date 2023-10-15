@@ -1,7 +1,6 @@
 ﻿using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Domain.Entities;
 using ConferenceManager.Infrastructure.Persistence.Interceptors;
-using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +15,7 @@ namespace ConferenceManager.Infrastructure.Persistence
             IdentityRoleClaim<int>, IdentityUserToken<int>>,
         IApplicationDbContext
     {
-        private readonly IMediator _mediator;
+        private readonly DomainEventsSaveChangesInterceptor _domainEventsInterceptor;
         private readonly AuditableEntitySaveChangesInterceptor _auditableEntityInterceptor;
         private readonly ForeignKeysSaveChangesInterceptor _foreignKeysInterceptor;
 
@@ -40,14 +39,14 @@ namespace ConferenceManager.Infrastructure.Persistence
 
         public ApplicationDbContext(
             DbContextOptions<ApplicationDbContext> options,
+            DomainEventsSaveChangesInterceptor domainEventsInterceptor,
             AuditableEntitySaveChangesInterceptor auditableEntityInterceptor,
-            ForeignKeysSaveChangesInterceptor foreignKeysInterceptor,
-            IMediator mediator
+            ForeignKeysSaveChangesInterceptor foreignKeysInterceptor
             ) : base(options)
         {
+            _domainEventsInterceptor = domainEventsInterceptor;
             _auditableEntityInterceptor = auditableEntityInterceptor;
             _foreignKeysInterceptor = foreignKeysInterceptor;
-            _mediator = mediator;
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -59,14 +58,10 @@ namespace ConferenceManager.Infrastructure.Persistence
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.AddInterceptors(_auditableEntityInterceptor, _foreignKeysInterceptor);
-        }
-
-        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-        {
-            await _mediator.DispatchDomainEvents(this);
-
-            return await base.SaveChangesAsync(cancellationToken);
+            optionsBuilder.AddInterceptors(
+                _domainEventsInterceptor,
+                _auditableEntityInterceptor,
+                _foreignKeysInterceptor);
         }
     }
 }

@@ -21,7 +21,6 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ConferenceManager.Api.Controllers
 {
-    [Route("api/[controller]")]
     public class UserController : ApiControllerBase
     {
         /// <summary>

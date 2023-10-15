@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace ConferenceManager.Core.Common.Validators
 {
-    public abstract class DbContextValidator<TModel> : Validator<TModel>
+    public abstract class DbContextValidator<TModel> : BaseValidator<TModel>
     {
         protected IApplicationDbContext Context { get; }
 

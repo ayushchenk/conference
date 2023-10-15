@@ -3,7 +3,7 @@ using ConferenceManager.Core.Conferences.Common;
 
 namespace ConferenceManager.Core.Conferences.Update
 {
-    public class UpdateConferenceCommandValidator : Validator<UpdateConferenceCommand>
+    public class UpdateConferenceCommandValidator : BaseValidator<UpdateConferenceCommand>
     {
         public UpdateConferenceCommandValidator()
         {

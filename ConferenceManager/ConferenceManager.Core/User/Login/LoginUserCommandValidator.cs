@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace ConferenceManager.Core.User.Login
 {
-    public class LoginUserCommandValidator : Validator<LoginUserCommand>
+    public class LoginUserCommandValidator : BaseValidator<LoginUserCommand>
     {
         public LoginUserCommandValidator()
         {

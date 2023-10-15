@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace ConferenceManager.Core.Common.Validators
 {
-    public class Validator<TModel> : AbstractValidator<TModel>
+    public class BaseValidator<TModel> : AbstractValidator<TModel>
     {
         public IRuleBuilderOptions<TModel, int> RuleForId(Expression<Func<TModel, int>> expression)
         {

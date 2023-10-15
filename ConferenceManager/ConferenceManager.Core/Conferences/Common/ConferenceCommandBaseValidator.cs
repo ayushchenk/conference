@@ -5,7 +5,7 @@ using FluentValidation;
 
 namespace ConferenceManager.Core.Conferences.Common
 {
-    public class ConferenceCommandBaseValidator : Validator<ConferenceCommandBase>
+    public class ConferenceCommandBaseValidator : BaseValidator<ConferenceCommandBase>
     {
         public ConferenceCommandBaseValidator()
         {
