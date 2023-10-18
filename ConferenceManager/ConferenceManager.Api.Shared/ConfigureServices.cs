@@ -1,6 +1,7 @@
 ﻿using ConferenceManager.Api.Filters;
 using ConferenceManager.Api.Middleware;
 using ConferenceManager.Api.Services;
+using ConferenceManager.Api.Shared.Middleware;
 using ConferenceManager.Api.Util;
 using ConferenceManager.Core;
 using ConferenceManager.Core.Common.Interfaces;
@@ -11,6 +12,8 @@ using ConferenceManager.Infrastructure.Persistence;
 using ConferenceManager.Infrastructure.Util;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.CookiePolicy;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,6 +36,7 @@ namespace ConferenceManager.Api
             services.AddCors(o => o.AddPolicy(CorsPolicies.Front, builder =>
             {
                 builder.WithOrigins(corsSettings.FrontUrl)
+                    .AllowCredentials()
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .WithExposedHeaders(Headers.FileName);
@@ -55,6 +59,7 @@ namespace ConferenceManager.Api
 
             services.AddTransient<ExceptionMiddleware>();
             services.AddTransient<LoggingMiddleware>();
+            services.AddTransient<JwtCookieMiddleware>();
 
             services.AddAuthorization();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -111,7 +116,7 @@ namespace ConferenceManager.Api
             {
                 // enables immediate logout, after updating the user's stat.
                 options.ValidationInterval = TimeSpan.Zero;
-            });            
+            });
 
             return services;
         }
@@ -144,8 +149,16 @@ namespace ConferenceManager.Api
                 await initialiser.SeedAsync();
             }
 
+            app.UseCookiePolicy(new CookiePolicyOptions
+            {                
+                MinimumSameSitePolicy = SameSiteMode.Strict,
+                HttpOnly = HttpOnlyPolicy.Always,
+                Secure = CookieSecurePolicy.None
+            });
+
             app.UseHttpsRedirection();
 
+            app.UseMiddleware<JwtCookieMiddleware>();
             app.UseMiddleware<ExceptionMiddleware>();
             app.UseMiddleware<LoggingMiddleware>();
 

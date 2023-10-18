@@ -1,5 +1,5 @@
-import { AuthData, JwtToken } from "../types/Auth";
-import jwt_decode from "jwt-decode";
+import axios from "axios";
+import { AuthData } from "../types/Auth";
 
 export namespace Auth {
   const AUTH_DATA = "authData";
@@ -10,6 +10,7 @@ export namespace Auth {
 
   export function logout() {
     localStorage.removeItem(AUTH_DATA);
+    axios.post(import.meta.env.VITE_USER_API_URL + '/user/sign-out').catch(console.error);
   }
 
   export function isAuthed() {
@@ -19,36 +20,19 @@ export namespace Auth {
       return false;
     }
 
-    //exp is seconds, getTime is milliseconds
-    return authData.parsedToken.exp * 1000 > new Date().getTime();
-  }
-
-  export function getToken() {
-    const authData = getData();
-
-    if (!authData || !isAuthed()) {
-      return null;
-    }
-
-    return authData.accessToken;
+    return new Date(authData.validTo).getTime() > new Date().getTime();
   }
 
   export function getId() {
     const authData = getData();
 
-    return authData?.parsedToken.nameid && isAuthed()
-      ? Number(authData?.parsedToken.nameid)
+    return isAuthed() && authData
+      ? authData.id
       : null;
   }
 
   export function isAdmin() {
-    const authData = getData();
-
-    if (!authData) {
-      return false;
-    }
-
-    return isAuthed() && (authData.parsedToken.role === "Admin" || authData.parsedToken.role?.includes("Admin"));
+    return isAuthed() && getData()?.admin;
   }
 
   export function hasAnyRole(conferenceId: number, roles: string[]) {
@@ -78,12 +62,7 @@ export namespace Auth {
       return null;
     }
 
-    const data = JSON.parse(authDataString) as AuthData;
-
-    return {
-      ...data,
-      parsedToken: jwt_decode<JwtToken>(data.accessToken)
-    };
+    return JSON.parse(authDataString) as AuthData;
   }
 
   function getRoles(conferenceId: number) {

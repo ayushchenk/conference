@@ -14,6 +14,7 @@ using ConferenceManager.Core.User.GetSubmissions;
 using ConferenceManager.Core.User.Login;
 using ConferenceManager.Core.User.Page;
 using ConferenceManager.Core.User.Register;
+using ConferenceManager.Core.User.SignOut;
 using ConferenceManager.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -34,7 +35,7 @@ namespace ConferenceManager.Api.Controllers
         /// </remarks> 
         [HttpPost]
         [Route("register")]
-        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(TokenResponse))]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(AuthResponse))]
         public async Task<IActionResult> Register(RegisterUserCommand command, CancellationToken cancellation)
         {
             var token = await Mediator.Send(command, cancellation);
@@ -47,12 +48,25 @@ namespace ConferenceManager.Api.Controllers
         /// </summary>
         [HttpPost]
         [Route("login")]
-        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(TokenResponse))]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(AuthResponse))]
         public async Task<IActionResult> Login(LoginUserCommand command, CancellationToken cancellation)
         {
             var token = await Mediator.Send(command, cancellation);
 
             return Ok(token);
+        }
+
+        /// <summary>
+        /// Signs out user
+        /// </summary>
+        [HttpPost]
+        [Route("sign-out")]
+        [SwaggerResponse(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> SignOut(CancellationToken cancellation)
+        {
+            await Mediator.Send(new SignOutCommand(), cancellation);
+
+            return NoContent();
         }
 
         /// <summary>

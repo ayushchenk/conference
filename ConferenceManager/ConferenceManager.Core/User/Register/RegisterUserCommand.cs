@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ConferenceManager.Core.User.Register
 {
-    public class RegisterUserCommand : IRequest<TokenResponse>
+    public class RegisterUserCommand : IRequest<AuthResponse>
     {
         [Required]
         [MaxLength(256)]

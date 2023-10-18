@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ConferenceManager.Core.Conferences.Join
 {
-    public class JoinConferenceCommandHandler : DbContextRequestHandler<JoinConferenceCommand, TokenResponse>
+    public class JoinConferenceCommandHandler : DbContextRequestHandler<JoinConferenceCommand, AuthResponse>
     {
         private readonly IMediator _mediator;
         private readonly IIdentityService _identityService;
@@ -24,7 +24,7 @@ namespace ConferenceManager.Core.Conferences.Join
             _identityService = identityService;
         }
 
-        public override async Task<TokenResponse> Handle(JoinConferenceCommand request, CancellationToken cancellationToken)
+        public override async Task<AuthResponse> Handle(JoinConferenceCommand request, CancellationToken cancellationToken)
         {
             var code = await Context.InviteCodes
                 .FirstOrDefaultAsync(c => c.Code == request.Code, cancellationToken);

@@ -269,6 +269,7 @@ export const SubmissionDetails = ({ submission }: { submission: Submission }) =>
         onConfirm={() => returnSubmission({})}
         onCancel={() => setReturnDialogOpen(false)}>
         Are you sure you want to return this submission? <br />
+        You may want to leave a comment explaining the reason. <br/>
         Author will have to update the submission before you can submit a review.
         <FormErrorAlert response={returnResponse} />
       </ConfirmationDialog>

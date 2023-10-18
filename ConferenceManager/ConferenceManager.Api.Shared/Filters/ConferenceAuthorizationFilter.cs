@@ -56,22 +56,15 @@ namespace ConferenceManager.Api.Filters
                 return;
             }
 
-            var userParticipations = _dbContext.ConferenceParticipants
-                .AsNoTracking()
-                .Where(p => p.UserId == _currentUser.Id)
-                .Select(p => p.ConferenceId);
-
-            if (!userParticipations.Contains(conferenceId))
+            if (!_currentUser.Participations.Contains(conferenceId))
             {
                 SetNotPartOfConferenceResult(context);
                 return;
             }
 
-            var userConferenceRoles = _dbContext.UserRoles
-                .AsNoTracking()
-                .Include(r => r.Role)
-                .Where(r => r.UserId == _currentUser.Id && r.ConferenceId == conferenceId)
-                .Select(r => r.Role.Name);
+            var userConferenceRoles = _currentUser.Roles
+                .Where(kv => kv.Key == conferenceId)
+                .SelectMany(kv => kv.Value);
 
             bool hasRole = userConferenceRoles.Any(role => _roles.Contains(role));          
 

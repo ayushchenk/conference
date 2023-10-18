@@ -1,7 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { ErrorApiResponse, LoadingApiResponse, NotInitiatedResponse, SuccessApiResponse } from "../types/ApiResponse";
 import { User } from "../types/User";
-import { Auth } from "./Auth";
 import { submissionStatus } from "./Constants";
 
 //string of type "{0} text {1} ..."
@@ -71,10 +70,7 @@ export function createErrorResponse(error: any): ErrorApiResponse {
 
 export function setupAxios() {
   axios.interceptors.request.use(function (config) {
-    const token = Auth.getToken();
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+    config.withCredentials = true;
     return config;
   });
 }

@@ -5,9 +5,11 @@ namespace ConferenceManager.Core.Common.Interfaces
 {
     public interface IIdentityService
     {
-        Task<TokenResponse> Authenticate(TokenRequest tokenRequest);
+        Task<AuthResponse> Authenticate(TokenRequest tokenRequest);
 
-        TokenResponse GenerateToken(ApplicationUser user);
+        void SignOut();
+
+        AuthResponse GenerateToken(ApplicationUser user);
 
         Task CreateUser(ApplicationUser user, string password);
 

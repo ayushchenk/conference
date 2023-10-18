@@ -1,11 +1,14 @@
-﻿using ConferenceManager.Core.Common.Exceptions;
+﻿using ConferenceManager.Api.Shared.Util;
+using ConferenceManager.Core.Common.Exceptions;
 using ConferenceManager.Core.Common.Interfaces;
 using ConferenceManager.Core.Common.Model.Settings;
 using ConferenceManager.Core.Common.Model.Token;
 using ConferenceManager.Domain.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -19,36 +22,48 @@ namespace ConferenceManager.Api.Services
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly TokenSettings _settings;
         private readonly IDateTimeService _dateTime;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public IdentityService(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IOptions<TokenSettings> settings,
-            IDateTimeService dateTime)
+            IDateTimeService dateTime,
+            IHttpContextAccessor httpContextAccessor)
         {
             _manager = userManager;
             _signInManager = signInManager;
             _settings = settings.Value;
             _dateTime = dateTime;
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<TokenResponse> Authenticate(TokenRequest request)
+        public async Task<AuthResponse> Authenticate(TokenRequest request)
         {
             var user = await _manager.FindByEmailAsync(request.Email);
 
             if (user == null)
             {
-                throw new NotFoundException("User not found");
+                throw new IdentityException("Incorrect email or password");
             }
 
             var signInResult = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
 
             if (!signInResult.Succeeded)
             {
-                throw new IdentityException("Incorrect password");
+                throw new IdentityException("Incorrect email or password");
             }
 
             return GenerateToken(user);
+        }
+
+        public void SignOut()
+        {
+            _httpContextAccessor.HttpContext?.Response.Cookies.Append(Cookies.Token, string.Empty, new CookieOptions()
+            {
+                Expires = _dateTime.Now.AddDays(-1),
+                IsEssential = true,
+            });
         }
 
         public async Task CreateUser(ApplicationUser user, string password)
@@ -73,7 +88,7 @@ namespace ConferenceManager.Api.Services
             await _manager.DeleteAsync(user);
         }
 
-        public TokenResponse GenerateToken(ApplicationUser user)
+        public AuthResponse GenerateToken(ApplicationUser user)
         {
             byte[] key = Encoding.ASCII.GetBytes(_settings.Key);
 
@@ -98,6 +113,10 @@ namespace ConferenceManager.Api.Services
                 ?.ToDictionary(key => key.Key, value => value.Select(v => v.Role).ToArray())
                 ?? new Dictionary<int, string[]>();
 
+            var participations = user.ConferenceParticipations
+                ?.Select(part => part.Id)
+                ?.ToArray() ?? Array.Empty<int>();
+
             var uniqueRoles = roles.SelectMany(r => r.Value).Distinct();
 
             foreach (var role in uniqueRoles)
@@ -110,13 +129,24 @@ namespace ConferenceManager.Api.Services
                 descriptor.Subject.AddClaim(new Claim(ClaimTypes.Role, ApplicationRole.Admin));
             }
 
+            descriptor.Subject.AddClaim(new Claim(Claims.ConferenceRoles, JsonConvert.SerializeObject(roles)));
+            descriptor.Subject.AddClaim(new Claim(Claims.ConferenceParticipations, JsonConvert.SerializeObject(participations)));
+
             var token = handler.CreateToken(descriptor);
             var tokenValue = handler.WriteToken(token);
 
-            return new TokenResponse()
+            _httpContextAccessor.HttpContext?.Response.Cookies.Append(Cookies.Token, tokenValue, new CookieOptions()
             {
+                MaxAge = TimeSpan.FromMinutes(_settings.ExpiresMinutes),
+                IsEssential = true,
+            });
+
+            return new AuthResponse()
+            {
+                Id = user.Id,
                 Roles = roles,
-                AccessToken = tokenValue
+                Admin = user.IsAdmin,
+                ValidTo = token.ValidTo,
             };
         }
     }

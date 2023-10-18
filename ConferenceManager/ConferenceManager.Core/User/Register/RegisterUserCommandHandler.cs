@@ -6,7 +6,7 @@ using MediatR;
 
 namespace ConferenceManager.Core.User.Register
 {
-    public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, TokenResponse>
+    public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, AuthResponse>
     {
         private readonly IMapper<RegisterUserCommand, ApplicationUser> _mapper;
         private readonly IIdentityService _identityService;
@@ -26,7 +26,7 @@ namespace ConferenceManager.Core.User.Register
             _mediator = mediator;
         }
 
-        public async Task<TokenResponse> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
+        public async Task<AuthResponse> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
             using var transaction = _context.Database.BeginTransaction();
 

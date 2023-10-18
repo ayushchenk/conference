@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ConferenceManager.Core.Conferences.Join
 {
-    public class JoinConferenceCommand : IRequest<TokenResponse>
+    public class JoinConferenceCommand : IRequest<AuthResponse>
     {
         [Required]
         [MaxLength(20)]

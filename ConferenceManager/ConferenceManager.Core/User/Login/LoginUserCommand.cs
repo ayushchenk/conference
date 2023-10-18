@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ConferenceManager.Core.User.Login
 {
-    public class LoginUserCommand : IRequest<TokenResponse>
+    public class LoginUserCommand : IRequest<AuthResponse>
     {
         [Required]
         [MaxLength(256)]

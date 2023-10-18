@@ -221,7 +221,7 @@ namespace ConferenceManager.Api.Controllers
         [HttpPost]
         [Route("join")]
         [Authorize]
-        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(TokenResponse))]
+        [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(AuthResponse))]
         public async Task<IActionResult> Join(JoinConferenceCommand command, CancellationToken cancellation)
         {
             var result = await Mediator.Send(command, cancellation);

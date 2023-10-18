@@ -9,6 +9,10 @@ namespace ConferenceManager.Core.Common.Interfaces
 
         bool IsAdmin { get; }
 
+        public int[] Participations { get; }
+
+        public IDictionary<int, string[]> Roles { get; }
+
         bool IsAuthorIn(Conference conference);
 
         bool IsReviewerIn(Conference conference);

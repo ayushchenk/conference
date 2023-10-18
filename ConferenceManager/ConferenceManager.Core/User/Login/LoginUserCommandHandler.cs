@@ -4,7 +4,7 @@ using MediatR;
 
 namespace ConferenceManager.Core.User.Login
 {
-    public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, TokenResponse>
+    public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, AuthResponse>
     {
         private readonly IIdentityService _identityService;
 
@@ -13,7 +13,7 @@ namespace ConferenceManager.Core.User.Login
             _identityService = identityService;
         }
 
-        public async Task<TokenResponse> Handle(LoginUserCommand request, CancellationToken cancellationToken)
+        public async Task<AuthResponse> Handle(LoginUserCommand request, CancellationToken cancellationToken)
         {
             return await _identityService.Authenticate(new TokenRequest()
             {

@@ -40,7 +40,7 @@ namespace ConferenceManager.Core
 
             foreach (var mapper in mappers)
             {
-                services.Add(new ServiceDescriptor(mapper.Service, mapper.Implementation, ServiceLifetime.Scoped));
+                services.Add(new ServiceDescriptor(mapper.Service, mapper.Implementation, ServiceLifetime.Transient));
             }
 
             services.AddSingleton<List<MapperDescription>>(mappers);
