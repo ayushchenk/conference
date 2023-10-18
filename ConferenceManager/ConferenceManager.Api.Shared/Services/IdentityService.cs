@@ -38,7 +38,7 @@ namespace ConferenceManager.Api.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<AuthResponse> Authenticate(TokenRequest request)
+        public async Task<AuthResponse> Authenticate(AuthRequest request)
         {
             var user = await _manager.FindByEmailAsync(request.Email);
 
@@ -92,8 +92,6 @@ namespace ConferenceManager.Api.Services
         {
             byte[] key = Encoding.ASCII.GetBytes(_settings.Key);
 
-            var handler = new JwtSecurityTokenHandler();
-
             var descriptor = new SecurityTokenDescriptor
             {
                 Issuer = _settings.Issuer,
@@ -131,6 +129,8 @@ namespace ConferenceManager.Api.Services
 
             descriptor.Subject.AddClaim(new Claim(Claims.ConferenceRoles, JsonConvert.SerializeObject(roles)));
             descriptor.Subject.AddClaim(new Claim(Claims.ConferenceParticipations, JsonConvert.SerializeObject(participations)));
+
+            var handler = new JwtSecurityTokenHandler();
 
             var token = handler.CreateToken(descriptor);
             var tokenValue = handler.WriteToken(token);

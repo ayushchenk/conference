@@ -43,7 +43,7 @@ namespace ConferenceManager.Core.User.Register
                 });
             }
 
-            var result = await _identityService.Authenticate(new TokenRequest()
+            var result = await _identityService.Authenticate(new AuthRequest()
             {
                 Email = request.Email,
                 Password = request.Password

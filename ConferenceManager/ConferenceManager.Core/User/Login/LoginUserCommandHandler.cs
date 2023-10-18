@@ -15,7 +15,7 @@ namespace ConferenceManager.Core.User.Login
 
         public async Task<AuthResponse> Handle(LoginUserCommand request, CancellationToken cancellationToken)
         {
-            return await _identityService.Authenticate(new TokenRequest()
+            return await _identityService.Authenticate(new AuthRequest()
             {
                 Email = request.Email,
                 Password = request.Password

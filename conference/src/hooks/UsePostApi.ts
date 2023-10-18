@@ -13,7 +13,7 @@ export function usePostApi<TRequest, TData>(path: string, config?: AxiosRequestC
     (data: TRequest, ...urlParams: (string | number)[]) => {
       setResponse(createLoadingResponse());
       axios
-        .post<TData>(format(path, urlParams), data, configWithHeaders)
+      .post<TData>(format(path, urlParams), data, configWithHeaders)
         .then((response) => {
           setResponse(createSuccessResponse(response));
         })

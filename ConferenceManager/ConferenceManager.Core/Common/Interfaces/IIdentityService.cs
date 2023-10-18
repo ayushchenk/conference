@@ -5,7 +5,7 @@ namespace ConferenceManager.Core.Common.Interfaces
 {
     public interface IIdentityService
     {
-        Task<AuthResponse> Authenticate(TokenRequest tokenRequest);
+        Task<AuthResponse> Authenticate(AuthRequest tokenRequest);
 
         void SignOut();
 

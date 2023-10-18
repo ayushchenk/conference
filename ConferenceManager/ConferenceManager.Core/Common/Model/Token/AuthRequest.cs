@@ -1,6 +1,6 @@
 ﻿namespace ConferenceManager.Core.Common.Model.Token
 {
-    public class TokenRequest
+    public class AuthRequest
     {
         public required string Email { get; init; }
 
