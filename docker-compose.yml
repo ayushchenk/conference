@@ -8,8 +8,6 @@ services:
         VITE_USER_API_URL: ${VITE_USER_API_URL}
         VITE_CONFERENCE_API_URL: ${VITE_CONFERENCE_API_URL}
         VITE_SUBMISSION_API_URL: ${VITE_SUBMISSION_API_URL}
-    depends_on: 
-      - user-service
     ports:
       - 80:80
     networks:
@@ -21,7 +19,6 @@ services:
     container_name: user-service
     build:
       context: ./ConferenceManager/
-      dockerfile: Dockerfile.user
       args:
         DB_SERVER: ${DB_SERVER}
         DB_USER: ${DB_USER}
@@ -32,6 +29,8 @@ services:
         ADMIN_EMAIL: ${ADMIN_EMAIL}
         ADMIN_PASSWORD: ${ADMIN_PASSWORD}
         FRONT_URL: ${TOKEN_AUDIENCE}
+        PROJECT: User
+        PORT: 8001
     depends_on: 
       - db
     ports:
@@ -43,7 +42,6 @@ services:
     container_name: conference-service
     build:
       context: ./ConferenceManager/
-      dockerfile: Dockerfile.conference
       args:
         DB_SERVER: ${DB_SERVER}
         DB_USER: ${DB_USER}
@@ -54,6 +52,8 @@ services:
         ADMIN_EMAIL: ${ADMIN_EMAIL}
         ADMIN_PASSWORD: ${ADMIN_PASSWORD}
         FRONT_URL: ${TOKEN_AUDIENCE}
+        PROJECT: Conference
+        PORT: 8002
     depends_on: 
       - user-service
     ports:
@@ -65,7 +65,6 @@ services:
     container_name: submission-service
     build:
       context: ./ConferenceManager/
-      dockerfile: Dockerfile.submission
       args:
         DB_SERVER: ${DB_SERVER}
         DB_USER: ${DB_USER}
@@ -76,8 +75,10 @@ services:
         ADMIN_EMAIL: ${ADMIN_EMAIL}
         ADMIN_PASSWORD: ${ADMIN_PASSWORD}
         FRONT_URL: ${TOKEN_AUDIENCE}
+        PROJECT: Submission
+        PORT: 8003
     depends_on: 
-      - conference-service
+      - user-service
       - db
     ports:
       - 8003:8003

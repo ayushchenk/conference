@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
-ENV ASPNETCORE_URLS=http://+:8002
-EXPOSE 8002
+ARG PORT
+ENV ASPNETCORE_URLS=http://+:${PORT}
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
@@ -14,6 +14,7 @@ ARG TOKEN_KEY
 ARG ADMIN_PASSWORD
 ARG ADMIN_EMAIL
 ARG FRONT_URL
+ARG PROJECT
 COPY ConferenceManager.sln ./ConferenceManager.sln
 COPY ConferenceManager.Api.User/*.csproj ./ConferenceManager.Api.User/
 COPY ConferenceManager.Api.Submission/*.csproj ./ConferenceManager.Api.Submission/
@@ -24,7 +25,7 @@ COPY ConferenceManager.Domain/*.csproj ./ConferenceManager.Domain/
 COPY ConferenceManager.Infrastructure/*.csproj ./ConferenceManager.Infrastructure/
 RUN dotnet restore
 COPY . .
-WORKDIR /src/ConferenceManager.Api.Conference
+WORKDIR /src/ConferenceManager.Api.${PROJECT}
 RUN sed -i "s;DB_SERVER;${DB_SERVER};" appsettings.json
 RUN sed -i "s;DB_USER;${DB_USER};" appsettings.json
 RUN sed -i "s;DB_PASSWORD;${DB_PASSWORD};" appsettings.json
@@ -34,12 +35,14 @@ RUN sed -i "s;TOKEN_KEY;${TOKEN_KEY};" appsettings.json
 RUN sed -i "s;ADMIN_PASSWORD;${ADMIN_PASSWORD};" appsettings.json
 RUN sed -i "s;ADMIN_EMAIL;${ADMIN_EMAIL};" appsettings.json
 RUN sed -i "s;FRONT_URL;${FRONT_URL};" appsettings.json
-RUN dotnet build "ConferenceManager.Api.Conference.csproj" -c Release -o /app/build
+RUN dotnet build "ConferenceManager.Api.${PROJECT}.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "ConferenceManager.Api.Conference.csproj" -c Release -o /app/publish
+ARG PROJECT
+RUN dotnet publish "ConferenceManager.Api.${PROJECT}.csproj" -c Release -o /app/publish
 
 FROM base AS final
+ARG PROJECT
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "ConferenceManager.Api.Conference.dll"]
+ENTRYPOINT ["dotnet", "ConferenceManager.Api.${PROJECT}.dll"]
